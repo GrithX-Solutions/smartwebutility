@@ -58,3 +58,6 @@ Works on Cloudflare Pages, Netlify, nginx, Apache, or any static host for fronte
 - outbound web/TLS connections permitted by the host
 
 The PHP API validates targets and redirect hops and rejects private/reserved IP ranges to reduce SSRF risk.
+
+## Launch plan
+See `LAUNCH.md` for the global SEO, AdSense readiness, privacy/consent and production deployment checklist.
