@@ -9,6 +9,7 @@ Performance-first static website for https://smartwebutility.com.
 - `/redirect-checker/` — follow redirect chains and final destination.
 - `/json-formatter/` — format, validate and minify JSON in the browser.
 - `/base64-encoder-decoder/` — encode and decode Base64 with UTF-8 and URL-safe support.
+- `/unix-timestamp-converter/` — convert Unix epoch seconds or milliseconds to dates and back.
 
 ## Run locally
 ```bash
