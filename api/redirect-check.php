@@ -1,5 +1,6 @@
 <?php
 require __DIR__.'/common.php';
+rate_limit('redirect-check', 20, 60);
 $url=normalize_url($_GET['url'] ?? '');
 $chain=[]; $current=$url; $seen=[];
 for($i=0;$i<10;$i++){
