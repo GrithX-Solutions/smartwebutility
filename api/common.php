@@ -89,3 +89,36 @@ function curl_headers(string $url): array {
   if ($ok===false || $errno) out(['error'=>'Request failed: '.$err],502);
   return ['url'=>$url,'status'=>(int)($info['http_code']??0),'time_ms'=>(int)round($elapsed),'content_type'=>$info['content_type']??null,'ip'=>$info['primary_ip']??$ip,'headers'=>$headers];
 }
+
+function curl_body(string $url, int $maxBytes=1048576): array {
+  $url=normalize_url($url);
+  $p=parse_url($url); $host=clean_host($p['host'] ?? ''); $ips=resolve_public($host); $ip=$ips[0];
+  $port=(int)($p['port'] ?? (($p['scheme'] ?? 'https')==='https'?443:80));
+  $headers=[]; $body='';
+  $ch=curl_init($url);
+  curl_setopt_array($ch,[
+    CURLOPT_RETURNTRANSFER=>false,
+    CURLOPT_FOLLOWLOCATION=>false,
+    CURLOPT_CONNECTTIMEOUT=>6,
+    CURLOPT_TIMEOUT=>12,
+    CURLOPT_USERAGENT=>'SmartWebUtility/1.0 (+https://smartwebutility.com/)',
+    CURLOPT_SSL_VERIFYPEER=>true,
+    CURLOPT_SSL_VERIFYHOST=>2,
+    CURLOPT_RESOLVE=>[$host.':'.$port.':'.$ip],
+    CURLOPT_HEADERFUNCTION=>function($ch,$line) use (&$headers){
+      $len=strlen($line); $line=trim($line);
+      if ($line!=='' && str_contains($line,':')) { [$k,$v]=array_map('trim',explode(':',$line,2)); $headers[strtolower($k)]=$v; }
+      return $len;
+    },
+    CURLOPT_WRITEFUNCTION=>function($ch,$chunk) use (&$body,$maxBytes){
+      $remaining=$maxBytes-strlen($body);
+      if($remaining<=0) return 0;
+      $take=substr($chunk,0,$remaining);
+      $body.=$take;
+      return strlen($chunk);
+    }
+  ]);
+  $ok=curl_exec($ch); $errno=curl_errno($ch); $err=curl_error($ch); $info=curl_getinfo($ch); curl_close($ch);
+  if ($ok===false && $errno!==23) out(['error'=>'Request failed: '.$err],502);
+  return ['url'=>$url,'status'=>(int)($info['http_code']??0),'content_type'=>$info['content_type']??null,'headers'=>$headers,'body'=>$body,'truncated'=>strlen($body)>=$maxBytes];
+}
