@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Base64 Encoder & Decoder — Encode and Decode Base64 Online | Smart Web Utility</title>
+  <meta name="description" content="Free Base64 encoder and decoder with UTF-8 and URL-safe Base64 support. Encode or decode text instantly in your browser with no upload or signup.">
+  <link rel="canonical" href="https://smartwebutility.com/base64-encoder-decoder/">
+  <meta property="og:title" content="Base64 Encoder & Decoder | Smart Web Utility">
+  <meta property="og:description" content="Encode and decode Base64 text instantly in your browser, including UTF-8 and URL-safe Base64.">
+  <meta property="og:url" content="https://smartwebutility.com/base64-encoder-decoder/">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#07101b">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Base64 Encoder & Decoder","url":"https://smartwebutility.com/base64-encoder-decoder/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Encode Base64","Decode Base64","UTF-8 support","URL-safe Base64"]}</script>
+</head>
+<body>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav><a href="/#tools">Tools</a><a href="/json-formatter/">JSON</a><a href="/dns-checker/">DNS</a></nav></div></header>
+
+<main>
+  <section class="tool-hero wrap json-tool-hero">
+    <div class="crumb"><a href="/">Home</a><span>/</span><span>Base64 Encoder & Decoder</span></div>
+    <span class="kicker">Developer tool · runs locally</span>
+    <h1>Base64 Encoder & Decoder</h1>
+    <p class="lead compact">Encode text to Base64 or decode Base64 back to UTF-8 text. Everything runs locally in your browser.</p>
+
+    <div class="json-toolbar" aria-label="Base64 options">
+      <label class="file-btn">Mode
+        <select id="base64Mode" aria-label="Base64 mode">
+          <option value="encode">Encode</option>
+          <option value="decode">Decode</option>
+        </select>
+      </label>
+      <label class="file-btn"><input id="urlSafe" type="checkbox"> URL-safe Base64</label>
+      <button class="btn primary" id="runBase64" type="button">Process</button>
+      <button class="btn ghost" id="swapBase64" type="button">Swap & Reverse</button>
+      <button class="text-btn" id="exampleBase64" type="button">Example</button>
+      <button class="text-btn" id="clearBase64" type="button">Clear</button>
+    </div>
+
+    <div class="json-workspace">
+      <section class="editor-panel">
+        <div class="editor-head"><div><strong>Input</strong><span>Text or Base64</span></div></div>
+        <textarea id="base64Input" class="code-editor" spellcheck="false" autocapitalize="none" autocomplete="off" placeholder="Enter text or Base64 here" aria-label="Base64 input"></textarea>
+      </section>
+
+      <section class="editor-panel">
+        <div class="editor-head"><div><strong>Output</strong><span id="base64Status" data-kind="neutral">Ready</span></div><div class="editor-actions"><button id="copyBase64" class="text-btn" type="button">Copy</button><button id="downloadBase64" class="text-btn" type="button">Download</button></div></div>
+        <textarea id="base64Output" class="code-editor" spellcheck="false" readonly placeholder="Result will appear here" aria-label="Base64 output"></textarea>
+      </section>
+    </div>
+
+    <div id="base64Error" class="error" hidden role="alert"></div>
+    <div class="trustbar"><span>Browser-side processing</span><span>UTF-8 support</span><span>URL-safe mode</span></div>
+  </section>
+
+  <section class="section wrap prose">
+    <h2>Encode Base64 online</h2>
+    <p>Use Encode mode to convert regular UTF-8 text into Base64. This is useful when working with APIs, authorization headers, data payloads, configuration values and other systems that represent binary or text data using Base64.</p>
+
+    <h2>Decode Base64 online</h2>
+    <p>Use Decode mode to convert valid Base64 back to readable UTF-8 text. Invalid Base64 input is rejected instead of silently producing corrupted output.</p>
+
+    <div class="info-grid">
+      <article><h3>UTF-8 aware</h3><p>Handles Unicode characters correctly, including non-Latin text and emoji.</p></article>
+      <article><h3>URL-safe Base64</h3><p>Supports the URL-safe alphabet that uses <code>-</code> and <code>_</code> and commonly omits padding.</p></article>
+      <article><h3>Private by design</h3><p>Your input is processed in JavaScript and is not submitted to a Smart Web Utility API.</p></article>
+      <article><h3>Fast workflow</h3><p>Copy, download, swap direction and process with Ctrl/⌘ + Enter.</p></article>
+    </div>
+
+    <h2>Related tools</h2>
+    <div class="related-tools">
+      <a href="/json-formatter/">JSON Formatter<span>Format, validate and minify JSON.</span></a>
+      <a href="/http-status-checker/">HTTP Status Checker<span>Inspect HTTP responses.</span></a>
+      <a href="/dns-checker/">DNS Checker<span>Lookup common DNS records.</span></a>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility</span><div class="footer-links"><a href="/">All tools</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script src="/assets/base64.js" defer></script>
+</body>
+</html>
