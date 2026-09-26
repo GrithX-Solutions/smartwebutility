@@ -39,14 +39,14 @@ Completed in the repository:
 - [x] No AdSense script, ca-pub ID or ad unit is present before account details are known.
 - [x] No placeholder ads.txt publisher ID is published.
 - [x] Privacy Policy includes Google advertising-cookie and personalized-ad choice disclosures for future AdSense use.
-- [x] Performance baseline is strong in the current PageSpeed audit (desktop and mobile).
+- [x] Performance baseline is strong in the current PageSpeed audit (desktop and mobile).\n- [x] Google Analytics 4 measurement ID G-TKF8FWKQN6 is installed globally through the shared theme script.\n- [x] Analytics consent defaults are restricted for EEA/UK/Switzerland, while ad storage and ad personalization remain denied site-wide until a CMP/AdSense flow is enabled.
 
 External/account actions still required:
-- [ ] Confirm the latest main branch is deployed to production.
-- [ ] Verify Google Search Console ownership.
-- [ ] Submit https://smartwebutility.com/sitemap.xml in Search Console.
+- [x] Latest main branch deployment confirmed by the site owner.
+- [x] Google Search Console ownership configured.
+- [x] https://smartwebutility.com/sitemap.xml submitted in Google Search Console.
 - [ ] Inspect the homepage and priority tool URLs in Search Console and request indexing where appropriate.
-- [ ] Add/import the site in Bing Webmaster Tools and submit the sitemap.
+- [x] Bing Webmaster Tools configured and sitemap submitted.
 - [ ] Confirm priority pages are indexed before the AdSense application.
 - [ ] Add smartwebutility.com to the AdSense Sites list.
 - [ ] Use the exact AdSense verification method/code supplied for this account.
