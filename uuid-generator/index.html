@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UUID Generator — Generate UUID v4 Online | Smart Web Utility</title>
+  <meta name="description" content="Free UUID v4 generator. Create one or hundreds of cryptographically random UUIDs in your browser, with uppercase and hyphen options.">
+  <link rel="canonical" href="https://smartwebutility.com/uuid-generator/">
+  <meta property="og:title" content="UUID Generator | Smart Web Utility">
+  <meta property="og:description" content="Generate secure UUID v4 values instantly in your browser.">
+  <meta property="og:url" content="https://smartwebutility.com/uuid-generator/">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#07101b">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"UUID Generator","url":"https://smartwebutility.com/uuid-generator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["UUID v4 generation","Bulk UUID generation","Uppercase option","Hyphen toggle","Copy UUIDs","Download UUIDs"]}</script>
+</head>
+<body>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav><a href="/#tools">Tools</a><a href="/json-formatter/">JSON</a><a href="/unix-timestamp-converter/">Timestamp</a></nav></div></header>
+
+<main>
+  <section class="tool-hero wrap json-tool-hero">
+    <div class="crumb"><a href="/">Home</a><span>/</span><span>UUID Generator</span></div>
+    <span class="kicker">Developer tool · runs locally</span>
+    <h1>UUID Generator</h1>
+    <p class="lead compact">Generate secure UUID v4 identifiers instantly in your browser. Create one UUID or a bulk list for development, testing and data generation.</p>
+
+    <div class="json-toolbar">
+      <label class="file-btn">Count
+        <input id="uuidCount" type="number" min="1" max="500" value="10" style="width:82px;margin-left:8px">
+      </label>
+      <label class="file-btn"><input id="uuidUppercase" type="checkbox"> Uppercase</label>
+      <label class="file-btn"><input id="uuidHyphens" type="checkbox" checked> Hyphens</label>
+      <button class="btn primary" id="generateUuid" type="button">Generate UUIDs</button>
+      <button class="text-btn" id="clearUuid" type="button">Clear</button>
+      <span id="uuidStatus" data-kind="neutral">Ready</span>
+    </div>
+
+    <section class="editor-panel" style="margin-top:14px">
+      <div class="editor-head">
+        <div><strong>UUID v4 output</strong><span>One UUID per line</span></div>
+        <div class="editor-actions"><button id="copyUuid" class="text-btn" type="button">Copy</button><button id="downloadUuid" class="text-btn" type="button">Download</button></div>
+      </div>
+      <textarea id="uuidOutput" class="code-editor" spellcheck="false" readonly aria-label="Generated UUIDs"></textarea>
+    </section>
+
+    <div id="uuidError" class="error" hidden role="alert"></div>
+    <div class="trustbar"><span>Cryptographic randomness</span><span>Bulk generation</span><span>No server request</span></div>
+  </section>
+
+  <section class="section wrap prose">
+    <h2>Generate UUID v4 identifiers</h2>
+    <p>UUID v4 values are 128-bit identifiers generated from random data. They are widely used for database keys, request IDs, test fixtures, distributed systems and other cases where globally unique identifiers are useful without coordinating a central counter.</p>
+
+    <div class="info-grid">
+      <article><h3>Version 4 UUIDs</h3><p>This tool generates standards-compatible random UUID v4 values with the correct version and variant bits.</p></article>
+      <article><h3>Bulk generation</h3><p>Create up to 500 UUIDs at once and copy or download them as plain text.</p></article>
+      <article><h3>Format options</h3><p>Switch between lowercase and uppercase and optionally remove hyphens from the output.</p></article>
+      <article><h3>Private by design</h3><p>Generation uses the browser's cryptographic random-number API and does not send UUID requests to the server.</p></article>
+    </div>
+
+    <h2>Related tools</h2>
+    <div class="related-tools">
+      <a href="/unix-timestamp-converter/">Unix Timestamp Converter<span>Convert epoch values and dates.</span></a>
+      <a href="/base64-encoder-decoder/">Base64 Encoder / Decoder<span>Encode and decode Base64 text.</span></a>
+      <a href="/json-formatter/">JSON Formatter<span>Format and validate JSON.</span></a>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility</span><div class="footer-links"><a href="/">All tools</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script src="/assets/uuid.js" defer></script>
+</body>
+</html>
