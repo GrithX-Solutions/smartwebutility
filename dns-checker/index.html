@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DNS Checker — A, MX, TXT, CNAME, NS Lookup | Smart Web Utility</title>
-  <meta name="description" content="Free DNS checker for A, AAAA, MX, TXT, CNAME, NS and CAA records. Check live DNS records instantly with no signup.">
+  <title>DNS Checker — A, AAAA, MX, TXT, CNAME, NS & CAA Lookup | Smart Web Utility</title>
+  <meta name="description" content="Check DNS records online for A, AAAA, MX, TXT, CNAME, NS and CAA. See current answers and TTL values from a public recursive resolver.">
   <link rel="canonical" href="https://smartwebutility.com/dns-checker/">
   <meta property="og:title" content="Free DNS Checker | Smart Web Utility">
   <meta property="og:description" content="Check A, AAAA, MX, TXT, CNAME, NS and CAA records instantly.">
@@ -13,7 +13,7 @@
   <meta name="theme-color" content="#07101b">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"DNS Checker","url":"https://smartwebutility.com/dns-checker/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"DNS Checker","url":"https://smartwebutility.com/dns-checker/","description":"Check public DNS records and TTL values for A, AAAA, MX, TXT, CNAME, NS and CAA record types.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["A record lookup","AAAA record lookup","MX record lookup","TXT record lookup","CNAME record lookup","NS record lookup","CAA record lookup","TTL display"]}</script>
 </head>
 <body>
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
@@ -37,16 +37,52 @@
     <div id="error" class="error" hidden role="alert"></div>
   </section>
 
-  <section class="section wrap prose">
-    <h2>What this DNS checker does</h2>
-    <p>Enter a domain and choose a record type. The lookup is sent over HTTPS to a public recursive DNS resolver and the returned records are displayed with TTL values when available.</p>
-    <div class="info-grid"><article><h3>A / AAAA</h3><p>Find IPv4 and IPv6 addresses for a hostname.</p></article><article><h3>MX</h3><p>See which mail servers receive email for the domain.</p></article><article><h3>TXT</h3><p>Inspect SPF, verification and other text-based DNS records.</p></article><article><h3>NS / CNAME / CAA</h3><p>Review nameservers, aliases and certificate-authority policy.</p></article></div>
-    <h2>Why DNS checks matter</h2>
-    <p>DNS changes, email configuration, CDN migrations and SSL validation all depend on the right records being published. A quick lookup helps confirm what a recursive resolver currently sees.</p>
-    <h2>Related website tools</h2><div class="related-tools"><a href="/ssl-checker/">SSL Checker<span>Inspect HTTPS certificate validity and expiry.</span></a><a href="/http-status-checker/">HTTP Status Checker<span>Check HTTP status and response headers.</span></a><a href="/redirect-checker/">Redirect Checker<span>Trace each redirect hop.</span></a></div><h2>DNS record types supported</h2>
-    <p>This tool supports A, AAAA, MX, TXT, CNAME, NS and CAA lookups. It is intended for quick diagnostics and validation, not as a substitute for authoritative DNS administration.</p>
-  </section>
-<section class="section alt" data-quality-content="v1"><div class="wrap prose"><h2>How to use DNS lookup results</h2><p>DNS records control how a domain connects to websites, email services and other internet systems. An A record points a hostname to an IPv4 address, while AAAA provides the IPv6 equivalent. MX records identify mail servers, TXT records commonly carry verification or email-authentication data, and NS records identify authoritative name servers.</p><h2>Common troubleshooting scenarios</h2><p>If a website works from one network but not another, compare the expected A or AAAA value with the returned record. For email-delivery issues, review MX and relevant TXT records. After a DNS change, remember that recursive resolvers can continue serving cached values until their TTL expires.</p><h2>Limitations</h2><p>A DNS lookup shows what a resolver can currently see; it does not guarantee that every resolver worldwide has the same cached answer. For comparison across resolvers, use the DNS Propagation Checker.</p><h2>Frequently asked questions</h2><h3>Why does DNS still show an old IP?</h3><p>Cached records can remain visible until their TTL expires. Registrar, authoritative DNS and recursive resolver caches can also make changes appear at different times.</p><h3>Does a correct DNS record prove the website is online?</h3><p>No. DNS only maps names to records. The destination web server, TLS certificate and application must also be working.</p></div></section></main>
+<section class="section wrap prose">
+  <h2>Check the DNS records a public resolver can see</h2>
+  <p>Enter a domain, choose a record type and run the lookup. The browser sends a DNS-over-HTTPS query to Cloudflare's public recursive resolver and displays the returned answers together with TTL values when they are available.</p>
+  <div class="info-grid">
+    <article><h3>A and AAAA records</h3><p>A records map a hostname to an IPv4 address. AAAA records provide the IPv6 equivalent. Check these after a hosting, CDN or server-IP change.</p></article>
+    <article><h3>MX records</h3><p>MX records identify the mail exchangers responsible for receiving email for a domain. Their priorities help determine which mail server is preferred.</p></article>
+    <article><h3>TXT records</h3><p>TXT records commonly carry SPF policies, ownership verification tokens and other service-specific text. A single domain can legitimately publish multiple TXT records.</p></article>
+    <article><h3>CNAME, NS and CAA</h3><p>CNAME creates an alias to another hostname, NS identifies authoritative nameservers, and CAA can restrict which certificate authorities may issue certificates for a domain.</p></article>
+  </div>
+
+  <h2>How to interpret DNS lookup results</h2>
+  <p>The <strong>Value</strong> column contains the answer returned for the selected record type. <strong>TTL</strong> is the time-to-live supplied with the answer: recursive resolvers may cache that record for up to that period before asking again. A low TTL can make planned migrations converge faster, while a previously cached record can still remain visible until its earlier TTL expires.</p>
+  <p>If no answer is returned, that does not always mean the entire domain is broken. The selected record type may simply not exist for that hostname. For example, a hostname can have an A record without having a CNAME record.</p>
+
+  <h2>DNS troubleshooting by task</h2>
+  <div class="info-grid">
+    <article><h3>Website points to the wrong server</h3><p>Check A and AAAA records and compare them with the expected hosting or CDN addresses. Also verify whether a CNAME is being used instead of a direct address record.</p></article>
+    <article><h3>Email is not being delivered</h3><p>Check MX records first, then review relevant TXT records such as SPF and provider verification records. Mail delivery can still fail for reasons outside DNS.</p></article>
+    <article><h3>SSL validation is failing</h3><p>Confirm the hostname resolves to the infrastructure where the certificate is installed. CAA records can also matter when a certificate authority is attempting issuance.</p></article>
+    <article><h3>Nameserver migration looks incomplete</h3><p>Review NS records and compare them with the nameservers configured at the registrar. Resolver caches can make old answers persist temporarily after a change.</p></article>
+  </div>
+
+  <h2>DNS lookup versus DNS propagation checking</h2>
+  <p>This DNS Checker answers from one public recursive resolver, which is useful for a fast, repeatable lookup. If you need to compare answers across independent resolvers after a DNS change, use the <a href="/dns-propagation-checker/">DNS Propagation Checker</a>. Different resolvers can temporarily show different cached values while TTLs expire.</p>
+
+  <h2>Limits of a DNS check</h2>
+  <p>A correct DNS answer confirms name-resolution data, not the health of the destination service. A website can have the correct A record while the web server is offline, and correct MX records do not prove that a mail server will accept or deliver a message. Use DNS together with HTTP, SSL and service-specific diagnostics.</p>
+
+  <h2>Related website tools</h2>
+  <div class="related-tools">
+    <a href="/dns-propagation-checker/">DNS Propagation Checker<span>Compare DNS answers across independent resolvers.</span></a>
+    <a href="/ssl-checker/">SSL Checker<span>Check the certificate served by the resolved HTTPS endpoint.</span></a>
+    <a href="/http-status-checker/">HTTP Status Checker<span>Verify the destination responds over HTTP or HTTPS.</span></a>
+  </div>
+</section>
+<section class="section alt" data-quality-content="v2"><div class="wrap prose">
+  <h2>Frequently asked DNS questions</h2>
+  <h3>Why do I still see the old IP address after changing DNS?</h3>
+  <p>A recursive resolver may have cached the old answer before the change. It can continue serving that answer until the cached TTL expires. Local operating-system, browser and ISP caches can add another layer of delay.</p>
+  <h3>What is a DNS TTL?</h3>
+  <p>TTL means time to live. It tells recursive resolvers how long an answer may be cached before it should be refreshed. It is not a guarantee that every user will update at exactly the same second.</p>
+  <h3>Should a domain have both A and AAAA records?</h3>
+  <p>Only if the service is intentionally reachable over both IPv4 and IPv6. Publishing an AAAA record for an endpoint that is not correctly serving IPv6 can create connection problems for clients that prefer IPv6.</p>
+  <h3>Why can I have multiple MX or TXT records?</h3>
+  <p>Multiple MX records can provide prioritized mail destinations. TXT records are general-purpose and are commonly used by several independent services, so multiple TXT answers are normal.</p>
+</div></section></main>
 <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/">All tools</a><a href="/sitemap.xml">Sitemap</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></div></footer>
 <script src="/assets/dns.js" defer></script>
 </body>
