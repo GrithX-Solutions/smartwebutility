@@ -20,7 +20,15 @@
     });
     if(empty)empty.classList.toggle('show',shown===0);
   }
-  input.addEventListener('input',filter);
+  const params=new URLSearchParams(location.search);
+  if(params.get('q')) input.value=params.get('q');
+  input.addEventListener('input',()=>{
+    filter();
+    const url=new URL(location.href);
+    if(input.value.trim()) url.searchParams.set('q',input.value.trim()); else url.searchParams.delete('q');
+    history.replaceState(null,'',url.pathname+url.search+url.hash);
+  });
+  filter();
   document.addEventListener('keydown',e=>{
     if(e.key==='/' && document.activeElement!==input){e.preventDefault();input.focus();}
     if(e.key==='Escape' && document.activeElement===input){input.value='';filter();input.blur();}
