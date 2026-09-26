@@ -1,5 +1,6 @@
 <?php
 require __DIR__.'/common.php';
+rate_limit('page-inspect', 20, 60);
 $url=normalize_url($_GET['url'] ?? '');
 $mode=$_GET['mode'] ?? 'meta';
 $r=curl_body($url, 1048576);
