@@ -1,0 +1,29 @@
+name: Build deployment bundle
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Upload site bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: smartwebutility-site
+          path: |
+            .
+            !.git/**
+            !.github/**
+          include-hidden-files: true
+          retention-days: 3
+          if-no-files-found: error
