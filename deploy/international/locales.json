@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "sourceLocale": "en",
+  "xDefaultLocale": "en",
+  "locales": {
+    "en": {
+      "name": "English",
+      "nativeName": "English",
+      "direction": "ltr",
+      "prefix": "/"
+    },
+    "de": {
+      "name": "German",
+      "nativeName": "Deutsch",
+      "direction": "ltr",
+      "prefix": "/de/"
+    },
+    "es": {
+      "name": "Spanish",
+      "nativeName": "Español",
+      "direction": "ltr",
+      "prefix": "/es/"
+    },
+    "fr": {
+      "name": "French",
+      "nativeName": "Français",
+      "direction": "ltr",
+      "prefix": "/fr/"
+    },
+    "nl": {
+      "name": "Dutch",
+      "nativeName": "Nederlands",
+      "direction": "ltr",
+      "prefix": "/nl/"
+    },
+    "ar": {
+      "name": "Arabic",
+      "nativeName": "العربية",
+      "direction": "rtl",
+      "prefix": "/ar/"
+    }
+  },
+  "publishedPages": {}
+}
