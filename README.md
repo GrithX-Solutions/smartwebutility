@@ -17,6 +17,10 @@ Performance-first static website for https://smartwebutility.com.
 - `/url-encoder-decoder/` — encode and decode URLs and URL components.
 - `/html-entity-encoder-decoder/` — encode HTML entities and decode them back to text.
 - `/cron-expression-helper/` — explain common 5-field cron expressions and presets.
+- `/meta-tag-generator/` — generate essential SEO meta tags with a preview.
+- `/robots-txt-generator/` — create common robots.txt directives and sitemap references.
+- `/schema-markup-generator/` — generate basic JSON-LD Schema.org markup.
+- `/open-graph-preview/` — generate Open Graph tags and preview social metadata.
 
 ## Run locally
 ```bash
