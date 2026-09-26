@@ -1,5 +1,6 @@
 <?php
 require __DIR__.'/common.php';
+rate_limit('dns-propagation', 30, 60);
 $host=clean_host($_GET['host'] ?? '');
 $type=strtoupper($_GET['type'] ?? 'A');
 $allowed=['A','AAAA','MX','TXT','CNAME','NS','CAA'];
