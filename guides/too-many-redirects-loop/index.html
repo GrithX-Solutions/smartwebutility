@@ -1,0 +1,82 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ERR_TOO_MANY_REDIRECTS: Find & Fix Redirect Loops | Smart Web Utility</title><meta name="description" content="ERR_TOO_MANY_REDIRECTS usually means conflicting redirect rules. Trace the chain, identify the repeated URL, then fix HTTP/HTTPS, www, CDN, proxy or CMS conflicts."><link rel="canonical" href="https://smartwebutility.com/guides/too-many-redirects-loop/">
+<meta property="og:title" content="ERR_TOO_MANY_REDIRECTS: How to Find and Fix a Redirect Loop"><meta property="og:description" content="Trace the redirect chain first, then fix the exact pair of rules sending requests in circles."><meta property="og:url" content="https://smartwebutility.com/guides/too-many-redirects-loop/"><meta property="og:type" content="article">
+<meta name="theme-color" content="#0b1120"><link rel="icon" href="/favicon-64.png" sizes="64x64" type="image/png"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="manifest" href="/site.webmanifest">
+<script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"ERR_TOO_MANY_REDIRECTS: How to Find and Fix a Redirect Loop","description":"A practical workflow for tracing redirect loops caused by conflicting HTTP/HTTPS, www/non-www, proxy, CDN, CMS and application rules.","url":"https://smartwebutility.com/guides/too-many-redirects-loop/","datePublished":"2026-09-27","dateModified":"2026-09-27","author":{"@type":"Organization","@id":"https://smartwebutility.com/#organization","name":"Smart Web Utility","url":"https://smartwebutility.com/"},"publisher":{"@type":"Organization","@id":"https://smartwebutility.com/#organization","name":"Smart Web Utility","url":"https://smartwebutility.com/"},"mainEntityOfPage":"https://smartwebutility.com/guides/too-many-redirects-loop/"}</script>
+</head><body><header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+<main><section class="tool-hero wrap"><div class="crumb"><a href="/">Home</a><span>/</span><a href="/guides/">Guides</a><span>/</span><span>Redirect Loop</span></div><span class="kicker">HTTP troubleshooting guide</span><h1>ERR_TOO_MANY_REDIRECTS: How to Find and Fix a Redirect Loop</h1><p class="lead compact">A redirect loop happens when one response sends the client to another URL that eventually sends it back to a URL already visited. The browser keeps following redirects until it gives up with an error such as ERR_TOO_MANY_REDIRECTS.</p></section>
+<section class="section wrap prose" data-quality-content="v2">
+  <h2>Start by tracing the redirect chain</h2>
+  <p>Do not begin by clearing caches or changing several settings at once. First run the failing URL through the <a href="/redirect-checker/">Redirect Checker</a>. Smart Web Utility follows HTTP <code>301</code>, <code>302</code>, <code>303</code>, <code>307</code> and <code>308</code> responses, records each <code>Location</code> target, and stops when it reaches a non-redirect response, detects a repeated URL, or reaches its ten-step safety limit.</p>
+  <p>The goal is to identify the first repeated state. If the chain alternates between <code>http://example.com</code> and <code>https://example.com</code>, the conflict is scheme handling. If it alternates between <code>www.example.com</code> and <code>example.com</code>, host canonicalization rules disagree. A larger cycle can point to application routes, locale rules or proxy behavior.</p>
+
+  <h2>Common redirect-loop patterns</h2>
+  <div class="info-grid">
+    <article><h3>HTTP ↔ HTTPS</h3><p>A proxy or CDN reaches the origin over HTTP while the origin forces HTTPS, then another layer converts the request back to HTTP. Cloudflare documents this as a classic loop when Flexible encryption conflicts with an origin HTTPS redirect.</p></article>
+    <article><h3>www ↔ non-www</h3><p>One layer redirects <code>www</code> to the apex while another redirects the apex back to <code>www</code>. Only one canonical hostname policy should win.</p></article>
+    <article><h3>CDN ↔ origin</h3><p>The edge normalizes a URL one way while the origin or application rewrites it back. This commonly happens when forwarded scheme/host headers are not interpreted consistently.</p></article>
+    <article><h3>Application/CMS loop</h3><p>WordPress, frameworks, authentication middleware, locale rules or plugins can redirect based on state that another layer immediately reverses.</p></article>
+  </div>
+
+  <h2>Step 1: separate the browser symptom from the HTTP evidence</h2>
+  <p>A browser error tells you that too many redirects occurred, but it does not tell you which rule created the cycle. Use the redirect chain to record the sequence of status codes, URLs and <code>Location</code> headers. The <a href="/http-header-checker/">HTTP Header Checker</a> is useful when you need to inspect the response headers for a particular hop.</p>
+  <p>Be careful with cached permanent redirects. A browser may remember a previous <code>301</code> and appear to behave differently from a fresh server-side request. Compare the live HTTP chain with a private browser session or developer tools before assuming the current origin still sends the same redirect.</p>
+
+  <h2>Step 2: check HTTP/HTTPS ownership</h2>
+  <p>Choose where HTTPS enforcement belongs and avoid contradictory rules. If a CDN or reverse proxy terminates TLS, make sure the origin can tell that the original visitor connection was HTTPS—typically through trusted forwarded-protocol information—and does not blindly redirect because the proxy-to-origin connection itself is HTTP.</p>
+  <p>Cloudflare's current SSL/TLS documentation specifically warns that Flexible mode can create a loop when the origin redirects every HTTP request to HTTPS. In Full or Full (strict), the edge connects to the origin over HTTPS instead. The exact fix depends on the platform, but the principle is the same: the edge and origin must agree about the scheme.</p>
+
+  <h2>Step 3: choose one canonical hostname</h2>
+  <p>If both <code>www</code> and non-<code>www</code> are public entry points, select one canonical destination and make every redirect rule point in that direction. Do not configure an edge rule for <code>www → apex</code> while the application has <code>apex → www</code>.</p>
+  <p>Test four starting URLs independently when relevant: HTTP apex, HTTPS apex, HTTP www and HTTPS www. The intended setup usually converges all four to one canonical HTTPS URL without cycling.</p>
+
+  <h2>Step 4: inspect proxy and application assumptions</h2>
+  <p>Reverse proxies, load balancers and CDNs often pass the original hostname and scheme through headers. An application that does not trust or interpret those headers correctly may think every request arrived on the wrong scheme or hostname and issue another redirect.</p>
+  <p>Authentication and session middleware can create a different class of loop: protected page → login → callback → protected page → login. That loop may depend on cookies, SameSite behavior, hostnames or session state rather than a static web-server rule.</p>
+
+  <h2>Step 5: change one redirect layer at a time</h2>
+  <p>Once the repeated pair or cycle is visible, disable or correct the conflicting rule and test again. Avoid changing CDN settings, web-server rewrites and CMS configuration simultaneously. A single-variable test preserves evidence and reduces the chance of creating a second problem.</p>
+
+  <h2>What the Redirect Checker can and cannot prove</h2>
+  <p>The checker sends server-side header requests and follows supported HTTP redirect status codes for up to ten request steps. It can identify a repeated URL visible to that client and show the <code>Location</code> chain. It does not execute JavaScript and does not reproduce every browser cookie, authentication state, user agent, geography, experiment bucket or bot-protection rule.</p>
+  <p>Because some applications respond differently to <code>HEAD</code> and <code>GET</code>, a browser can occasionally see a redirect path that differs from this checker. When results disagree, use browser developer tools or an application-aware client to capture the exact session-specific requests.</p>
+
+  <h2>Diagnostic patterns</h2>
+  <table class="record-table">
+    <thead><tr><th>Observed chain</th><th>Likely conflict</th><th>Check next</th></tr></thead>
+    <tbody>
+      <tr><td>http → https → http</td><td>Proxy/CDN and origin disagree on scheme.</td><td>TLS mode, HTTPS enforcement, forwarded-proto handling.</td></tr>
+      <tr><td>www → apex → www</td><td>Conflicting canonical-host rules.</td><td>CDN redirect rule, web server, CMS site URL.</td></tr>
+      <tr><td>/login → /app → /login</td><td>Authentication/session loop.</td><td>Cookie domain, callback URL, session persistence.</td></tr>
+      <tr><td>/a → /b → /c → /a</td><td>Multiple rewrite rules form a cycle.</td><td>Trace the rule responsible for each hop.</td></tr>
+      <tr><td>Checker is clean, browser loops</td><td>Client/session-specific redirect or cached redirect.</td><td>Browser network panel, cookies, private session, service worker.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Frequently asked questions</h2>
+  <h3>Does clearing cookies fix ERR_TOO_MANY_REDIRECTS?</h3>
+  <p>Sometimes, when the loop depends on authentication or session state. It will not fix a deterministic server/CDN redirect conflict. Trace the chain first so you know whether cookies are relevant.</p>
+  <h3>Can HSTS cause a redirect loop?</h3>
+  <p>HSTS makes compliant browsers upgrade HTTP to HTTPS before the HTTP request is sent. A conflicting origin or proxy rule that tries to force HTTPS traffic back to HTTP can then create repeated scheme changes or make the site inaccessible.</p>
+  <h3>Can two 301 rules loop forever?</h3>
+  <p>Yes. Status code permanence does not prevent a cycle. If URL A permanently redirects to B and B redirects back to A, clients still have no stable destination.</p>
+  <h3>Should I remove all redirects?</h3>
+  <p>No. Redirects are useful for HTTPS enforcement, canonical hostnames and moved URLs. The goal is to remove conflicting rules and keep the path to the final destination as direct as practical.</p>
+
+  <h2>Related tools and guides</h2>
+  <div class="related-tools">
+    <a href="/redirect-checker/">Redirect Checker<span>Trace each supported HTTP redirect hop and its Location target.</span></a>
+    <a href="/http-status-checker/">HTTP Status Checker<span>Inspect the first response without automatically following the redirect.</span></a>
+    <a href="/http-header-checker/">HTTP Header Checker<span>Review Location and proxy/cache headers for a specific hop.</span></a>
+    <a href="/ssl-checker/">SSL Checker<span>Verify the public certificate when HTTPS configuration is part of the loop.</span></a>
+  </div>
+
+  <h2>Technical references</h2>
+  <div class="related-tools">
+    <a href="https://developers.cloudflare.com/ssl/troubleshooting/too-many-redirects/" rel="noopener">Cloudflare: ERR_TOO_MANY_REDIRECTS<span>Current examples of scheme, TLS mode and redirect-rule loops.</span></a>
+    <a href="https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/flexible/" rel="noopener">Cloudflare: Flexible encryption<span>Why Flexible plus an origin HTTPS redirect can form a loop.</span></a>
+    <a href="/methodology/">Smart Web Utility methodology<span>How diagnostic claims, limitations and research standards are handled.</span></a>
+  </div>
+</section></main><footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer></body></html>
