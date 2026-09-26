@@ -21,6 +21,11 @@ Performance-first static website for https://smartwebutility.com.
 - `/robots-txt-generator/` — create common robots.txt directives and sitemap references.
 - `/schema-markup-generator/` — generate basic JSON-LD Schema.org markup.
 - `/open-graph-preview/` — generate Open Graph tags and preview social metadata.
+- `/sitemap-checker/` — validate XML sitemaps and sitemap indexes.
+- `/meta-tag-checker/` — inspect title, description, canonical, robots and H1 metadata.
+- `/open-graph-checker/` — inspect Open Graph metadata on public pages.
+- `/http-header-checker/` — inspect HTTP response headers, status, IP and timing.
+- `/dns-propagation-checker/` — compare DNS answers across independent resolvers.
 
 ## Run locally
 ```bash
