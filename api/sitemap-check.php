@@ -1,5 +1,6 @@
 <?php
 require __DIR__.'/common.php';
+rate_limit('sitemap-check', 15, 60);
 $url=normalize_url($_GET['url'] ?? '');
 $r=curl_body($url, 2097152);
 if($r['status']<200 || $r['status']>=400) out(['error'=>'Sitemap returned HTTP '.$r['status']],502);
