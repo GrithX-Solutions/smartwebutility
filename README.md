@@ -13,6 +13,10 @@ Performance-first static website for https://smartwebutility.com.
 - `/uuid-generator/` — generate secure UUID v4 values individually or in bulk.
 - `/hash-generator/` — generate SHA-1, SHA-256, SHA-384 and SHA-512 hashes for text or files.
 - `/jwt-decoder/` — decode JWT headers, payloads and standard claims locally in the browser.
+- `/regex-tester/` — test JavaScript regular expressions, capture groups and replacements.
+- `/url-encoder-decoder/` — encode and decode URLs and URL components.
+- `/html-entity-encoder-decoder/` — encode HTML entities and decode them back to text.
+- `/cron-expression-helper/` — explain common 5-field cron expressions and presets.
 
 ## Run locally
 ```bash
