@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hash Generator — SHA-1, SHA-256, SHA-384, SHA-512 | Smart Web Utility</title>
+  <meta name="description" content="Free online hash generator for SHA-1, SHA-256, SHA-384 and SHA-512. Hash text or files locally in your browser with no upload required.">
+  <link rel="canonical" href="https://smartwebutility.com/hash-generator/">
+  <meta property="og:title" content="Hash Generator | Smart Web Utility">
+  <meta property="og:description" content="Generate SHA-1, SHA-256, SHA-384 and SHA-512 hashes for text or files directly in your browser.">
+  <meta property="og:url" content="https://smartwebutility.com/hash-generator/">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#07101b">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Hash Generator","url":"https://smartwebutility.com/hash-generator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["SHA-1","SHA-256","SHA-384","SHA-512","Text hashing","File hashing"]}</script>
+</head>
+<body>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav><a href="/#tools">Tools</a><a href="/uuid-generator/">UUID</a><a href="/json-formatter/">JSON</a></nav></div></header>
+
+<main>
+  <section class="tool-hero wrap json-tool-hero">
+    <div class="crumb"><a href="/">Home</a><span>/</span><span>Hash Generator</span></div>
+    <span class="kicker">Developer tool · runs locally</span>
+    <h1>Hash Generator</h1>
+    <p class="lead compact">Generate SHA-1, SHA-256, SHA-384 or SHA-512 hashes for text and files directly in your browser.</p>
+
+    <div class="json-toolbar">
+      <label class="file-btn">Algorithm
+        <select id="hashAlgorithm" aria-label="Hash algorithm">
+          <option value="SHA-256">SHA-256</option>
+          <option value="SHA-1">SHA-1</option>
+          <option value="SHA-384">SHA-384</option>
+          <option value="SHA-512">SHA-512</option>
+        </select>
+      </label>
+      <label class="file-btn"><input id="hashUppercase" type="checkbox"> Uppercase output</label>
+      <label class="file-btn">Hash file<input id="hashFile" type="file" hidden></label>
+      <button class="btn primary" id="generateHash" type="button">Generate Hash</button>
+      <button class="text-btn" id="exampleHash" type="button">Example</button>
+      <button class="text-btn" id="clearHash" type="button">Clear</button>
+      <span id="hashStatus" data-kind="neutral">Ready</span>
+    </div>
+
+    <div class="json-workspace">
+      <section class="editor-panel">
+        <div class="editor-head"><div><strong>Text input</strong><span>UTF-8 text</span></div></div>
+        <textarea id="hashInput" class="code-editor" spellcheck="false" autocapitalize="none" autocomplete="off" placeholder="Enter text to hash" aria-label="Text to hash"></textarea>
+      </section>
+
+      <section class="editor-panel">
+        <div class="editor-head">
+          <div><strong>Hash output</strong><span>Hexadecimal digest</span></div>
+          <div class="editor-actions"><button id="copyHash" class="text-btn" type="button">Copy</button></div>
+        </div>
+        <textarea id="hashOutput" class="code-editor" spellcheck="false" readonly placeholder="Hash will appear here" aria-label="Hash output"></textarea>
+      </section>
+    </div>
+
+    <div id="hashError" class="error" hidden role="alert"></div>
+    <div class="trustbar"><span>Text & file hashing</span><span>Web Crypto API</span><span>No file upload</span></div>
+  </section>
+
+  <section class="section wrap prose">
+    <h2>Generate SHA hashes online</h2>
+    <p>This tool uses your browser's Web Crypto API to calculate cryptographic digests. You can hash UTF-8 text or select a local file. File contents are read and hashed in the browser and are not uploaded to Smart Web Utility.</p>
+
+    <div class="info-grid">
+      <article><h3>SHA-256</h3><p>A widely used 256-bit cryptographic hash for integrity checks, APIs and security workflows.</p></article>
+      <article><h3>SHA-512</h3><p>A SHA-2 family hash with a 512-bit output, useful where a longer digest is preferred.</p></article>
+      <article><h3>SHA-1</h3><p>Included for legacy compatibility and checksum workflows. It should not be used for modern collision-resistant security designs.</p></article>
+      <article><h3>Local file hashing</h3><p>Select a file and generate its hash without sending the file to a server.</p></article>
+    </div>
+
+    <h2>Related tools</h2>
+    <div class="related-tools">
+      <a href="/uuid-generator/">UUID Generator<span>Generate random UUID v4 identifiers.</span></a>
+      <a href="/base64-encoder-decoder/">Base64 Encoder / Decoder<span>Encode and decode Base64 text.</span></a>
+      <a href="/json-formatter/">JSON Formatter<span>Format and validate JSON.</span></a>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility</span><div class="footer-links"><a href="/">All tools</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script src="/assets/hash.js" defer></script>
+</body>
+</html>
