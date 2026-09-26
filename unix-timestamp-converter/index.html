@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Unix Timestamp Converter — Epoch to Date & Date to Unix | Smart Web Utility</title>
+  <meta name="description" content="Free Unix timestamp converter. Convert epoch seconds or milliseconds to date and time, or convert a date to Unix time. UTC, local time and ISO 8601 included.">
+  <link rel="canonical" href="https://smartwebutility.com/unix-timestamp-converter/">
+  <meta property="og:title" content="Unix Timestamp Converter | Smart Web Utility">
+  <meta property="og:description" content="Convert Unix epoch seconds or milliseconds to human-readable dates and convert dates back to Unix timestamps.">
+  <meta property="og:url" content="https://smartwebutility.com/unix-timestamp-converter/">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#07101b">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Unix Timestamp Converter","url":"https://smartwebutility.com/unix-timestamp-converter/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Unix seconds to date","Unix milliseconds to date","Date to Unix timestamp","UTC output","ISO 8601 output"]}</script>
+</head>
+<body>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav><a href="/#tools">Tools</a><a href="/json-formatter/">JSON</a><a href="/base64-encoder-decoder/">Base64</a></nav></div></header>
+
+<main>
+  <section class="tool-hero wrap json-tool-hero">
+    <div class="crumb"><a href="/">Home</a><span>/</span><span>Unix Timestamp Converter</span></div>
+    <span class="kicker">Developer tool · runs locally</span>
+    <h1>Unix Timestamp Converter</h1>
+    <p class="lead compact">Convert Unix epoch seconds or milliseconds to readable dates, or convert a date and time back to Unix timestamps.</p>
+
+    <div class="json-toolbar">
+      <button class="btn primary" id="timestampNow" type="button">Use Current Time</button>
+      <button class="text-btn" id="clearTimestamp" type="button">Clear</button>
+      <span id="timestampStatus" data-kind="neutral">Ready</span>
+    </div>
+
+    <div class="json-workspace">
+      <section class="editor-panel">
+        <div class="editor-head"><div><strong>Unix → Date</strong><span>Epoch seconds or milliseconds</span></div></div>
+        <div style="padding:16px">
+          <label class="sr-only" for="unixInput">Unix timestamp</label>
+          <input id="unixInput" class="code-editor" style="height:auto;min-height:58px;resize:none" inputmode="numeric" autocomplete="off" placeholder="e.g. 1769438400">
+          <div class="json-toolbar">
+            <label class="file-btn">Unit
+              <select id="unixUnit">
+                <option value="auto">Auto detect</option>
+                <option value="seconds">Seconds</option>
+                <option value="milliseconds">Milliseconds</option>
+              </select>
+            </label>
+            <button class="btn primary" id="convertUnix" type="button">Convert to Date</button>
+          </div>
+        </div>
+        <div class="result-card" style="margin:0;border-left:0;border-right:0;border-bottom:0;border-radius:0">
+          <div class="result-head"><strong>Date output</strong><button id="copyDateResult" class="text-btn" type="button">Copy</button></div>
+          <div id="dateResult"></div>
+        </div>
+      </section>
+
+      <section class="editor-panel">
+        <div class="editor-head"><div><strong>Date → Unix</strong><span>Uses your browser's local timezone</span></div></div>
+        <div style="padding:16px">
+          <label class="sr-only" for="dateInput">Date and time</label>
+          <input id="dateInput" class="code-editor" style="height:auto;min-height:58px;resize:none" type="datetime-local" step="1">
+          <div class="json-toolbar">
+            <button class="btn primary" id="convertDate" type="button">Convert to Unix</button>
+          </div>
+        </div>
+        <div class="result-card" style="margin:0;border-left:0;border-right:0;border-bottom:0;border-radius:0">
+          <div class="result-head"><strong>Unix output</strong><button id="copyUnixResult" class="text-btn" type="button">Copy</button></div>
+          <div id="unixResult"></div>
+        </div>
+      </section>
+    </div>
+
+    <div id="timestampError" class="error" hidden role="alert"></div>
+    <div class="trustbar"><span>Seconds & milliseconds</span><span>UTC & local time</span><span>No server upload</span></div>
+  </section>
+
+  <section class="section wrap prose">
+    <h2>What is a Unix timestamp?</h2>
+    <p>A Unix timestamp represents a point in time as the number of seconds since 00:00:00 UTC on January 1, 1970. Many systems also use milliseconds, especially JavaScript APIs and event logs.</p>
+
+    <div class="info-grid">
+      <article><h3>Seconds</h3><p>Traditional Unix time is stored as whole seconds since the Unix epoch.</p></article>
+      <article><h3>Milliseconds</h3><p>JavaScript's Date object and many APIs use milliseconds since the epoch.</p></article>
+      <article><h3>UTC output</h3><p>See the same instant rendered in Coordinated Universal Time.</p></article>
+      <article><h3>Local output</h3><p>See the converted date in the timezone configured in your browser.</p></article>
+    </div>
+
+    <h2>Related tools</h2>
+    <div class="related-tools">
+      <a href="/base64-encoder-decoder/">Base64 Encoder / Decoder<span>Encode and decode UTF-8 Base64.</span></a>
+      <a href="/json-formatter/">JSON Formatter<span>Format and validate JSON.</span></a>
+      <a href="/http-status-checker/">HTTP Status Checker<span>Inspect web responses.</span></a>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility</span><div class="footer-links"><a href="/">All tools</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script src="/assets/timestamp.js" defer></script>
+</body>
+</html>
