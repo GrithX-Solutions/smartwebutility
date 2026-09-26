@@ -36,7 +36,7 @@ Decision: DELAY.
 
 ## First publishing batch — problem-led topics
 
-### 1. DNS Changed but Website Still Points to the Old IP
+### 1. DNS Changed but Website Still Points to the Old IP — PUBLISHED 2026-09-26
 Primary intent: troubleshooting after a DNS/server migration.
 
 Why it fits:
@@ -58,7 +58,7 @@ Differentiation:
 - Show which Smart Web Utility check answers each step.
 - Explain why lowering the new TTL does not retroactively change an already cached old answer.
 
-### 2. Renewed SSL Certificate but Browser Still Shows the Old Certificate
+### 2. Renewed SSL Certificate but Browser Still Shows the Old Certificate — PUBLISHED 2026-09-26
 Primary intent: post-renewal TLS troubleshooting.
 
 Why it fits:
@@ -79,7 +79,7 @@ Differentiation:
 - CDN/load-balancer/multi-node checklist.
 - Use SSL Checker SAN, issuer, validity and endpoint IP results as evidence.
 
-### 3. SSL Certificate Hostname Mismatch: Causes and Fixes
+### 3. SSL Certificate Hostname Mismatch: Causes and Fixes — PUBLISHED 2026-09-26
 Primary intent: diagnose certificate name mismatch / ERR_CERT_COMMON_NAME_INVALID.
 
 Why it fits:
