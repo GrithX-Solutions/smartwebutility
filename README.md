@@ -12,6 +12,7 @@ Performance-first static website for https://smartwebutility.com.
 - `/unix-timestamp-converter/` — convert Unix epoch seconds or milliseconds to dates and back.
 - `/uuid-generator/` — generate secure UUID v4 values individually or in bulk.
 - `/hash-generator/` — generate SHA-1, SHA-256, SHA-384 and SHA-512 hashes for text or files.
+- `/jwt-decoder/` — decode JWT headers, payloads and standard claims locally in the browser.
 
 ## Run locally
 ```bash
