@@ -70,6 +70,35 @@
   applyTheme(preferredTheme());
 
   document.addEventListener('DOMContentLoaded', () => {
+    // Mirror the visible breadcrumb as BreadcrumbList structured data.
+    const crumb = document.querySelector('.crumb');
+    if (crumb && !document.querySelector('script[data-swu-breadcrumb]')) {
+      const parts = [...crumb.children].filter(el => el.textContent.trim() && el.textContent.trim() !== '/');
+      const items = parts.map((el, index) => {
+        const name = el.textContent.trim();
+        let item = null;
+        if (el.tagName === 'A' && el.getAttribute('href')) {
+          try { item = new URL(el.getAttribute('href'), location.origin).href; } catch {}
+        } else if (index === parts.length - 1) {
+          item = location.origin + location.pathname;
+        }
+        const entry = {'@type':'ListItem', position:index + 1, name};
+        if (item) entry.item = item;
+        return entry;
+      });
+      if (items.length >= 2) {
+        const script = document.createElement('script');
+        script.type = 'application/ld+json';
+        script.dataset.swuBreadcrumb = 'true';
+        script.textContent = JSON.stringify({
+          '@context':'https://schema.org',
+          '@type':'BreadcrumbList',
+          itemListElement:items
+        });
+        document.head.appendChild(script);
+      }
+    }
+
     const themeButton = document.getElementById('themeToggle');
     const menuButton = document.getElementById('menuToggle');
     const nav = document.getElementById('primaryNav');
