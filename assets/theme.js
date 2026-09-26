@@ -40,6 +40,11 @@
     const menuButton = document.getElementById('menuToggle');
     const nav = document.getElementById('primaryNav');
 
+    const footerLinks = document.querySelector('.footer-links');
+    if (footerLinks) {
+      footerLinks.innerHTML = '<a href="/about/">About</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a>';
+    }
+
     if (themeButton) {
       applyTheme(root.dataset.theme || preferredTheme());
       themeButton.addEventListener('click', () => {
