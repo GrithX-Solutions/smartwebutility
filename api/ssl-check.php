@@ -1,5 +1,6 @@
 <?php
 require __DIR__.'/common.php';
+rate_limit('ssl-check', 20, 60);
 $host=clean_host($_GET['host'] ?? '');
 $ips=resolve_public($host); $ip=$ips[0];
 $target=(str_contains($ip,':')?'['.$ip.']':$ip).':443';
