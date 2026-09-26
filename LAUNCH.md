@@ -25,7 +25,7 @@ Pakistan remains an important audience, but the site should use globally underst
 ## Current readiness status — September 26, 2026
 
 Completed in the repository:
-- [x] 43 indexable HTML pages are represented by 43 sitemap URLs.
+- [x] 44 indexable HTML pages are represented by 44 sitemap URLs.
 - [x] robots.txt allows crawling and points to sitemap.xml.
 - [x] Canonical URLs, titles and meta descriptions are present across indexable pages.
 - [x] About, Privacy, Terms and Contact pages exist and are linked site-wide.
@@ -47,6 +47,7 @@ External/account actions still required:
 - [x] https://smartwebutility.com/sitemap.xml submitted in Google Search Console.
 - [ ] Inspect the homepage and priority tool URLs in Search Console and request indexing where appropriate.
 - [x] Bing Webmaster Tools configured and sitemap submitted.
+- [x] IndexNow ownership key and deployment-aware URL submission helper added.
 - [ ] Confirm priority pages are indexed before the AdSense application.
 - [x] smartwebutility.com added to the AdSense Sites list.
 - [x] AdSense verification snippet for publisher ca-pub-5136695583106589 added to the homepage head.
@@ -107,3 +108,5 @@ Only after indexing, policy readiness and quality are stable:
 - carefully selected calculators with global search demand
 
 Avoid adding dozens of near-duplicate pages simply to increase URL count.
+
+- [x] SEO + AI visibility measurement framework documented for Google Search Console, Bing Webmaster Tools and GA4.
