@@ -4,5 +4,19 @@
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0b1120",
-  "theme_color": "#0b1120"
+  "theme_color": "#0b1120",
+  "icons": [
+    {
+      "src": "/favicon-64.png",
+      "sizes": "64x64",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
 }
