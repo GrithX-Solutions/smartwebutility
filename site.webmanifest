@@ -1,0 +1,8 @@
+{
+  "name": "Smart Web Utility",
+  "short_name": "SW Utility",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07101b",
+  "theme_color": "#07101b"
+}
