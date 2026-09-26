@@ -1,0 +1,199 @@
+# Smart Web Utility — Semantic SEO Content Research
+
+Last reviewed: 2026-09-26
+
+## Research rule
+
+Do not publish supporting articles because a topic sounds relevant. A topic must pass:
+1. Query intent is clear from current SERPs.
+2. The topic is adjacent to an existing Smart Web Utility tool without duplicating the tool's main transactional intent.
+3. Smart Web Utility can add practical value through a working diagnostic tool, examples, interpretation, or troubleshooting.
+4. The SERP is not exclusively controlled by high-authority vendor documentation with no realistic differentiation angle.
+5. The page can link naturally to the relevant tool and sibling guides.
+6. The article can be written from technically verified behavior, not generic SEO filler.
+7. After publishing, expansion is driven by Search Console impressions and queries rather than article-count targets.
+
+Keyword volume/KD/CPC must only be recorded when live provider data is available. Do not invent metrics. Ubersuggest report quota was exhausted during this research day, so this roadmap uses live SERP composition and intent evidence rather than fabricated numerical metrics.
+
+## Current SERP findings
+
+### Generic topics to delay
+
+#### A Record vs CNAME
+Current search results contain many dedicated, recently maintained articles from DNS-specific/tool sites and hosting/domain properties. The angle is highly commoditized. Smart Web Utility can cover the distinction inside a broader DNS guide or tool documentation, but a standalone comparison is not a first-batch priority unless Search Console later shows demand.
+
+Decision: DELAY.
+
+#### 301 vs 302 vs 307 vs 308
+The SERP is crowded with fresh dedicated guides and redirect-tool sites. A generic comparison would be difficult to differentiate and risks becoming another summary page.
+
+Decision: DELAY. Use the redirect checker page itself for concise code semantics, and target concrete troubleshooting queries first.
+
+#### SSL certificate chain explained
+The SERP contains vendor/authority documentation (including DigiCert and Microsoft) plus many current specialist TLS guides. A generic chain-of-trust article is useful educationally but not the strongest initial acquisition bet for a new domain.
+
+Decision: DELAY.
+
+## First publishing batch — problem-led topics
+
+### 1. DNS Changed but Website Still Points to the Old IP
+Primary intent: troubleshooting after a DNS/server migration.
+
+Why it fits:
+- Directly supported by DNS Checker and DNS Propagation Checker.
+- User has a concrete problem and needs diagnostic next steps.
+- Article can distinguish authoritative DNS, recursive resolver cache, device/browser cache, AAAA vs A, CDN/proxy routing and redirects.
+- The live SERP contains specialist/tool-led pages rather than being exclusively dominated by global authority sites.
+
+Proposed URL: /guides/dns-changed-still-old-ip/
+
+Primary internal links:
+- /dns-checker/
+- /dns-propagation-checker/
+- /http-status-checker/
+- /ssl-checker/
+
+Differentiation:
+- Step-by-step where-is-the-old-answer-surviving decision tree.
+- Show which Smart Web Utility check answers each step.
+- Explain why lowering the new TTL does not retroactively change an already cached old answer.
+
+### 2. Renewed SSL Certificate but Browser Still Shows the Old Certificate
+Primary intent: post-renewal TLS troubleshooting.
+
+Why it fits:
+- Very tight fit with SSL Checker.
+- Live results include Stack Overflow and specialist TLS pages, indicating real troubleshooting intent rather than only glossary intent.
+- We can add a practical endpoint-first workflow: verify the certificate actually served on the wire, then isolate web server reload, wrong virtual host, load balancer, CDN/edge, stale node or DNS endpoint.
+
+Proposed URL: /guides/ssl-certificate-still-old-after-renewal/
+
+Primary internal links:
+- /ssl-checker/
+- /dns-checker/
+- /dns-propagation-checker/
+- /http-header-checker/
+
+Differentiation:
+- Certificate on disk vs certificate served to users.
+- CDN/load-balancer/multi-node checklist.
+- Use SSL Checker SAN, issuer, validity and endpoint IP results as evidence.
+
+### 3. SSL Certificate Hostname Mismatch: Causes and Fixes
+Primary intent: diagnose certificate name mismatch / ERR_CERT_COMMON_NAME_INVALID.
+
+Why it fits:
+- Exact fit with SSL Checker SAN output and hostname verification.
+- SERP has a mix of niche TLS sites and authoritative vendor documentation, so accuracy is essential but a practical diagnostic workflow can differentiate.
+- Common scenarios map directly to our existing DNS + SSL tools: apex vs www, missing SAN, wildcard limitations, wrong certificate due to SNI/vhost, CDN/load balancer serving a different certificate.
+
+Proposed URL: /guides/ssl-certificate-hostname-mismatch/
+
+Primary internal links:
+- /ssl-checker/
+- /dns-checker/
+- /redirect-checker/
+
+Differentiation:
+- Start from the actual hostname requested.
+- Compare hostname with SAN list.
+- Check which IP/edge is serving the certificate.
+- Explain why changing DNS alone does not fix a certificate that lacks the requested hostname.
+
+### 4. ERR_TOO_MANY_REDIRECTS: How to Find and Fix a Redirect Loop
+Primary intent: repair a site that cannot load because redirects circle.
+
+Why it fits:
+- Strong connection to Redirect Checker.
+- Current SERP contains Elementor plus multiple smaller specialist/tool sites, so this is competitive but not exclusively authority-controlled.
+- User needs the exact hop chain before changing WordPress, CDN, HTTPS or host-normalization settings.
+
+Proposed URL: /guides/too-many-redirects-loop/
+
+Primary internal links:
+- /redirect-checker/
+- /http-status-checker/
+- /http-header-checker/
+- /ssl-checker/
+
+Differentiation:
+- Trace before changing settings.
+- Separate self-loop, HTTP-to-HTTPS, www-to-non-www, CDN-to-origin and application/CMS loops.
+- Show how a repeated URL in the checker identifies the conflicting rule.
+
+### 5. DNS Propagation: Why Some Resolvers Still Return the Old Record
+Primary intent: understand inconsistent DNS answers after a change.
+
+Why it fits:
+- Supports the DNS Propagation Checker without duplicating the transactional check-DNS-propagation tool intent.
+- Current results include Namecheap and several niche explainers; the concept is established, but we can be more precise about resolver caching and the limitations of world-map propagation language.
+- Smart Web Utility's actual checker compares Cloudflare, Google and the server resolver, making the explanation concrete.
+
+Proposed URL: /guides/dns-propagation-resolver-cache/
+
+Primary internal links:
+- /dns-propagation-checker/
+- /dns-checker/
+
+Differentiation:
+- Explain that propagation is usually cache expiry, not a global push.
+- TTL and negative caching.
+- Authoritative vs recursive answers.
+- Why two resolvers can legitimately disagree temporarily.
+- Explicitly state that Smart Web Utility compares independent resolvers rather than claiming to sample geographic nodes worldwide.
+
+## Second-wave candidates
+
+Research these after the first batch has Search Console data:
+- 404 vs 410 for removed pages.
+- Redirect chains after a site migration.
+- A vs AAAA when a site works on one network but not another.
+- CAA records and certificate issuance troubleshooting.
+- MX/TXT troubleshooting for email authentication.
+- JWT expired / audience / issuer debugging.
+- Base64 vs Base64URL in JWT workflows.
+
+## Internal architecture
+
+Create a crawlable /guides/ hub only when the first real guides are published.
+
+Recommended relationships:
+
+DNS Checker ↔ DNS changed but old IP ↔ DNS propagation/resolver cache ↔ DNS Propagation Checker
+
+SSL Checker ↔ old certificate after renewal ↔ hostname mismatch ↔ DNS troubleshooting
+
+Redirect Checker ↔ ERR_TOO_MANY_REDIRECTS ↔ future redirect-chain guide ↔ HTTP Status Checker
+
+Each guide should link to the tool at the point where the reader needs evidence, not only in a generic footer block. Tool pages should link back to the most relevant troubleshooting guides once they exist.
+
+## Quality standard for every guide
+
+Every guide must include:
+- Direct answer near the top.
+- Technically accurate definition of the problem.
+- Observable symptoms.
+- Diagnostic sequence.
+- Realistic examples.
+- What the Smart Web Utility tool can and cannot prove.
+- Common false fixes / dead ends.
+- Platform-neutral fixes first; platform-specific examples only where useful.
+- Verification after the fix.
+- Related tools and related guides.
+- Visible FAQ only when it adds distinct user questions.
+- Authoritative references for protocol/search claims.
+- No fake volume, KD, traffic, ranking gain or unsupported statistics.
+
+## Measurement after publishing
+
+Use Google Search Console as the feedback loop:
+- indexed/not indexed
+- impressions by query
+- average position as directional evidence, not a standalone success metric
+- clicks and CTR
+- long-tail variants appearing without being explicitly targeted
+- pages with impressions but weak CTR: improve title/snippet alignment
+- pages ranking roughly positions 8–30: deepen the exact subtopics shown in queries
+- zero-impression pages after sufficient crawl/indexing time: re-evaluate intent rather than automatically publishing more of the same
+
+Do not expand a cluster merely because it exists. Expand when search data shows Google is beginning to associate Smart Web Utility with that topic.
