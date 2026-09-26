@@ -26,6 +26,13 @@ Performance-first static website for https://smartwebutility.com.
 - `/open-graph-checker/` — inspect Open Graph metadata on public pages.
 - `/http-header-checker/` — inspect HTTP response headers, status, IP and timing.
 - `/dns-propagation-checker/` — compare DNS answers across independent resolvers.
+- `/word-counter/` — count words, characters, sentences, paragraphs and lines.
+- `/character-counter/` — count characters with and without spaces plus text stats.
+- `/case-converter/` — convert text between common casing formats.
+- `/slug-generator/` — turn titles and phrases into clean URL slugs.
+- `/lorem-ipsum-generator/` — generate placeholder paragraphs.
+- `/password-generator/` — generate cryptographically random passwords locally.
+- `/random-string-generator/` — generate random strings for development and test data.
 
 ## Run locally
 ```bash
