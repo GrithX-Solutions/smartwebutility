@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JSON Formatter & Validator — Format, Validate, Minify JSON | Smart Web Utility</title>
+  <meta name="description" content="Free online JSON formatter and validator. Beautify, validate, minify, copy and download JSON instantly in your browser. No upload or signup required.">
+  <link rel="canonical" href="https://smartwebutility.com/json-formatter/">
+  <meta property="og:title" content="JSON Formatter & Validator | Smart Web Utility">
+  <meta property="og:description" content="Format, validate and minify JSON instantly in your browser. Your JSON stays on your device.">
+  <meta property="og:url" content="https://smartwebutility.com/json-formatter/">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#07101b">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"JSON Formatter & Validator","url":"https://smartwebutility.com/json-formatter/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Format JSON","Validate JSON","Minify JSON","Copy JSON","Download JSON"]}</script>
+</head>
+<body>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav><a href="/#tools">Tools</a><a href="/dns-checker/">DNS</a><a href="/ssl-checker/">SSL</a></nav></div></header>
+<main>
+  <section class="tool-hero wrap json-tool-hero">
+    <div class="crumb"><a href="/">Home</a><span>/</span><span>JSON Formatter</span></div>
+    <span class="kicker">Developer tool · runs locally</span>
+    <h1>JSON Formatter & Validator</h1>
+    <p class="lead compact">Beautify, validate or minify JSON instantly. Processing happens in your browser, so your JSON is not sent to our server.</p>
+
+    <div class="json-toolbar" aria-label="JSON actions">
+      <button class="btn primary" id="formatJson" type="button">Format JSON</button>
+      <button class="btn ghost" id="validateJson" type="button">Validate</button>
+      <button class="btn ghost" id="minifyJson" type="button">Minify</button>
+      <label class="file-btn">Open .json<input id="jsonFile" type="file" accept="application/json,.json" hidden></label>
+      <button class="text-btn" id="exampleJson" type="button">Example</button>
+      <button class="text-btn" id="clearJson" type="button">Clear</button>
+    </div>
+
+    <div class="json-workspace">
+      <section class="editor-panel">
+        <div class="editor-head"><div><strong>Input</strong><span>Paste or edit JSON</span></div><label>Indent <select id="indent"><option value="2">2 spaces</option><option value="4">4 spaces</option><option value="tab">Tab</option></select></label></div>
+        <textarea id="jsonInput" class="code-editor" spellcheck="false" autocapitalize="none" autocomplete="off" placeholder='{"hello":"world"}' aria-label="JSON input"></textarea>
+      </section>
+      <section class="editor-panel">
+        <div class="editor-head"><div><strong>Output</strong><span id="jsonStatus" data-kind="neutral">Ready</span></div><div class="editor-actions"><button id="copyJson" class="text-btn" type="button">Copy</button><button id="downloadJson" class="text-btn" type="button">Download</button></div></div>
+        <textarea id="jsonOutput" class="code-editor" spellcheck="false" readonly placeholder="Formatted JSON will appear here" aria-label="Formatted JSON output"></textarea>
+      </section>
+    </div>
+    <div id="jsonError" class="error" hidden role="alert"></div>
+    <div id="jsonStats" class="json-stats" hidden aria-label="JSON statistics"></div>
+    <div class="trustbar"><span>Browser-side processing</span><span>No account</span><span>Ctrl/⌘ + Enter to format</span></div>
+  </section>
+
+  <section class="section wrap prose">
+    <h2>Format and validate JSON online</h2>
+    <p>Paste JSON into the input editor and choose Format JSON to produce clean, readable indentation. The validator uses the browser's native JSON parser and reports syntax errors when the input is invalid. You can also create a compact representation with Minify.</p>
+    <div class="info-grid"><article><h3>JSON Formatter</h3><p>Beautifies compact JSON with 2 spaces, 4 spaces or tabs so nested objects and arrays are easier to inspect.</p></article><article><h3>JSON Validator</h3><p>Checks whether the input is valid JSON before formatting or minifying it, with useful error details when parsing fails.</p></article><article><h3>JSON Minifier</h3><p>Removes unnecessary whitespace while preserving the underlying JSON data.</p></article><article><h3>Private by design</h3><p>Formatting and validation run locally in JavaScript. The JSON content is not submitted to a Smart Web Utility API.</p></article></div>
+
+    <h2>Common JSON formatting issues</h2>
+    <p>JSON requires double-quoted property names and strings, does not allow trailing commas, and does not support comments. Valid values include objects, arrays, strings, numbers, booleans and null.</p>
+
+    <h2>Related tools</h2>
+    <div class="related-tools"><a href="/http-status-checker/">HTTP Status Checker<span>Inspect web response status and headers.</span></a><a href="/redirect-checker/">Redirect Checker<span>Trace redirects and final destinations.</span></a><a href="/dns-checker/">DNS Checker<span>Lookup common DNS record types.</span></a></div>
+  </section>
+</main>
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility</span><div class="footer-links"><a href="/">All tools</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script src="/assets/json-formatter.js" defer></script>
+</body>
+</html>
