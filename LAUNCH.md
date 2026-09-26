@@ -37,7 +37,7 @@ Completed in the repository:
 - [x] 64x64 PNG favicon fallback is available alongside the SVG favicon.
 - [x] Frontend asset caching no longer uses a one-year immutable policy on unversioned CSS/JS.
 - [x] No AdSense script, ca-pub ID or ad unit is present before account details are known.
-- [x] No placeholder ads.txt publisher ID is published.
+- [x] No placeholder ads.txt publisher ID is published.\n- [x] No ad units have been inserted; the AdSense script is currently present for site verification only.
 - [x] Privacy Policy includes Google advertising-cookie and personalized-ad choice disclosures for future AdSense use.
 - [x] Performance baseline is strong in the current PageSpeed audit (desktop and mobile).\n- [x] Google Analytics 4 measurement ID G-TKF8FWKQN6 is installed globally through the shared theme script.\n- [x] Analytics consent defaults are restricted for EEA/UK/Switzerland, while ad storage and ad personalization remain denied site-wide until a CMP/AdSense flow is enabled.
 
@@ -48,9 +48,9 @@ External/account actions still required:
 - [ ] Inspect the homepage and priority tool URLs in Search Console and request indexing where appropriate.
 - [x] Bing Webmaster Tools configured and sitemap submitted.
 - [ ] Confirm priority pages are indexed before the AdSense application.
-- [ ] Add smartwebutility.com to the AdSense Sites list.
-- [ ] Use the exact AdSense verification method/code supplied for this account.
-- [ ] After the real publisher ID is available, publish the exact ads.txt line supplied by AdSense at /ads.txt.
+- [x] smartwebutility.com added to the AdSense Sites list.
+- [x] AdSense verification snippet for publisher ca-pub-5136695583106589 added to the homepage head.
+- [x] Real publisher ID received: pub-5136695583106589; root ads.txt published with Google DIRECT seller declaration.
 - [ ] Configure a Google-certified CMP for EEA/UK/Swiss traffic before serving personalized Google ads there.
 - [ ] After site approval, add ad units conservatively and verify mobile accidental-click spacing.
 
