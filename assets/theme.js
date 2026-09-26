@@ -18,11 +18,16 @@
     if (persist) {
       try { localStorage.setItem(storageKey, theme); } catch {}
     }
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
+    if (themeMeta) themeMeta.setAttribute('content', theme === 'dark' ? '#0a0f1e' : '#f7f8fc');
+
     const button = document.getElementById('themeToggle');
     if (button) {
       const next = theme === 'dark' ? 'light' : 'dark';
       const label = button.querySelector('.theme-label');
+      const icon = button.querySelector('.theme-icon');
       if (label) label.textContent = next === 'light' ? 'Light' : 'Dark';
+      if (icon) icon.textContent = theme === 'dark' ? '☀' : '☾';
       button.setAttribute('aria-label', 'Switch to ' + next + ' mode');
       button.setAttribute('title', 'Switch to ' + next + ' mode');
     }
