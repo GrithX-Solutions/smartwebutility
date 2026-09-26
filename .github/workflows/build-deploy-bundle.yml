@@ -1,5 +1,7 @@
 name: Build deployment bundle
 
+# Deployment artifact only; production activation happens on the hosting server.
+
 on:
   push:
     branches:
