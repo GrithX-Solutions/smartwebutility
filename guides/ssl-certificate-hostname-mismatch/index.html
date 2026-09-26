@@ -1,0 +1,85 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SSL Certificate Hostname Mismatch: Causes & Fixes | Smart Web Utility</title><meta name="description" content="Fix SSL certificate hostname mismatch errors. Check SAN coverage, www vs apex, wildcard limits, SNI, DNS, CDN and the certificate served by the active endpoint."><link rel="canonical" href="https://smartwebutility.com/guides/ssl-certificate-hostname-mismatch/">
+<meta property="og:title" content="SSL Certificate Hostname Mismatch: Causes and Fixes"><meta property="og:description" content="Trace NET::ERR_CERT_COMMON_NAME_INVALID and related TLS name errors from the requested hostname to SAN coverage and the endpoint actually serving the certificate."><meta property="og:url" content="https://smartwebutility.com/guides/ssl-certificate-hostname-mismatch/"><meta property="og:type" content="article">
+<meta name="theme-color" content="#0b1120"><link rel="icon" href="/favicon-64.png" sizes="64x64" type="image/png"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="manifest" href="/site.webmanifest">
+<script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"SSL Certificate Hostname Mismatch: Causes and Fixes","description":"Diagnose SSL/TLS hostname mismatch errors by checking the exact requested hostname, SAN coverage, wildcards, SNI, DNS, CDNs and the certificate served by the active endpoint.","url":"https://smartwebutility.com/guides/ssl-certificate-hostname-mismatch/","datePublished":"2026-09-26","dateModified":"2026-09-26","author":{"@type":"Organization","name":"Smart Web Utility","url":"https://smartwebutility.com/"},"publisher":{"@type":"Organization","name":"Smart Web Utility","url":"https://smartwebutility.com/"},"mainEntityOfPage":"https://smartwebutility.com/guides/ssl-certificate-hostname-mismatch/"}</script>
+</head><body>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+<main><section class="tool-hero wrap"><div class="crumb"><a href="/">Home</a><span>/</span><a href="/guides/">Guides</a><span>/</span><span>SSL Hostname Mismatch</span></div><span class="kicker">TLS troubleshooting guide</span><h1>SSL Certificate Hostname Mismatch: Causes and Fixes</h1><p class="lead compact">A hostname mismatch means the TLS certificate presented by the server does not identify the hostname the client requested. Fix the name or endpoint mismatch—do not bypass certificate validation.</p></section>
+<section class="section wrap prose" data-quality-content="v2">
+  <h2>What a hostname mismatch actually means</h2>
+  <p>When a client opens <code>https://shop.example.com</code>, it verifies that the certificate presented by the TLS server identifies <code>shop.example.com</code>. The current IETF service-identity specification, RFC 9525, says DNS service identities are checked using <strong>dNSName entries in the Subject Alternative Name (SAN) extension</strong>; the Common Name should not be used as the service identity.</p>
+  <p>If none of the certificate's relevant SAN entries match the requested hostname, verification fails even when the certificate is unexpired and signed by a trusted certificate authority.</p>
+
+  <h2>Common mismatch patterns</h2>
+  <div class="info-grid">
+    <article><h3>Apex versus www</h3><p>A certificate that covers <code>www.example.com</code> does not automatically cover <code>example.com</code>. Include both when both hostnames are served.</p></article>
+    <article><h3>Missing subdomain</h3><p>A certificate for <code>example.com</code> does not cover <code>api.example.com</code> unless that subdomain is explicitly present or a valid wildcard covers it.</p></article>
+    <article><h3>Wildcard expectation is wrong</h3><p>A wildcard such as <code>*.example.com</code> matches a single left-most label such as <code>api.example.com</code>; it does not identify the apex <code>example.com</code> or deeper names such as <code>a.b.example.com</code>.</p></article>
+    <article><h3>Wrong certificate is served</h3><p>DNS, SNI, a default virtual host, CDN or load balancer can route the request to infrastructure that presents a certificate for a different site.</p></article>
+  </div>
+
+  <h2>Step 1: identify the exact hostname that fails</h2>
+  <p>Write down the hostname from the address bar or API endpoint exactly as requested. Test apex and <code>www</code> separately. A redirect does not rescue the first TLS handshake: the browser must establish HTTPS with the original hostname before it can receive an HTTP redirect.</p>
+  <p>That is why “redirect the uncovered hostname to the covered hostname” is not a complete certificate fix. The first hostname still needs a valid certificate if users connect to it over HTTPS.</p>
+
+  <h2>Step 2: check what the public endpoint serves</h2>
+  <p>Run the hostname through the <a href="/ssl-checker/">SSL Checker</a>. The checker uses hostname verification during the TLS connection. If the connection validates, review the returned SANs, subject, issuer, validity window and endpoint IP. If it fails with a certificate validation problem, use your server/provider certificate view or a command-line TLS client to inspect the invalid certificate in more detail.</p>
+  <p>DigiCert's certificate guidance describes the same core rule: browsers compare the requested host with names the certificate is valid for, and a mismatch can occur when users connect through a different hostname or IP than the certificate covers.</p>
+
+  <h2>Step 3: compare SAN coverage with the hostname</h2>
+  <table class="record-table">
+    <thead><tr><th>Requested hostname</th><th>Certificate SAN</th><th>Expected result</th></tr></thead>
+    <tbody>
+      <tr><td>www.example.com</td><td>www.example.com</td><td>Exact DNS-name match.</td></tr>
+      <tr><td>api.example.com</td><td>*.example.com</td><td>Wildcard can match one left-most label.</td></tr>
+      <tr><td>example.com</td><td>*.example.com</td><td>Mismatch: wildcard does not cover the apex.</td></tr>
+      <tr><td>v2.api.example.com</td><td>*.example.com</td><td>Mismatch: wildcard is not a multi-label catch-all.</td></tr>
+      <tr><td>203.0.113.10</td><td>example.com</td><td>Mismatch unless the certificate contains a matching IP identity.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Step 4: verify DNS is sending the hostname to the intended infrastructure</h2>
+  <p>Use the <a href="/dns-checker/">DNS Checker</a> to inspect A, AAAA and CNAME. A correct certificate can be installed on one server while DNS sends users to another server with a default certificate. This is especially common during hosting migrations, CDN changes and partial IPv6 rollouts.</p>
+  <p>If a DNS change was recent, compare resolver answers with the <a href="/dns-propagation-checker/">DNS Propagation Checker</a>. Intermittent mismatch errors can happen when some resolvers still send users to an old endpoint.</p>
+
+  <h2>Step 5: inspect SNI, virtual hosts, load balancers and CDNs</h2>
+  <p>On shared HTTPS infrastructure, SNI tells the server which hostname the client wants so it can select the corresponding certificate. If the hostname is not mapped correctly, the server may present a default certificate belonging to another virtual host.</p>
+  <p>The same issue exists at higher layers. A load balancer can have one certificate attached to the wrong listener, or a CDN can serve its own edge certificate while the origin has a different, perfectly valid certificate. Fix the certificate where the public TLS connection terminates.</p>
+
+  <h2>Step 6: reissue or redeploy with the right names</h2>
+  <p>If the requested hostname is genuinely missing, reissue the certificate with the required SAN entries or use an appropriate wildcard plus any uncovered apex names. Then deploy the certificate to every TLS termination point that can receive traffic.</p>
+  <p>After deployment, test the exact failing hostname again. Also test alternate public names such as <code>www</code>, apex, API or shop subdomains individually rather than assuming one successful hostname proves the whole certificate configuration.</p>
+
+  <h2>Do not “fix” a mismatch by disabling certificate verification</h2>
+  <p>Hostname verification protects clients from accepting a valid certificate for the wrong service. Disabling verification, ignoring browser warnings or forcing clients to trust a mismatched certificate removes an important identity check. Correct the certificate coverage or routing instead.</p>
+
+  <h2>What Smart Web Utility can and cannot prove</h2>
+  <p>The SSL Checker can confirm a successful verified TLS connection and, when verification succeeds, show certificate SANs and endpoint details. Because it enforces certificate verification, a severe mismatch may stop the connection before the tool can display every field from the invalid certificate. It also checks one resolved endpoint per request rather than auditing every edge node worldwide.</p>
+
+  <h2>Frequently asked questions</h2>
+  <h3>Does a wildcard certificate cover the root domain?</h3>
+  <p>No. <code>*.example.com</code> does not identify <code>example.com</code>. Include the apex separately when the site serves it.</p>
+  <h3>Can I fix a hostname mismatch with a redirect?</h3>
+  <p>Not for an HTTPS request to the mismatched hostname. TLS validation happens before the browser can receive the HTTP redirect, so the original HTTPS hostname still needs valid certificate coverage.</p>
+  <h3>Why does the certificate match on one server but not for users?</h3>
+  <p>Users may be reaching a CDN, load balancer, different A/AAAA target or another node that presents a different certificate.</p>
+  <h3>What does NET::ERR_CERT_COMMON_NAME_INVALID usually indicate?</h3>
+  <p>It commonly appears when the requested hostname is not covered by the certificate the browser receives. Modern standards rely on SAN DNS identities rather than the legacy Common Name for service identity matching.</p>
+
+  <h2>Related tools and guides</h2>
+  <div class="related-tools">
+    <a href="/ssl-checker/">SSL Checker<span>Verify a public TLS certificate and hostname when validation succeeds.</span></a>
+    <a href="/guides/ssl-certificate-still-old-after-renewal/">Old SSL after renewal<span>Trace a renewed certificate that has not reached the public endpoint.</span></a>
+    <a href="/guides/dns-changed-still-old-ip/">DNS still points to old IP<span>Check whether stale DNS is sending clients to the wrong TLS server.</span></a>
+  </div>
+
+  <h2>Technical references</h2>
+  <div class="related-tools">
+    <a href="https://www.rfc-editor.org/rfc/rfc9525.html" rel="noopener">RFC 9525: Service Identity in TLS<span>Current IETF rules for SAN-based service identity and wildcard matching.</span></a>
+    <a href="https://knowledge.digicert.com/solution/name-mismatch-in-web-browser" rel="noopener">DigiCert: Name mismatch<span>Examples of browser hostname mismatch conditions.</span></a>
+    <a href="https://developers.cloudflare.com/ssl/edge-certificates/" rel="noopener">Cloudflare: Edge certificates<span>Why the visitor-facing certificate can differ from the origin certificate.</span></a>
+  </div>
+</section></main><footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer></body></html>
