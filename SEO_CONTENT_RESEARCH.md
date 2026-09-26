@@ -100,7 +100,7 @@ Differentiation:
 - Check which IP/edge is serving the certificate.
 - Explain why changing DNS alone does not fix a certificate that lacks the requested hostname.
 
-### 4. ERR_TOO_MANY_REDIRECTS: How to Find and Fix a Redirect Loop
+### 4. ERR_TOO_MANY_REDIRECTS: How to Find and Fix a Redirect Loop — PUBLISHED 2026-09-27
 Primary intent: repair a site that cannot load because redirects circle.
 
 Why it fits:
@@ -121,7 +121,7 @@ Differentiation:
 - Separate self-loop, HTTP-to-HTTPS, www-to-non-www, CDN-to-origin and application/CMS loops.
 - Show how a repeated URL in the checker identifies the conflicting rule.
 
-### 5. DNS Propagation: Why Some Resolvers Still Return the Old Record
+### 5. DNS Propagation: Why Some Resolvers Still Return the Old Record — PUBLISHED 2026-09-27
 Primary intent: understand inconsistent DNS answers after a change.
 
 Why it fits:
