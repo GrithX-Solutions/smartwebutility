@@ -4,6 +4,51 @@
   const root = document.documentElement;
   const storageKey = 'swu-theme';
 
+  const analyticsMeasurementId = 'G-TKF8FWKQN6';
+  const restrictedAnalyticsRegions = [
+    'AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IS','IE','IT',
+    'LV','LI','LT','LU','MT','NL','NO','PL','PT','RO','SK','SI','ES','SE','GB','CH'
+  ];
+
+  function initGoogleAnalytics() {
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function(){ window.dataLayer.push(arguments); };
+
+    // Analytics is enabled by default outside the restricted regions below.
+    // Advertising-related storage and personalization remain disabled site-wide
+    // until an approved consent/CMP flow explicitly updates these signals.
+    window.gtag('consent', 'default', {
+      analytics_storage: 'granted',
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      functionality_storage: 'granted',
+      security_storage: 'granted'
+    });
+
+    // EEA + UK + Switzerland: keep Analytics storage denied until a consent
+    // mechanism updates the visitor's choice. Google may use cookieless pings
+    // while consent remains denied, depending on Consent Mode behavior.
+    window.gtag('consent', 'default', {
+      analytics_storage: 'denied',
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      region: restrictedAnalyticsRegions,
+      wait_for_update: 500
+    });
+
+    window.gtag('js', new Date());
+    window.gtag('config', analyticsMeasurementId);
+
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(analyticsMeasurementId);
+    document.head.appendChild(script);
+  }
+
+  initGoogleAnalytics();
+
   function preferredTheme() {
     try {
       const saved = localStorage.getItem(storageKey);
