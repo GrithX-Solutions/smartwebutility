@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DNS Checker — A, MX, TXT, CNAME, NS Lookup | Smart Web Utility</title>
+  <meta name="description" content="Free DNS checker for A, AAAA, MX, TXT, CNAME, NS and CAA records. Check live DNS records instantly with no signup.">
+  <link rel="canonical" href="https://smartwebutility.com/dns-checker/">
+  <meta property="og:title" content="Free DNS Checker | Smart Web Utility">
+  <meta property="og:description" content="Check A, AAAA, MX, TXT, CNAME, NS and CAA records instantly.">
+  <meta property="og:url" content="https://smartwebutility.com/dns-checker/">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#07101b">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"DNS Checker","url":"https://smartwebutility.com/dns-checker/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+</head>
+<body>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav><a href="/#tools">Tools</a><a href="/#why">Why us</a></nav></div></header>
+<main>
+  <section class="tool-hero wrap">
+    <div class="crumb"><a href="/">Home</a><span>/</span><span>DNS Checker</span></div>
+    <span class="kicker">Developer & website tool</span>
+    <h1>DNS Checker</h1>
+    <p class="lead compact">Check live DNS records for any domain. Supports A, AAAA, MX, TXT, CNAME, NS and CAA.</p>
+
+    <form id="dnsForm" class="lookup" novalidate>
+      <label class="sr-only" for="domain">Domain name</label>
+      <input id="domain" name="domain" inputmode="url" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="example.com" required>
+      <label class="sr-only" for="type">Record type</label>
+      <select id="type" name="type" aria-label="DNS record type"><option>A</option><option>AAAA</option><option>MX</option><option>TXT</option><option>CNAME</option><option>NS</option><option>CAA</option></select>
+      <button class="btn primary" type="submit">Check DNS</button>
+    </form>
+    <div class="quick-types" aria-label="Quick record types"><button data-type="A">A</button><button data-type="MX">MX</button><button data-type="TXT">TXT</button><button data-type="CNAME">CNAME</button><button data-type="NS">NS</button></div>
+
+    <section id="result" class="result-card" hidden aria-live="polite"><div class="result-head"><div><span class="status-dot"></span><strong id="resultTitle">DNS result</strong></div><button id="copyBtn" class="text-btn" type="button">Copy</button></div><div id="resultBody"></div></section>
+    <div id="error" class="error" hidden role="alert"></div>
+  </section>
+
+  <section class="section wrap prose">
+    <h2>What this DNS checker does</h2>
+    <p>Enter a domain and choose a record type. The lookup is sent over HTTPS to a public recursive DNS resolver and the returned records are displayed with TTL values when available.</p>
+    <div class="info-grid"><article><h3>A / AAAA</h3><p>Find IPv4 and IPv6 addresses for a hostname.</p></article><article><h3>MX</h3><p>See which mail servers receive email for the domain.</p></article><article><h3>TXT</h3><p>Inspect SPF, verification and other text-based DNS records.</p></article><article><h3>NS / CNAME / CAA</h3><p>Review nameservers, aliases and certificate-authority policy.</p></article></div>
+    <h2>Why DNS checks matter</h2>
+    <p>DNS changes, email configuration, CDN migrations and SSL validation all depend on the right records being published. A quick lookup helps confirm what a recursive resolver currently sees.</p>
+    <h2>Related website tools</h2><div class="related-tools"><a href="/ssl-checker/">SSL Checker<span>Inspect HTTPS certificate validity and expiry.</span></a><a href="/http-status-checker/">HTTP Status Checker<span>Check HTTP status and response headers.</span></a><a href="/redirect-checker/">Redirect Checker<span>Trace each redirect hop.</span></a></div><h2>DNS record types supported</h2>
+    <p>This tool supports A, AAAA, MX, TXT, CNAME, NS and CAA lookups. It is intended for quick diagnostics and validation, not as a substitute for authoritative DNS administration.</p>
+  </section>
+</main>
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility</span><div class="footer-links"><a href="/">All tools</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script src="/assets/dns.js" defer></script>
+</body>
+</html>
