@@ -25,7 +25,7 @@ Pakistan remains an important audience, but the site should use globally underst
 ## Current readiness status — September 26, 2026
 
 Completed in the repository:
-- [x] 39 indexable HTML pages are represented by 39 sitemap URLs.
+- [x] 43 indexable HTML pages are represented by 43 sitemap URLs.
 - [x] robots.txt allows crawling and points to sitemap.xml.
 - [x] Canonical URLs, titles and meta descriptions are present across indexable pages.
 - [x] About, Privacy, Terms and Contact pages exist and are linked site-wide.
