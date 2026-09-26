@@ -9,6 +9,29 @@ function out(array $data, int $status=200): never {
   echo json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
   exit;
 }
+function rate_limit(string $bucket, int $limit=30, int $window=60): void {
+  $ip=$_SERVER['REMOTE_ADDR'] ?? 'unknown';
+  $dir=sys_get_temp_dir().'/smartwebutility-rate';
+  if (!is_dir($dir)) @mkdir($dir,0700,true);
+  $file=$dir.'/'.hash('sha256',$bucket.'|'.$ip).'.json';
+  $now=time();
+  $fp=@fopen($file,'c+');
+  if (!$fp) return;
+  if (!flock($fp,LOCK_EX)) { fclose($fp); return; }
+  $raw=stream_get_contents($fp);
+  $data=json_decode($raw?:'',true);
+  if (!is_array($data) || ($data['start']??0)+$window <= $now) $data=['start'=>$now,'count'=>0];
+  if (($data['count']??0) >= $limit) {
+    $retry=max(1,($data['start']+$window)-$now);
+    flock($fp,LOCK_UN); fclose($fp);
+    header('Retry-After: '.$retry);
+    out(['error'=>'Too many requests. Please try again shortly.','retry_after'=>$retry],429);
+  }
+  $data['count']++;
+  rewind($fp); ftruncate($fp,0); fwrite($fp,json_encode($data)); fflush($fp);
+  flock($fp,LOCK_UN); fclose($fp);
+}
+
 function public_ip(string $ip): bool {
   return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false;
 }
