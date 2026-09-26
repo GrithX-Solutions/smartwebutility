@@ -1,0 +1,83 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DNS Changed but Website Still Points to Old IP? Fix It | Smart Web Utility</title><meta name="description" content="Changed DNS but the site still loads the old server? Diagnose authoritative DNS, resolver cache, TTL, A/AAAA, CDN routing and redirects step by step."><link rel="canonical" href="https://smartwebutility.com/guides/dns-changed-still-old-ip/">
+<meta property="og:title" content="DNS Changed but Website Still Points to the Old IP"><meta property="og:description" content="Find where the old DNS answer is surviving and verify each layer before changing more settings."><meta property="og:url" content="https://smartwebutility.com/guides/dns-changed-still-old-ip/"><meta property="og:type" content="article">
+<meta name="theme-color" content="#0b1120"><link rel="icon" href="/favicon-64.png" sizes="64x64" type="image/png"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="manifest" href="/site.webmanifest">
+<script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"DNS Changed but Website Still Points to the Old IP","description":"A practical workflow for finding whether an old website IP is coming from authoritative DNS, recursive resolver cache, A/AAAA records, a CDN or another layer.","url":"https://smartwebutility.com/guides/dns-changed-still-old-ip/","datePublished":"2026-09-26","dateModified":"2026-09-26","author":{"@type":"Organization","name":"Smart Web Utility","url":"https://smartwebutility.com/"},"publisher":{"@type":"Organization","name":"Smart Web Utility","url":"https://smartwebutility.com/"},"mainEntityOfPage":"https://smartwebutility.com/guides/dns-changed-still-old-ip/"}</script>
+</head><body>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+<main><section class="tool-hero wrap"><div class="crumb"><a href="/">Home</a><span>/</span><a href="/guides/">Guides</a><span>/</span><span>DNS Changed but Old IP</span></div><span class="kicker">DNS troubleshooting guide</span><h1>DNS Changed but Website Still Points to the Old IP</h1><p class="lead compact">You changed DNS, but visitors still reach the old server. The useful question is not “has DNS propagated yet?”—it is which layer is still returning or routing to the old address.</p></section>
+<section class="section wrap prose" data-quality-content="v2">
+  <h2>Quick diagnosis</h2>
+  <p>If the authoritative DNS already returns the new IP but some users still reach the old server, a recursive resolver can still be serving an earlier cached answer until its previous TTL expires. If the authoritative DNS itself still returns the old value, waiting for propagation will not fix the problem: the active DNS zone or delegation is still wrong.</p>
+  <div class="info-grid">
+    <article><h3>Old answer everywhere</h3><p>Check which nameservers are authoritative and confirm you edited the zone they actually serve. A common migration mistake is changing records at a registrar while DNS is hosted somewhere else.</p></article>
+    <article><h3>Resolvers disagree</h3><p>This usually points to cache state. Independent recursive resolvers can refresh at different times because they did not all cache the record at the same moment.</p></article>
+    <article><h3>DNS is new, site is old</h3><p>Look beyond DNS. A CDN, reverse proxy, origin mapping, HTTP redirect or application cache can still route requests to old infrastructure even when the A or AAAA answer is correct.</p></article>
+    <article><h3>Only some networks fail</h3><p>Compare IPv4 and IPv6, the local resolver, VPN or secure-DNS provider. One path may still use an old A/AAAA answer while another path has already refreshed.</p></article>
+  </div>
+
+  <h2>Step 1: confirm the DNS answer you expect</h2>
+  <p>Start with the <a href="/dns-checker/">DNS Checker</a>. Check the exact hostname users visit, not only the zone apex. Look at <strong>A</strong>, <strong>AAAA</strong> and, where relevant, <strong>CNAME</strong>. If you changed <code>www.example.com</code> but users browse <code>example.com</code>, or IPv6 still points to the previous host, the migration can look inconsistent even though one record is correct.</p>
+  <p>The checker also shows the TTL returned with an answer. TTL is the cache lifetime a resolver can apply to that record. Cloudflare's DNS documentation describes TTL as the field controlling how long records are cached and notes that a longer TTL can make updates take longer to appear to end users.</p>
+
+  <h2>Step 2: compare independent recursive resolvers</h2>
+  <p>Use the <a href="/dns-propagation-checker/">DNS Propagation Checker</a> to compare Cloudflare, Google and the server resolver. Smart Web Utility does not pretend to sample a world map of geographic DNS nodes; it compares independent resolver views so you can see whether caches disagree.</p>
+  <table class="record-table">
+    <thead><tr><th>What you see</th><th>What it usually means</th><th>Next move</th></tr></thead>
+    <tbody>
+      <tr><td>All resolvers return old IP</td><td>Old record may still be cached broadly, or authoritative DNS may still be old.</td><td>Confirm delegation and authoritative data.</td></tr>
+      <tr><td>Some old, some new</td><td>Resolver caches are at different stages.</td><td>Wait for the old cache lifetime; avoid random DNS edits.</td></tr>
+      <tr><td>All return new IP</td><td>DNS is probably not the remaining layer.</td><td>Check CDN, redirects, HTTP and TLS endpoint.</td></tr>
+      <tr><td>A is new, AAAA is old</td><td>IPv4 and IPv6 paths disagree.</td><td>Fix/remove the stale AAAA record if IPv6 is not intended.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Step 3: make sure you changed the authoritative zone</h2>
+  <p>Check the domain's <strong>NS</strong> records. The delegated nameservers determine which DNS provider is authoritative. If the parent zone delegates to a provider such as Cloudflare, Route 53 or a hosting platform, editing an unused DNS zone somewhere else changes nothing for public queries.</p>
+  <p>If the active authoritative source returns the new IP, recursive resolvers will eventually age out older cached answers. If it still returns the old IP, fix that source first.</p>
+
+  <h2>Why lowering the new TTL does not erase an old cached answer</h2>
+  <p>A resolver that already cached the old record uses the TTL attached to the answer it received at that time. Changing the record now to a lower TTL does not reach into existing resolver caches and rewrite their timers. Lower TTLs help most when set <em>before</em> a planned migration, allowed to age through existing caches, and then followed by the record change.</p>
+  <p>The same principle applies to <strong>negative caching</strong>. If a hostname did not exist and a resolver cached an NXDOMAIN or NODATA response, creating the record does not instantly invalidate that negative cache. RFC 2308 defines TTL behavior for cached negative DNS answers.</p>
+
+  <h2>Step 4: separate DNS from routing, redirects and cached content</h2>
+  <p>If independent resolvers all show the new IP, check what the destination actually returns. The <a href="/http-status-checker/">HTTP Status Checker</a> can confirm the responding IP, status and redirect location. The <a href="/http-header-checker/">HTTP Header Checker</a> can expose CDN or cache headers. The <a href="/ssl-checker/">SSL Checker</a> can help confirm which HTTPS endpoint is presenting the certificate when the connection verifies successfully.</p>
+  <p>A site can appear to be on the “old server” when DNS is already correct because a CDN still points to the old origin, the new server redirects to an old hostname, or the application itself serves cached content. Treat those as separate layers instead of changing DNS again.</p>
+
+  <h2>A practical migration sequence</h2>
+  <div class="info-grid">
+    <article><h3>Before the change</h3><p>Lower TTL far enough in advance for the previous higher TTL to expire. Inventory A, AAAA, CNAME, CDN and TLS dependencies.</p></article>
+    <article><h3>During the change</h3><p>Update the authoritative record once. Confirm the new server works before making additional DNS edits that can obscure the evidence.</p></article>
+    <article><h3>After the change</h3><p>Compare resolver answers, then test HTTP and HTTPS separately. Do not interpret old cached answers as proof that the authoritative zone is wrong.</p></article>
+    <article><h3>After convergence</h3><p>Raise TTL again if your availability strategy favors longer caching and you no longer need rapid migration changes.</p></article>
+  </div>
+
+  <h2>What Smart Web Utility can and cannot prove</h2>
+  <p>The DNS tools can show current answers from the resolvers they query and the TTLs returned with those answers. They cannot see every ISP, enterprise resolver, device cache or private DNS system on the internet. A matching DNS answer also does not prove that a CDN or application is routing to the intended origin.</p>
+
+  <h2>Frequently asked questions</h2>
+  <h3>How long should I wait after changing an A record?</h3>
+  <p>Use the previous record's cache lifetime as the starting point rather than a fixed “24–48 hour” rule. Different resolvers may refresh at different times. If authoritative DNS is already correct and one resolver still returns the old value, that resolver's remaining cache is the evidence that matters.</p>
+  <h3>Why does mobile data show the new site but Wi-Fi shows the old site?</h3>
+  <p>The two networks can use different recursive resolvers and different IPv4/IPv6 paths. One resolver may have refreshed while the other is still serving a cached answer.</p>
+  <h3>Can flushing my computer's DNS cache fix it?</h3>
+  <p>It can remove a local cached answer, but it cannot force an upstream ISP or public recursive resolver to discard its own valid cache entry.</p>
+  <h3>Should I keep changing the DNS record until the site works?</h3>
+  <p>No. Repeated edits make troubleshooting harder. First determine whether authoritative DNS, recursive caching or a non-DNS layer is responsible.</p>
+
+  <h2>Related tools and guides</h2>
+  <div class="related-tools">
+    <a href="/dns-checker/">DNS Checker<span>Inspect A, AAAA, CNAME, NS and TTL values.</span></a>
+    <a href="/dns-propagation-checker/">DNS Propagation Checker<span>Compare answers from independent resolvers.</span></a>
+    <a href="/guides/ssl-certificate-still-old-after-renewal/">Old SSL after renewal<span>Diagnose a certificate that still looks stale after a migration or renewal.</span></a>
+  </div>
+
+  <h2>Technical references</h2>
+  <div class="related-tools">
+    <a href="https://developers.cloudflare.com/dns/manage-dns-records/reference/ttl/" rel="noopener">Cloudflare: DNS TTL<span>How TTL controls resolver caching and change visibility.</span></a>
+    <a href="https://developers.cloudflare.com/dns/troubleshooting/dns-issues/" rel="noopener">Cloudflare: DNS troubleshooting<span>Authoritative checks, resolver caches and negative caching.</span></a>
+    <a href="https://www.rfc-editor.org/rfc/rfc2308.html" rel="noopener">RFC 2308<span>Standards-track definition of negative DNS caching.</span></a>
+  </div>
+</section></main><footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer></body></html>
