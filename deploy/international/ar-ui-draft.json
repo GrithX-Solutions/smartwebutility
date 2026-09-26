@@ -1,0 +1,59 @@
+{
+  "locale": "ar",
+  "languageName": "العربية",
+  "direction": "rtl",
+  "status": "draft-private",
+  "shared": {
+    "home": "الرئيسية",
+    "developer": "أدوات المطورين",
+    "website": "أدوات المواقع",
+    "seo": "أدوات SEO",
+    "text": "أدوات النص",
+    "theme": "المظهر",
+    "menu": "القائمة",
+    "guides": "الأدلة",
+    "about": "حول الموقع",
+    "privacy": "الخصوصية",
+    "terms": "الشروط",
+    "contact": "اتصل بنا",
+    "sitemap": "خريطة الموقع",
+    "check": "فحص",
+    "analyze": "تحليل",
+    "copy": "نسخ",
+    "clear": "مسح",
+    "loading": "جارٍ الفحص…",
+    "relatedTools": "أدوات ذات صلة"
+  },
+  "dnsChecker": {
+    "workingTitle": "فحص DNS",
+    "hostLabel": "اسم النطاق",
+    "recordType": "نوع السجل",
+    "ttl": "TTL",
+    "answer": "النتيجة",
+    "noResult": "لم يتم العثور على نتيجة لهذا السجل."
+  },
+  "sslChecker": {
+    "workingTitle": "فحص شهادة SSL",
+    "hostLabel": "اسم النطاق",
+    "status": "الحالة",
+    "valid": "صالحة",
+    "invalid": "غير صالحة حاليًا",
+    "subject": "الاسم",
+    "issuer": "الجهة المُصدِرة",
+    "validFrom": "صالحة من",
+    "expires": "تنتهي في",
+    "daysRemaining": "الأيام المتبقية",
+    "ip": "عنوان IP",
+    "signature": "خوارزمية التوقيع",
+    "tlsConnect": "زمن اتصال TLS",
+    "sans": "الأسماء البديلة (SAN)"
+  },
+  "technicalDirection": {
+    "domainInputs": "ltr",
+    "urls": "ltr",
+    "ipAddresses": "ltr",
+    "code": "ltr",
+    "dnsAnswers": "ltr",
+    "httpHeaders": "ltr"
+  }
+}
