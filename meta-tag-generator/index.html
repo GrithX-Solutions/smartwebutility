@@ -1,8 +1,49 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Meta Tag Generator | Smart Web Utility</title><meta name="description" content="Generate SEO meta tags including title, description, canonical, robots and author tags with a live preview."><link rel="canonical" href="https://smartwebutility.com/meta-tag-generator/"><meta name="theme-color" content="#07101b"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css"></head><body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Meta Tag Generator — Title, Description, Canonical & Robots | Smart Web Utility</title><meta name="description" content="Generate HTML title, meta description, canonical, robots and author tags locally with a simple search-result-style preview and copy-ready output."><link rel="canonical" href="https://smartwebutility.com/meta-tag-generator/"><meta property="og:title" content="Meta Tag Generator — Create SEO Metadata"><meta property="og:description" content="Generate title, description, canonical, robots and author tags with copy-ready HTML output."><meta property="og:url" content="https://smartwebutility.com/meta-tag-generator/"><meta property="og:type" content="website"><meta name="theme-color" content="#0b1120"><link rel="icon" href="/favicon-64.png" sizes="64x64" type="image/png"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css"><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Meta Tag Generator","url":"https://smartwebutility.com/meta-tag-generator/","description":"Generate common HTML metadata locally, including title, description, canonical, robots and author tags.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Title tag generation","Meta description generation","Canonical link generation","Robots meta generation","Author meta generation","Search-result-style preview","Copy generated HTML"]}</script></head><body>
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
 <main><section class="tool-hero wrap json-tool-hero"><div class="crumb"><a href="/">Home</a><span>/</span><span>Meta Tag Generator</span></div><span class="kicker">SEO tool · runs locally</span><h1>Meta Tag Generator</h1><p class="lead compact">Create common SEO meta tags and preview how your title, URL and description may look in search results.</p>
 <div class="json-workspace"><section class="editor-panel"><div class="editor-head"><strong>Page details</strong></div><div style="padding:16px;display:grid;gap:12px"><input id="metaTitle" class="code-editor" style="height:auto;min-height:52px;resize:none" placeholder="Page title"><textarea id="metaDescription" class="code-editor" style="height:110px" placeholder="Meta description"></textarea><input id="metaCanonical" class="code-editor" style="height:auto;min-height:52px;resize:none" placeholder="https://example.com/page"><input id="metaAuthor" class="code-editor" style="height:auto;min-height:52px;resize:none" placeholder="Author or brand"><select id="metaRobots" class="code-editor" style="height:auto;min-height:52px"><option>index,follow</option><option>noindex,follow</option><option>index,nofollow</option><option>noindex,nofollow</option></select></div></section>
 <section class="editor-panel"><div class="editor-head"><strong>Generated tags</strong><button id="copyMeta" class="text-btn" type="button">Copy</button></div><textarea id="metaOutput" class="code-editor" readonly></textarea><div class="result-card" style="margin:0;border-left:0;border-right:0;border-bottom:0;border-radius:0"><div class="result-head"><strong>Preview</strong></div><div id="metaPreview" class="empty"></div></div></section></div>
 <div class="json-toolbar"><button id="exampleMeta" class="btn ghost" type="button">Example</button><button id="clearMeta" class="text-btn" type="button">Clear</button></div><div class="trustbar"><span>SEO basics</span><span>Live preview</span><span>No server request</span></div></section>
-<section class="section wrap prose"><h2>Generate essential SEO meta tags</h2><p>Create a title tag, meta description, canonical URL, robots directive and author tag from one simple form. The preview is illustrative; search engines may rewrite titles and descriptions.</p></section></main>
+<section class="section wrap prose">
+  <h2>Generate a clean metadata starting point</h2>
+  <p>Enter a page title, description, preferred canonical URL, robots directive and optional author or brand value. The tool builds copy-ready HTML locally in your browser and shows an illustrative search-result-style preview.</p>
+  <div class="info-grid">
+    <article><h3>Title</h3><p>Create the document title that appears in the browser tab and provides an important description of the page to search systems and users.</p></article>
+    <article><h3>Meta description</h3><p>Write a concise summary that accurately describes the page. It can be used as a snippet source, although search engines may choose different text.</p></article>
+    <article><h3>Canonical link</h3><p>Declare the preferred public URL for the page when duplicate or near-duplicate URL variations can exist.</p></article>
+    <article><h3>Robots directive</h3><p>Choose common combinations of <code>index</code>, <code>noindex</code>, <code>follow</code> and <code>nofollow</code>. Review these carefully before deploying them to production.</p></article>
+  </div>
+
+  <h2>How to use the generated tags</h2>
+  <p>Place the generated elements inside the page's <code>&lt;head&gt;</code>. Then deploy the page and inspect the actual public HTML to confirm your CMS, template or framework did not alter or duplicate the metadata. The author meta tag is generic page metadata; visible authorship and relevant structured data should be handled separately when your content model requires them.</p>
+
+  <h2>The preview is illustrative, not a ranking simulator</h2>
+  <p>The preview helps you review wording and URL presentation. It does not predict rankings, pixel-perfect search appearance or whether a search engine will use the exact title and description you supplied. Search systems can rewrite title links or snippets based on page content and query context.</p>
+
+  <h2>Common mistakes to avoid</h2>
+  <div class="info-grid">
+    <article><h3>Copying one title everywhere</h3><p>Metadata should describe the specific page. Reusing one generic title or description across many pages makes them harder to distinguish.</p></article>
+    <article><h3>Canonicalizing to the wrong page</h3><p>A canonical should identify the preferred equivalent URL, not send every page in a section to an unrelated homepage or category.</p></article>
+    <article><h3>Accidental noindex</h3><p>A production page can disappear from search when a staging robots directive is carried over during launch.</p></article>
+    <article><h3>Keyword stuffing</h3><p>Write natural, accurate metadata for the real page intent rather than repeating the same phrase unnaturally.</p></article>
+  </div>
+
+  <h2>Related SEO tools</h2>
+  <div class="related-tools">
+    <a href="/meta-tag-checker/">Meta Tag Checker<span>Inspect the metadata actually returned by a live page.</span></a>
+    <a href="/open-graph-preview/">Open Graph Preview<span>Create and preview social-sharing metadata.</span></a>
+    <a href="/schema-markup-generator/">Schema Markup Generator<span>Create starter JSON-LD for common entity types.</span></a>
+  </div>
+</section>
+<section class="section alt" data-quality-content="v2"><div class="wrap prose">
+  <h2>Frequently asked meta tag generator questions</h2>
+  <h3>Do I need to include <code>index,follow</code> on every page?</h3>
+  <p>It is often unnecessary because indexing and following are normal defaults when no restrictive directive is present. The generator includes the option because teams sometimes prefer explicit markup.</p>
+  <h3>Should the canonical URL be absolute?</h3>
+  <p>Using a full absolute preferred URL is a clear and common implementation for canonical links, especially across complex routing or multi-host setups.</p>
+  <h3>Can search engines rewrite my title or description?</h3>
+  <p>Yes. The generated metadata is an input signal, not a guarantee of the exact text displayed for every query.</p>
+  <h3>Does this tool submit anything to a server?</h3>
+  <p>No. Generation and preview logic run in browser JavaScript.</p>
+</div></section></main>
 <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/">All tools</a><a href="/sitemap.xml">Sitemap</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></div></footer><script src="/assets/meta-generator.js" defer></script></body></html>
