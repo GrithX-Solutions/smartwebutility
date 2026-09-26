@@ -1,12 +1,56 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Redirect Checker | Smart Web Utility</title><meta name="description" content="Trace HTTP redirect chains and see every 301, 302, 303, 307 or 308 hop through to the final URL."><link rel="canonical" href="https://smartwebutility.com/redirect-checker/">
-<meta property="og:title" content="Redirect Checker | Smart Web Utility"><meta property="og:description" content="Trace HTTP redirect chains and see every 301, 302, 303, 307 or 308 hop through to the final URL."><meta property="og:url" content="https://smartwebutility.com/redirect-checker/"><meta property="og:type" content="website"><meta name="theme-color" content="#07101b"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Redirect Checker","url":"https://smartwebutility.com/redirect-checker/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<title>Redirect Checker — Trace 301, 302, 307 & 308 Chains | Smart Web Utility</title><meta name="description" content="Trace a URL redirect chain hop by hop. See each 301, 302, 303, 307 or 308 response, Location header and final destination."><link rel="canonical" href="https://smartwebutility.com/redirect-checker/">
+<meta property="og:title" content="Redirect Checker — Trace Redirect Chains"><meta property="og:description" content="Follow HTTP redirect hops and inspect each status code, URL and Location header through to the final destination."><meta property="og:url" content="https://smartwebutility.com/redirect-checker/"><meta property="og:type" content="website"><meta name="theme-color" content="#07101b"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Redirect Checker","url":"https://smartwebutility.com/redirect-checker/","description":"Trace HTTP redirect chains hop by hop and inspect redirect status codes, Location headers and the final destination.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["301 redirect tracing","302 redirect tracing","303 redirect tracing","307 redirect tracing","308 redirect tracing","Redirect loop detection","Final URL identification"]}</script>
 </head><body>
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
 <main><section class="tool-hero wrap"><div class="crumb"><a href="/">Home</a><span>/</span><span>Redirect Checker</span></div><span class="kicker">Redirect diagnostics</span><h1>Redirect Checker</h1><p class="lead compact">Trace HTTP redirect chains and see every 301, 302, 303, 307 or 308 hop through to the final URL.</p>
 <form id="toolForm" class="lookup" data-tool="redirect" novalidate><label class="sr-only" for="target">Target</label><input id="target" name="target" inputmode="url" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="https://example.com/old-page" required><button class="btn primary" type="submit">Trace Redirects</button></form>
 <section id="result" class="result-card" hidden aria-live="polite"><div class="result-head"><div><span class="status-dot"></span><strong id="resultTitle">Result</strong></div><button id="copyBtn" class="text-btn" type="button">Copy</button></div><div id="resultBody"></div></section><div id="error" class="error" hidden role="alert"></div></section>
-<section class="section wrap prose"><h2>What this tool checks</h2><p>The redirect checker follows redirects one hop at a time and displays each URL, status code and Location header. Public-host validation is repeated on every hop.</p><h2>When to use it</h2><p>Use it during domain migrations, HTTPS changes, URL cleanup, SEO audits and debugging when a redirect chain is longer or different than expected.</p><h2>Related website tools</h2><div class="related-tools"><a href="/dns-checker/">DNS Checker<span>Inspect DNS records.</span></a><a href="/ssl-checker/">SSL Checker<span>Inspect HTTPS certificate details.</span></a><a href="/http-status-checker/">HTTP Status Checker<span>Check status and headers.</span></a></div></section><section class="section alt" data-quality-content="v1"><div class="wrap prose"><h2>Why redirect chains matter</h2><p>A redirect chain occurs when one URL redirects to another URL that redirects again before reaching the final destination. Redirects are normal, but unnecessary hops add latency and make website migrations, canonicalization and debugging harder.</p><h2>What to look for</h2><p>Check that the final destination is the page you expect, that HTTP-to-HTTPS and hostname normalization are consistent, and that old URLs do not bounce through several historical locations. Redirect loops should be fixed immediately because clients never reach usable content.</p><h2>SEO and migration use cases</h2><p>During a domain or URL migration, direct old URLs to the closest relevant new destination. After launch, update internal links so visitors and crawlers do not need to traverse redirects for normal navigation.</p><h2>Frequently asked questions</h2><h3>How many redirect hops are ideal?</h3><p>The best chain is usually the shortest one that correctly implements your routing goal. Avoid adding hops that provide no functional value.</p><h3>Can redirects change by user?</h3><p>Yes. Cookies, device detection, geolocation, authentication and CDN rules can produce different redirect behavior for different clients.</p></div></section></main>
+<section class="section wrap prose">
+  <h2>Trace a redirect chain one hop at a time</h2>
+  <p>The Redirect Checker requests the starting URL, reads its redirect status and Location header, then follows the destination one hop at a time. The result table shows the URL, status code and next Location for each step through to the final response.</p>
+  <div class="info-grid">
+    <article><h3>See every hop</h3><p>Expose intermediate 301, 302, 303, 307 and 308 responses that browsers normally follow automatically.</p></article>
+    <article><h3>Find the final destination</h3><p>Confirm where an old URL, short link, campaign URL or migrated page ultimately lands.</p></article>
+    <article><h3>Detect redirect loops</h3><p>The checker tracks previously visited URLs and reports when a chain loops back to a URL it has already seen.</p></article>
+    <article><h3>Public-target validation</h3><p>Each hop is normalized and validated before the server follows it, reducing unsafe access to private or reserved network targets.</p></article>
+  </div>
+
+  <h2>Why redirect chains matter</h2>
+  <p>Redirects are normal infrastructure, but unnecessary hops add connection and request latency. Long historical chains also make migrations harder to reason about. Where possible, old URLs should point directly to the correct current destination rather than passing through several previous URL structures.</p>
+
+  <h2>Common redirect patterns to inspect</h2>
+  <div class="info-grid">
+    <article><h3>HTTP to HTTPS</h3><p>Confirm the insecure URL moves to the intended HTTPS hostname and does not bounce through extra host or path variations.</p></article>
+    <article><h3>www and non-www normalization</h3><p>Make sure the preferred hostname is reached consistently and internal links already use the canonical version.</p></article>
+    <article><h3>Domain or CMS migration</h3><p>Check representative legacy URLs and important deep links. Redirect each old page to the closest relevant new page rather than sending everything to the homepage.</p></article>
+    <article><h3>Tracking and short links</h3><p>Inspect where marketing, affiliate or shortened links land and whether intermediate redirects introduce unexpected domains or parameters.</p></article>
+  </div>
+
+  <h2>Redirect status codes in context</h2>
+  <p>301 and 308 commonly communicate permanent redirects, while 302 and 307 are commonly used for temporary routing. 303 instructs the client to retrieve the destination with GET. The correct status depends on the application and request method, so choose the code that matches the routing behavior you intend.</p>
+
+  <h2>Limits of this checker</h2>
+  <p>The server follows up to ten request steps and reports redirects visible to its HTTP client. Redirect behavior can still vary by cookie, authentication, user agent, geography, JavaScript execution or application state. Client-side JavaScript navigation is not the same as an HTTP redirect and may not appear in this chain.</p>
+
+  <h2>Related website tools</h2>
+  <div class="related-tools">
+    <a href="/http-status-checker/">HTTP Status Checker<span>Inspect the first response without following redirects.</span></a>
+    <a href="/http-header-checker/">HTTP Header Checker<span>Review Location and other response headers in detail.</span></a>
+    <a href="/dns-checker/">DNS Checker<span>Confirm the hostnames in a chain resolve as expected.</span></a>
+  </div>
+</section>
+<section class="section alt" data-quality-content="v2"><div class="wrap prose">
+  <h2>Frequently asked redirect questions</h2>
+  <h3>How many redirect hops should a URL have?</h3>
+  <p>There is no universal magic number, but fewer unnecessary hops are easier to maintain and faster for clients. A direct redirect to the intended destination is preferable when it is practical.</p>
+  <h3>What causes a redirect loop?</h3>
+  <p>Conflicting rules can send URL A to URL B and then send URL B back to URL A, or cycle through a larger set of URLs. Proxy, CDN, CMS and web-server rules can all contribute.</p>
+  <h3>Why does my browser show a different redirect?</h3>
+  <p>Cookies, login state, user agent, geographic routing, bot protection and A/B testing can change redirect behavior between clients.</p>
+  <h3>Should internal links point to redirected URLs?</h3>
+  <p>Usually it is better to update internal links to the final intended URL so normal navigation does not rely on avoidable redirect hops.</p>
+</div></section></main>
 <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/">All tools</a><a href="/sitemap.xml">Sitemap</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></div></footer><script src="/assets/network-tools.js" defer></script></body></html>
