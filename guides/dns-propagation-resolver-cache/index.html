@@ -1,0 +1,86 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DNS Propagation & Resolver Cache: Why Old Records Persist | Smart Web Utility</title><meta name="description" content="Why do some DNS resolvers still return an old record after a change? Understand TTL, recursive caches, authoritative DNS, negative caching and stale answers."><link rel="canonical" href="https://smartwebutility.com/guides/dns-propagation-resolver-cache/">
+<meta property="og:title" content="DNS Propagation: Why Some Resolvers Still Return the Old Record"><meta property="og:description" content="DNS changes are not pushed to every resolver at once. Independent caches refresh on their own timelines."><meta property="og:url" content="https://smartwebutility.com/guides/dns-propagation-resolver-cache/"><meta property="og:type" content="article">
+<meta name="theme-color" content="#0b1120"><link rel="icon" href="/favicon-64.png" sizes="64x64" type="image/png"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="manifest" href="/site.webmanifest">
+<script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"DNS Propagation: Why Some Resolvers Still Return the Old Record","description":"Understand why recursive resolvers can disagree after a DNS change, how TTL and negative caching work, and how to distinguish cache delay from an authoritative DNS mistake.","url":"https://smartwebutility.com/guides/dns-propagation-resolver-cache/","datePublished":"2026-09-27","dateModified":"2026-09-27","author":{"@type":"Organization","@id":"https://smartwebutility.com/#organization","name":"Smart Web Utility","url":"https://smartwebutility.com/"},"publisher":{"@type":"Organization","@id":"https://smartwebutility.com/#organization","name":"Smart Web Utility","url":"https://smartwebutility.com/"},"mainEntityOfPage":"https://smartwebutility.com/guides/dns-propagation-resolver-cache/"}</script>
+</head><body><header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+<main><section class="tool-hero wrap"><div class="crumb"><a href="/">Home</a><span>/</span><a href="/guides/">Guides</a><span>/</span><span>DNS Resolver Cache</span></div><span class="kicker">DNS troubleshooting guide</span><h1>DNS Propagation: Why Some Resolvers Still Return the Old Record</h1><p class="lead compact">What people call DNS propagation is usually a combination of authoritative DNS changes and many independent recursive caches expiring at different times. Two resolvers can temporarily return different valid views of the same hostname.</p></section>
+<section class="section wrap prose" data-quality-content="v2">
+  <h2>DNS changes are not a global push</h2>
+  <p>When you edit an A, AAAA, CNAME, MX or other DNS record, the authoritative source changes first. Recursive resolvers around the internet do not receive an instant broadcast telling them to discard every cached answer. A resolver that already cached the previous record can continue using it until its cache policy requires a refresh.</p>
+  <p>RFC 1035 defines TTL as the interval a resource record may be cached before the source should be consulted again. Modern recursive resolvers implement that principle while also applying operational policies, and standards such as RFC 8767 allow stale data to be served in limited resilience scenarios when fresh authoritative data cannot be obtained.</p>
+
+  <h2>Authoritative DNS versus recursive DNS</h2>
+  <div class="info-grid">
+    <article><h3>Authoritative nameserver</h3><p>Holds the definitive zone data for the delegated domain and answers from that configured source.</p></article>
+    <article><h3>Recursive resolver</h3><p>Looks up answers on behalf of clients and caches results so later requests can be answered faster.</p></article>
+    <article><h3>Local/client cache</h3><p>Operating systems, browsers, routers and applications can add another cache layer beyond the recursive service.</p></article>
+    <article><h3>CDN/application layer</h3><p>Even when DNS is correct, a CDN or application can still route or serve content from an older origin. That is not a DNS propagation problem.</p></article>
+  </div>
+
+  <h2>Step 1: compare independent resolver answers</h2>
+  <p>Use the <a href="/dns-propagation-checker/">DNS Propagation Checker</a> to compare Cloudflare, Google and the server resolver. These are separate resolver paths with separate caches. If one shows the new value and another shows the old value shortly after a change, cache state is a plausible explanation.</p>
+  <p>The checker intentionally does not claim to sample every country or ISP. Three independent answers are useful evidence, but they are not proof that every resolver worldwide has converged.</p>
+
+  <h2>Step 2: inspect the current record and TTL</h2>
+  <p>Use the <a href="/dns-checker/">DNS Checker</a> to inspect common record types and the TTL returned by its resolver. Cloudflare's DNS documentation describes TTL as the field controlling how long records are cached and notes that longer TTLs can make updates take longer to appear to end users.</p>
+  <p>The important value after a change is often the <strong>previous</strong> cache lifetime. If a resolver cached the old answer before you lowered the TTL, the new lower TTL does not retroactively rewrite the timer on that existing cache entry.</p>
+
+  <h2>Step 3: verify the authoritative configuration</h2>
+  <p>If every recursive resolver keeps returning the wrong value, do not assume you simply need to wait longer. Check the domain's NS delegation and confirm you edited the DNS zone that is actually authoritative. A common mistake is changing records at a registrar while the domain is delegated to another DNS provider.</p>
+  <p>If some authoritative nameservers themselves disagree, recursive resolvers can receive different answers depending on which authority they reach. Google Public DNS troubleshooting guidance recommends checking SOA serials when stale answers persist because inconsistent authoritative servers can be the underlying problem.</p>
+
+  <h2>Why resolvers can disagree temporarily</h2>
+  <table class="record-table">
+    <thead><tr><th>Observation</th><th>Likely explanation</th><th>What to do</th></tr></thead>
+    <tbody>
+      <tr><td>Cloudflare new, Google old</td><td>Independent caches refreshed at different times.</td><td>Check previous TTL and wait for the old cache to expire if authoritative DNS is correct.</td></tr>
+      <tr><td>Both public resolvers old</td><td>Old cache may still be valid, or authoritative DNS may still be old.</td><td>Verify delegation and authoritative zone data.</td></tr>
+      <tr><td>All resolvers new, one device old</td><td>Local OS/router/browser cache or a different configured resolver.</td><td>Identify the resolver path used by that device/network.</td></tr>
+      <tr><td>A new, AAAA old</td><td>IPv4 and IPv6 records were not updated together.</td><td>Fix or remove the stale AAAA record if IPv6 is not intended.</td></tr>
+      <tr><td>DNS new, website still old</td><td>CDN/origin routing, redirect or application cache.</td><td>Move to HTTP/SSL diagnostics instead of editing DNS again.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Negative caching can delay newly created records</h2>
+  <p>DNS caching is not limited to successful answers. A resolver can cache a negative result such as NXDOMAIN or NODATA according to DNS negative-caching rules. If a hostname did not exist and you create it moments later, some clients can still receive the cached negative answer until that cache expires.</p>
+  <p>This is why “the record exists now” does not necessarily mean every resolver will immediately stop returning the earlier negative response.</p>
+
+  <h2>Serving stale data is a special case</h2>
+  <p>TTL is the normal freshness boundary, but RFC 8767 allows recursive resolvers to serve expired cached data in exceptional situations to improve resilience when fresh authoritative data cannot be retrieved. If you are debugging a rare stale-answer case during an authoritative outage, do not assume every resolver must discard the old record at the exact TTL boundary.</p>
+
+  <h2>Do not keep editing the record while diagnosing</h2>
+  <p>Repeated DNS changes can reset your own troubleshooting baseline and create more generations of cached answers. Once the intended authoritative data is correct, observe resolver behavior before making another change. If the problem persists beyond the expected cache window, investigate delegation, authoritative consistency, CNAME chains, A/AAAA differences and non-DNS routing layers.</p>
+
+  <h2>What Smart Web Utility can and cannot prove</h2>
+  <p>The propagation checker compares current answers from Cloudflare, Google and the server resolver for supported A, AAAA, MX, TXT, CNAME, NS and CAA queries. It does not query every geographic resolver, expose each resolver's remaining cache TTL, or directly audit all authoritative nameservers.</p>
+  <p>The DNS Checker can show TTL with the answer returned by the resolver it queries, but that TTL is evidence about that current response—not a universal countdown shared by every resolver worldwide.</p>
+
+  <h2>Frequently asked questions</h2>
+  <h3>How long does DNS propagation take?</h3>
+  <p>There is no single universal duration. The previous TTL, when each resolver cached the answer, negative caching, resolver policy and authoritative consistency all affect what different users see.</p>
+  <h3>Why does 1.1.1.1 show the new IP but 8.8.8.8 shows the old IP?</h3>
+  <p>They are independent recursive resolver systems. One may have refreshed after your DNS change while the other still has a valid cached answer.</p>
+  <h3>Can I force every resolver to refresh immediately?</h3>
+  <p>No. You can correct authoritative DNS and, for some public resolver services, use provider-specific cache-flush tools, but you cannot remotely purge every ISP, enterprise or local DNS cache on the internet.</p>
+  <h3>Does a low TTL guarantee instant changes?</h3>
+  <p>No. It reduces the normal maximum caching interval for new answers, but existing caches may have been populated under an older TTL and exceptional stale-serving behavior can exist.</p>
+
+  <h2>Related tools and guides</h2>
+  <div class="related-tools">
+    <a href="/dns-propagation-checker/">DNS Propagation Checker<span>Compare current answers from Cloudflare, Google and the server resolver.</span></a>
+    <a href="/dns-checker/">DNS Checker<span>Inspect record values and TTL from a public resolver.</span></a>
+    <a href="/guides/dns-changed-still-old-ip/">DNS changed but site still points to old IP<span>Continue from resolver evidence into A/AAAA, CDN, HTTP and migration troubleshooting.</span></a>
+  </div>
+
+  <h2>Technical references</h2>
+  <div class="related-tools">
+    <a href="https://www.rfc-editor.org/rfc/rfc1035.html" rel="noopener">RFC 1035<span>Defines DNS resource-record TTL and resolver caching fundamentals.</span></a>
+    <a href="https://www.rfc-editor.org/rfc/rfc8767.html" rel="noopener">RFC 8767<span>Defines limited serving of stale DNS data for resiliency.</span></a>
+    <a href="https://developers.cloudflare.com/dns/manage-dns-records/reference/ttl/" rel="noopener">Cloudflare: DNS TTL<span>Operational guidance on caching and DNS record updates.</span></a>
+    <a href="https://developers.google.com/speed/public-dns/docs/troubleshooting" rel="noopener">Google Public DNS troubleshooting<span>Guidance for stale cached answers and inconsistent authoritative servers.</span></a>
+    <a href="/methodology/">Smart Web Utility methodology<span>Research, sourcing and tool-limit standards for these guides.</span></a>
+  </div>
+</section></main><footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer></body></html>
