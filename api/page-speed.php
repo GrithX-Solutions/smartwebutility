@@ -189,6 +189,7 @@ out([
   'notes'=>[
     'Lab data is a synthetic Lighthouse run for the selected device strategy.',
     'Field data is shown only when the provider returns sufficient real-user experience data.',
-    'Performance scores can vary between runs because network, server and page conditions change.',\n    'Field data is provider-dependent and may be unavailable even when a Lighthouse lab run succeeds.'
+    'Performance scores can vary between runs because network, server and page conditions change.',
+    'Field data is provider-dependent and may be unavailable even when a Lighthouse lab run succeeds.'
   ]
 ]);
