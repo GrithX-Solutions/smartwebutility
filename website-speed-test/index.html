@@ -86,7 +86,7 @@
 </section>
 
 <section class="section alt"><div class="wrap prose">
-  <div class="section-head"><div><span class="kicker">Understand the result</span><h2>Mobile and desktop speed are different tests</h2></div><p>A page can perform well on desktop and still struggle under mobile CPU and network conditions.</p></div>
+  <div class="section-head"><div><span class="kicker">Understand the result</span><h2>Mobile website speed test vs desktop Lighthouse test</h2></div><p>A page can perform well on desktop and still struggle under mobile CPU and network conditions.</p></div>
   <div class="info-grid">
     <article><h3>Performance score</h3><p>The Lighthouse performance score is a weighted summary of synthetic lab metrics. Treat it as a diagnostic benchmark, not a ranking guarantee.</p></article>
     <article><h3>Core Web Vitals</h3><p>Largest Contentful Paint, Interaction to Next Paint and Cumulative Layout Shift describe loading, responsiveness and visual stability using real-user data when available.</p></article>
@@ -101,7 +101,7 @@
     <article><h3>CLS ≤ 0.1</h3><p>Cumulative Layout Shift measures unexpected visual movement. The good threshold is 0.1 or less at the 75th percentile.</p></article>
   </div>
 
-  <h2>How to improve a slow website</h2>
+  <h2>Why a mobile Lighthouse score can be lower than desktop</h2><p>Mobile and desktop are separate lab profiles. Mobile testing applies more constrained device and network conditions, so JavaScript execution, render-blocking requests and large above-the-fold assets can have a larger measured impact. Compare each device strategy against itself over repeated runs rather than expecting identical scores.</p><h2>How to improve a slow website</h2>
   <p>Start with the largest measured bottlenecks rather than chasing a perfect score. Optimize the largest above-the-fold images, remove or defer unnecessary JavaScript, reduce render-blocking CSS, improve cache policy and compression, and investigate slow server response. Re-test after each meaningful change so you can confirm the improvement under the same device strategy.</p>
 
   <h2>Field data vs lab data</h2>
