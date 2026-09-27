@@ -24,50 +24,132 @@ if(is_file($cacheFile)){
   }
 }
 
-$endpoint='https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed';
-$query='url='.rawurlencode($url).'&strategy='.$strategy.'&locale=en'
-  .'&category=performance&category=accessibility&category=best-practices&category=seo';
+function ps_local_lighthouse(string $url,string $strategy): array {
+  $dir=sys_get_temp_dir().'/lighthouse-jobs';
+  if(!is_dir($dir) && !@mkdir($dir,0770,true) && !is_dir($dir)){
+    return ['ok'=>false,'code'=>'runner_unavailable','error'=>'Local Lighthouse job directory is unavailable.'];
+  }
+  $lock=@fopen($dir.'/.runner.lock','c');
+  if(!$lock) return ['ok'=>false,'code'=>'runner_unavailable','error'=>'Local Lighthouse lock is unavailable.'];
+  if(!@flock($lock,LOCK_EX|LOCK_NB)){
+    fclose($lock);
+    return ['ok'=>false,'code'=>'runner_busy','error'=>'Performance runner is busy with another audit.'];
+  }
+
+  try{
+    $id=bin2hex(random_bytes(12));
+    $jobFile=$dir.'/'.$id.'.json';
+    $resultFile=$dir.'/'.$id.'.result.json';
+    $payload=json_encode(['url'=>$url,'strategy'=>$strategy,'created_at'=>gmdate('c')],JSON_UNESCAPED_SLASHES);
+    if($payload===false || @file_put_contents($jobFile,$payload,LOCK_EX)===false){
+      return ['ok'=>false,'code'=>'runner_unavailable','error'=>'Could not queue the local Lighthouse audit.'];
+    }
+
+    $deadline=microtime(true)+88.0;
+    while(microtime(true)<$deadline){
+      if(is_file($resultFile)){
+        $raw=@file_get_contents($resultFile);
+        @unlink($resultFile);
+        $decoded=json_decode((string)$raw,true);
+        if(!is_array($decoded)){
+          return ['ok'=>false,'code'=>'runner_error','error'=>'Local Lighthouse returned an invalid result.'];
+        }
+        if(($decoded['ok']??false) && is_array($decoded['lighthouseResult']??null)){
+          return ['ok'=>true,'lighthouseResult'=>$decoded['lighthouseResult']];
+        }
+        return ['ok'=>false,'code'=>'runner_error','error'=>$decoded['error']??'Local Lighthouse audit failed.'];
+      }
+      usleep(250000);
+    }
+    @unlink($jobFile);
+    return ['ok'=>false,'code'=>'runner_timeout','error'=>'Local Lighthouse audit timed out.'];
+  } finally {
+    @flock($lock,LOCK_UN);
+    fclose($lock);
+  }
+}
+
+function ps_google_pagespeed(string $url,string $strategy,string $key): array {
+  $endpoint='https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed';
+  $query='url='.rawurlencode($url).'&strategy='.$strategy.'&locale=en'
+    .'&category=performance&category=accessibility&category=best-practices&category=seo';
+  if($key!=='') $query.='&key='.rawurlencode($key);
+
+  $ch=curl_init($endpoint.'?'.$query);
+  curl_setopt_array($ch,[
+    CURLOPT_RETURNTRANSFER=>true,
+    CURLOPT_FOLLOWLOCATION=>true,
+    CURLOPT_CONNECTTIMEOUT=>10,
+    CURLOPT_TIMEOUT=>100,
+    CURLOPT_USERAGENT=>'SmartWebUtility/1.0 (+https://smartwebutility.com/)',
+    CURLOPT_SSL_VERIFYPEER=>true,
+    CURLOPT_SSL_VERIFYHOST=>2,
+    CURLOPT_HTTPHEADER=>['Accept: application/json']
+  ]);
+  $body=curl_exec($ch);
+  $errno=curl_errno($ch);
+  $error=curl_error($ch);
+  $status=(int)curl_getinfo($ch,CURLINFO_HTTP_CODE);
+  curl_close($ch);
+
+  if($body===false || $errno){
+    return ['ok'=>false,'status'=>0,'error'=>'PageSpeed service could not be reached: '.$error];
+  }
+  $data=json_decode((string)$body,true);
+  if(!is_array($data)){
+    return ['ok'=>false,'status'=>$status,'error'=>'PageSpeed returned an invalid response.'];
+  }
+  if($status>=400 || isset($data['error'])){
+    return [
+      'ok'=>false,
+      'status'=>$status,
+      'error'=>$data['error']['message'] ?? 'PageSpeed analysis could not be completed.'
+    ];
+  }
+  return ['ok'=>true,'status'=>$status,'data'=>$data];
+}
+
 $key=trim((string)(getenv('PAGESPEED_API_KEY') ?: ''));
-if($key!=='') $query.='&key='.rawurlencode($key);
+$data=null;
+$provider='Google PageSpeed Insights API / Lighthouse';
+$providerWarning=null;
 
-$ch=curl_init($endpoint.'?'.$query);
-curl_setopt_array($ch,[
-  CURLOPT_RETURNTRANSFER=>true,
-  CURLOPT_FOLLOWLOCATION=>true,
-  CURLOPT_CONNECTTIMEOUT=>10,
-  CURLOPT_TIMEOUT=>100,
-  CURLOPT_USERAGENT=>'SmartWebUtility/1.0 (+https://smartwebutility.com/)',
-  CURLOPT_SSL_VERIFYPEER=>true,
-  CURLOPT_SSL_VERIFYHOST=>2,
-  CURLOPT_HTTPHEADER=>['Accept: application/json']
-]);
-$body=curl_exec($ch);
-$errno=curl_errno($ch);
-$error=curl_error($ch);
-$status=(int)curl_getinfo($ch,CURLINFO_HTTP_CODE);
-curl_close($ch);
-
-if($body===false || $errno){
-  out(['error'=>'Performance analysis service could not be reached. Please try again shortly.','detail'=>$error],502);
-}
-$data=json_decode((string)$body,true);
-if(!is_array($data)){
-  out(['error'=>'Performance analysis returned an invalid response.'],502);
-}
-if($status>=400 || isset($data['error'])){
-  $message=$data['error']['message'] ?? 'PageSpeed analysis could not be completed.';
-  $code='provider_error';
-  if($status===429){
-    $code='provider_quota';
-    $message=$key===''
-      ? 'Reliable PageSpeed analysis requires a server API key because the keyless provider quota is unavailable.'
-      : 'PageSpeed analysis quota is currently exhausted for the configured API project.';
-    if($cached && is_file($cacheFile) && filemtime($cacheFile)!==false && filemtime($cacheFile)>=time()-86400){
-      $cached['cache']=['status'=>'stale','max_age_seconds'=>86400,'warning'=>$message];
-      out($cached);
+if($key!==''){
+  $remote=ps_google_pagespeed($url,$strategy,$key);
+  if($remote['ok']??false){
+    $data=$remote['data'];
+  } else {
+    $local=ps_local_lighthouse($url,$strategy);
+    if($local['ok']??false){
+      $data=['lighthouseResult'=>$local['lighthouseResult']];
+      $provider='Local Lighthouse 13.5.0 fallback';
+      $providerWarning='Google PageSpeed API was unavailable, so this report uses the isolated local Lighthouse runner.';
+    } else {
+      $message=$remote['error']??'PageSpeed analysis could not be completed.';
+      if($cached && is_file($cacheFile) && filemtime($cacheFile)!==false && filemtime($cacheFile)>=time()-86400){
+        $cached['cache']=['status'=>'stale','max_age_seconds'=>86400,'warning'=>$message];
+        out($cached);
+      }
+      out(['error'=>$message,'code'=>'provider_error','provider_status'=>$remote['status']??0],502);
     }
   }
-  out(['error'=>$message,'code'=>$code,'provider_status'=>$status],$status===429?503:502);
+} else {
+  $local=ps_local_lighthouse($url,$strategy);
+  if($local['ok']??false){
+    $data=['lighthouseResult'=>$local['lighthouseResult']];
+    $provider='Isolated local Lighthouse 13.5.0';
+  } else {
+    if($cached && is_file($cacheFile) && filemtime($cacheFile)!==false && filemtime($cacheFile)>=time()-86400){
+      $cached['cache']=['status'=>'stale','max_age_seconds'=>86400,'warning'=>$local['error']??'Local runner unavailable.'];
+      out($cached);
+    }
+    $code=$local['code']??'runner_unavailable';
+    $status=$code==='runner_busy'?429:503;
+    out([
+      'error'=>$local['error']??'Performance runner is unavailable.',
+      'code'=>$code
+    ],$status);
+  }
 }
 
 $lh=$data['lighthouseResult'] ?? [];
@@ -300,13 +382,14 @@ $response=[
   'diagnostics'=>$diagnostics,
   'passed'=>$passed,
   'resources'=>$resourceSummary,
-  'provider'=>'Google PageSpeed Insights API / Lighthouse',
-  'notes'=>[
+  'provider'=>$provider,
+  'notes'=>array_values(array_filter([
     'Lab data is a synthetic Lighthouse run for the selected device strategy.',
     'Field data is shown only when the provider returns sufficient real-user experience data.',
     'Performance scores can vary between runs because network, server and page conditions change.',
-    'Field data is provider-dependent and may be unavailable even when a Lighthouse lab run succeeds.'
-  ]
+    'Field data is provider-dependent and may be unavailable even when a Lighthouse lab run succeeds.',
+    $providerWarning
+  ]))
 ];
 @file_put_contents($cacheFile,json_encode($response,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE),LOCK_EX);
 $response['cache']=['status'=>'miss','max_age_seconds'=>900];
