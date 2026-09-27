@@ -9,7 +9,7 @@
 <form id="toolForm" class="lookup" data-tool="ssl" novalidate><label class="sr-only" for="target">Target</label><input id="target" name="target" inputmode="url" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="example.com" required><button class="btn primary" type="submit">Check SSL</button></form>
 <section id="result" class="result-card" hidden aria-live="polite"><div class="result-head"><div><span class="status-dot"></span><strong id="resultTitle">Result</strong></div><button id="copyBtn" class="text-btn" type="button">Copy</button></div><div id="resultBody"></div></section><div id="error" class="error" hidden role="alert"></div></section>
 <section class="section wrap prose">
-  <h2>Check an SSL certificate before it becomes an outage</h2>
+  <h2>SSL expiry checker for a domain or website</h2><p>Enter the hostname users actually visit to check the certificate currently served on HTTPS port 443. The result includes the expiry timestamp and calculated days remaining, plus hostname coverage, issuer and SANs.</p><h2>Check an SSL certificate before it becomes an outage</h2>
   <p>The SSL Checker connects to the public HTTPS service on port 443 using the hostname you enter. It verifies the certificate presented for that hostname and returns the fields most useful during certificate renewal, migration and HTTPS troubleshooting.</p>
   <div class="info-grid">
     <article><h3>Validity and expiry</h3><p>See whether the certificate is currently within its validity window, when it started, when it expires and the calculated number of days remaining.</p></article>
