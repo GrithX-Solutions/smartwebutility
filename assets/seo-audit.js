@@ -103,6 +103,12 @@
       const indexable=p.noindex===true?'No':(p.noindex===false?'Yes':'—');
       const detailId='audit-page-detail-'+i;
       const schema=(p.schema_types||[]).length?(p.schema_types||[]).join(', '):'None detected';
+      const pageIssues=p.issues||[];
+      const issueSummary=pageIssues.length
+        ? '<div class="audit-page-findings"><h4>Detected issues on this URL</h4>'+pageIssues.map(issue=>
+            '<article class="audit-page-finding"><div><span class="audit-severity '+esc(issue.severity)+'">'+esc(issue.severity)+'</span><b>'+esc(issue.title)+'</b><small>'+esc(issue.category)+'</small></div><p>'+esc(issue.why)+'</p><p><strong>Fix:</strong> '+esc(issue.fix)+'</p></article>'
+          ).join('')+'</div>'
+        : '<div class="audit-page-clean"><strong>✓ No page-specific issues detected by the checks run.</strong><span>Review site-wide findings and methodology as well; this is not a ranking guarantee.</span></div>';
       const detail='<tr id="'+detailId+'" class="audit-page-detail-row" hidden><td colspan="8"><div class="audit-page-diagnostics">'+
         '<div><b>Title</b><span>'+esc(p.title||'Missing')+' ('+esc(p.title_length??0)+' chars)</span></div>'+
         '<div><b>Meta description</b><span>'+esc(p.description||'Missing')+' ('+esc(p.description_length??0)+' chars)</span></div>'+
@@ -116,7 +122,7 @@
         '<div><b>Discovery signals</b><span>Hreflang: '+esc(p.hreflang_count??0)+' · Viewport: '+(p.viewport?'Yes':'No')+'</span></div>'+
         '<div><b>Social metadata</b><span>OG title: '+(p.og_title?'Yes':'No')+' · OG description: '+(p.og_description?'Yes':'No')+'</span></div>'+
         '<div><b>Response</b><span>'+esc(p.status||'—')+' · '+esc(p.time_ms!=null?p.time_ms+' ms':'—')+'</span></div>'+
-      '</div></td></tr>';
+      '</div>'+issueSummary+'</td></tr>';
       return '<tr>'+
         '<td><div class="audit-page-url"><code>'+esc(p.url)+'</code><small>'+esc(title)+'</small></div></td>'+
         '<td><span class="audit-http '+statusClass(Number(p.status||0))+'">'+esc(p.status||'—')+'</span></td>'+
