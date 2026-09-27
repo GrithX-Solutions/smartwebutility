@@ -5,16 +5,17 @@ require __DIR__.'/common.php';
 rate_limit('seo-site-audit', 4, 600);
 @set_time_limit(45);
 
-const AUDIT_MAX_PAGES = 5000; // execution safety ceiling, not a user-facing product limit
-const AUDIT_MAX_DEPTH = 12;
+const AUDIT_MAX_PAGES = 50;
+const AUDIT_MAX_DEPTH = 5;
 const AUDIT_TIME_BUDGET = 36.0;
 const AUDIT_BODY_LIMIT = 786432;
 const AUDIT_SITEMAP_LIMIT = 2097152;
 
 $started = microtime(true);
 $requested = normalize_url($_GET['url'] ?? '');
-$mode = (($_GET['mode'] ?? 'full') === 'page') ? 'page' : 'full';
-$maxPages = $mode === 'page' ? 1 : AUDIT_MAX_PAGES;
+$mode = (($_GET['mode'] ?? 'crawl') === 'page') ? 'page' : 'crawl';
+$requestedPages = (int)($_GET['pages'] ?? 25);
+$maxPages = $mode === 'page' ? 1 : (in_array($requestedPages,[10,25,50],true) ? $requestedPages : 25);
 
 function audit_fetch(string $url, int $maxBytes=AUDIT_BODY_LIMIT): array {
   $url=normalize_url($url);
@@ -298,7 +299,7 @@ $sitemapVisited=[];
 $sitemapUrls=audit_collect_sitemap($sitemapUrl,$host,$sitemapVisited,0,250);
 
 $queue=[['url'=>$finalUrl,'depth'=>0]];
-if($mode === 'full'){
+if($mode === 'crawl'){
   foreach($sitemapUrls as $u){
     $normalized=audit_same_host_url($finalUrl,$u,$host);
     if($normalized) $queue[]=['url'=>$normalized,'depth'=>1];
@@ -337,7 +338,7 @@ while($queue && count($pages)<$maxPages && (microtime(true)-$started)<AUDIT_TIME
   foreach($page['internal_links'] as $link){
     $discovered[$link]=true;
     $inbound[$link]=($inbound[$link]??0)+1;
-    if($mode === 'full' && $depth<AUDIT_MAX_DEPTH && !isset($seen[$link])) $queue[]=['url'=>$link,'depth'=>$depth+1];
+    if($mode === 'crawl' && $depth<AUDIT_MAX_DEPTH && !isset($seen[$link])) $queue[]=['url'=>$link,'depth'=>$depth+1];
   }
 }
 
@@ -484,11 +485,12 @@ out([
     'html_pages'=>$htmlPages,
     'indexable_html_pages'=>$indexablePages,
     'mode'=>$mode,
+    'max_pages'=>$maxPages,
     'discovered_urls'=>count($discovered),
     'robots_blocked_urls'=>count($blocked),
     'sitemap_url'=>$sitemapUrl,
     'sitemap_urls_found'=>count($sitemapUrls),
-    'stopped_early'=>($mode==='full' && (microtime(true)-$started)>=AUDIT_TIME_BUDGET),
+    'stopped_early'=>($mode==='crawl' && (count($pages)>=$maxPages || (microtime(true)-$started)>=AUDIT_TIME_BUDGET)),
     'elapsed_ms'=>(int)round((microtime(true)-$started)*1000)
   ],
   'summary'=>[
@@ -501,7 +503,7 @@ out([
   'passes'=>$passes,
   'pages'=>$pageRows,
   'methodology'=>[
-    'scope'=>$mode==='page' ? 'Public single-page audit of the requested URL after its initial redirect resolution.' : 'Public same-host crawl seeded by the final landing URL, internal links and available XML sitemap URLs. The request uses an execution-time safety budget; larger crawls are candidates for resumable batching.',
+    'scope'=>$mode==='page' ? 'Public single-page audit of the requested URL after its initial redirect resolution.' : 'Focused public crawl of up to '.$maxPages.' same-host pages, seeded by the final landing URL, internal links and available XML sitemap URLs. The bounded scope prioritizes audit depth, completion reliability and actionable evidence over bulk crawling.',
     'limits'=>[
       'Does not use private Google Search Console or Bing Webmaster data for sites you do not own.',
       'Does not measure CrUX field data or guarantee Core Web Vitals.',
