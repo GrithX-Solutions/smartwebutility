@@ -877,3 +877,144 @@ body:not(.home-page) .section.wrap.prose{
   }
   .home-dns-summary>div:last-child{border-bottom:0}
 }
+
+
+/* Mobile DNS-first hierarchy: results before all explanatory/secondary homepage content */
+@media(max-width:760px){
+  .home-page main{
+    display:flex;
+    flex-direction:column;
+  }
+  .home-page .home-dns-results{order:-20}
+  .home-page .home-dns-hero{order:-10}
+  .home-page .category-strip,
+  .home-page #tools,
+  .home-page #why{order:0}
+
+  body.dns-results-active .home-dns-results{
+    width:100%;
+    max-width:none;
+    margin:0;
+    border-left:0;
+    border-right:0;
+    border-radius:0 0 18px 18px;
+    box-shadow:none;
+    display:flex;
+    flex-direction:column;
+  }
+  body.dns-results-active .home-dns-table-wrap{order:1}
+  body.dns-results-active .home-dns-result-head{order:2}
+  body.dns-results-active .home-dns-summary{order:3}
+  body.dns-results-active .home-dns-note{order:4}
+  body.dns-results-active .home-dns-related{order:5}
+
+  body.dns-results-active .home-dns-hero{
+    padding-top:18px;
+    padding-bottom:22px;
+  }
+  body.dns-results-active .home-dns-main>.eyebrow,
+  body.dns-results-active .home-dns-main>h1,
+  body.dns-results-active .home-dns-main>.lead,
+  body.dns-results-active .home-dns-trust,
+  body.dns-results-active .home-dns-coverage{
+    display:none;
+  }
+  body.dns-results-active .home-dns-form{
+    margin-top:0;
+    box-shadow:none;
+  }
+  body.dns-results-active .home-dns-types{
+    margin-top:9px;
+  }
+
+  body.dns-results-active .home-dns-table-wrap{
+    overflow:visible;
+  }
+  body.dns-results-active .home-dns-table{
+    display:block;
+    width:100%;
+    min-width:0;
+  }
+  body.dns-results-active .home-dns-table thead{
+    display:none;
+  }
+  body.dns-results-active .home-dns-table tbody,
+  body.dns-results-active .home-dns-table tr{
+    display:block;
+    width:100%;
+  }
+  body.dns-results-active .home-dns-table tr{
+    padding:15px 18px 13px;
+    border-bottom:1px solid var(--line);
+  }
+  body.dns-results-active .home-dns-table tr:last-child{
+    border-bottom:0;
+  }
+  body.dns-results-active .home-dns-table td{
+    display:grid;
+    grid-template-columns:92px minmax(0,1fr);
+    gap:10px;
+    align-items:start;
+    width:100%;
+    padding:5px 0;
+    border:0;
+    text-align:left;
+  }
+  body.dns-results-active .home-dns-table td::before{
+    content:attr(data-label);
+    padding-top:2px;
+    color:var(--muted);
+    font-size:.66rem;
+    font-weight:850;
+    letter-spacing:.055em;
+    text-transform:uppercase;
+  }
+  body.dns-results-active .home-dns-table td:first-child{
+    grid-template-columns:1fr;
+    padding-bottom:9px;
+  }
+  body.dns-results-active .home-dns-table td:first-child::before{
+    display:none;
+  }
+  body.dns-results-active .dns-location{
+    min-width:0;
+  }
+  body.dns-results-active .dns-location strong{
+    font-size:1rem;
+  }
+  body.dns-results-active .dns-location small{
+    max-width:none;
+    font-size:.76rem;
+  }
+  body.dns-results-active .dns-answer-list{
+    min-width:0;
+  }
+  body.dns-results-active .dns-answer-list code{
+    width:fit-content;
+    max-width:100%;
+    font-size:.82rem;
+  }
+  body.dns-results-active .home-dns-result-head{
+    padding:16px 18px 14px;
+    border-top:1px solid var(--line);
+  }
+  body.dns-results-active .home-dns-result-head .kicker{
+    display:none;
+  }
+  body.dns-results-active .home-dns-result-head h2{
+    margin:0;
+    font-size:1.18rem;
+  }
+  body.dns-results-active .home-dns-summary{
+    grid-template-columns:1fr 1fr;
+  }
+  body.dns-results-active .home-dns-summary>div{
+    padding:12px 16px;
+  }
+  body.dns-results-active .home-dns-note{
+    padding:16px 18px;
+  }
+  body.dns-results-active .home-dns-related{
+    padding:0 18px 18px;
+  }
+}
