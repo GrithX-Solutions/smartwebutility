@@ -475,8 +475,15 @@ $pageRows=[];
 foreach($pages as $p){
   $pageRows[]=[
     'url'=>$p['url'],'status'=>$p['status']??0,'title'=>$p['title']??null,'noindex'=>$p['noindex']??null,
-    'canonical'=>$p['canonical']??null,'h1_count'=>$p['h1_count']??null,'word_count'=>$p['word_count']??null,
-    'internal_links'=>$p['internal_link_count']??null,'time_ms'=>$p['time_ms']??null
+    'canonical'=>$p['canonical']??null,'robots'=>$p['robots']??null,'x_robots_tag'=>$p['x_robots_tag']??null,
+    'h1_count'=>$p['h1_count']??null,'h2_count'=>$p['h2_count']??null,'word_count'=>$p['word_count']??null,
+    'description'=>$p['description']??null,'description_length'=>$p['description_length']??null,'title_length'=>$p['title_length']??null,
+    'internal_links'=>$p['internal_link_count']??null,'external_links'=>$p['external_link_count']??null,
+    'images'=>$p['images']??null,'images_missing_alt'=>$p['images_missing_alt']??null,
+    'jsonld_count'=>$p['jsonld_count']??null,'jsonld_invalid'=>$p['jsonld_invalid']??null,'schema_types'=>$p['schema_types']??[],
+    'viewport'=>$p['viewport']??null,'lang'=>$p['lang']??null,'hreflang_count'=>$p['hreflang_count']??null,
+    'og_title'=>$p['og_title_present']??null,'og_description'=>$p['og_description_present']??null,
+    'time_ms'=>$p['time_ms']??null
   ];
 }
 
