@@ -10,6 +10,11 @@ let running=false;
 await fs.mkdir(JOB_DIR,{recursive:true});
 
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+async function writeStatus(id,state,stage,progress,message){
+  await fs.writeFile(path.join(JOB_DIR,id+'.status'),JSON.stringify({
+    state,stage,progress,message,updated_at:new Date().toISOString()
+  })).catch(()=>{});
+}
 
 function slimAudit(a,id){
   if(!a || typeof a!=='object') return null;
@@ -109,13 +114,22 @@ async function processOne(){
   running=true;
   try{
     const job=JSON.parse(await fs.readFile(claimed,'utf8'));
+    await fs.writeFile(path.join(JOB_DIR,id+'.jobmeta'),JSON.stringify(job)).catch(()=>{});
+    await writeStatus(id,'running','preparing',22,'Launching the isolated browser and preparing the test profile.');
     const parsed=new URL(job.url);
     if(!['http:','https:'].includes(parsed.protocol)) throw new Error('Only HTTP and HTTPS URLs are supported.');
     const strategy=job.strategy==='desktop'?'desktop':'mobile';
+    await writeStatus(id,'running','measuring',48,'Loading the page and collecting the Lighthouse performance trace.');
     const lhr=await runLighthouse(parsed.toString(),strategy);
-    await fs.writeFile(path.join(JOB_DIR,id+'.result.json'),JSON.stringify({ok:true,lighthouseResult:lhr}));
+    await writeStatus(id,'running','processing',88,'Measurement finished. Preparing scores, metrics and diagnostics.');
+    await fs.writeFile(path.join(JOB_DIR,id+'.result.json'),JSON.stringify({
+      ok:true,lighthouseResult:lhr,url:job.url,strategy,cache_key:job.cache_key ?? null
+    }));
   }catch(e){
-    await fs.writeFile(path.join(JOB_DIR,id+'.result.json'),JSON.stringify({ok:false,error:String(e?.message||e).slice(0,2000)}));
+    await writeStatus(id,'failed','failed',100,'The Lighthouse audit could not be completed.');
+    await fs.writeFile(path.join(JOB_DIR,id+'.result.json'),JSON.stringify({
+      ok:false,error:String(e?.message||e).slice(0,2000)
+    }));
   }finally{
     await fs.rm(claimed,{force:true}).catch(()=>{});
     running=false;
