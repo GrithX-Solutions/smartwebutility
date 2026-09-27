@@ -64,7 +64,11 @@
     }
     const fallback=!data.field && !!data.origin_field;
     const assessment=field.assessment==='passed'?'Core Web Vitals passed':field.assessment==='needs-improvement'?'Core Web Vitals need improvement':'Not enough Core Web Vitals data';
-    fieldSummary.textContent=(fallback?'Origin-level field data · ':'URL-level field data · ')+assessment;
+    const period=field.collection_period;
+    const fmtDate=d=>d&&d.year?d.year+'-'+String(d.month).padStart(2,'0')+'-'+String(d.day).padStart(2,'0'):'';
+    const periodText=period&&period.firstDate&&period.lastDate?' · '+fmtDate(period.firstDate)+' to '+fmtDate(period.lastDate):'';
+    const sourceText=field.source?' · '+field.source:'';
+    fieldSummary.textContent=(fallback?'Origin-level field data · ':'URL-level field data · ')+assessment+sourceText+periodText;
     fieldEl.innerHTML='<div class="speed-field-head '+(field.assessment==='passed'?'good':field.assessment==='needs-improvement'?'average':'na')+'"><strong>'+esc(assessment)+'</strong><span>75th-percentile experience'+(fallback?' · origin fallback':'')+'</span></div>'+
       '<div class="speed-metric-grid">'+(field.metrics||[]).map(m=>
         '<article class="speed-metric '+fieldTone(m.category)+'"><span>'+esc(m.label)+'</span><strong>'+esc(metricValue(m))+'</strong><small>'+esc(m.category==='FAST'?'Good':m.category==='AVERAGE'?'Needs improvement':m.category==='SLOW'?'Poor':'No category')+'</small></article>'
