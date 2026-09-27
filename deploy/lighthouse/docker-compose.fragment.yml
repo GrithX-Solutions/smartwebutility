@@ -23,8 +23,8 @@ services:
     restart: unless-stopped
     mem_limit: 192m
     networks:
-      - lighthouse_internal
       - lighthouse_egress
+      - lighthouse_internal
 
 networks:
   lighthouse_internal:
