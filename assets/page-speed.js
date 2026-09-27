@@ -51,7 +51,7 @@
 
   function renderScores(data){
     scoresEl.innerHTML=Object.entries(data.categories||{}).map(([key,score])=>
-      '<article class="speed-score-card '+tone(score)+'"><div class="speed-score-ring" style="--score:'+(score??0)+'"><strong>'+esc(score??'—')+'</strong><span>/ 100</span></div><h3>'+esc(categoryLabel(key))+'</h3></article>'
+      '<article class="speed-score-card '+tone(score)+'"><div class="speed-score-ring" style="--score:'+(score??0)+'%"><strong>'+esc(score??'—')+'</strong><span>/ 100</span></div><h3>'+esc(categoryLabel(key))+'</h3></article>'
     ).join('');
   }
 
