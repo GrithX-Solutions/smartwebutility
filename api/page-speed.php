@@ -9,6 +9,21 @@ $url=normalize_url($_GET['url'] ?? '');
 $strategy=strtolower(trim($_GET['strategy'] ?? 'mobile'));
 if(!in_array($strategy,['mobile','desktop'],true)) $strategy='mobile';
 
+$cacheDir=sys_get_temp_dir().'/smartwebutility-pagespeed-cache';
+if(!is_dir($cacheDir)) @mkdir($cacheDir,0700,true);
+$cacheKey=hash('sha256',$strategy.'|'.$url);
+$cacheFile=$cacheDir.'/'.$cacheKey.'.json';
+$cached=null;
+if(is_file($cacheFile)){
+  $raw=@file_get_contents($cacheFile);
+  $decoded=json_decode((string)$raw,true);
+  if(is_array($decoded)) $cached=$decoded;
+  if($cached && filemtime($cacheFile)!==false && filemtime($cacheFile)>=time()-900){
+    $cached['cache']=['status'=>'fresh','max_age_seconds'=>900];
+    out($cached);
+  }
+}
+
 $endpoint='https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed';
 $query='url='.rawurlencode($url).'&strategy='.$strategy.'&locale=en'
   .'&category=performance&category=accessibility&category=best-practices&category=seo';
@@ -41,8 +56,18 @@ if(!is_array($data)){
 }
 if($status>=400 || isset($data['error'])){
   $message=$data['error']['message'] ?? 'PageSpeed analysis could not be completed.';
-  if($status===429) $message='PageSpeed analysis quota is temporarily busy. Please try again shortly.';
-  out(['error'=>$message,'provider_status'=>$status],$status===429?429:502);
+  $code='provider_error';
+  if($status===429){
+    $code='provider_quota';
+    $message=$key===''
+      ? 'Reliable PageSpeed analysis requires a server API key because the keyless provider quota is unavailable.'
+      : 'PageSpeed analysis quota is currently exhausted for the configured API project.';
+    if($cached && is_file($cacheFile) && filemtime($cacheFile)!==false && filemtime($cacheFile)>=time()-86400){
+      $cached['cache']=['status'=>'stale','max_age_seconds'=>86400,'warning'=>$message];
+      out($cached);
+    }
+  }
+  out(['error'=>$message,'code'=>$code,'provider_status'=>$status],$status===429?503:502);
 }
 
 $lh=$data['lighthouseResult'] ?? [];
@@ -256,7 +281,7 @@ if($cruxKey!==''){
   }
 }
 
-out([
+$response=[
   'url'=>$url,
   'strategy'=>$strategy,
   'final_url'=>$lh['finalUrl'] ?? ($data['id'] ?? $url),
@@ -282,4 +307,7 @@ out([
     'Performance scores can vary between runs because network, server and page conditions change.',
     'Field data is provider-dependent and may be unavailable even when a Lighthouse lab run succeeds.'
   ]
-]);
+];
+@file_put_contents($cacheFile,json_encode($response,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE),LOCK_EX);
+$response['cache']=['status'=>'miss','max_age_seconds'=>900];
+out($response);
