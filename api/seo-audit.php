@@ -190,7 +190,7 @@ function audit_parse_page(array $fetch, string $host): array {
     $href=$a->getAttribute('href');
     $same=audit_same_host_url($fetch['url'],$href,$host);
     if($same) $internal[]=$same;
-    elseif(preg_match('~^https?://~i,',$href)) $external++;
+    elseif(preg_match('~^https?://~i',$href)) $external++;
   }
   $internal=array_values(array_unique($internal));
 
@@ -250,6 +250,8 @@ function audit_add_issue(array &$issues,string $id,string $severity,string $cate
 
 function audit_collect_sitemap(string $url,string $host,array &$visited,int $depth=0,int $limit=200): array {
   if($depth>1 || isset($visited[$url]) || count($visited)>8) return [];
+  $sp=parse_url($url);
+  if(!$sp || strtolower($sp['host']??'')!==strtolower($host)) return [];
   $visited[$url]=true;
   $r=audit_fetch($url,AUDIT_SITEMAP_LIMIT);
   if($r['status']<200||$r['status']>=400||trim($r['body'])==='') return [];
@@ -375,7 +377,7 @@ foreach($pages as $url=>$p){
     audit_add_issue($issues,'redirecting-internal','warning','Site Architecture','Crawled URLs redirect','Internal links that point through redirects add unnecessary hops and can make migrations harder to debug.','Update internal links to point directly to the final canonical URL where practical.',$url,$canonicalRef);
     continue;
   }
-  if(!isset($p['title'])) continue;
+  if(!array_key_exists('word_count',$p)) continue;
   $htmlPages++;
   if(!$p['noindex']) $indexablePages++;
   $totalInternal+=($p['internal_link_count']??0);
