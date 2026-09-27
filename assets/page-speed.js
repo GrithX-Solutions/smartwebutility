@@ -97,7 +97,7 @@
 
   function renderResources(data){
     const rows=(data.resources||[]).filter(r=>r.type!=='total');
-    resourcesEl.innerHTML=rows.map(r=>'<tr><td>'+esc(r.label||r.type)+'</td><td>'+esc(r.requests??'—')+'</td><td>'+esc(bytes(Number(r.transfer_bytes)))+'</td></tr>').join('') || '<tr><td colspan="3">No resource summary returned.</td></tr>';
+    resourcesEl.innerHTML=rows.map(r=>'<tr><td>'+esc(r.label||r.type)+'</td><td>'+esc(r.requests??'—')+'</td><td>'+esc(bytes(r.transfer_bytes))+'</td></tr>').join('') || '<tr><td colspan="3">No resource summary returned.</td></tr>';
   }
 
   function renderPassed(data){
