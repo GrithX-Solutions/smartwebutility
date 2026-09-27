@@ -1,4 +1,87 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Website & Network Tools — Free Online Utilities | Smart Web Utility</title><meta name="description" content="Website diagnostics for DNS, SSL certificates, HTTP status, redirects, headers, sitemaps and propagation checks."><link rel="canonical" href="https://smartwebutility.com/website-tools/"><meta name="theme-color" content="#07101b"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css"></head><body><header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header><main><section class="tool-hero wrap category-hero"><div class="crumb"><a href="/">Home</a><span>/</span><span>Website & Network Tools</span></div><span class="kicker">Tool category</span><h1>Website & Network Tools</h1><p class="lead compact">Built for site owners, hosting teams, DevOps engineers and technical SEO workflows. Network tools only accept public targets and use server-side validation to reduce abuse risk.</p></section><section class="section wrap"><div class="tool-grid"><a class="tool-card live" href="/dns-checker/"><div class="icon">DC</div><div><h3>DNS Checker</h3><p>Lookup A, AAAA, MX, TXT, CNAME, NS and CAA records.</p><span class="tag">Free tool</span></div></a>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Website Tools & Speed Test — Mobile/Desktop Performance, DNS, SSL & HTTP | Smart Web Utility</title><meta name="description" content="Run a mobile or desktop website speed test with Lighthouse diagnostics, then use free DNS, SSL, HTTP, redirect, header, sitemap and website troubleshooting tools."><link rel="canonical" href="https://smartwebutility.com/website-tools/"><meta property="og:title" content="Website Tools & Speed Test — Smart Web Utility"><meta property="og:description" content="Test mobile and desktop website performance, then diagnose DNS, SSL, HTTP, redirects, headers and sitemaps."><meta property="og:url" content="https://smartwebutility.com/website-tools/"><meta property="og:type" content="website"><meta name="theme-color" content="#07101b"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css"><link rel="stylesheet" href="/assets/page-speed.css?v=20260928-async1"><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Website Speed Test on Website Tools","url":"https://smartwebutility.com/website-tools/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Mobile Lighthouse speed test","Desktop Lighthouse speed test","Live asynchronous progress","Lab performance metrics","Performance opportunities","Website and network diagnostics"]}</script></head><body><header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/" aria-current="page">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header><main>
+<section class="tool-hero wrap speed-hero website-tools-hero">
+  <div class="crumb"><a href="/">Home</a><span>/</span><span>Website & Network Tools</span></div>
+  <span class="kicker">Website diagnostics + performance</span>
+  <h1>Website & Network Tools</h1>
+  <p class="lead compact">Start with a real mobile or desktop Lighthouse speed test, then drill into DNS, SSL, HTTP, redirects, headers, sitemaps and other website diagnostics. Public targets only; no signup required.</p>
+
+  <form id="speedForm" class="speed-form" novalidate>
+    <label class="sr-only" for="speedUrl">Website URL</label>
+    <input id="speedUrl" type="url" inputmode="url" autocomplete="url" autocapitalize="none" spellcheck="false" placeholder="https://example.com" required>
+    <button class="btn primary" type="submit">Analyze speed</button>
+  </form>
+
+  <div class="speed-trust">
+    <span>Mobile + desktop</span>
+    <span>Live Lighthouse status</span>
+    <span>Async server queue</span>
+    <span>No signup</span>
+  </div>
+
+  <section id="speedProgress" class="speed-live" role="status" aria-live="polite" hidden>
+    <div class="speed-live-head">
+      <span id="speedLiveBadge" class="speed-live-badge active">Queued</span>
+      <div class="speed-live-copy"><strong id="speedLiveTitle">Mobile performance test</strong><span id="speedLiveMessage">Preparing the performance queue.</span></div>
+      <span id="speedElapsed" class="speed-live-time">0s</span>
+    </div>
+    <div class="speed-live-track" aria-hidden="true"><span id="speedProgressBar"></span></div>
+    <ol class="speed-live-steps" aria-label="Performance test progress">
+      <li class="speed-step active"><span>1</span><div><strong>Accepted</strong><small>Request received</small></div></li>
+      <li class="speed-step"><span>2</span><div><strong>Queued</strong><small>Waiting for browser</small></div></li>
+      <li class="speed-step"><span>3</span><div><strong>Measuring</strong><small>Loading and tracing</small></div></li>
+      <li class="speed-step"><span>4</span><div><strong>Processing</strong><small>Building report</small></div></li>
+      <li class="speed-step"><span>5</span><div><strong>Ready</strong><small>Results displayed</small></div></li>
+    </ol>
+    <p class="speed-live-note">Heavy Lighthouse work runs in one isolated worker. This page receives small status updates while the report is prepared.</p>
+  </section>
+  <div id="speedError" class="error" role="alert" hidden></div>
+</section>
+
+<section class="section wrap speed-results website-speed-module" id="speedResults" hidden>
+  <div class="speed-report-head">
+    <div><span class="kicker">Website performance report</span><h2 id="speedReportTitle">Website performance</h2><p id="speedMeta"></p></div>
+    <div class="website-speed-actions"><a class="text-btn" href="/website-speed-test/">Open standalone</a><button class="text-btn" id="speedCopy" type="button">Copy report</button></div>
+  </div>
+
+  <div class="speed-device-tabs" role="tablist" aria-label="Test device">
+    <button id="speedMobileTab" class="active" type="button" role="tab" aria-selected="true" data-strategy="mobile"><span aria-hidden="true">▯</span> Mobile</button>
+    <button id="speedDesktopTab" type="button" role="tab" aria-selected="false" data-strategy="desktop"><span aria-hidden="true">▭</span> Desktop</button>
+  </div>
+
+  <div class="speed-score-grid" id="speedScores"></div>
+
+  <section class="speed-panel" aria-labelledby="fieldHeading">
+    <div class="section-head"><div><span class="kicker">Real-user experience</span><h2 id="fieldHeading">Core Web Vitals field data</h2></div><p id="fieldSummary">Shown when a supported field-data source is available.</p></div>
+    <div id="speedField"></div>
+  </section>
+
+  <section class="speed-panel" aria-labelledby="labHeading">
+    <div class="section-head"><div><span class="kicker">Controlled test</span><h2 id="labHeading">Lab performance metrics</h2></div><p>Fresh Lighthouse measurements for the selected mobile or desktop strategy.</p></div>
+    <div class="speed-metric-grid" id="speedLab"></div>
+  </section>
+
+  <section class="speed-panel" aria-labelledby="opportunityHeading">
+    <div class="section-head"><div><span class="kicker">Optimization</span><h2 id="opportunityHeading">Performance opportunities</h2></div><p>Potential improvements ordered by estimated savings when Lighthouse provides them.</p></div>
+    <div class="speed-audit-list" id="speedOpportunities"></div>
+  </section>
+
+  <section class="speed-panel" aria-labelledby="diagnosticHeading">
+    <div class="section-head"><div><span class="kicker">Diagnostics</span><h2 id="diagnosticHeading">Performance diagnostics</h2></div><p>Technical findings that help explain the measured result.</p></div>
+    <div class="speed-audit-list" id="speedDiagnostics"></div>
+  </section>
+
+  <section class="speed-panel">
+    <div class="section-head"><div><span class="kicker">Page weight</span><h2>Requests and transfer size</h2></div><p>Resource summary from the Lighthouse run.</p></div>
+    <div class="speed-resource-wrap"><table class="record-table speed-resource-table"><thead><tr><th>Resource</th><th>Requests</th><th>Transfer</th></tr></thead><tbody id="speedResources"></tbody></table></div>
+  </section>
+
+  <details class="speed-passed"><summary>Passed audits</summary><div id="speedPassed"></div></details>
+  <details class="speed-methodology"><summary>How to interpret this test</summary><div id="speedNotes"></div></details>
+</section>
+
+<section class="section wrap website-tools-directory">
+  <div class="section-head"><div><span class="kicker">Website & network utilities</span><h2>Diagnose the rest of your website stack</h2></div><p>Use these focused tools after the performance test to inspect DNS, SSL, HTTP behavior, redirects, metadata and discovery files.</p></div>
+  <div class="tool-grid"><a class="tool-card live" href="/dns-checker/"><div class="icon">DC</div><div><h3>DNS Checker</h3><p>Lookup A, AAAA, MX, TXT, CNAME, NS and CAA records.</p><span class="tag">Free tool</span></div></a>
 <a class="tool-card live" href="/dns-propagation-checker/"><div class="icon">DPC</div><div><h3>DNS Propagation Checker</h3><p>Compare answers across independent resolvers.</p><span class="tag">Free tool</span></div></a>
 <a class="tool-card live" href="/ssl-checker/"><div class="icon">SC</div><div><h3>SSL Checker</h3><p>Inspect certificate issuer, validity and expiry.</p><span class="tag">Free tool</span></div></a>
 <a class="tool-card live" href="/http-status-checker/"><div class="icon">HSC</div><div><h3>HTTP Status Checker</h3><p>Check response status, IP and timing.</p><span class="tag">Free tool</span></div></a>
@@ -7,4 +90,4 @@
 <a class="tool-card live" href="/redirect-checker/"><div class="icon">RC</div><div><h3>Redirect Checker</h3><p>Trace redirect chains and final destinations.</p><span class="tag">Free tool</span></div></a>
 <a class="tool-card live" href="/sitemap-checker/"><div class="icon">SC</div><div><h3>Sitemap Checker</h3><p>Validate XML sitemaps and sitemap indexes.</p><span class="tag">Free tool</span></div></a>
 <a class="tool-card live" href="/meta-tag-checker/"><div class="icon">MTC</div><div><h3>Meta Tag Checker</h3><p>Inspect page title, description and canonical data.</p><span class="tag">Free tool</span></div></a>
-<a class="tool-card live" href="/open-graph-checker/"><div class="icon">OGC</div><div><h3>Open Graph Checker</h3><p>Inspect social metadata on public pages.</p><span class="tag">Free tool</span></div></a></div></section><section class="section alt"><div class="wrap feature-grid"><article><h3>Fast by default</h3><p>Pages use lightweight HTML, CSS and focused JavaScript instead of a large framework runtime.</p></article><article><h3>Privacy-minded</h3><p>Browser-side processing is preferred whenever the task does not require a network request.</p></article><article><h3>Built for practical search intent</h3><p>Each tool has a dedicated crawlable URL and focused content around a specific task.</p></article></div></section></main><footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></div></footer><script>document.getElementById('year').textContent=new Date().getFullYear()</script></body></html>
+<a class="tool-card live" href="/open-graph-checker/"><div class="icon">OGC</div><div><h3>Open Graph Checker</h3><p>Inspect social metadata on public pages.</p><span class="tag">Free tool</span></div></a></div></section><section class="section alt"><div class="wrap feature-grid"><article><h3>Fast by default</h3><p>Pages use lightweight HTML, CSS and focused JavaScript instead of a large framework runtime.</p></article><article><h3>Privacy-minded</h3><p>Browser-side processing is preferred whenever the task does not require a network request.</p></article><article><h3>Built for practical search intent</h3><p>Each tool has a dedicated crawlable URL and focused content around a specific task.</p></article></div></section></main><footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></div></footer><script>document.getElementById('year').textContent=new Date().getFullYear()</script><script src="/assets/page-speed.js?v=20260928-async1" defer></script></body></html>
