@@ -26,6 +26,8 @@ jobs:
         run: |
           node --check assets/page-speed.js
           node --check assets/seo-audit.js
+          node --check deploy/lighthouse/worker.mjs
+          node --check deploy/lighthouse/proxy.mjs
 
       - name: Upload site bundle
         uses: actions/upload-artifact@v4
