@@ -81,6 +81,19 @@
     '</article>';
   }
 
+  function renderActionPlan(data){
+    const issues=data.issues||[];
+    const buckets={critical:[],warning:[],notice:[]};
+    issues.forEach(issue=>(buckets[issue.severity]||buckets.notice).push(issue));
+    Object.values(buckets).forEach(list=>list.sort((a,b)=>(b.affected_count||0)-(a.affected_count||0)));
+    const render=(list,empty)=>list.length?list.slice(0,6).map(issue=>
+      '<article class="audit-action-item"><div><span class="audit-severity '+esc(issue.severity)+'">'+esc(issue.severity)+'</span><strong>'+esc(issue.title)+'</strong></div><small>'+esc(issue.category)+' · '+esc(issue.affected_count||0)+' affected</small><p>'+esc(issue.fix)+'</p></article>'
+    ).join(''):'<div class="audit-action-empty">✓ '+esc(empty)+'</div>';
+    document.getElementById('seoAuditFixFirst').innerHTML=render(buckets.critical,'No critical blockers detected.');
+    document.getElementById('seoAuditFixNext').innerHTML=render(buckets.warning,'No warning-level fixes detected.');
+    document.getElementById('seoAuditImprove').innerHTML=render(buckets.notice,'No optional improvements detected.');
+  }
+
   function renderIssues(data){
     const issues=data.issues||[];
     issuesEl.innerHTML=issues.length
@@ -199,6 +212,7 @@
 
       lastData=data;
       renderSummary(data);
+      renderActionPlan(data);
       renderIssues(data);
       renderPasses(data);
       renderPages(data);
