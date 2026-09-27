@@ -153,13 +153,14 @@
     const started=Date.now();
     const timer=setInterval(()=>{
       const sec=Math.max(1,Math.round((Date.now()-started)/1000));
-      progressEl.textContent=(modeEl?.value==='page'?'Auditing this page… ':'Discovering and auditing same-host pages… ')+sec+'s';
+      progressEl.textContent=(modeEl?.value==='page'?'Auditing this page… ':'Auditing up to '+modeEl.value+' same-host pages… ')+sec+'s';
     },1000);
     progressEl.textContent='Starting crawl and site-level checks…';
 
     try{
-      const mode=modeEl?.value==='page'?'page':'full';
-      const endpoint='/api/seo-audit.php?url='+encodeURIComponent(target)+'&mode='+encodeURIComponent(mode);
+      const scope=modeEl?.value||'25';
+      const mode=scope==='page'?'page':'crawl';
+      const endpoint='/api/seo-audit.php?url='+encodeURIComponent(target)+'&mode='+encodeURIComponent(mode)+(mode==='crawl'?'&pages='+encodeURIComponent(scope):'');
       const response=await fetch(endpoint,{headers:{accept:'application/json'}});
       const data=await response.json().catch(()=>({error:'Invalid audit response'}));
       if(!response.ok||data.error)throw new Error(data.error||'Audit failed.');
