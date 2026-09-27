@@ -197,3 +197,25 @@ Use Google Search Console as the feedback loop:
 - zero-impression pages after sufficient crawl/indexing time: re-evaluate intent rather than automatically publishing more of the same
 
 Do not expand a cluster merely because it exists. Expand when search data shows Google is beginning to associate Smart Web Utility with that topic.
+
+
+## Homepage global DNS keyword evidence — 2026-09-27
+
+Live Ubersuggest US/en data was used only where metrics were actually returned.
+
+| Keyword | US monthly volume | SEO difficulty | Role |
+| --- | ---: | ---: | --- |
+| global dns checker | 320 | 57 | Broad head term; retained naturally, not treated as a quick-win target |
+| global dns propagation test | 10 | 5 | Primary low-difficulty transactional variant for homepage |
+| global dns propagation tool | 10 | 6 | Supporting transactional variant |
+| worldwide dns propagation checker | 10 | 10 | Supporting worldwide/multi-country variant |
+
+Decision:
+- Homepage owns live country-level/global propagation intent.
+- /dns-propagation-checker/ owns named-resolver comparison intent (Cloudflare, Google, server resolver).
+- /dns-checker/ owns focused single-resolver record lookup intent.
+- Do not create separate thin pages for each keyword variation.
+- Search Console currently returns no query rows for smartwebutility.com, so future title/content changes should be driven by first-party query data as it becomes available.
+- Bing Webmaster connection is valid but its data endpoint was throttled during this review; no Bing query metrics were invented.
+
+Supporting zero-volume or intent-mismatched suggestions were not promoted into target keywords merely because they had low difficulty.
