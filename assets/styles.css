@@ -1036,3 +1036,67 @@ body:not(.home-page) .section.wrap.prose{
   .dns-static-location small{font-size:.63rem}
   .dns-static-values code{font-size:.69rem}
 }
+
+
+/* DNS semantic search content */
+.home-dns-semantic{
+  padding-top:34px;
+  padding-bottom:28px;
+}
+.home-dns-semantic>.section-head{
+  margin-bottom:24px;
+}
+.home-dns-semantic>.section-head p{
+  max-width:680px;
+}
+.home-dns-semantic>h2{
+  margin-top:34px;
+  margin-bottom:10px;
+  font-size:clamp(1.45rem,3vw,2.15rem);
+  letter-spacing:-.03em;
+}
+.home-dns-semantic>h3{
+  margin:22px 0 7px;
+  font-size:1.03rem;
+}
+.home-dns-semantic>p{
+  max-width:920px;
+  color:var(--muted);
+  line-height:1.68;
+}
+.home-dns-intent-table-wrap{
+  overflow-x:auto;
+  margin-top:14px;
+  border:1px solid var(--line);
+  border-radius:15px;
+}
+.home-dns-intent-table{
+  min-width:760px;
+  margin:0;
+}
+.home-dns-intent-table th{
+  background:color-mix(in srgb,var(--soft) 72%,transparent);
+}
+.home-dns-intent-table code{
+  padding:3px 6px;
+  border:1px solid var(--line);
+  border-radius:6px;
+  background:var(--soft);
+}
+.home-dns-next-steps{
+  margin-top:14px;
+}
+@media(max-width:760px){
+  .home-dns-semantic{
+    padding-top:24px;
+  }
+  .home-dns-semantic>.section-head{
+    display:block;
+  }
+  .home-dns-semantic>.section-head p{
+    margin-top:10px;
+  }
+  .home-dns-semantic>h2{
+    margin-top:28px;
+  }
+}
