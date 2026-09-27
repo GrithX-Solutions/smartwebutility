@@ -79,6 +79,13 @@
     <article><h3>Opportunities</h3><p>Use estimated savings to prioritize work such as reducing render-blocking resources, image payloads, unused code or excessive main-thread work.</p></article>
   </div>
 
+  <h2>What counts as good Core Web Vitals?</h2>
+  <div class="info-grid">
+    <article><h3>LCP ≤ 2.5 seconds</h3><p>Largest Contentful Paint measures when the main visible content finishes rendering. The good threshold is 2.5 seconds or less at the 75th percentile.</p></article>
+    <article><h3>INP ≤ 200 milliseconds</h3><p>Interaction to Next Paint measures responsiveness to user interactions. The good threshold is 200 milliseconds or less at the 75th percentile.</p></article>
+    <article><h3>CLS ≤ 0.1</h3><p>Cumulative Layout Shift measures unexpected visual movement. The good threshold is 0.1 or less at the 75th percentile.</p></article>
+  </div>
+
   <h2>How to improve a slow website</h2>
   <p>Start with the largest measured bottlenecks rather than chasing a perfect score. Optimize the largest above-the-fold images, remove or defer unnecessary JavaScript, reduce render-blocking CSS, improve cache policy and compression, and investigate slow server response. Re-test after each meaningful change so you can confirm the improvement under the same device strategy.</p>
 
