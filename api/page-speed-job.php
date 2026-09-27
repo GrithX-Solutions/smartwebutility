@@ -22,7 +22,7 @@ function psj_write_json(string $path,array $data): bool {
 function psj_cleanup(string $dir): void {
   $cut=time()-1800;
   foreach(glob($dir.'/*') ?: [] as $path){
-    if(!is_file($path)) continue;
+    if(!is_file($path) || basename($path)==='.runner.lock') continue;
     $mtime=@filemtime($path);
     if($mtime!==false && $mtime<$cut) @unlink($path);
   }
