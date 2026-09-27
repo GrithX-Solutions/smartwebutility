@@ -1,0 +1,105 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Website Speed Test — Mobile & Desktop PageSpeed Test | Smart Web Utility</title>
+<meta name="description" content="Test website speed on mobile and desktop with Lighthouse performance metrics, Core Web Vitals field data when available, optimization opportunities and actionable diagnostics.">
+<link rel="canonical" href="https://smartwebutility.com/website-speed-test/">
+<meta property="og:title" content="Website Speed Test — Mobile & Desktop Performance">
+<meta property="og:description" content="Run a mobile or desktop Lighthouse speed test with performance metrics, Core Web Vitals data and actionable fixes.">
+<meta property="og:url" content="https://smartwebutility.com/website-speed-test/"><meta property="og:type" content="website">
+<meta name="theme-color" content="#07101b"><link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css"><link rel="stylesheet" href="/assets/page-speed.css?v=20260927-1">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Website Speed Test","url":"https://smartwebutility.com/website-speed-test/","description":"Mobile and desktop website performance test using PageSpeed Insights API and Lighthouse diagnostics.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Mobile website speed test","Desktop website speed test","Lighthouse performance score","Core Web Vitals field data when available","Lab performance metrics","Performance opportunities","Diagnostics and passed audits"]}</script>
+</head><body>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+
+<main>
+<section class="tool-hero wrap speed-hero">
+  <div class="crumb"><a href="/">Home</a><span>/</span><a href="/website-tools/">Website Tools</a><span>/</span><span>Website Speed Test</span></div>
+  <span class="kicker">Performance & Core Web Vitals</span>
+  <h1>Website Speed Test</h1>
+  <p class="lead compact">Test a public page with a mobile or desktop Lighthouse run. Review performance scores, lab metrics, real-user field data when available, optimization opportunities and exact diagnostics.</p>
+  <form id="speedForm" class="speed-form" novalidate>
+    <label class="sr-only" for="speedUrl">Website URL</label>
+    <input id="speedUrl" type="url" inputmode="url" autocomplete="url" autocapitalize="none" spellcheck="false" placeholder="https://example.com" required>
+    <button class="btn primary" type="submit">Analyze speed</button>
+  </form>
+  <div class="speed-trust"><span>Mobile + desktop</span><span>Lighthouse lab data</span><span>Core Web Vitals when available</span><span>No signup</span></div>
+  <div id="speedProgress" class="speed-progress" role="status" aria-live="polite" hidden></div>
+  <div id="speedError" class="error" role="alert" hidden></div>
+</section>
+
+<section class="section wrap speed-results" id="speedResults" hidden>
+  <div class="speed-report-head">
+    <div><span class="kicker">Performance report</span><h2 id="speedReportTitle">Website performance</h2><p id="speedMeta"></p></div>
+    <button class="text-btn" id="speedCopy" type="button">Copy report</button>
+  </div>
+
+  <div class="speed-device-tabs" role="tablist" aria-label="Test device">
+    <button id="speedMobileTab" class="active" type="button" role="tab" aria-selected="true" data-strategy="mobile"><span aria-hidden="true">▯</span> Mobile</button>
+    <button id="speedDesktopTab" type="button" role="tab" aria-selected="false" data-strategy="desktop"><span aria-hidden="true">▭</span> Desktop</button>
+  </div>
+
+  <div class="speed-score-grid" id="speedScores"></div>
+
+  <section class="speed-panel" aria-labelledby="fieldHeading">
+    <div class="section-head"><div><span class="kicker">Real-user experience</span><h2 id="fieldHeading">Core Web Vitals field data</h2></div><p id="fieldSummary">Shown only when sufficient field data is available.</p></div>
+    <div id="speedField"></div>
+  </section>
+
+  <section class="speed-panel" aria-labelledby="labHeading">
+    <div class="section-head"><div><span class="kicker">Controlled test</span><h2 id="labHeading">Lab performance metrics</h2></div><p>These measurements come from the selected Lighthouse device strategy and can vary between runs.</p></div>
+    <div class="speed-metric-grid" id="speedLab"></div>
+  </section>
+
+  <section class="speed-panel" aria-labelledby="opportunityHeading">
+    <div class="section-head"><div><span class="kicker">Optimization</span><h2 id="opportunityHeading">Performance opportunities</h2></div><p>Potential improvements are ordered by estimated time or transfer savings when Lighthouse provides them.</p></div>
+    <div class="speed-audit-list" id="speedOpportunities"></div>
+  </section>
+
+  <section class="speed-panel" aria-labelledby="diagnosticHeading">
+    <div class="section-head"><div><span class="kicker">Diagnostics</span><h2 id="diagnosticHeading">What is slowing or complicating the page</h2></div><p>Technical findings that help explain the measured result.</p></div>
+    <div class="speed-audit-list" id="speedDiagnostics"></div>
+  </section>
+
+  <section class="speed-panel">
+    <div class="section-head"><div><span class="kicker">Page weight</span><h2>Requests and transfer size</h2></div><p>Resource summary from the Lighthouse run.</p></div>
+    <div class="speed-resource-wrap"><table class="record-table speed-resource-table"><thead><tr><th>Resource</th><th>Requests</th><th>Transfer</th></tr></thead><tbody id="speedResources"></tbody></table></div>
+  </section>
+
+  <details class="speed-passed"><summary>Passed audits</summary><div id="speedPassed"></div></details>
+  <details class="speed-methodology"><summary>How to interpret this test</summary><div id="speedNotes"></div></details>
+</section>
+
+<section class="section alt"><div class="wrap prose">
+  <div class="section-head"><div><span class="kicker">Understand the result</span><h2>Mobile and desktop speed are different tests</h2></div><p>A page can perform well on desktop and still struggle under mobile CPU and network conditions.</p></div>
+  <div class="info-grid">
+    <article><h3>Performance score</h3><p>The Lighthouse performance score is a weighted summary of synthetic lab metrics. Treat it as a diagnostic benchmark, not a ranking guarantee.</p></article>
+    <article><h3>Core Web Vitals</h3><p>Largest Contentful Paint, Interaction to Next Paint and Cumulative Layout Shift describe loading, responsiveness and visual stability using real-user data when available.</p></article>
+    <article><h3>Lab metrics</h3><p>FCP, LCP, Total Blocking Time, CLS and Speed Index help reproduce performance problems under a controlled test profile.</p></article>
+    <article><h3>Opportunities</h3><p>Use estimated savings to prioritize work such as reducing render-blocking resources, image payloads, unused code or excessive main-thread work.</p></article>
+  </div>
+
+  <h2>How to improve a slow website</h2>
+  <p>Start with the largest measured bottlenecks rather than chasing a perfect score. Optimize the largest above-the-fold images, remove or defer unnecessary JavaScript, reduce render-blocking CSS, improve cache policy and compression, and investigate slow server response. Re-test after each meaningful change so you can confirm the improvement under the same device strategy.</p>
+
+  <h2>Field data vs lab data</h2>
+  <p><strong>Field data</strong> reflects aggregated real-user experiences when enough data exists for the tested page or origin. <strong>Lab data</strong> is a fresh synthetic Lighthouse run. A newly launched or low-traffic page may have useful lab results but no field dataset yet.</p>
+
+  <h2>Related website and SEO tools</h2>
+  <div class="related-tools">
+    <a href="/seo-tools/">SEO Audit<span>Check crawlability, indexability, metadata, structured data and content signals.</span></a>
+    <a href="/http-header-checker/">HTTP Header Checker<span>Inspect caching, compression and response headers.</span></a>
+    <a href="/redirect-checker/">Redirect Checker<span>Find unnecessary redirect hops before the final page loads.</span></a>
+    <a href="/ssl-checker/">SSL Checker<span>Verify HTTPS certificate health and hostname coverage.</span></a>
+  </div>
+
+  <h2>Data source and limitations</h2>
+  <p>This tool uses the Google PageSpeed Insights API and Lighthouse results for the selected strategy. Real-user field data is displayed only when returned by the provider. Performance varies with page content, server conditions and test environment, so compare repeated runs and focus on persistent bottlenecks rather than a single number.</p>
+  <p><a href="https://developers.google.com/speed/docs/insights/rest/v5/pagespeedapi/runpagespeed" rel="noopener">Google PageSpeed Insights API documentation</a></p>
+</div></section>
+</main>
+
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></div></footer>
+<script>document.getElementById('year').textContent=new Date().getFullYear()</script>
+<script src="/assets/page-speed.js?v=20260927-1"></script>
+</body></html>
