@@ -98,9 +98,25 @@
 
   function renderPages(data){
     const pages=data.pages||[];
-    pagesBody.innerHTML=pages.map(p=>{
+    pagesBody.innerHTML=pages.map((p,i)=>{
       const title=p.title||'—';
       const indexable=p.noindex===true?'No':(p.noindex===false?'Yes':'—');
+      const detailId='audit-page-detail-'+i;
+      const schema=(p.schema_types||[]).length?(p.schema_types||[]).join(', '):'None detected';
+      const detail='<tr id="'+detailId+'" class="audit-page-detail-row" hidden><td colspan="8"><div class="audit-page-diagnostics">'+
+        '<div><b>Title</b><span>'+esc(p.title||'Missing')+' ('+esc(p.title_length??0)+' chars)</span></div>'+
+        '<div><b>Meta description</b><span>'+esc(p.description||'Missing')+' ('+esc(p.description_length??0)+' chars)</span></div>'+
+        '<div><b>Canonical</b><span><code>'+esc(p.canonical||'Missing')+'</code></span></div>'+
+        '<div><b>Robots</b><span>'+esc(p.robots||'Default')+(p.x_robots_tag?' · X-Robots: '+esc(p.x_robots_tag):'')+'</span></div>'+
+        '<div><b>Headings</b><span>H1: '+esc(p.h1_count??'—')+' · H2: '+esc(p.h2_count??'—')+'</span></div>'+
+        '<div><b>Content</b><span>'+esc(p.word_count??'—')+' words · lang: '+esc(p.lang||'not declared')+'</span></div>'+
+        '<div><b>Links</b><span>'+esc(p.internal_links??'—')+' internal · '+esc(p.external_links??'—')+' external</span></div>'+
+        '<div><b>Images</b><span>'+esc(p.images??'—')+' total · '+esc(p.images_missing_alt??'—')+' missing alt</span></div>'+
+        '<div><b>Structured data</b><span>'+esc(schema)+(p.jsonld_invalid?' · '+esc(p.jsonld_invalid)+' invalid JSON-LD':'')+'</span></div>'+
+        '<div><b>Discovery signals</b><span>Hreflang: '+esc(p.hreflang_count??0)+' · Viewport: '+(p.viewport?'Yes':'No')+'</span></div>'+
+        '<div><b>Social metadata</b><span>OG title: '+(p.og_title?'Yes':'No')+' · OG description: '+(p.og_description?'Yes':'No')+'</span></div>'+
+        '<div><b>Response</b><span>'+esc(p.status||'—')+' · '+esc(p.time_ms!=null?p.time_ms+' ms':'—')+'</span></div>'+
+      '</div></td></tr>';
       return '<tr>'+
         '<td><div class="audit-page-url"><code>'+esc(p.url)+'</code><small>'+esc(title)+'</small></div></td>'+
         '<td><span class="audit-http '+statusClass(Number(p.status||0))+'">'+esc(p.status||'—')+'</span></td>'+
@@ -109,8 +125,17 @@
         '<td>'+esc(p.word_count??'—')+'</td>'+
         '<td>'+esc(p.internal_links??'—')+'</td>'+
         '<td>'+esc(p.time_ms!=null?p.time_ms+' ms':'—')+'</td>'+
-      '</tr>';
+        '<td><button class="text-btn audit-page-toggle" type="button" data-target="'+detailId+'" aria-expanded="false">Inspect</button></td>'+
+      '</tr>'+detail;
     }).join('');
+    pagesBody.querySelectorAll('.audit-page-toggle').forEach(btn=>btn.addEventListener('click',()=>{
+      const row=document.getElementById(btn.dataset.target);
+      if(!row)return;
+      const opening=row.hidden;
+      row.hidden=!opening;
+      btn.setAttribute('aria-expanded',String(opening));
+      btn.textContent=opening?'Close':'Inspect';
+    }));
   }
 
   function renderMethodology(data){
