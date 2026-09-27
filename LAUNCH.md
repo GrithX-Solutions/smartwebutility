@@ -110,3 +110,5 @@ Only after indexing, policy readiness and quality are stable:
 Avoid adding dozens of near-duplicate pages simply to increase URL count.
 
 - [x] SEO + AI visibility measurement framework documented for Google Search Console, Bing Webmaster Tools and GA4.
+
+- [x] `/seo-tools/` upgraded to a crawl-based SEO audit console with prioritized technical/on-page/GEO-AIO/SXO findings and specialist-tool drilldowns.
