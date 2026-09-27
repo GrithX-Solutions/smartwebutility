@@ -1,0 +1,194 @@
+<?php
+declare(strict_types=1);
+require __DIR__.'/common.php';
+
+@set_time_limit(120);
+rate_limit('page-speed-test', 8, 600);
+
+$url=normalize_url($_GET['url'] ?? '');
+$strategy=strtolower(trim($_GET['strategy'] ?? 'mobile'));
+if(!in_array($strategy,['mobile','desktop'],true)) $strategy='mobile';
+
+$endpoint='https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed';
+$query='url='.rawurlencode($url).'&strategy='.$strategy.'&locale=en'
+  .'&category=performance&category=accessibility&category=best-practices&category=seo';
+$key=trim((string)(getenv('PAGESPEED_API_KEY') ?: ''));
+if($key!=='') $query.='&key='.rawurlencode($key);
+
+$ch=curl_init($endpoint.'?'.$query);
+curl_setopt_array($ch,[
+  CURLOPT_RETURNTRANSFER=>true,
+  CURLOPT_FOLLOWLOCATION=>true,
+  CURLOPT_CONNECTTIMEOUT=>10,
+  CURLOPT_TIMEOUT=>100,
+  CURLOPT_USERAGENT=>'SmartWebUtility/1.0 (+https://smartwebutility.com/)',
+  CURLOPT_SSL_VERIFYPEER=>true,
+  CURLOPT_SSL_VERIFYHOST=>2,
+  CURLOPT_HTTPHEADER=>['Accept: application/json']
+]);
+$body=curl_exec($ch);
+$errno=curl_errno($ch);
+$error=curl_error($ch);
+$status=(int)curl_getinfo($ch,CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+if($body===false || $errno){
+  out(['error'=>'Performance analysis service could not be reached. Please try again shortly.','detail'=>$error],502);
+}
+$data=json_decode((string)$body,true);
+if(!is_array($data)){
+  out(['error'=>'Performance analysis returned an invalid response.'],502);
+}
+if($status>=400 || isset($data['error'])){
+  $message=$data['error']['message'] ?? 'PageSpeed analysis could not be completed.';
+  if($status===429) $message='PageSpeed analysis quota is temporarily busy. Please try again shortly.';
+  out(['error'=>$message,'provider_status'=>$status],$status===429?429:502);
+}
+
+$lh=$data['lighthouseResult'] ?? [];
+$audits=$lh['audits'] ?? [];
+$categories=$lh['categories'] ?? [];
+
+function ps_score(array $categories,string $id): ?int {
+  if(!isset($categories[$id]['score']) || !is_numeric($categories[$id]['score'])) return null;
+  return (int)round(((float)$categories[$id]['score'])*100);
+}
+function ps_lab(array $audits,string $id,string $label): ?array {
+  $a=$audits[$id] ?? null;
+  if(!is_array($a)) return null;
+  return [
+    'id'=>$id,
+    'label'=>$label,
+    'value'=>$a['numericValue'] ?? null,
+    'display'=>$a['displayValue'] ?? null,
+    'score'=>isset($a['score']) && is_numeric($a['score']) ? (int)round(((float)$a['score'])*100) : null
+  ];
+}
+function ps_field_metric(array $experience,string $key,string $label,string $unit='ms'): ?array {
+  $m=$experience['metrics'][$key] ?? null;
+  if(!is_array($m) || !isset($m['percentile'])) return null;
+  $value=(float)$m['percentile'];
+  if($key==='CUMULATIVE_LAYOUT_SHIFT_SCORE') $value=$value/100;
+  return [
+    'key'=>$key,
+    'label'=>$label,
+    'value'=>$value,
+    'unit'=>$unit,
+    'category'=>$m['category'] ?? 'NONE'
+  ];
+}
+function ps_experience(array $experience): ?array {
+  if(empty($experience['metrics']) || !is_array($experience['metrics'])) return null;
+  $metrics=array_values(array_filter([
+    ps_field_metric($experience,'LARGEST_CONTENTFUL_PAINT_MS','Largest Contentful Paint'),
+    ps_field_metric($experience,'INTERACTION_TO_NEXT_PAINT','Interaction to Next Paint'),
+    ps_field_metric($experience,'CUMULATIVE_LAYOUT_SHIFT_SCORE','Cumulative Layout Shift','score'),
+    ps_field_metric($experience,'FIRST_CONTENTFUL_PAINT_MS','First Contentful Paint'),
+    ps_field_metric($experience,'EXPERIMENTAL_TIME_TO_FIRST_BYTE','Time to First Byte')
+  ]));
+  $cwv=[];
+  foreach($metrics as $m){
+    if(in_array($m['key'],['LARGEST_CONTENTFUL_PAINT_MS','INTERACTION_TO_NEXT_PAINT','CUMULATIVE_LAYOUT_SHIFT_SCORE'],true)) $cwv[]=$m;
+  }
+  $assessment='insufficient-data';
+  if(count($cwv)===3){
+    $assessment=count(array_filter($cwv,fn($m)=>($m['category']??'')==='FAST'))===3?'passed':'needs-improvement';
+  }
+  return [
+    'id'=>$experience['id'] ?? null,
+    'overall_category'=>$experience['overall_category'] ?? 'NONE',
+    'origin_fallback'=>(bool)($experience['origin_fallback'] ?? false),
+    'assessment'=>$assessment,
+    'metrics'=>$metrics
+  ];
+}
+
+$lab=array_values(array_filter([
+  ps_lab($audits,'first-contentful-paint','First Contentful Paint'),
+  ps_lab($audits,'largest-contentful-paint','Largest Contentful Paint'),
+  ps_lab($audits,'total-blocking-time','Total Blocking Time'),
+  ps_lab($audits,'cumulative-layout-shift','Cumulative Layout Shift'),
+  ps_lab($audits,'speed-index','Speed Index'),
+  ps_lab($audits,'interactive','Time to Interactive')
+]));
+
+$opportunities=[];
+$diagnostics=[];
+$passed=[];
+$perfRefs=$categories['performance']['auditRefs'] ?? [];
+foreach($perfRefs as $ref){
+  $id=$ref['id'] ?? '';
+  $a=$audits[$id] ?? null;
+  if(!$id || !is_array($a)) continue;
+  $mode=$a['scoreDisplayMode'] ?? '';
+  if(in_array($mode,['notApplicable','manual','informative'],true)) continue;
+  $item=[
+    'id'=>$id,
+    'title'=>$a['title'] ?? $id,
+    'description'=>$a['description'] ?? '',
+    'display'=>$a['displayValue'] ?? null,
+    'score'=>isset($a['score']) && is_numeric($a['score']) ? (int)round(((float)$a['score'])*100) : null,
+    'savings_ms'=>$a['details']['overallSavingsMs'] ?? null,
+    'savings_bytes'=>$a['details']['overallSavingsBytes'] ?? null
+  ];
+  $group=$ref['group'] ?? '';
+  if(($a['details']['type'] ?? '')==='opportunity' || $group==='load-opportunities'){
+    if(($a['score'] ?? 1)<1) $opportunities[$id]=$item;
+  } elseif($group==='diagnostics' && ($a['score'] ?? 1)<1){
+    $diagnostics[$id]=$item;
+  }
+}
+usort($opportunities,function($a,$b){
+  return (($b['savings_ms']??0)<=>($a['savings_ms']??0)) ?: (($b['savings_bytes']??0)<=>($a['savings_bytes']??0));
+});
+$opportunities=array_slice(array_values($opportunities),0,12);
+$diagnostics=array_slice(array_values($diagnostics),0,14);
+
+foreach($categories as $category){
+  foreach(($category['auditRefs'] ?? []) as $ref){
+    $id=$ref['id'] ?? '';
+    $a=$audits[$id] ?? null;
+    if(!$id || !is_array($a) || ($a['score'] ?? null)!==1) continue;
+    if(isset($passed[$id])) continue;
+    $passed[$id]=['id'=>$id,'title'=>$a['title'] ?? $id];
+  }
+}
+$passed=array_slice(array_values($passed),0,24);
+
+$resourceSummary=[];
+foreach(($audits['resource-summary']['details']['items'] ?? []) as $item){
+  if(!is_array($item)) continue;
+  $resourceSummary[]=[
+    'type'=>$item['resourceType'] ?? 'other',
+    'label'=>$item['label'] ?? null,
+    'requests'=>$item['requestCount'] ?? null,
+    'transfer_bytes'=>$item['transferSize'] ?? null
+  ];
+}
+
+out([
+  'url'=>$url,
+  'strategy'=>$strategy,
+  'final_url'=>$lh['finalUrl'] ?? ($data['id'] ?? $url),
+  'fetch_time'=>$lh['fetchTime'] ?? ($data['analysisUTCTimestamp'] ?? null),
+  'lighthouse_version'=>$lh['lighthouseVersion'] ?? null,
+  'categories'=>[
+    'performance'=>ps_score($categories,'performance'),
+    'accessibility'=>ps_score($categories,'accessibility'),
+    'best_practices'=>ps_score($categories,'best-practices'),
+    'seo'=>ps_score($categories,'seo')
+  ],
+  'field'=>ps_experience($data['loadingExperience'] ?? []),
+  'origin_field'=>ps_experience($data['originLoadingExperience'] ?? []),
+  'lab'=>$lab,
+  'opportunities'=>$opportunities,
+  'diagnostics'=>$diagnostics,
+  'passed'=>$passed,
+  'resources'=>$resourceSummary,
+  'provider'=>'Google PageSpeed Insights API / Lighthouse',
+  'notes'=>[
+    'Lab data is a synthetic Lighthouse run for the selected device strategy.',
+    'Field data is shown only when the provider returns sufficient real-user experience data.',
+    'Performance scores can vary between runs because network, server and page conditions change.'
+  ]
+]);
