@@ -1,0 +1,32 @@
+services:
+  lighthouse:
+    build:
+      context: ./site.current/deploy/lighthouse
+      dockerfile: Dockerfile
+    container_name: smartwebutility_lighthouse
+    restart: unless-stopped
+    shm_size: 256m
+    mem_limit: 1200m
+    cpus: 1.5
+    volumes:
+      - ./tmp/lighthouse-jobs:/jobs
+    networks:
+      - lighthouse_internal
+    depends_on:
+      - lighthouse_proxy
+
+  lighthouse_proxy:
+    build:
+      context: ./site.current/deploy/lighthouse
+      dockerfile: Dockerfile.proxy
+    container_name: smartwebutility_lighthouse_proxy
+    restart: unless-stopped
+    mem_limit: 192m
+    networks:
+      - lighthouse_internal
+      - lighthouse_egress
+
+networks:
+  lighthouse_internal:
+    internal: true
+  lighthouse_egress:
