@@ -20,7 +20,7 @@
     <article><h3>CDN/application layer</h3><p>Even when DNS is correct, a CDN or application can still route or serve content from an older origin. That is not a DNS propagation problem.</p></article>
   </div>
 
-  <h2>Step 1: compare independent resolver answers</h2>
+  <h2>Step 1: compare independent resolver answers</h2><p>For a country-level sample, <a href="/">run a live worldwide propagation check</a> from the homepage. The countries remain fixed while the current DNS answers are filled into each row.</p>
   <p>Use the <a href="/dns-propagation-checker/">DNS Propagation Checker</a> to compare Cloudflare, Google and the server resolver. These are separate resolver paths with separate caches. If one shows the new value and another shows the old value shortly after a change, cache state is a plausible explanation.</p>
   <p>The checker intentionally does not claim to sample every country or ISP. Three independent answers are useful evidence, but they are not proof that every resolver worldwide has converged.</p>
 
