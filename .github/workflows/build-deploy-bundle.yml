@@ -18,6 +18,15 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Validate PHP syntax
+        run: |
+          find api -type f -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Validate JavaScript syntax
+        run: |
+          node --check assets/page-speed.js
+          node --check assets/seo-audit.js
+
       - name: Upload site bundle
         uses: actions/upload-artifact@v4
         with:
