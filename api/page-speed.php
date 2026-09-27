@@ -148,7 +148,7 @@ foreach($categories as $category){
   foreach(($category['auditRefs'] ?? []) as $ref){
     $id=$ref['id'] ?? '';
     $a=$audits[$id] ?? null;
-    if(!$id || !is_array($a) || ($a['score'] ?? null)!==1) continue;
+    if(!$id || !is_array($a) || !isset($a['score']) || (float)$a['score']<0.999) continue;
     if(isset($passed[$id])) continue;
     $passed[$id]=['id'=>$id,'title'=>$a['title'] ?? $id];
   }
@@ -189,6 +189,6 @@ out([
   'notes'=>[
     'Lab data is a synthetic Lighthouse run for the selected device strategy.',
     'Field data is shown only when the provider returns sufficient real-user experience data.',
-    'Performance scores can vary between runs because network, server and page conditions change.'
+    'Performance scores can vary between runs because network, server and page conditions change.',\n    'Field data is provider-dependent and may be unavailable even when a Lighthouse lab run succeeds.'
   ]
 ]);
