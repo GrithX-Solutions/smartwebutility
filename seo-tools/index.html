@@ -8,8 +8,8 @@
 <meta property="og:url" content="https://smartwebutility.com/seo-tools/"><meta property="og:type" content="website">
 <meta name="theme-color" content="#0b1120">
 <link rel="icon" href="/favicon-64.png" sizes="64x64" type="image/png"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="manifest" href="/site.webmanifest">
-<script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css?v=20260927-seoaudit2">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Free Website SEO Audit","url":"https://smartwebutility.com/seo-tools/","applicationCategory":"BusinessApplication","operatingSystem":"Any","description":"A free crawl-based website audit for technical SEO, crawlability, on-page signals, structured data, GEO/AIO readiness and SXO diagnostics.","isAccessibleForFree":true,"featureList":["Full-site and single-page public crawling","robots.txt and XML sitemap checks","Indexability and canonical checks","Titles, descriptions and heading checks","Internal-link and broken-URL checks","Structured-data syntax checks","GEO/AIO technical-readiness checks","SXO and mobile usability signals","Prioritized fixes with affected URL samples"],"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"publisher":{"@type":"Organization","@id":"https://smartwebutility.com/#organization","name":"Smart Web Utility","url":"https://smartwebutility.com/"}}</script>
+<script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css?v=20260927-seoaudit3">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Free Website SEO Audit","url":"https://smartwebutility.com/seo-tools/","applicationCategory":"BusinessApplication","operatingSystem":"Any","description":"A free crawl-based website audit for technical SEO, crawlability, on-page signals, structured data, GEO/AIO readiness and SXO diagnostics.","isAccessibleForFree":true,"featureList":["Single-page and focused 10, 25 or 50-page crawling","robots.txt and XML sitemap checks","Indexability and canonical checks","Titles, descriptions and heading checks","Internal-link and broken-URL checks","Structured-data syntax checks","GEO/AIO technical-readiness checks","SXO and mobile usability signals","Prioritized fixes with affected URL samples"],"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"publisher":{"@type":"Organization","@id":"https://smartwebutility.com/#organization","name":"Smart Web Utility","url":"https://smartwebutility.com/"}}</script>
 </head><body>
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/" aria-current="page">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
 
@@ -23,15 +23,17 @@
   <form class="seo-audit-form" id="seoAuditForm">
     <label class="sr-only" for="seoAuditUrl">Website URL</label>
     <input id="seoAuditUrl" name="url" type="url" inputmode="url" placeholder="https://example.com" autocomplete="url" required>
-    <label class="sr-only" for="seoAuditMode">Audit mode</label>
-    <select id="seoAuditMode" name="mode" aria-label="Audit mode">
-      <option value="full" selected>Full Site Audit</option>
-      <option value="page">Single Page Audit</option>
+    <label class="sr-only" for="seoAuditMode">Audit scope</label>
+    <select id="seoAuditMode" name="mode" aria-label="Audit scope">
+      <option value="page">Single Page</option>
+      <option value="10">10 Pages</option>
+      <option value="25" selected>25 Pages</option>
+      <option value="50">50 Pages</option>
     </select>
     <button class="btn" type="submit">Run SEO audit</button>
   </form>
   <div class="seo-audit-trust">
-    <span>Public pages only</span><span>Full-site & single-page modes</span><span>No signup</span><span>No fake ranking score</span>
+    <span>Public pages only</span><span>Single page or 10 / 25 / 50 pages</span><span>No signup</span><span>Evidence-based findings</span>
   </div>
   <div id="seoAuditProgress" class="seo-audit-progress" role="status" aria-live="polite" hidden></div>
   <div id="seoAuditError" class="error" role="alert" hidden></div>
@@ -110,7 +112,7 @@
   </div>
 
   <h2>Audit scope and execution safety</h2>
-  <p>Choose Full Site Audit to discover same-host URLs from the landing page, crawlable internal links and XML sitemaps, or Single Page Audit for a focused URL check. Server-side work is bounded by execution safety controls rather than presenting an arbitrary 25/50-page product tier. Very large sites may require resumable batches as the crawler architecture expands. JavaScript rendering, private Search Console/Bing Webmaster data and CrUX field metrics are not inferred by this public crawler.</p>
+  <p>Choose Single Page for a focused URL diagnosis, or audit 10, 25 or 50 same-host pages discovered from the landing page, crawlable internal links and XML sitemaps. The bounded scope is intentional: it prioritizes deeper evidence, reliable completion and actionable fixes over bulk crawling. JavaScript rendering, private Search Console/Bing Webmaster data and CrUX field metrics are not inferred by this public crawler.</p>
 
   <h2>Official references behind the audit model</h2>
   <div class="related-tools">
@@ -145,5 +147,5 @@
 
 <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a></div></div></footer>
 <script>document.getElementById('year').textContent=new Date().getFullYear()</script>
-<script src="/assets/seo-audit.js?v=20260927-seoaudit2" defer></script>
+<script src="/assets/seo-audit.js?v=20260927-seoaudit3" defer></script>
 </body></html>
