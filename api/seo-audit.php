@@ -471,6 +471,17 @@ usort($issueList,fn($a,$b)=>($rank[$a['severity']]<=>$rank[$b['severity']]) ?: s
 $counts=['critical'=>0,'warning'=>0,'notice'=>0];
 foreach($issueList as $issue) $counts[$issue['severity']]++;
 
+$pageIssueMap=[];
+foreach($issueList as $issue){
+  foreach(($issue['urls']??[]) as $affectedUrl){
+    if(!isset($pageIssueMap[$affectedUrl])) $pageIssueMap[$affectedUrl]=[];
+    $pageIssueMap[$affectedUrl][]=[
+      'id'=>$issue['id'],'severity'=>$issue['severity'],'category'=>$issue['category'],
+      'title'=>$issue['title'],'why'=>$issue['why'],'fix'=>$issue['fix']
+    ];
+  }
+}
+
 $pageRows=[];
 foreach($pages as $p){
   $pageRows[]=[
@@ -483,7 +494,8 @@ foreach($pages as $p){
     'jsonld_count'=>$p['jsonld_count']??null,'jsonld_invalid'=>$p['jsonld_invalid']??null,'schema_types'=>$p['schema_types']??[],
     'viewport'=>$p['viewport']??null,'lang'=>$p['lang']??null,'hreflang_count'=>$p['hreflang_count']??null,
     'og_title'=>$p['og_title_present']??null,'og_description'=>$p['og_description_present']??null,
-    'time_ms'=>$p['time_ms']??null
+    'time_ms'=>$p['time_ms']??null,
+    'issues'=>$pageIssueMap[$p['url']]??[]
   ];
 }
 
