@@ -7,7 +7,7 @@
 <meta property="og:description" content="Run a mobile or desktop Lighthouse speed test with performance metrics, Core Web Vitals data and actionable fixes.">
 <meta property="og:url" content="https://smartwebutility.com/website-speed-test/"><meta property="og:type" content="website">
 <meta name="theme-color" content="#07101b"><link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css"><link rel="stylesheet" href="/assets/page-speed.css?v=20260927-1">
+<script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css"><link rel="stylesheet" href="/assets/page-speed.css?v=20260928-async1">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Website Speed Test","url":"https://smartwebutility.com/website-speed-test/","description":"Mobile and desktop website performance test using PageSpeed Insights API and Lighthouse diagnostics.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Mobile website speed test","Desktop website speed test","Lighthouse performance score","Core Web Vitals field data when available","Lab performance metrics","Performance opportunities","Diagnostics and passed audits"]}</script>
 </head><body>
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
@@ -24,7 +24,22 @@
     <button class="btn primary" type="submit">Analyze speed</button>
   </form>
   <div class="speed-trust"><span>Mobile + desktop</span><span>Lighthouse lab data</span><span>Core Web Vitals when available</span><span>No signup</span></div>
-  <div id="speedProgress" class="speed-progress" role="status" aria-live="polite" hidden></div>
+  <section id="speedProgress" class="speed-live" role="status" aria-live="polite" hidden>
+    <div class="speed-live-head">
+      <span id="speedLiveBadge" class="speed-live-badge active">Queued</span>
+      <div class="speed-live-copy"><strong id="speedLiveTitle">Mobile performance test</strong><span id="speedLiveMessage">Preparing the performance queue.</span></div>
+      <span id="speedElapsed" class="speed-live-time">0s</span>
+    </div>
+    <div class="speed-live-track" aria-hidden="true"><span id="speedProgressBar"></span></div>
+    <ol class="speed-live-steps" aria-label="Performance test progress">
+      <li class="speed-step active"><span>1</span><div><strong>Accepted</strong><small>Request received</small></div></li>
+      <li class="speed-step"><span>2</span><div><strong>Queued</strong><small>Waiting for browser</small></div></li>
+      <li class="speed-step"><span>3</span><div><strong>Measuring</strong><small>Loading and tracing</small></div></li>
+      <li class="speed-step"><span>4</span><div><strong>Processing</strong><small>Building report</small></div></li>
+      <li class="speed-step"><span>5</span><div><strong>Ready</strong><small>Results displayed</small></div></li>
+    </ol>
+    <p class="speed-live-note">Heavy Lighthouse work runs in one isolated worker. This page receives small status updates instead of holding one long server request.</p>
+  </section>
   <div id="speedError" class="error" role="alert" hidden></div>
 </section>
 
@@ -108,5 +123,5 @@
 
 <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></div></footer>
 <script>document.getElementById('year').textContent=new Date().getFullYear()</script>
-<script src="/assets/page-speed.js?v=20260927-1"></script>
+<script src="/assets/page-speed.js?v=20260928-async1"></script>
 </body></html>
