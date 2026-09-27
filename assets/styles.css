@@ -1526,3 +1526,13 @@ body:not(.home-page) .section.wrap.prose{
   .seo-audit-toolbar{overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px}
   .seo-audit-toolbar button{flex:0 0 auto}
 }
+
+/* SEO audit per-page diagnostic evidence */
+.audit-page-detail-row td{padding:0!important;border-top:0!important}
+.audit-page-diagnostics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:16px 18px 20px;background:var(--surface-2,#f6f8fb);border-top:1px solid var(--border,#dfe4ea);border-bottom:1px solid var(--border,#dfe4ea)}
+.audit-page-diagnostics>div{min-width:0;padding:12px;border:1px solid var(--border,#dfe4ea);border-radius:10px;background:var(--surface,#fff)}
+.audit-page-diagnostics b{display:block;margin-bottom:5px;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted,#667085)}
+.audit-page-diagnostics span,.audit-page-diagnostics code{font-size:.9rem;line-height:1.45;overflow-wrap:anywhere;white-space:normal}
+.audit-page-toggle{white-space:nowrap}
+@media(max-width:900px){.audit-page-diagnostics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.audit-page-diagnostics{grid-template-columns:1fr;padding:12px}.seo-audit-pages-table{min-width:900px}}
