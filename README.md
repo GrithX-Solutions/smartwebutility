@@ -61,3 +61,4 @@ The PHP API validates targets and redirect hops and rejects private/reserved IP 
 
 ## Launch plan
 See `LAUNCH.md` for the global SEO, AdSense readiness, privacy/consent and production deployment checklist.
+\n\n## Performance API configuration\n\nThe `/website-speed-test/` tool uses the Google PageSpeed Insights API through `/api/page-speed.php`. `PAGESPEED_API_KEY` is optional but recommended for regular production traffic. `CRUX_API_KEY` is optional and enables direct Chrome UX Report field data; when it is not set, the backend can reuse `PAGESPEED_API_KEY` if that key also has the Chrome UX Report API enabled. Keys stay server-side and are never exposed to the browser.\n
