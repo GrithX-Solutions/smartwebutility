@@ -155,6 +155,78 @@ foreach($categories as $category){
 }
 $passed=array_slice(array_values($passed),0,24);
 
+function ps_crux_category(string $metric,float $value): string {
+  return match($metric){
+    'largest_contentful_paint' => $value<=2500?'FAST':($value<=4000?'AVERAGE':'SLOW'),
+    'interaction_to_next_paint' => $value<=200?'FAST':($value<=500?'AVERAGE':'SLOW'),
+    'cumulative_layout_shift' => $value<=0.10?'FAST':($value<=0.25?'AVERAGE':'SLOW'),
+    'first_contentful_paint' => $value<=1800?'FAST':($value<=3000?'AVERAGE':'SLOW'),
+    'experimental_time_to_first_byte' => $value<=800?'FAST':($value<=1800?'AVERAGE':'SLOW'),
+    default => 'NONE'
+  };
+}
+function ps_crux_request(string $key,string $target,string $strategy,bool $origin=false): ?array {
+  if($key==='') return null;
+  $endpoint='https://chromeuxreport.googleapis.com/v1/records:queryRecord?key='.rawurlencode($key);
+  $payload=[
+    $origin?'origin':'url'=>$target,
+    'formFactor'=>$strategy==='desktop'?'DESKTOP':'PHONE',
+    'metrics'=>[
+      'largest_contentful_paint','interaction_to_next_paint','cumulative_layout_shift',
+      'first_contentful_paint','experimental_time_to_first_byte'
+    ]
+  ];
+  $ch=curl_init($endpoint);
+  curl_setopt_array($ch,[
+    CURLOPT_RETURNTRANSFER=>true,
+    CURLOPT_POST=>true,
+    CURLOPT_POSTFIELDS=>json_encode($payload,JSON_UNESCAPED_SLASHES),
+    CURLOPT_CONNECTTIMEOUT=>6,
+    CURLOPT_TIMEOUT=>15,
+    CURLOPT_SSL_VERIFYPEER=>true,
+    CURLOPT_SSL_VERIFYHOST=>2,
+    CURLOPT_HTTPHEADER=>['Accept: application/json','Content-Type: application/json']
+  ]);
+  $body=curl_exec($ch);
+  $status=(int)curl_getinfo($ch,CURLINFO_HTTP_CODE);
+  $errno=curl_errno($ch);
+  curl_close($ch);
+  if($body===false || $errno || $status>=400) return null;
+  $json=json_decode((string)$body,true);
+  return is_array($json['record'] ?? null)?$json['record']:null;
+}
+function ps_crux_experience(array $record,bool $originFallback=false): ?array {
+  $metrics=$record['metrics'] ?? null;
+  if(!is_array($metrics) || !$metrics) return null;
+  $map=[
+    'largest_contentful_paint'=>['LARGEST_CONTENTFUL_PAINT_MS','Largest Contentful Paint','ms'],
+    'interaction_to_next_paint'=>['INTERACTION_TO_NEXT_PAINT','Interaction to Next Paint','ms'],
+    'cumulative_layout_shift'=>['CUMULATIVE_LAYOUT_SHIFT_SCORE','Cumulative Layout Shift','score'],
+    'first_contentful_paint'=>['FIRST_CONTENTFUL_PAINT_MS','First Contentful Paint','ms'],
+    'experimental_time_to_first_byte'=>['EXPERIMENTAL_TIME_TO_FIRST_BYTE','Time to First Byte','ms']
+  ];
+  $out=[];
+  foreach($map as $metric=>$meta){
+    $raw=$metrics[$metric]['percentiles']['p75'] ?? null;
+    if($raw===null || !is_numeric($raw)) continue;
+    $value=(float)$raw;
+    $out[]=['key'=>$meta[0],'label'=>$meta[1],'value'=>$value,'unit'=>$meta[2],'category'=>ps_crux_category($metric,$value)];
+  }
+  $cwv=array_values(array_filter($out,fn($m)=>in_array($m['key'],['LARGEST_CONTENTFUL_PAINT_MS','INTERACTION_TO_NEXT_PAINT','CUMULATIVE_LAYOUT_SHIFT_SCORE'],true)));
+  $assessment='insufficient-data';
+  if(count($cwv)===3) $assessment=count(array_filter($cwv,fn($m)=>$m['category']==='FAST'))===3?'passed':'needs-improvement';
+  $key=$record['key'] ?? [];
+  return [
+    'id'=>$key['url'] ?? ($key['origin'] ?? null),
+    'overall_category'=>'NONE',
+    'origin_fallback'=>$originFallback,
+    'assessment'=>$assessment,
+    'metrics'=>$out,
+    'source'=>'Chrome UX Report API',
+    'collection_period'=>$record['collectionPeriod'] ?? null
+  ];
+}
+
 $resourceSummary=[];
 foreach(($audits['resource-summary']['details']['items'] ?? []) as $item){
   if(!is_array($item)) continue;
@@ -164,6 +236,24 @@ foreach(($audits['resource-summary']['details']['items'] ?? []) as $item){
     'requests'=>$item['requestCount'] ?? null,
     'transfer_bytes'=>$item['transferSize'] ?? null
   ];
+}
+
+$field=ps_experience($data['loadingExperience'] ?? []);
+$originField=ps_experience($data['originLoadingExperience'] ?? []);
+$cruxKey=trim((string)(getenv('CRUX_API_KEY') ?: $key));
+if($cruxKey!==''){
+  $cruxRecord=ps_crux_request($cruxKey,$lh['finalUrl'] ?? $url,$strategy,false);
+  if($cruxRecord){
+    $field=ps_crux_experience($cruxRecord,false);
+    $originField=null;
+  } else {
+    $p=parse_url($lh['finalUrl'] ?? $url);
+    if($p && isset($p['scheme'],$p['host'])){
+      $origin=$p['scheme'].'://'.$p['host'].(isset($p['port'])?':'.$p['port']:'');
+      $originRecord=ps_crux_request($cruxKey,$origin,$strategy,true);
+      if($originRecord) $originField=ps_crux_experience($originRecord,true);
+    }
+  }
 }
 
 out([
@@ -178,8 +268,8 @@ out([
     'best_practices'=>ps_score($categories,'best-practices'),
     'seo'=>ps_score($categories,'seo')
   ],
-  'field'=>ps_experience($data['loadingExperience'] ?? []),
-  'origin_field'=>ps_experience($data['originLoadingExperience'] ?? []),
+  'field'=>$field,
+  'origin_field'=>$originField,
   'lab'=>$lab,
   'opportunities'=>$opportunities,
   'diagnostics'=>$diagnostics,
