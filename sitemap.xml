@@ -1,50 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://smartwebutility.com/</loc><lastmod>2026-09-27</lastmod></url>
-  <url><loc>https://smartwebutility.com/developer-tools/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/website-tools/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/seo-tools/</loc><lastmod>2026-09-27</lastmod></url>
-  <url><loc>https://smartwebutility.com/text-tools/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/dns-checker/</loc><lastmod>2026-09-27</lastmod></url>
-  <url><loc>https://smartwebutility.com/ssl-checker/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/http-status-checker/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/website-speed-test/</loc><lastmod>2026-09-27</lastmod></url>
-  <url><loc>https://smartwebutility.com/redirect-checker/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/json-formatter/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/base64-encoder-decoder/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/unix-timestamp-converter/</loc><lastmod>2026-09-26</lastmod></url>
+  <url><loc>https://smartwebutility.com/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/developer-tools/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/website-tools/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/seo-tools/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/text-tools/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/dns-checker/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/ssl-checker/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/http-status-checker/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/website-speed-test/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/redirect-checker/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/json-formatter/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/base64-encoder-decoder/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/unix-timestamp-converter/</loc><lastmod>2026-09-28</lastmod></url>
   <url><loc>https://smartwebutility.com/uuid-generator/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/hash-generator/</loc><lastmod>2026-09-26</lastmod></url>
+  <url><loc>https://smartwebutility.com/hash-generator/</loc><lastmod>2026-09-28</lastmod></url>
   <url><loc>https://smartwebutility.com/jwt-decoder/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/regex-tester/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/url-encoder-decoder/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/html-entity-encoder-decoder/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/cron-expression-helper/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/meta-tag-generator/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/robots-txt-generator/</loc><lastmod>2026-09-26</lastmod></url>
+  <url><loc>https://smartwebutility.com/regex-tester/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/url-encoder-decoder/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/html-entity-encoder-decoder/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/cron-expression-helper/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/meta-tag-generator/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/robots-txt-generator/</loc><lastmod>2026-09-28</lastmod></url>
   <url><loc>https://smartwebutility.com/schema-markup-generator/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/open-graph-preview/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/sitemap-checker/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/meta-tag-checker/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/open-graph-checker/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/http-header-checker/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/dns-propagation-checker/</loc><lastmod>2026-09-27</lastmod></url>
-  <url><loc>https://smartwebutility.com/word-counter/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/character-counter/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/case-converter/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/slug-generator/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/lorem-ipsum-generator/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/password-generator/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/random-string-generator/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/guides/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/guides/dns-changed-still-old-ip/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/guides/ssl-certificate-still-old-after-renewal/</loc><lastmod>2026-09-26</lastmod></url>
+  <url><loc>https://smartwebutility.com/open-graph-preview/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/sitemap-checker/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/meta-tag-checker/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/open-graph-checker/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/http-header-checker/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/dns-propagation-checker/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/word-counter/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/character-counter/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/case-converter/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/slug-generator/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/lorem-ipsum-generator/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/password-generator/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/random-string-generator/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/guides/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/guides/dns-changed-still-old-ip/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/guides/ssl-certificate-still-old-after-renewal/</loc><lastmod>2026-09-28</lastmod></url>
   <url><loc>https://smartwebutility.com/guides/ssl-certificate-hostname-mismatch/</loc><lastmod>2026-09-26</lastmod></url>
   <url><loc>https://smartwebutility.com/guides/too-many-redirects-loop/</loc><lastmod>2026-09-27</lastmod></url>
-  <url><loc>https://smartwebutility.com/guides/dns-propagation-resolver-cache/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://smartwebutility.com/guides/dns-propagation-resolver-cache/</loc><lastmod>2026-09-28</lastmod></url>
   <url><loc>https://smartwebutility.com/methodology/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/about/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/privacy/</loc><lastmod>2026-09-27</lastmod></url>
-  <url><loc>https://smartwebutility.com/terms/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://smartwebutility.com/contact/</loc><lastmod>2026-09-26</lastmod></url>
+  <url><loc>https://smartwebutility.com/about/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/privacy/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/terms/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/contact/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/guides/mobile-vs-desktop-lighthouse-speed/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/guides/check-ssl-certificate-expiry/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/guides/http-security-headers-checklist/</loc><lastmod>2026-09-28</lastmod></url>
+  <url><loc>https://smartwebutility.com/guides/check-redirect-chain-301-302/</loc><lastmod>2026-09-28</lastmod></url>
 </urlset>
