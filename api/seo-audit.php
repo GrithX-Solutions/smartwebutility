@@ -235,7 +235,8 @@ function audit_parse_page(array $fetch, string $host): array {
     'images'=>$images,'images_missing_alt'=>$missingAlt,
     'jsonld_count'=>$jsonldCount,'jsonld_invalid'=>$jsonldInvalid,'schema_types'=>$schemaTypes,
     'og_title'=>(bool)$ogTitle,'og_description'=>(bool)$ogDescription,
-    'hreflang_count'=>$hreflang,'truncated'=>$fetch['truncated']
+    'hreflang_count'=>$hreflang,'truncated'=>$fetch['truncated'],
+    'og_title_present'=>(bool)$ogTitle,'og_description_present'=>(bool)$ogDescription
   ];
 }
 
@@ -410,10 +411,15 @@ foreach($pages as $url=>$p){
   else {
     $chost=strtolower(parse_url($p['canonical'],PHP_URL_HOST)??'');
     if($chost!=='' && $chost!==$host) audit_add_issue($issues,'canonical-crosshost','warning','Canonicalization','Canonical points to another hostname','Cross-domain canonicals can intentionally consolidate content, but accidental ones can remove the audited page from the preferred index set.','Confirm the cross-domain canonical is deliberate; otherwise point it to the preferred URL on this site.',$url,$canonicalRef);
+    if(strtolower(parse_url($p['canonical'],PHP_URL_SCHEME)??'')!=='https') audit_add_issue($issues,'canonical-http','warning','Canonicalization','Canonical points to a non-HTTPS URL','A canonical that points from an HTTPS page to HTTP can conflict with the preferred secure URL strategy.','Use the final preferred HTTPS URL in canonical annotations unless HTTP is deliberately canonical.',$url,$canonicalRef);
   }
 
   if(!$p['viewport']) audit_add_issue($issues,'viewport','warning','SXO & Mobile','Pages are missing a viewport meta tag','Mobile layout behavior can be poor without a responsive viewport, hurting usability on phones.','Add a responsive viewport declaration and test the page at mobile widths.',$url,$googleRef);
   if(!$p['lang']) audit_add_issue($issues,'lang','notice','Accessibility & Semantics','Pages do not declare the document language','A language declaration helps browsers, assistive technology and language processing interpret the page.','Set the html lang attribute to the page language.',$url,$googleRef);
+
+  if(!$p['og_title_present'] || !$p['og_description_present']) audit_add_issue($issues,'social-meta','notice','Content Distribution','Pages have incomplete Open Graph metadata','Open Graph metadata does not directly determine rankings, but it improves control over how shared URLs are described on social and messaging platforms.','Add accurate og:title and og:description values that reflect the visible page content.',$url,$googleRef);
+  if($p['truncated']) audit_add_issue($issues,'large-html','notice','Performance & Crawl Efficiency','HTML response exceeded the audit body budget','Very large HTML documents can increase transfer, parsing and rendering cost for users and crawlers.','Reduce unnecessary server-rendered markup and move non-critical payloads out of the initial HTML where practical.',$url,$googleRef);
+  if($p['hreflang_count']>0 && !$p['canonical']) audit_add_issue($issues,'hreflang-canonical','warning','International SEO','Hreflang is present without a canonical hint','International targeting is easier to interpret when alternate-language URLs and canonical signals are internally consistent.','Review hreflang clusters and add an appropriate canonical for each indexable language/region URL.',$url,$canonicalRef);
 
   if($p['images_missing_alt']>0) audit_add_issue($issues,'image-alt','notice','Content & Accessibility','Images are missing alt attributes','Meaningful images should have useful alternative text; decorative images should use an empty alt attribute.','Add accurate alt text where the image conveys information and alt="" for purely decorative images.',$url,$googleRef);
 
