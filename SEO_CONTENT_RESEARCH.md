@@ -219,3 +219,23 @@ Decision:
 - Bing Webmaster connection is valid but its data endpoint was throttled during this review; no Bing query metrics were invented.
 
 Supporting zero-volume or intent-mismatched suggestions were not promoted into target keywords merely because they had low difficulty.
+
+
+## SEO audit tool keyword evidence — 2026-09-27
+
+Live Ubersuggest US/en data for the new /seo-tools/ audit console:
+
+| Keyword | US monthly volume | SEO difficulty | CPC | Interpretation |
+| --- | ---: | ---: | ---: | --- |
+| free seo audit tool | 720 | 69 | $14.06 | Strong commercial head term; high competition |
+| free website seo audit tool | 260 | 68 | $3.59 | Relevant transactional phrase; high competition |
+| free seo site audit tools | 140 | 68 | $10.87 | Relevant but competitive |
+| free white label seo audit tool | 50 | 24 | $0 | Lower difficulty but does not match current product intent |
+| free technical seo audit tool | 0 | 0 | $0 | Semantically relevant, but no measured volume in this dataset |
+| free seo audit and reporting tool | 0 | 4 | $0 | Low difficulty but no measured volume |
+
+Decision:
+- Do not create thin pages for low-KD zero-volume variants.
+- /seo-tools/ owns the broad free website/SEO audit intent and differentiates through real crawl functionality.
+- Ranking strategy depends on product usefulness, semantic coverage, internal links and future first-party query data rather than keyword stuffing.
+- International keyword research will be market-specific when multilingual rollout resumes.
