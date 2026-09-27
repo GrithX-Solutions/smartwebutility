@@ -118,20 +118,24 @@
       const loc=locationLabel(probe)||probe.country||'Unknown location';
       const statusClass=String(status).toUpperCase()==='NOERROR'?'ok':'warn';
       return `<tr>
-        <td>
+        <td data-label="Location">
           <div class="dns-location"><span class="dns-flag" aria-hidden="true">${escapeHtml(flag(probe.country||''))}</span><span><strong>${escapeHtml(loc)}</strong><small>${escapeHtml(network||'Network unavailable')}</small></span></div>
         </td>
-        <td>${renderAnswers(result)}</td>
-        <td><span class="dns-status ${statusClass}">${escapeHtml(status)}</span></td>
-        <td class="record-value">${escapeHtml(ttls.length?ttls.map(v=>v+'s').join(', '):'—')}</td>
-        <td class="record-value">${escapeHtml(resolver)}</td>
-        <td class="record-value">${escapeHtml(time)}</td>
+        <td data-label="DNS answer">${renderAnswers(result)}</td>
+        <td data-label="Status"><span class="dns-status ${statusClass}">${escapeHtml(status)}</span></td>
+        <td data-label="TTL" class="record-value">${escapeHtml(ttls.length?ttls.map(v=>v+'s').join(', '):'—')}</td>
+        <td data-label="Resolver" class="record-value">${escapeHtml(resolver)}</td>
+        <td data-label="Query time" class="record-value">${escapeHtml(time)}</td>
       </tr>`;
     }).join('');
 
     lastResults=rows;
     resultsEl.hidden=false;
     progressEl.hidden=true;
+    document.body.classList.add('dns-results-active');
+    if(window.matchMedia('(max-width: 760px)').matches){
+      requestAnimationFrame(()=>resultsEl.scrollIntoView({behavior:'smooth',block:'start'}));
+    }
   }
 
   async function createMeasurement(target,type){
