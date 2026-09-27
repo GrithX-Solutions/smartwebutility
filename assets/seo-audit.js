@@ -45,7 +45,7 @@
   function renderSummary(data){
     const a=data.audit||{}, s=data.summary||{};
     summaryEl.innerHTML=[
-      summaryCard('Pages crawled',a.pages_crawled||0),
+      summaryCard(a.mode==='page'?'Page audited':'Pages crawled',a.pages_crawled||0),
       summaryCard('Critical',s.critical||0,(s.critical||0)>0?'critical':'ok'),
       summaryCard('Warnings',s.warnings||0,(s.warnings||0)>0?'warning':'ok'),
       summaryCard('Passed checks',s.passed_checks||0,'ok')
@@ -57,7 +57,8 @@
       '<strong>'+esc(a.sitemap_urls_found||0)+'</strong> sitemap URLs found · '+
       '<strong>'+esc(a.discovered_urls||0)+'</strong> URLs discovered · '+
       '<strong>'+esc(Math.round((a.elapsed_ms||0)/1000))+'s</strong> audit time'+
-      (a.stopped_early?' · <span class="audit-scope-note">crawl limit/time budget reached</span>':'');
+      (a.mode==='crawl'&&a.max_pages?' · <strong>'+esc(a.max_pages)+'</strong> page scope':'')+
+      (a.stopped_early?' · <span class="audit-scope-note">selected scope or execution budget reached</span>':'');
   }
 
   function issueCard(issue){
