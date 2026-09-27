@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Global DNS Checker — Multi-Country DNS Lookup | Smart Web Utility</title><meta name="description" content="Check A, AAAA, CNAME, MX, NS, TXT, CAA, SOA and SRV DNS records from 12 live probes across multiple countries. Compare answers, TTL, resolver, network and query time."><link rel="canonical" href="https://smartwebutility.com/"><meta property="og:title" content="Global DNS Checker — Multi-Country DNS Lookup"><meta property="og:description" content="Check DNS records from live probes across 12 countries and compare answers, TTL, resolver, network and query time."><meta property="og:url" content="https://smartwebutility.com/"><meta property="og:type" content="website"><meta name="theme-color" content="#0b1120"><link rel="icon" href="/favicon-64.png" sizes="64x64" type="image/png"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="manifest" href="/site.webmanifest"><link rel="preload" href="/assets/styles.css?v=20260927-dns2" as="style"><script src="/assets/theme.js"></script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5136695583106589" crossorigin="anonymous"></script><link rel="stylesheet" href="/assets/styles.css?v=20260927-dns2"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://smartwebutility.com/#website","name":"Smart Web Utility","alternateName":"SW Utility","url":"https://smartwebutility.com/","description":"Global DNS checking plus free developer, SEO, website and text utilities."},{"@type":"WebApplication","name":"Global DNS Checker","url":"https://smartwebutility.com/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","description":"Check DNS records from live probes across multiple countries.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"Organization","@id":"https://smartwebutility.com/#organization","name":"Smart Web Utility","url":"https://smartwebutility.com/","email":"contact@smartwebutility.com","publishingPrinciples":"https://smartwebutility.com/methodology/"}]}</script></head><body class="home-page"><header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header><main><section class="home-dns-hero wrap" aria-labelledby="homeDnsHeading">
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Global DNS Checker — Multi-Country DNS Lookup | Smart Web Utility</title><meta name="description" content="Check A, AAAA, CNAME, MX, NS, TXT, CAA, SOA and SRV DNS records from 12 live probes across multiple countries. Compare answers, TTL, resolver, network and query time."><link rel="canonical" href="https://smartwebutility.com/"><meta property="og:title" content="Global DNS Checker — Multi-Country DNS Lookup"><meta property="og:description" content="Check DNS records from live probes across 12 countries and compare answers, TTL, resolver, network and query time."><meta property="og:url" content="https://smartwebutility.com/"><meta property="og:type" content="website"><meta name="theme-color" content="#0b1120"><link rel="icon" href="/favicon-64.png" sizes="64x64" type="image/png"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="manifest" href="/site.webmanifest"><link rel="preload" href="/assets/styles.css?v=20260927-dns4" as="style"><script src="/assets/theme.js"></script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5136695583106589" crossorigin="anonymous"></script><link rel="stylesheet" href="/assets/styles.css?v=20260927-dns4"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://smartwebutility.com/#website","name":"Smart Web Utility","alternateName":"SW Utility","url":"https://smartwebutility.com/","description":"Global DNS checking plus free developer, SEO, website and text utilities."},{"@type":"WebApplication","name":"Global DNS Checker","url":"https://smartwebutility.com/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","description":"Check DNS records from live probes across multiple countries.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"Organization","@id":"https://smartwebutility.com/#organization","name":"Smart Web Utility","url":"https://smartwebutility.com/","email":"contact@smartwebutility.com","publishingPrinciples":"https://smartwebutility.com/methodology/"}]}</script></head><body class="home-page"><header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header><main><section class="home-dns-hero wrap" aria-labelledby="homeDnsHeading">
   <div class="home-dns-main">
     <div class="eyebrow">Global DNS Checker</div>
     <h1 id="homeDnsHeading">Check DNS records from multiple countries.</h1>
@@ -32,10 +32,26 @@
       <button type="button" data-home-dns-type="CAA">CAA</button>
     </div>
 
-    <div class="home-dns-trust" aria-label="DNS checker details">
-      <span><strong>12</strong> live probe locations</span>
-      <span><strong>9</strong> record types</span>
-      <span><strong>0</strong> signup required</span>
+    <div class="home-dns-inline-results" id="homeDnsResults" aria-live="polite">
+      <div class="home-dns-inline-head">
+        <span>Probe location</span>
+        <span>DNS answer</span>
+      </div>
+      <div class="home-dns-inline-rows" id="homeDnsRows">
+        <div class="home-dns-inline-row" data-country="US"><div class="dns-static-location"><span aria-hidden="true">🇺🇸</span><span><strong>United States</strong><small data-network-country="US">Live probe</small></span></div><div class="dns-static-answer" data-answer-country="US">—</div></div>
+        <div class="home-dns-inline-row" data-country="CA"><div class="dns-static-location"><span aria-hidden="true">🇨🇦</span><span><strong>Canada</strong><small data-network-country="CA">Live probe</small></span></div><div class="dns-static-answer" data-answer-country="CA">—</div></div>
+        <div class="home-dns-inline-row" data-country="BR"><div class="dns-static-location"><span aria-hidden="true">🇧🇷</span><span><strong>Brazil</strong><small data-network-country="BR">Live probe</small></span></div><div class="dns-static-answer" data-answer-country="BR">—</div></div>
+        <div class="home-dns-inline-row" data-country="GB"><div class="dns-static-location"><span aria-hidden="true">🇬🇧</span><span><strong>United Kingdom</strong><small data-network-country="GB">Live probe</small></span></div><div class="dns-static-answer" data-answer-country="GB">—</div></div>
+        <div class="home-dns-inline-row" data-country="DE"><div class="dns-static-location"><span aria-hidden="true">🇩🇪</span><span><strong>Germany</strong><small data-network-country="DE">Live probe</small></span></div><div class="dns-static-answer" data-answer-country="DE">—</div></div>
+        <div class="home-dns-inline-row" data-country="NL"><div class="dns-static-location"><span aria-hidden="true">🇳🇱</span><span><strong>Netherlands</strong><small data-network-country="NL">Live probe</small></span></div><div class="dns-static-answer" data-answer-country="NL">—</div></div>
+        <div class="home-dns-inline-row" data-country="ZA"><div class="dns-static-location"><span aria-hidden="true">🇿🇦</span><span><strong>South Africa</strong><small data-network-country="ZA">Live probe</small></span></div><div class="dns-static-answer" data-answer-country="ZA">—</div></div>
+        <div class="home-dns-inline-row" data-country="IN"><div class="dns-static-location"><span aria-hidden="true">🇮🇳</span><span><strong>India</strong><small data-network-country="IN">Live probe</small></span></div><div class="dns-static-answer" data-answer-country="IN">—</div></div>
+        <div class="home-dns-inline-row" data-country="SG"><div class="dns-static-location"><span aria-hidden="true">🇸🇬</span><span><strong>Singapore</strong><small data-network-country="SG">Live probe</small></span></div><div class="dns-static-answer" data-answer-country="SG">—</div></div>
+        <div class="home-dns-inline-row" data-country="JP"><div class="dns-static-location"><span aria-hidden="true">🇯🇵</span><span><strong>Japan</strong><small data-network-country="JP">Live probe</small></span></div><div class="dns-static-answer" data-answer-country="JP">—</div></div>
+        <div class="home-dns-inline-row" data-country="AU"><div class="dns-static-location"><span aria-hidden="true">🇦🇺</span><span><strong>Australia</strong><small data-network-country="AU">Live probe</small></span></div><div class="dns-static-answer" data-answer-country="AU">—</div></div>
+        <div class="home-dns-inline-row" data-country="AE"><div class="dns-static-location"><span aria-hidden="true">🇦🇪</span><span><strong>United Arab Emirates</strong><small data-network-country="AE">Live probe</small></span></div><div class="dns-static-answer" data-answer-country="AE">—</div></div>
+      </div>
+      <div class="home-dns-inline-footer" id="homeDnsSummary" hidden></div>
     </div>
     <div id="homeDnsProgress" class="home-dns-progress" role="status" aria-live="polite" hidden></div>
     <div id="homeDnsError" class="error" role="alert" hidden></div>
@@ -68,38 +84,6 @@
   </aside>
 </section>
 
-<section class="home-dns-results wrap" id="homeDnsResults" aria-live="polite" hidden>
-  <div class="home-dns-result-head">
-    <div>
-      <span class="kicker">Live distributed results</span>
-      <h2 id="homeDnsResultTitle">DNS results</h2>
-    </div>
-    <div class="home-dns-actions">
-      <button class="text-btn" id="homeDnsCopy" type="button">Copy results</button>
-      <button class="text-btn" id="homeDnsShare" type="button">Copy link</button>
-    </div>
-  </div>
-
-  <div class="home-dns-summary" id="homeDnsSummary"></div>
-
-  <div class="home-dns-table-wrap">
-    <table class="record-table home-dns-table">
-      <thead><tr><th>Probe location</th><th>DNS answer</th><th>Status</th><th>TTL</th><th>Resolver</th><th>Query time</th></tr></thead>
-      <tbody id="homeDnsRows"></tbody>
-    </table>
-  </div>
-
-  <div class="home-dns-note">
-    <p><strong>How to read this:</strong> matching answers mean the tested probes currently agree. Different answers can indicate cache state, resolver policy, split DNS or an authoritative configuration issue. This sample does not test every country, ISP or recursive resolver.</p>
-    <p>Distributed measurements are powered by <a href="https://globalping.io/" rel="noopener noreferrer">Globalping</a>. The domain you enter is sent to Globalping when you run this global check.</p>
-  </div>
-
-  <div class="related-tools home-dns-related">
-    <a href="/dns-checker/">DNS Checker<span>Inspect records and TTL through a single public DNS resolver.</span></a>
-    <a href="/dns-propagation-checker/">DNS Propagation Checker<span>Compare Cloudflare, Google and the server resolver.</span></a>
-    <a href="/guides/dns-propagation-resolver-cache/">Resolver cache guide<span>Understand why different resolvers can temporarily return different answers.</span></a>
-  </div>
-</section>
 <section class="category-strip wrap" aria-label="Tool categories">
   <a class="category-link" href="/developer-tools/"><span class="category-index">01</span><b>Developer</b><small>JSON, JWT, hashes, UUID, regex and encoding</small></a>
   <a class="category-link" href="/website-tools/"><span class="category-index">02</span><b>Website & Network</b><small>DNS, SSL, HTTP, redirects and diagnostics</small></a>
