@@ -169,7 +169,7 @@ function ps_crux_request(string $key,string $target,string $strategy,bool $origi
   if($key==='') return null;
   $endpoint='https://chromeuxreport.googleapis.com/v1/records:queryRecord?key='.rawurlencode($key);
   $payload=[
-    $origin?'origin':'url'=>$target,
+    ($origin?'origin':'url')=>$target,
     'formFactor'=>$strategy==='desktop'?'DESKTOP':'PHONE',
     'metrics'=>[
       'largest_contentful_paint','interaction_to_next_paint','cumulative_layout_shift',
