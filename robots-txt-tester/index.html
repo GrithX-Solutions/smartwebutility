@@ -1,0 +1,152 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Robots.txt Tester — Check Rules for Googlebot & AI Crawlers</title>
+<meta name="description" content="Test robots.txt rules online for Googlebot, Bingbot, GPTBot, ClaudeBot, PerplexityBot or a custom crawler. See allowed/blocked paths, winning rule and syntax warnings.">
+<link rel="canonical" href="https://smartwebutility.com/robots-txt-tester/">
+<meta property="og:title" content="Robots.txt Tester — Check Rules for Googlebot & AI Crawlers"><meta property="og:description" content="Test live or pasted robots.txt rules, inspect exact Allow/Disallow matches and verify crawler access for multiple URLs."><meta property="og:url" content="https://smartwebutility.com/robots-txt-tester/"><meta property="og:type" content="website">
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="Robots.txt Tester — Check Rules for Googlebot & AI Crawlers"><meta name="twitter:description" content="Test robots.txt rules for search and AI crawlers with exact winning-rule evidence.">
+<meta name="theme-color" content="#07101b"><link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css"><link rel="stylesheet" href="/assets/robots-tester.css?v=20260929-1">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Robots.txt Tester","url":"https://smartwebutility.com/robots-txt-tester/","description":"Test robots.txt rules for Googlebot, Bingbot, AI crawlers or custom user agents and see exact matching Allow or Disallow rules.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Live robots.txt fetch","Paste and edit mode","Googlebot and Bingbot testing","GPTBot, ClaudeBot and PerplexityBot testing","Custom user-agent testing","Bulk URL path testing","Winning rule evidence","Syntax and unsupported-directive warnings","Sitemap directive discovery"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smartwebutility.com/"},{"@type":"ListItem","position":2,"name":"SEO Tools","item":"https://smartwebutility.com/seo-tools/"},{"@type":"ListItem","position":3,"name":"Robots.txt Tester","item":"https://smartwebutility.com/robots-txt-tester/"}]}</script>
+</head><body>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/" aria-current="page">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+
+<main>
+<section class="tool-hero wrap robots-hero">
+  <div class="crumb"><a href="/">Home</a><span>/</span><a href="/seo-tools/">SEO Tools</a><span>/</span><span>Robots.txt Tester</span></div>
+  <span class="kicker">Technical SEO · crawler control</span>
+  <h1>Robots.txt Tester</h1>
+  <p class="lead compact">Test whether Googlebot, Bingbot, GPTBot, ClaudeBot, PerplexityBot or another crawler is allowed to fetch specific paths. See the exact winning rule, group selection, sitemap directives and parser warnings.</p>
+
+  <div class="robots-mode-tabs" role="tablist" aria-label="Robots test source">
+    <button class="active" type="button" data-robots-mode="live" role="tab" aria-selected="true">Fetch live robots.txt</button>
+    <button type="button" data-robots-mode="paste" role="tab" aria-selected="false">Paste / edit robots.txt</button>
+  </div>
+
+  <form id="robotsTesterForm" class="robots-tester-form" novalidate>
+    <section id="robotsLivePanel" class="robots-source-panel">
+      <label for="robotsSiteUrl">Website URL</label>
+      <div class="robots-url-row"><input id="robotsSiteUrl" type="url" inputmode="url" autocomplete="url" autocapitalize="none" spellcheck="false" placeholder="https://example.com/" value=""><button class="btn primary" type="submit">Test robots.txt</button></div>
+      <small>The tester fetches <code>/robots.txt</code> from the same scheme, host and port.</small>
+    </section>
+
+    <section id="robotsPastePanel" class="robots-source-panel" hidden>
+      <label for="robotsPasteText">robots.txt content</label>
+      <textarea id="robotsPasteText" class="robots-code" spellcheck="false" placeholder="User-agent: *&#10;Disallow: /admin/&#10;Allow: /admin/public/&#10;Sitemap: https://example.com/sitemap.xml"></textarea>
+      <button class="btn primary" type="submit">Test pasted rules</button>
+    </section>
+
+    <div class="robots-test-grid">
+      <div>
+        <label for="robotsCrawler">Crawler / user-agent</label>
+        <select id="robotsCrawler">
+          <option value="Googlebot">Googlebot</option>
+          <option value="Bingbot">Bingbot</option>
+          <option value="GPTBot">GPTBot</option>
+          <option value="ClaudeBot">ClaudeBot</option>
+          <option value="PerplexityBot">PerplexityBot</option>
+          <option value="Google-Extended">Google-Extended</option>
+          <option value="custom">Custom user-agent</option>
+        </select>
+      </div>
+      <div id="robotsCustomWrap" hidden>
+        <label for="robotsCustomCrawler">Custom crawler string</label>
+        <input id="robotsCustomCrawler" type="text" placeholder="ExampleBot/1.0">
+      </div>
+    </div>
+
+    <label for="robotsPaths">URLs or paths to test <span class="muted">(one per line, up to 100)</span></label>
+    <textarea id="robotsPaths" class="robots-paths" spellcheck="false">/</textarea>
+
+    <div class="robots-form-actions">
+      <button class="btn primary" type="submit">Run robots test</button>
+      <button id="robotsExample" class="btn ghost" type="button">Load example</button>
+      <button id="robotsClear" class="text-btn" type="button">Clear</button>
+    </div>
+  </form>
+
+  <div class="robots-trust"><span>RFC 9309 matching</span><span>Google-style group precedence</span><span>Bulk paths</span><span>No signup</span></div>
+  <div id="robotsProgress" class="notice" role="status" aria-live="polite" hidden>Fetching and parsing robots.txt…</div>
+  <div id="robotsError" class="error" role="alert" hidden></div>
+</section>
+
+<section id="robotsResults" class="section wrap robots-results" hidden>
+  <div class="robots-report-head">
+    <div><span class="kicker">Crawler access report</span><h2 id="robotsReportTitle">robots.txt test</h2><p id="robotsReportMeta"></p></div>
+    <button id="robotsCopy" class="text-btn" type="button">Copy report</button>
+  </div>
+
+  <div class="robots-summary">
+    <article><strong id="robotsAllowedCount">0</strong><span>Allowed paths</span></article>
+    <article><strong id="robotsBlockedCount">0</strong><span>Blocked paths</span></article>
+    <article><strong id="robotsWarningCount">0</strong><span>Warnings</span></article>
+    <article><strong id="robotsGroupCount">0</strong><span>Matched groups</span></article>
+  </div>
+
+  <section class="robots-panel">
+    <div class="section-head"><div><span class="kicker">Path results</span><h2>Allowed or blocked?</h2></div><p>Each result shows the winning rule that determined crawler access.</p></div>
+    <div id="robotsPathResults" class="robots-path-results"></div>
+  </section>
+
+  <section class="robots-panel">
+    <div class="section-head"><div><span class="kicker">Parser evidence</span><h2>Matched crawler group</h2></div><p id="robotsSelectionText"></p></div>
+    <div id="robotsRules" class="robots-rules"></div>
+  </section>
+
+  <section class="robots-panel">
+    <div class="section-head"><div><span class="kicker">Validation</span><h2>Syntax and directive warnings</h2></div><p>Unsupported directives are reported without pretending they are crawler rules.</p></div>
+    <div id="robotsWarnings"></div>
+  </section>
+
+  <section class="robots-panel">
+    <div class="section-head"><div><span class="kicker">Discovery</span><h2>Sitemap directives</h2></div><p>Absolute sitemap URLs declared in the file.</p></div>
+    <div id="robotsSitemaps"></div>
+  </section>
+
+  <details class="robots-details">
+    <summary>Source robots.txt</summary>
+    <pre id="robotsSource"></pre>
+  </details>
+  <details class="robots-details">
+    <summary>Methodology and limitations</summary>
+    <div id="robotsMethodology"></div>
+  </details>
+</section>
+
+<section class="section alt"><div class="wrap prose" data-quality-content="v3">
+  <div class="section-head"><div><span class="kicker">How robots rules work</span><h2>Test robots.txt rules before they block important pages</h2></div><p>A correct robots.txt file controls crawling by compliant bots; it does not protect private content and does not reliably remove URLs from search results.</p></div>
+
+  <h2>How this robots.txt tester chooses the winning rule</h2>
+  <p>The evaluator first selects the most specific matching user-agent group. If multiple groups target the same most-specific crawler token, their rules are combined. A specific crawler group is not merged with the global <code>User-agent: *</code> group. Among matching <code>Allow</code> and <code>Disallow</code> paths, the most specific path wins; when equally specific rules conflict, <code>Allow</code> wins.</p>
+
+  <div class="info-grid">
+    <article><h3>Googlebot</h3><p>Use this mode to test ordinary Google Search crawling against Googlebot-specific or global rules.</p></article>
+    <article><h3>Bingbot</h3><p>Check whether Bing's crawler matches a dedicated Bingbot group or falls back to the global rules.</p></article>
+    <article><h3>AI crawler testing</h3><p>Test GPTBot, ClaudeBot, PerplexityBot and Google-Extended against the rules you publish. A crawler's actual compliance remains the crawler operator's responsibility.</p></article>
+    <article><h3>Bulk URL paths</h3><p>Paste multiple paths or full URLs to identify broad rules that unintentionally block sections of a site.</p></article>
+    <article><h3>Wildcard matching</h3><p><code>*</code> matches zero or more characters and terminal <code>$</code> anchors the end of the path. More specific matching paths outrank shorter matches.</p></article>
+    <article><h3>Exact rule evidence</h3><p>Instead of only returning “blocked,” the tool shows the winning directive, source line and all matching rules considered.</p></article>
+  </div>
+
+  <h2>Robots.txt does not mean noindex</h2>
+  <p>A disallowed URL may still be known from links and can potentially appear in search results without its content being crawled. If the goal is to prevent indexing, use an appropriate indexing directive on a crawlable response and verify it with the search engine's inspection tools. Do not use robots.txt as authentication or access control.</p>
+
+  <h2>What about crawl-delay?</h2>
+  <p>This tester flags <code>Crawl-delay</code> as unsupported by the Google-style rule evaluator because Google documents <code>user-agent</code>, <code>allow</code>, <code>disallow</code> and <code>sitemap</code> as its supported robots fields. Other crawlers may implement additional directives differently.</p>
+
+  <h2>Related tools</h2>
+  <div class="related-tools">
+    <a href="/robots-txt-generator/">Robots.txt Generator<span>Create a starter robots file, then verify it here before deployment.</span></a>
+    <a href="/sitemap-checker/">Sitemap Checker<span>Validate the XML sitemap URLs discovered in robots.txt.</span></a>
+    <a href="/seo-tools/">SEO Audit<span>Check crawlability, indexing signals, canonicals and internal links across multiple pages.</span></a>
+  </div>
+
+  <h2>Primary references</h2>
+  <p><a href="https://www.rfc-editor.org/rfc/rfc9309.html" rel="noopener">RFC 9309 — Robots Exclusion Protocol</a> · <a href="https://developers.google.com/crawling/docs/robots-txt/robots-txt-spec" rel="noopener">Google robots.txt specification</a></p>
+</div></section>
+</main>
+
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></div></footer>
+<script>document.getElementById('year').textContent=new Date().getFullYear()</script><script src="/assets/robots-tester.js?v=20260929-1" defer></script>
+</body></html>
