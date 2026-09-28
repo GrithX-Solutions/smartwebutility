@@ -1,0 +1,107 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Canonical Tag Checker — Check Canonical URL & Issues</title>
+<meta name="description" content="Check a page's canonical tag, HTTP Link canonical, redirects, target status, noindex conflicts and canonical chains. Free canonical URL checker with evidence.">
+<link rel="canonical" href="https://smartwebutility.com/canonical-tag-checker/">
+<meta property="og:title" content="Canonical Tag Checker — Check Canonical URL & Issues"><meta property="og:description" content="Inspect canonical tags, HTTP Link canonicals, target status, redirects, noindex conflicts and canonical chains."><meta property="og:url" content="https://smartwebutility.com/canonical-tag-checker/"><meta property="og:type" content="website">
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="Canonical Tag Checker — Check Canonical URL & Issues"><meta name="twitter:description" content="Deep canonical URL diagnostics with source and target evidence.">
+<meta name="theme-color" content="#07101b"><link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css"><link rel="stylesheet" href="/assets/canonical-checker.css?v=20260929-1">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Canonical Tag Checker","url":"https://smartwebutility.com/canonical-tag-checker/","description":"Check rel=canonical annotations, canonical HTTP Link headers, redirects, target status, noindex conflicts and canonical chains on a public page.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["HTML canonical tag inspection","HTTP Link canonical inspection","Canonical target verification","Redirect chain detection","Noindex conflict detection","Canonical chain detection","Relative and fragment canonical review","Cross-domain canonical evidence"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smartwebutility.com/"},{"@type":"ListItem","position":2,"name":"SEO Tools","item":"https://smartwebutility.com/seo-tools/"},{"@type":"ListItem","position":3,"name":"Canonical Tag Checker","item":"https://smartwebutility.com/canonical-tag-checker/"}]}</script>
+</head><body>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/" aria-current="page">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+
+<main>
+<section class="tool-hero wrap canonical-hero">
+  <div class="crumb"><a href="/">Home</a><span>/</span><a href="/seo-tools/">SEO Tools</a><span>/</span><span>Canonical Tag Checker</span></div>
+  <span class="kicker">Technical SEO · canonicalization</span>
+  <h1>Canonical Tag Checker</h1>
+  <p class="lead compact">Check the canonical URL a public page declares and verify the surrounding signals: HTML head vs body placement, HTTP <code>Link</code> canonicals, redirects, target status, noindex conflicts and canonical chains.</p>
+  <form id="canonicalForm" class="canonical-form" novalidate>
+    <label class="sr-only" for="canonicalUrl">Public page URL</label>
+    <input id="canonicalUrl" type="url" inputmode="url" autocomplete="url" autocapitalize="none" spellcheck="false" placeholder="https://example.com/page" required>
+    <button class="btn primary" type="submit">Check canonical</button>
+  </form>
+  <div class="canonical-trust"><span>Live public URL</span><span>Redirect-aware</span><span>Target verification</span><span>No signup</span></div>
+  <div id="canonicalProgress" class="notice" role="status" aria-live="polite" hidden>Fetching the source page and canonical target…</div>
+  <div id="canonicalError" class="error" role="alert" hidden></div>
+</section>
+
+<section id="canonicalResults" class="section wrap canonical-results" hidden>
+  <div class="canonical-report-head">
+    <div><span class="kicker">Canonical report</span><h2 id="canonicalTitle">Canonical analysis</h2><p id="canonicalMeta"></p></div>
+    <button id="canonicalCopy" class="text-btn" type="button">Copy report</button>
+  </div>
+
+  <div class="canonical-summary">
+    <article><strong id="canonicalPresent">0</strong><span>Present</span></article>
+    <article><strong id="canonicalReview">0</strong><span>Review</span></article>
+    <article><strong id="canonicalInfo">0</strong><span>Informational</span></article>
+  </div>
+
+  <section class="canonical-panel">
+    <div class="section-head"><div><span class="kicker">Declared signals</span><h2>Canonical annotations</h2></div><p>Every canonical found in the HTML or HTTP response.</p></div>
+    <div id="canonicalAnnotations"></div>
+  </section>
+
+  <section class="canonical-panel">
+    <div class="section-head"><div><span class="kicker">Diagnostics</span><h2>Canonical findings</h2></div><p>No artificial SEO score—each finding is tied to a concrete signal.</p></div>
+    <div id="canonicalFindings" class="canonical-findings"></div>
+  </section>
+
+  <section class="canonical-panel">
+    <div class="section-head"><div><span class="kicker">Source & target</span><h2>URL evidence</h2></div><p>Source response, canonical target and indexing directives.</p></div>
+    <div id="canonicalEvidence"></div>
+  </section>
+
+  <details class="canonical-details">
+    <summary>Redirect chains</summary>
+    <div id="canonicalRedirects"></div>
+  </details>
+
+  <details class="canonical-details">
+    <summary>Methodology and limitations</summary>
+    <div id="canonicalMethodology"></div>
+  </details>
+</section>
+
+<section class="section alt"><div class="wrap prose" data-quality-content="v3">
+  <div class="section-head"><div><span class="kicker">Canonical SEO</span><h2>What a canonical tag checker should verify</h2></div><p>A canonical is a preference signal. The URL itself, placement, target health and surrounding indexing signals all matter.</p></div>
+
+  <p>A <code>rel="canonical"</code> annotation tells search engines which URL you prefer as the representative of duplicate or substantially similar content. Google describes canonical link annotations as a strong canonicalization signal, while redirects and sitemap inclusion can reinforce the same preference. Google can still select a different canonical when other signals disagree. citeturn569640search0</p>
+
+  <div class="info-grid">
+    <article><h3>Canonical in the HTML head</h3><p>For HTML pages, Google accepts the canonical link element in the document <code>&lt;head&gt;</code>. A canonical link found in the body is reported for review.</p></article>
+    <article><h3>HTTP Link canonical</h3><p>Canonicalization can also be declared in an HTTP <code>Link</code> response header, including for non-HTML files. Mixing HTML and HTTP methods increases the chance of conflicting values.</p></article>
+    <article><h3>Absolute target URL</h3><p>Relative canonicals are supported, but Google recommends absolute URLs because they are less likely to be accidentally resolved against a staging or unintended host.</p></article>
+    <article><h3>Target returns a usable page</h3><p>A canonical that points at a redirect, error page or inaccessible endpoint adds ambiguity. This checker follows the declared target and reports the response chain.</p></article>
+    <article><h3>Noindex conflicts</h3><p>If the intended canonical target is marked <code>noindex</code>, the signals conflict. Google also advises against using <code>noindex</code> as a substitute for canonicalization within a site.</p></article>
+    <article><h3>Canonical chains</h3><p>If Page A canonicals to B and B canonicals to C, point A directly at the final preferred representative rather than maintaining an unnecessary canonical chain.</p></article>
+  </div>
+
+  <h2>Self-referencing vs cross-referencing canonicals</h2>
+  <p>A self-referencing canonical points back to the same preferred page and is commonly used to make the intended URL explicit. A cross-referencing canonical points to another URL and can be appropriate when the current page is a duplicate, parameter variation or another equivalent version. Cross-domain canonicalization is also possible, but it should be intentional and supported by genuinely similar content.</p>
+
+  <h2>Canonical tags are hints, not guaranteed Google-selected canonicals</h2>
+  <p>This tool can verify what your server declares; it cannot know which URL Google ultimately selected as canonical. Google Search Console's URL Inspection data is the appropriate source when you need the Google-selected canonical for a specific property. citeturn569640search4</p>
+
+  <h2>Canonical tag vs redirect vs noindex</h2>
+  <p>Use a permanent redirect when an old or duplicate URL should send users and crawlers to a replacement. Use canonicalization when multiple URLs need to remain accessible but represent the same or highly similar content. Use <code>noindex</code> when a page should not appear in search at all. These mechanisms solve different problems and should not be stacked without understanding their effects. citeturn569640search0</p>
+
+  <h2>Related tools</h2>
+  <div class="related-tools">
+    <a href="/meta-tag-checker/">Meta Tag Checker<span>Inspect title, description, robots and canonical metadata together.</span></a>
+    <a href="/robots-txt-tester/">Robots.txt Tester<span>Check whether crawlers can request the source or target URL.</span></a>
+    <a href="/redirect-checker/">Redirect Checker<span>Trace permanent and temporary redirects hop by hop.</span></a>
+    <a href="/seo-tools/">SEO Audit<span>Check canonicalization and indexing signals across multiple pages.</span></a>
+  </div>
+
+  <h2>Primary reference</h2>
+  <p><a href="https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls" rel="noopener">Google Search Central: How to specify a canonical URL</a></p>
+</div></section>
+</main>
+
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></div></footer>
+<script>document.getElementById('year').textContent=new Date().getFullYear()</script><script src="/assets/canonical-checker.js?v=20260929-1" defer></script>
+</body></html>
