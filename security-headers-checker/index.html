@@ -1,0 +1,115 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Security Headers Checker — Test HTTP Security Headers</title>
+<meta name="description" content="Check HTTP security headers on a public website. Inspect HSTS, CSP, X-Content-Type-Options, framing protection, Referrer-Policy, Permissions-Policy and more.">
+<link rel="canonical" href="https://smartwebutility.com/security-headers-checker/">
+<meta property="og:title" content="Security Headers Checker — Test HTTP Security Headers"><meta property="og:description" content="Inspect website security headers with raw values, evidence, review notes and remediation guidance—without a misleading one-number grade."><meta property="og:url" content="https://smartwebutility.com/security-headers-checker/"><meta property="og:type" content="website">
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="Security Headers Checker — Test HTTP Security Headers"><meta name="twitter:description" content="Check HSTS, CSP, X-Content-Type-Options, framing controls, Referrer-Policy and other response security headers.">
+<meta name="theme-color" content="#07101b"><link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css"><link rel="stylesheet" href="/assets/security-headers.css?v=20260928-1">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Security Headers Checker","url":"https://smartwebutility.com/security-headers-checker/","description":"Check HTTP security headers on a public website, including HSTS, Content Security Policy, MIME sniffing protection, framing controls, referrer policy and permissions policy.","applicationCategory":"SecurityApplication","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["HTTP security header inspection","HSTS review","Content Security Policy review","Clickjacking and framing protection","X-Content-Type-Options review","Referrer-Policy review","Permissions-Policy review","Cross-origin policy inspection","Raw response headers","Redirect-aware final response analysis"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smartwebutility.com/"},{"@type":"ListItem","position":2,"name":"Website Tools","item":"https://smartwebutility.com/website-tools/"},{"@type":"ListItem","position":3,"name":"Security Headers Checker","item":"https://smartwebutility.com/security-headers-checker/"}]}</script>
+</head><body>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/" aria-current="page">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+
+<main>
+<section class="tool-hero wrap security-hero">
+  <div class="crumb"><a href="/">Home</a><span>/</span><a href="/website-tools/">Website Tools</a><span>/</span><span>Security Headers Checker</span></div>
+  <span class="kicker">Website security diagnostic</span>
+  <h1>Security Headers Checker</h1>
+  <p class="lead compact">Check the HTTP security headers a public website actually returns. Review HSTS, CSP, MIME sniffing protection, framing controls, referrer policy, permissions policy and related browser policies without reducing security to a fake one-number grade.</p>
+
+  <form id="securityHeadersForm" class="security-form" novalidate>
+    <label class="sr-only" for="securityHeadersUrl">Public website URL</label>
+    <input id="securityHeadersUrl" type="url" inputmode="url" autocomplete="url" autocapitalize="none" spellcheck="false" placeholder="https://example.com/" required>
+    <button class="btn primary" type="submit">Check security headers</button>
+  </form>
+  <div class="security-trust"><span>Public URLs only</span><span>Redirect-aware</span><span>Raw header evidence</span><span>No signup</span></div>
+  <div id="securityHeadersProgress" class="notice security-progress" role="status" aria-live="polite" hidden>Checking the public response and security policies…</div>
+  <div id="securityHeadersError" class="error" role="alert" hidden></div>
+</section>
+
+<section id="securityHeadersResults" class="section wrap security-results" hidden>
+  <div class="security-result-head">
+    <div><span class="kicker">Security header report</span><h2 id="securityHeadersTitle">Header review</h2><p id="securityHeadersMeta"></p></div>
+    <button id="securityHeadersCopy" class="text-btn" type="button">Copy report</button>
+  </div>
+
+  <div class="security-summary" aria-label="Finding summary">
+    <article><strong id="securityPresent">0</strong><span>Present</span></article>
+    <article><strong id="securityReview">0</strong><span>Review</span></article>
+    <article><strong id="securityMissing">0</strong><span>Missing</span></article>
+    <article><strong id="securityInfo">0</strong><span>Informational</span></article>
+  </div>
+
+  <div class="security-filter" role="group" aria-label="Filter findings">
+    <button class="active" data-security-filter="all" type="button">All</button>
+    <button data-security-filter="review" type="button">Review</button>
+    <button data-security-filter="missing" type="button">Missing</button>
+    <button data-security-filter="present" type="button">Present</button>
+    <button data-security-filter="informational" type="button">Informational</button>
+  </div>
+
+  <div id="securityFindings" class="security-findings"></div>
+
+  <details class="security-details" id="securityRedirectsWrap">
+    <summary>Redirect path checked</summary>
+    <div id="securityRedirects"></div>
+  </details>
+
+  <details class="security-details">
+    <summary>Raw response headers</summary>
+    <div class="security-raw-wrap"><table class="record-table"><thead><tr><th>Header</th><th>Value</th></tr></thead><tbody id="securityRawHeaders"></tbody></table></div>
+  </details>
+
+  <details class="security-details">
+    <summary>Methodology and limitations</summary>
+    <div id="securityMethodology"></div>
+  </details>
+</section>
+
+<section class="section alt"><div class="wrap prose">
+  <div class="section-head"><div><span class="kicker">Interpret the evidence</span><h2>What a website security headers checker should tell you</h2></div><p>A header's presence is evidence, not a complete security verdict. The value and the application context matter.</p></div>
+
+  <p>HTTP response headers can instruct browsers to prefer HTTPS, restrict script and resource sources, disable MIME sniffing, limit framing, control referrer information and constrain access to browser features. The right policy depends on the application: a static marketing page, authenticated dashboard, API response and embedded widget can legitimately need different settings.</p>
+
+  <div class="info-grid">
+    <article><h3>Strict-Transport-Security</h3><p>HSTS tells supporting browsers to use HTTPS for future requests to a host. It is only effective when delivered over HTTPS. Long durations, <code>includeSubDomains</code> and preload should be deployed deliberately because they have operational consequences.</p></article>
+    <article><h3>Content-Security-Policy</h3><p>CSP restricts the origins and execution patterns a page can use. A present CSP can still be overly broad, so this checker highlights obvious policy choices such as <code>'unsafe-eval'</code>, <code>'unsafe-inline'</code> and wildcard script/default sources for review.</p></article>
+    <article><h3>Framing protection</h3><p>CSP <code>frame-ancestors</code> provides modern control over which parent pages may embed a document. <code>X-Frame-Options</code> remains useful for simpler or legacy framing restrictions.</p></article>
+    <article><h3>MIME sniffing protection</h3><p><code>X-Content-Type-Options: nosniff</code> tells browsers to respect declared content types rather than trying to reinterpret them. Correct <code>Content-Type</code> values still matter.</p></article>
+    <article><h3>Referrer-Policy</h3><p>Referrer-Policy controls how much source URL information is sent with requests and navigations. A missing explicit policy is reported as informational rather than automatically called a vulnerability.</p></article>
+    <article><h3>Permissions-Policy</h3><p>Permissions-Policy can restrict access to browser capabilities such as camera, microphone and other features. Whether it is needed depends on what the application uses.</p></article>
+  </div>
+
+  <h2>Why there is no fake security score</h2>
+  <p>A numerical grade can imply precision the response headers do not provide. A strict CSP might break an application if copied blindly, while an apparently complete header set does not prove the server, authentication, application code or dependencies are secure. This tool reports concrete values, flags specific policy choices for review and explains what each result can and cannot establish.</p>
+
+  <h2>Common security-header checks</h2>
+  <div class="info-grid">
+    <article><h3>HSTS missing on HTTPS</h3><p>Confirm the site is fully HTTPS-ready before adding a long-lived policy. Test every subdomain before enabling <code>includeSubDomains</code> or preload.</p></article>
+    <article><h3>CSP uses unsafe-inline</h3><p>Review whether nonces, hashes or a narrower architecture can replace broad inline execution. Do not remove it blindly if the current application still depends on inline code.</p></article>
+    <article><h3>No frame protection</h3><p>If the page should not be embedded by arbitrary origins, define <code>frame-ancestors</code> in CSP and validate any legitimate iframe use cases.</p></article>
+    <article><h3>Server technology disclosed</h3><p>Server or framework headers are reported as informational. Removing unnecessary version disclosure can reduce fingerprinting, but hiding a header never replaces patching or secure configuration.</p></article>
+  </div>
+
+  <h2>Security headers checker vs HTTP header checker</h2>
+  <p>The <a href="/http-header-checker/">HTTP Header Checker</a> is the raw diagnostic: it shows the complete response-header map. This page adds a security-specific interpretation layer for browser policies. Use the raw checker when troubleshooting caching, content type, CDN fields or arbitrary headers, and use this checker when the question is specifically about security controls.</p>
+
+  <h2>Related tools and guide</h2>
+  <div class="related-tools">
+    <a href="/guides/http-security-headers-checklist/">HTTP Security Headers Checklist<span>Understand HSTS, CSP, framing, MIME sniffing, referrer and permissions policies before changing production configuration.</span></a>
+    <a href="/http-header-checker/">HTTP Header Checker<span>Inspect the complete raw response-header map.</span></a>
+    <a href="/ssl-checker/">SSL Checker<span>Verify the certificate, expiry and hostname coverage on the HTTPS endpoint.</span></a>
+    <a href="/redirect-checker/">Redirect Checker<span>Trace HTTP/HTTPS and host redirects before the final response.</span></a>
+  </div>
+
+  <h2>Primary references</h2>
+  <p><a href="https://owasp.org/projects/secure-headers-project" rel="noopener">OWASP Secure Headers Project</a> · <a href="https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html" rel="noopener">OWASP HTTP Security Response Headers Cheat Sheet</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy" rel="noopener">MDN Content Security Policy</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Strict-Transport-Security" rel="noopener">MDN HSTS</a></p>
+</div></section>
+</main>
+
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></div></footer>
+<script>document.getElementById('year').textContent=new Date().getFullYear()</script>
+<script src="/assets/security-headers.js?v=20260928-1" defer></script>
+</body></html>
