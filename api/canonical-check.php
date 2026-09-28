@@ -20,6 +20,50 @@ function cc_fetch_follow(string $url,int $maxRedirects=5,int $maxBytes=1048576):
   return ['final_url'=>$current,'response'=>$r ?? null,'chain'=>$chain,'redirected'=>count($chain)>1];
 }
 
+function cc_safe_public_url(string $raw): array {
+  $raw=trim($raw);
+  if(!preg_match('~^https?://~i',$raw)) return ['ok'=>false,'error'=>'Canonical target is not an absolute HTTP or HTTPS URL.'];
+  $p=parse_url($raw);
+  if(!$p || !isset($p['host'])) return ['ok'=>false,'error'=>'Canonical target URL is malformed.'];
+  $scheme=strtolower((string)($p['scheme'] ?? ''));
+  if(!in_array($scheme,['http','https'],true)) return ['ok'=>false,'error'=>'Canonical target uses an unsupported URL scheme.'];
+  if(isset($p['user']) || isset($p['pass'])) return ['ok'=>false,'error'=>'Canonical target contains embedded credentials.'];
+  if(isset($p['port']) && !in_array((int)$p['port'],[80,443,8080,8443],true)) return ['ok'=>false,'error'=>'Canonical target uses a non-web port.'];
+  $host=strtolower(rtrim((string)$p['host'],'.'));
+  if($host==='') return ['ok'=>false,'error'=>'Canonical target hostname is empty.'];
+  if(filter_var($host,FILTER_VALIDATE_IP)){
+    if(!public_ip($host)) return ['ok'=>false,'error'=>'Canonical target resolves to a private or reserved IP address.'];
+    return ['ok'=>true,'url'=>$raw];
+  }
+  if(!preg_match('/^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/i',$host)) return ['ok'=>false,'error'=>'Canonical target hostname is invalid.'];
+  $records=@dns_get_record($host,DNS_A|DNS_AAAA) ?: [];
+  $public=[];
+  foreach($records as $r){
+    $ip=$r['ip'] ?? $r['ipv6'] ?? null;
+    if($ip && public_ip($ip)) $public[]=$ip;
+    elseif($ip) return ['ok'=>false,'error'=>'Canonical target resolves to a private or reserved IP address.'];
+  }
+  if(!$public) return ['ok'=>false,'error'=>'Canonical target did not resolve to a public IP address.'];
+  return ['ok'=>true,'url'=>$raw];
+}
+
+function cc_fetch_target_follow(string $url,int $maxRedirects=5,int $maxBytes=1048576): array {
+  $current=$url; $chain=[];
+  for($i=0;$i<=$maxRedirects;$i++){
+    $safe=cc_safe_public_url($current);
+    if(!$safe['ok']) return ['final_url'=>$current,'response'=>null,'chain'=>$chain,'redirected'=>count($chain)>0,'error'=>$safe['error']];
+    $r=curl_body($current,$maxBytes);
+    $location=$r['headers']['location'] ?? null;
+    $chain[]=['url'=>$current,'status'=>$r['status'],'location'=>$location];
+    if(in_array($r['status'],[301,302,303,307,308],true) && $location && $i<$maxRedirects){
+      $current=absolute_url($current,$location);
+      continue;
+    }
+    return ['final_url'=>$current,'response'=>$r,'chain'=>$chain,'redirected'=>count($chain)>1,'error'=>null];
+  }
+  return ['final_url'=>$current,'response'=>$r ?? null,'chain'=>$chain,'redirected'=>count($chain)>1,'error'=>'Redirect limit reached.'];
+}
+
 function cc_meta_content(DOMXPath $x,string $name): ?string {
   $q='//meta[translate(@name,"ABCDEFGHIJKLMNOPQRSTUVWXYZ","abcdefghijklmnopqrstuvwxyz")="'.strtolower($name).'"]/@content';
   $n=$x->query($q)->item(0);
@@ -211,8 +255,14 @@ if($canonicals){
   }
 
   try{
-    $targetFetch=cc_fetch_follow($preferred,5,1048576);
+    $targetFetch=cc_fetch_target_follow($preferred,5,1048576);
     $tr=$targetFetch['response'];
+    if(!empty($targetFetch['error'])){
+      cc_add($findings,'target_fetch','review','Canonical target could not be safely verified',
+        $targetFetch['error'],
+        'Use a valid public HTTP or HTTPS canonical target that resolves to a public web endpoint.',
+        ['canonical'=>$preferred]);
+    }
     $target=[
       'requested_url'=>$preferred,
       'final_url'=>$targetFetch['final_url'],
@@ -221,7 +271,9 @@ if($canonicals){
       'redirected'=>$targetFetch['redirected']
     ];
 
-    if(!$tr || $tr['status']<200 || $tr['status']>=400){
+    if(!$tr){
+      // A safe-verification finding was already added above.
+    }elseif($tr['status']<200 || $tr['status']>=400){
       cc_add($findings,'target_status','review','Canonical target does not return a successful page',
         'The declared canonical target returned HTTP '.($tr['status'] ?? 'unknown').'.',
         'Point the canonical directly at a stable, successful preferred URL.',
