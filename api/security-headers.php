@@ -132,14 +132,20 @@ if(!$isHtml && !$csp){
   if(stripos($csp,"'unsafe-eval'")!==false) $flags[]="'unsafe-eval'";
   if(stripos($csp,"'unsafe-inline'")!==false) $flags[]="'unsafe-inline'";
   if(preg_match('/(?:^|;)\s*(?:default-src|script-src)\s+\*/i',$csp)) $flags[]='wildcard script/default source';
-  if($flags){
+  $hasContentControl=(bool)preg_match('/(?:^|;)\s*(?:default-src|script-src|object-src|style-src|img-src|connect-src|font-src|media-src|worker-src|child-src)\s+/i',$csp);
+  if(!$hasContentControl){
+    sh_add($findings,'csp','Content Security Policy','Content-Security-Policy','review',$csp,
+      'An enforcing CSP header is present, but no content-loading directive such as default-src or script-src was found. A policy that only controls framing or upgrades does not provide the broader content restrictions usually expected from CSP.',
+      'Keep framing directives if needed, and design content-loading directives around the application resources before treating CSP as a broader XSS/resource-control layer.',
+      'https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy');
+  }elseif($flags){
     sh_add($findings,'csp','Content Security Policy','Content-Security-Policy','review',$csp,
       'An enforcing CSP is present, but it includes policy choices worth reviewing: '.implode(', ',$flags).'.',
-      'Reduce broad script permissions where the application can support nonces, hashes or narrower source lists. Test changes before enforcement.',
+      'Reduce broad inline, evaluation or wildcard permissions where the application can support nonces, hashes or narrower source lists. Test changes before enforcement.',
       'https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy');
   }else{
     sh_add($findings,'csp','Content Security Policy','Content-Security-Policy','present',$csp,
-      'An enforcing Content-Security-Policy header is present. Presence alone does not prove the policy is complete.',
+      'An enforcing Content-Security-Policy with at least one content-loading directive is present. Presence alone does not prove the policy is complete.',
       'Keep the policy aligned with the actual application and review it when scripts, frames, styles or third-party origins change.',
       'https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy');
   }
