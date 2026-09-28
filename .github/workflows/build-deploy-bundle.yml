@@ -27,6 +27,7 @@ jobs:
           node --check assets/page-speed.js
           node --check assets/seo-audit.js
           node --check assets/security-headers.js
+          node --check assets/robots-tester.js
           node --check deploy/lighthouse/worker.mjs
           node --check deploy/lighthouse/proxy.mjs
 
