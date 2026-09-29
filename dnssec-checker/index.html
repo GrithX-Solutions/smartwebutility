@@ -1,0 +1,111 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DNSSEC Checker — Test DS, DNSKEY & Validation</title>
+<meta name="description" content="Check DNSSEC for any domain. Test Cloudflare and Google validation, inspect DS and DNSKEY records, detect broken DNSSEC and compare resolver evidence.">
+<link rel="canonical" href="https://smartwebutility.com/dnssec-checker/">
+<meta property="og:title" content="DNSSEC Checker — Test DS, DNSKEY & Validation"><meta property="og:description" content="Check DNSSEC status, DS and DNSKEY records, validating resolver AD flags and broken DNSSEC evidence."><meta property="og:url" content="https://smartwebutility.com/dnssec-checker/"><meta property="og:type" content="website">
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="DNSSEC Checker — Test DS, DNSKEY & Validation"><meta name="twitter:description" content="Compare Google and Cloudflare DNSSEC validation with DS and DNSKEY evidence.">
+<meta name="theme-color" content="#07101b"><link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css"><link rel="stylesheet" href="/assets/dnssec-checker.css?v=20260929-1">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"DNSSEC Checker","url":"https://smartwebutility.com/dnssec-checker/","description":"Check DNSSEC validation using Cloudflare and Google validating resolvers, inspect DS and DNSKEY records and diagnose unsigned, partial or broken DNSSEC states.","applicationCategory":"SecurityApplication","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Cloudflare DNSSEC validation","Google Public DNS validation","Authenticated Data flag comparison","DS record inspection","DNSKEY inspection","Broken DNSSEC detection","Unsigned-domain detection","Resolver disagreement detection"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smartwebutility.com/"},{"@type":"ListItem","position":2,"name":"Website Tools","item":"https://smartwebutility.com/website-tools/"},{"@type":"ListItem","position":3,"name":"DNSSEC Checker","item":"https://smartwebutility.com/dnssec-checker/"}]}</script>
+</head><body>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/" aria-current="page">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+
+<main>
+<section class="tool-hero wrap dnssec-hero">
+  <div class="crumb"><a href="/">Home</a><span>/</span><a href="/website-tools/">Website Tools</a><span>/</span><span>DNSSEC Checker</span></div>
+  <span class="kicker">DNS security diagnostic</span>
+  <h1>DNSSEC Checker</h1>
+  <p class="lead compact">Check whether a domain's DNSSEC configuration validates through independent public resolvers. Compare Cloudflare and Google, inspect DS and DNSKEY records, and distinguish secure, unsigned, partial and broken DNSSEC states.</p>
+
+  <form id="dnssecForm" class="dnssec-form" novalidate>
+    <label class="sr-only" for="dnssecDomain">Domain name</label>
+    <input id="dnssecDomain" type="text" inputmode="url" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="example.com" required>
+    <button class="btn primary" type="submit">Check DNSSEC</button>
+  </form>
+  <div class="dnssec-trust"><span>Cloudflare + Google</span><span>DS + DNSKEY</span><span>Broken-state detection</span><span>No signup</span></div>
+  <div id="dnssecProgress" class="notice" role="status" aria-live="polite" hidden>Querying validating resolvers and DNSSEC records…</div>
+  <div id="dnssecError" class="error" role="alert" hidden></div>
+</section>
+
+<section id="dnssecResults" class="section wrap dnssec-results" hidden>
+  <div class="dnssec-report-head">
+    <div><span class="kicker">DNSSEC report</span><h2 id="dnssecTitle">DNSSEC analysis</h2><p id="dnssecMeta"></p></div>
+    <button id="dnssecCopy" class="text-btn" type="button">Copy report</button>
+  </div>
+
+  <div id="dnssecVerdict" class="dnssec-verdict"></div>
+
+  <div class="dnssec-summary">
+    <article><strong id="dnssecPresent">0</strong><span>Present</span></article>
+    <article><strong id="dnssecReview">0</strong><span>Review</span></article>
+    <article><strong id="dnssecCritical">0</strong><span>Critical</span></article>
+    <article><strong id="dnssecInfo">0</strong><span>Informational</span></article>
+  </div>
+
+  <section class="dnssec-panel">
+    <div class="section-head"><div><span class="kicker">Validation</span><h2>Resolver evidence</h2></div><p>AD flag and validated-vs-checking-disabled behavior from two public DNS-over-HTTPS resolvers.</p></div>
+    <div id="dnssecResolvers" class="dnssec-resolvers"></div>
+  </section>
+
+  <section class="dnssec-panel">
+    <div class="section-head"><div><span class="kicker">Delegation</span><h2>DS records</h2></div><p>Delegation Signer records visible through recursive DNS.</p></div>
+    <div id="dnssecDs"></div>
+  </section>
+
+  <section class="dnssec-panel">
+    <div class="section-head"><div><span class="kicker">Zone keys</span><h2>DNSKEY records</h2></div><p>Public DNSSEC keys returned for the domain.</p></div>
+    <div id="dnssecKeys"></div>
+  </section>
+
+  <section class="dnssec-panel">
+    <div class="section-head"><div><span class="kicker">Diagnostics</span><h2>Findings and actions</h2></div><p>Concrete evidence without a fabricated security score.</p></div>
+    <div id="dnssecFindings" class="dnssec-findings"></div>
+  </section>
+
+  <details class="dnssec-details">
+    <summary>Methodology and limitations</summary>
+    <div id="dnssecMethodology"></div>
+  </details>
+</section>
+
+<section class="section alt"><div class="wrap prose" data-quality-content="v3">
+  <div class="section-head"><div><span class="kicker">DNSSEC explained</span><h2>What a DNSSEC checker should verify</h2></div><p>Publishing DNSSEC records is not the same as passing end-to-end validation. The resolver verdict and the delegation chain both matter.</p></div>
+
+  <p>DNSSEC adds cryptographic signatures to DNS data so validating resolvers can detect tampering. A signed child zone publishes DNSKEY records, while the parent publishes a DS record that links the child into the DNSSEC chain of trust. If the chain is broken, validating resolvers can reject the response instead of silently accepting bad data.</p>
+
+  <div class="info-grid">
+    <article><h3>AD flag</h3><p>The Authenticated Data flag is set by a validating resolver when the returned data passed DNSSEC validation. This tool compares that signal from Cloudflare and Google.</p></article>
+    <article><h3>DS record</h3><p>The parent-side DS record identifies a DNSSEC key for the delegated child zone. Registrar-side DS data must stay synchronized with the keys actually published by the DNS provider.</p></article>
+    <article><h3>DNSKEY record</h3><p>DNSKEY records publish the public keys used by DNSSEC. Key material alone does not create an authenticated chain if the parent delegation does not contain the matching trust link.</p></article>
+    <article><h3>Broken DNSSEC</h3><p>If a validating resolver returns SERVFAIL but the same resolver can answer with checking disabled, the zone may be DNSSEC-bogus. This can make the domain unreachable for validating users.</p></article>
+    <article><h3>Unsigned domain</h3><p>An unsigned domain can resolve normally with AD=false. That is different from a broken signed zone: there is no failed validation chain to reject.</p></article>
+    <article><h3>Resolver agreement</h3><p>Comparing two independent validating resolvers helps separate a persistent DNSSEC state from a temporary cache or resolver-specific observation.</p></article>
+  </div>
+
+  <h2>DNSSEC does not encrypt DNS queries</h2>
+  <p>DNSSEC authenticates DNS data; it does not hide the domain being queried or encrypt the DNS transport. DNS-over-HTTPS and DNS-over-TLS address transport privacy, while DNSSEC addresses authenticity and integrity.</p>
+
+  <h2>Why a broken DNSSEC setup can be worse than no DNSSEC</h2>
+  <p>An unsigned domain can still resolve through ordinary DNS. A domain with a broken authenticated chain may instead return validation failures to security-aware resolvers. This commonly happens when a registrar DS record no longer matches the authoritative zone after an incorrect key rollover or DNS-provider migration.</p>
+
+  <h2>How this checker determines the result</h2>
+  <p>The tool queries Cloudflare and Google DNS-over-HTTPS with DNSSEC validation enabled and requests DNSSEC records. It also runs a comparison query with validation checking disabled. The resolver's AD flag is used as validation evidence. The tool does <strong>not</strong> claim to independently verify every cryptographic signature itself.</p>
+
+  <h2>Related tools</h2>
+  <div class="related-tools">
+    <a href="/dns-checker/">DNS Checker<span>Inspect A, AAAA, MX, TXT, CNAME, NS and CAA records.</span></a>
+    <a href="/dns-propagation-checker/">DNS Propagation Checker<span>Compare resolver answers after DNS changes.</span></a>
+    <a href="/ssl-checker/">SSL Checker<span>Check the TLS certificate served by the resolved endpoint.</span></a>
+    <a href="/security-headers-checker/">Security Headers Checker<span>Review browser-facing HTTP security policies.</span></a>
+  </div>
+
+  <h2>Primary references</h2>
+  <p><a href="https://developers.google.com/speed/public-dns/docs/doh/json" rel="noopener">Google Public DNS JSON API</a> · <a href="https://developers.cloudflare.com/1.1.1.1/encryption/dns-over-https/make-api-requests/dns-json/" rel="noopener">Cloudflare DNS-over-HTTPS JSON API</a></p>
+</div></section>
+</main>
+
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></div></footer>
+<script>document.getElementById('year').textContent=new Date().getFullYear()</script><script src="/assets/dnssec-checker.js?v=20260929-1" defer></script>
+</body></html>
