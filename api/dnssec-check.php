@@ -137,7 +137,9 @@ $dsMap=[];$keyMap=[];
 foreach($checks as $resolver=>$set){
   foreach(dnssec_records($set['ds'],43) as $r){
     $parsed=dnssec_parse_ds($r['data']);
-    $key=implode('|',[$parsed['key_tag'],$parsed['algorithm'],$parsed['digest_type'],$parsed['digest']]);
+    $normalizedDigest=strtoupper((string)($parsed['digest'] ?? ''));
+    $parsed['digest']=$normalizedDigest;
+    $key=implode('|',[$parsed['key_tag'],$parsed['algorithm'],$parsed['digest_type'],$normalizedDigest]);
     $dsMap[$key]=array_merge($r,$parsed,[
       'algorithm_name'=>dnssec_alg_name($parsed['algorithm']),
       'digest_name'=>dnssec_digest_name($parsed['digest_type'])
@@ -279,7 +281,8 @@ if(count($resolverSummary)>=2){
       'Recheck after DNS caches converge and inspect authoritative DNSSEC data if disagreement persists.',
       ['resolvers'=>$resolverSummary]);
   }else{
-    dnssec_add($findings,'present','Validating resolvers agree',
+    $agreeStatus=($first['validated_status']===0 && $first['ad']===true)?'present':'informational';
+    dnssec_add($findings,$agreeStatus,'Validating resolvers agree',
       'Cloudflare and Google returned the same validation status for the tested query.',
       'Use repeated checks around DNSSEC changes because resolver caches can temporarily expose different states.',
       ['status'=>$first['validated_status_name'],'ad'=>$first['ad']]);
