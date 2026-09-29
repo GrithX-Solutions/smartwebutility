@@ -69,10 +69,23 @@
       <article><h3>Fast workflow</h3><p>Copy, download, swap direction and process with Ctrl/⌘ + Enter.</p></article>
     </div>
 
+    <h2>Base64 vs Base64URL</h2>
+    <p>Standard Base64 uses the characters <code>+</code> and <code>/</code> in its alphabet and commonly uses <code>=</code> padding. Base64URL uses URL-friendly substitutions such as <code>-</code> and <code>_</code>, and padding is often omitted. This tool supports both normal Base64 and the URL-safe form so you can work with API payloads, tokens and web-safe encoded values.</p>
+
+    <h2>UTF-8 text, Unicode and Base64</h2>
+    <p>Base64 represents bytes, not human-readable characters. When you encode text, the text must first be represented as bytes. This tool uses UTF-8-aware handling so non-Latin scripts and emoji can be converted without relying on ASCII-only browser behavior.</p>
+
+    <h2>Base64 padding and invalid input</h2>
+    <p>The trailing <code>=</code> characters sometimes seen in Base64 are padding used to complete the encoded block shape. Some URL-safe formats omit that padding. During decoding, malformed input should be treated as an error rather than silently accepted as trustworthy data.</p>
+
+    <h2>Base64 is encoding, not encryption</h2>
+    <p>Anyone who has the encoded value can decode it. Do not use Base64 to protect passwords, API keys or confidential data. Its purpose is representation and transport compatibility, not secrecy or authentication.</p>
+
     <h2>Related tools</h2>
     <div class="related-tools">
       <a href="/json-formatter/">JSON Formatter<span>Format, validate and minify JSON.</span></a>
-      <a href="/http-status-checker/">HTTP Status Checker<span>Inspect HTTP responses.</span></a>
+      <a href="/jwt-decoder/">JWT Decoder<span>Inspect JWT header and payload values that commonly use Base64URL encoding.</span></a>
+      <a href="/url-encoder-decoder/">URL Encoder / Decoder<span>Work with percent-encoded URL components.</span></a>
       <a href="/dns-checker/">DNS Checker<span>Lookup common DNS records.</span></a>
     </div>
   </section>
