@@ -90,7 +90,7 @@
   <p>Fingerprint/versioned CSS, JavaScript, fonts and images are often good candidates for long-lived caching and <code>immutable</code>. HTML, APIs and personalized responses usually need more conservative or revalidation-based policies. The correct policy depends on how the URL changes when its content changes.</p>
 
   <h2>CDN-specific cache headers</h2>
-  <p>This checker recognizes common evidence such as <code>CF-Cache-Status</code>, <code>X-Cache</code>, <code>X-Vercel-Cache</code>, <code>X-Nextjs-Cache</code>, generic <code>X-Cache-Status</code> and <code>Age</code>. Vendor headers are interpreted as evidence, not as a universal cache standard.</p>
+  <p>This checker recognizes common evidence such as <code>CF-Cache-Status</code>, <code>X-Cache</code>, <code>X-Vercel-Cache</code>, <code>X-Nextjs-Cache</code>, generic <code>X-Cache-Status</code>, <code>X-CDNJS-Cache</code> and <code>Age</code>. Vendor headers are interpreted as evidence, not as a universal cache standard.</p>
 
   <h2>Related tools</h2>
   <div class="related-tools">
