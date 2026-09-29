@@ -1,0 +1,110 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cache-Control Checker — Test Browser & CDN Cache Headers</title>
+<meta name="description" content="Check Cache-Control, CDN cache headers, Age, Expires, ETag, Last-Modified and Vary for any public URL. Compare two requests and inspect browser vs shared-cache policy.">
+<link rel="canonical" href="https://smartwebutility.com/cache-control-checker/">
+<meta property="og:title" content="Cache-Control Checker — Test Browser & CDN Cache Headers"><meta property="og:description" content="Analyze Cache-Control, CDN cache policy, validators and repeated-request cache evidence for a public URL."><meta property="og:url" content="https://smartwebutility.com/cache-control-checker/"><meta property="og:type" content="website">
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="Cache-Control Checker — Test Browser & CDN Cache Headers"><meta name="twitter:description" content="Inspect browser and CDN cache headers with repeated-request evidence.">
+<meta name="theme-color" content="#07101b"><link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css"><link rel="stylesheet" href="/assets/cache-control-checker.css?v=20260929-1">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Cache-Control Checker","url":"https://smartwebutility.com/cache-control-checker/","description":"Analyze Cache-Control, CDN cache policy, Age, Expires, ETag, Last-Modified, Vary and repeated-request cache evidence for a public URL.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Cache-Control directive parsing","Browser cache TTL analysis","Shared and CDN cache TTL analysis","Two-request cache comparison","Age header inspection","ETag and Last-Modified validation","Vary header analysis","Cloudflare and common CDN cache-status headers"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smartwebutility.com/"},{"@type":"ListItem","position":2,"name":"Website Tools","item":"https://smartwebutility.com/website-tools/"},{"@type":"ListItem","position":3,"name":"Cache-Control Checker","item":"https://smartwebutility.com/cache-control-checker/"}]}</script>
+</head><body>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/" aria-current="page">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+
+<main>
+<section class="tool-hero wrap cache-hero">
+  <div class="crumb"><a href="/">Home</a><span>/</span><a href="/website-tools/">Website Tools</a><span>/</span><span>Cache-Control Checker</span></div>
+  <span class="kicker">HTTP caching diagnostic</span>
+  <h1>Cache-Control Checker</h1>
+  <p class="lead compact">Check how a public URL instructs browsers and shared caches. Parse <code>Cache-Control</code>, CDN-specific policy, <code>Age</code>, <code>Expires</code>, validators and <code>Vary</code>, then compare two requests for live cache evidence.</p>
+  <form id="cacheControlForm" class="cache-form" novalidate>
+    <label class="sr-only" for="cacheControlUrl">Public URL</label>
+    <input id="cacheControlUrl" type="url" inputmode="url" autocomplete="url" autocapitalize="none" spellcheck="false" placeholder="https://example.com/app.css" required>
+    <button class="btn primary" type="submit">Check cache policy</button>
+  </form>
+  <div class="cache-trust"><span>Browser + CDN policy</span><span>Two-request comparison</span><span>Raw header evidence</span><span>No signup</span></div>
+  <div id="cacheControlProgress" class="notice" role="status" aria-live="polite" hidden>Fetching the URL twice and analyzing cache headers…</div>
+  <div id="cacheControlError" class="error" role="alert" hidden></div>
+</section>
+
+<section id="cacheControlResults" class="section wrap cache-results" hidden>
+  <div class="cache-report-head">
+    <div><span class="kicker">Cache report</span><h2 id="cacheControlTitle">Cache policy analysis</h2><p id="cacheControlMeta"></p></div>
+    <button id="cacheControlCopy" class="text-btn" type="button">Copy report</button>
+  </div>
+
+  <div class="cache-summary">
+    <article><strong id="cachePresent">0</strong><span>Present</span></article>
+    <article><strong id="cacheReview">0</strong><span>Review</span></article>
+    <article><strong id="cacheInfo">0</strong><span>Informational</span></article>
+  </div>
+
+  <section class="cache-panel">
+    <div class="section-head"><div><span class="kicker">Policy</span><h2>Browser vs shared cache</h2></div><p>Freshness rules are separated because browsers and CDNs can follow different TTLs.</p></div>
+    <div id="cachePolicy" class="cache-policy-grid"></div>
+  </section>
+
+  <section class="cache-panel">
+    <div class="section-head"><div><span class="kicker">Repeated request</span><h2>First vs second request</h2></div><p>Point-in-time evidence from two ordinary GET requests to the same final URL.</p></div>
+    <div id="cacheRequests" class="cache-request-grid"></div>
+  </section>
+
+  <section class="cache-panel">
+    <div class="section-head"><div><span class="kicker">Headers</span><h2>Cache-related response headers</h2></div><p>Standard validators, freshness headers and detected CDN/proxy cache fields.</p></div>
+    <div id="cacheHeaders"></div>
+  </section>
+
+  <section class="cache-panel">
+    <div class="section-head"><div><span class="kicker">Diagnostics</span><h2>Findings and actions</h2></div><p>No artificial performance score—each item is tied to a concrete response signal.</p></div>
+    <div id="cacheFindings" class="cache-findings"></div>
+  </section>
+
+  <details class="cache-details">
+    <summary>Redirect path</summary>
+    <div id="cacheRedirects"></div>
+  </details>
+
+  <details class="cache-details">
+    <summary>Methodology and limitations</summary>
+    <div id="cacheMethodology"></div>
+  </details>
+</section>
+
+<section class="section alt"><div class="wrap prose" data-quality-content="v3">
+  <div class="section-head"><div><span class="kicker">HTTP caching explained</span><h2>What a Cache-Control checker should tell you</h2></div><p>“Cached” is not one state. Browser freshness, shared/CDN freshness, validation and live edge status are separate signals.</p></div>
+
+  <div class="info-grid">
+    <article><h3>max-age</h3><p><code>max-age</code> defines how long a response stays fresh for ordinary caches. The freshness clock relates to when the response was generated, and an <code>Age</code> value can reduce remaining freshness.</p></article>
+    <article><h3>s-maxage</h3><p><code>s-maxage</code> applies to shared caches such as CDNs and can override <code>max-age</code> for those caches. This allows a browser TTL and edge TTL to differ.</p></article>
+    <article><h3>no-cache vs no-store</h3><p><code>no-cache</code> allows storage but requires revalidation before reuse. <code>no-store</code> tells caches not to store the response. They are not interchangeable.</p></article>
+    <article><h3>ETag and Last-Modified</h3><p>Validators let clients ask whether stale content changed. If it did not, the server can return <code>304 Not Modified</code> instead of sending the full representation again.</p></article>
+    <article><h3>Age</h3><p><code>Age</code> indicates how long a response has spent in a proxy cache. A positive Age value can be evidence of shared-cache reuse, but absence of Age does not prove there is no CDN.</p></article>
+    <article><h3>Vary</h3><p><code>Vary</code> changes the cache key based on named request headers. <code>Vary: *</code> prevents normal reuse because unspecified factors influenced the representation.</p></article>
+  </div>
+
+  <h2>Why the tool makes two requests</h2>
+  <p>The second request can reveal a CDN <code>HIT</code>, a positive <code>Age</code>, or a vendor-specific cache-status transition. A repeated <code>MISS</code> is not automatically a problem: the object may be cold, intentionally bypassed, private, dynamic or keyed differently by headers, cookies or edge location.</p>
+
+  <h2>Static assets and HTML should not use the same policy blindly</h2>
+  <p>Fingerprint/versioned CSS, JavaScript, fonts and images are often good candidates for long-lived caching and <code>immutable</code>. HTML, APIs and personalized responses usually need more conservative or revalidation-based policies. The correct policy depends on how the URL changes when its content changes.</p>
+
+  <h2>CDN-specific cache headers</h2>
+  <p>This checker recognizes common evidence such as <code>CF-Cache-Status</code>, <code>X-Cache</code>, <code>X-Vercel-Cache</code>, <code>X-Nextjs-Cache</code>, generic <code>X-Cache-Status</code> and <code>Age</code>. Vendor headers are interpreted as evidence, not as a universal cache standard.</p>
+
+  <h2>Related tools</h2>
+  <div class="related-tools">
+    <a href="/http-header-checker/">HTTP Header Checker<span>Inspect the complete raw response-header map.</span></a>
+    <a href="/website-speed-test/">Website Speed Test<span>Measure Lighthouse performance and see whether delivery optimizations affect user-visible loading.</span></a>
+    <a href="/security-headers-checker/">Security Headers Checker<span>Review browser security policies separately from cache behavior.</span></a>
+    <a href="/redirect-checker/">Redirect Checker<span>Find redirect hops that occur before the final cacheable resource.</span></a>
+  </div>
+
+  <h2>Primary references</h2>
+  <p><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Cache-Control" rel="noopener">MDN Cache-Control</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching" rel="noopener">MDN HTTP caching guide</a> · <a href="https://developers.cloudflare.com/cache/troubleshooting/investigating-uncached-responses/" rel="noopener">Cloudflare cache-status troubleshooting</a></p>
+</div></section>
+</main>
+
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></div></footer>
+<script>document.getElementById('year').textContent=new Date().getFullYear()</script><script src="/assets/cache-control-checker.js?v=20260929-1" defer></script>
+</body></html>
