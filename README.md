@@ -24,6 +24,7 @@ Performance-first static website for https://smartwebutility.com.
 - `/sitemap-checker/` — validate XML sitemaps and sitemap indexes.
 - `/meta-tag-checker/` — inspect title, description, canonical, robots and H1 metadata.
 - `/open-graph-checker/` — inspect Open Graph metadata on public pages.
+- `/favicon-generator/` — generate ICO, PNG, Apple and PWA favicon packages locally.
 - `/http-header-checker/` — inspect HTTP response headers, status, IP and timing.
 - `/dns-propagation-checker/` — compare DNS answers across independent resolvers.
 - `/word-counter/` — count words, characters, sentences, paragraphs and lines.
