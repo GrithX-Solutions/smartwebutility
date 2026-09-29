@@ -164,7 +164,7 @@ function cache_hit_signal(array $headers): ?array {
 function cache_add(array &$findings,string $status,string $title,string $why,string $fix,?array $evidence=null): void {
   $findings[]=['status'=>$status,'title'=>$title,'why'=>$why,'fix'=>$fix,'evidence'=>$evidence];
 }
-\nfunction cache_negative_signal(array $headers): ?array {
+function cache_negative_signal(array $headers): ?array {
   $checks=[
     'cf-cache-status'=>['BYPASS','DYNAMIC','MISS','EXPIRED'],
     'x-vercel-cache'=>['MISS','BYPASS'],
