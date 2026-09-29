@@ -128,6 +128,7 @@ function cache_cdn_headers(array $headers): array {
     'x-proxy-cache'=>'Proxy cache status',
     'x-fastly-request-id'=>'Fastly request ID',
     'x-served-by'=>'Served by',
+    'x-cdnjs-cache'=>'cdnjs cache status',
     'cdn-cache-control'=>'CDN-Cache-Control',
     'cloudflare-cdn-cache-control'=>'Cloudflare-CDN-Cache-Control'
   ];
@@ -145,7 +146,8 @@ function cache_hit_signal(array $headers): ?array {
     'x-nextjs-cache'=>['HIT','STALE'],
     'x-cache'=>['HIT'],
     'x-cache-status'=>['HIT','STALE'],
-    'x-proxy-cache'=>['HIT']
+    'x-proxy-cache'=>['HIT'],
+    'x-cdnjs-cache'=>['HIT','STALE']
   ];
   foreach($checks as $key=>$tokens){
     if(!isset($headers[$key]))continue;
@@ -162,6 +164,26 @@ function cache_hit_signal(array $headers): ?array {
 function cache_add(array &$findings,string $status,string $title,string $why,string $fix,?array $evidence=null): void {
   $findings[]=['status'=>$status,'title'=>$title,'why'=>$why,'fix'=>$fix,'evidence'=>$evidence];
 }
+\nfunction cache_negative_signal(array $headers): ?array {
+  $checks=[
+    'cf-cache-status'=>['BYPASS','DYNAMIC','MISS','EXPIRED'],
+    'x-vercel-cache'=>['MISS','BYPASS'],
+    'x-nextjs-cache'=>['MISS'],
+    'x-cache'=>['MISS'],
+    'x-cache-status'=>['MISS','BYPASS'],
+    'x-proxy-cache'=>['MISS','BYPASS'],
+    'x-cdnjs-cache'=>['MISS','BYPASS']
+  ];
+  foreach($checks as $key=>$tokens){
+    if(!isset($headers[$key]))continue;
+    $value=strtoupper((string)$headers[$key]);
+    foreach($tokens as $token){
+      if(str_contains($value,$token))return ['header'=>$key,'value'=>$headers[$key],'token'=>$token];
+    }
+  }
+  return null;
+}
+
 
 $firstFollow=cache_follow($url);
 $first=$firstFollow['response'];
@@ -190,6 +212,8 @@ $vary=cache_header($headers,'vary');
 $setCookie=cache_header($headers,'set-cookie');
 $hit1=cache_hit_signal($first['headers']);
 $hit2=cache_hit_signal($second['headers']);
+$negative1=cache_negative_signal($first['headers']);
+$negative2=cache_negative_signal($second['headers']);
 
 $browserTtl=$maxAge;
 $sharedTtl=$cdnSMaxAge ?? $cdnMaxAge ?? $sMaxAge ?? $maxAge;
@@ -313,7 +337,13 @@ if($hit2){
   cache_add($findings,'present','Second request shows shared-cache evidence',
     'The repeated request returned a recognized cache-hit or positive Age signal.',
     'Use this as point-in-time evidence only; cache behavior can vary by edge, request headers, cookies, geography and cache key.',
-    ['signal'=>$hit2,'first_signal'=>$hit1]);
+    ['signal'=>$hit2,'first_signal'=>$hit1,'negative_signal'=>$negative2]);
+  if($negative2 && $negative2['header']!==$hit2['header']){
+    cache_add($findings,'informational','Multiple cache layers report different states',
+      'One cache-related header reports a hit or positive cached age while another layer reports '.$negative2['token'].'. This can happen when an outer CDN bypasses its cache but an upstream cache, worker, storage layer or inner CDN serves cached content.',
+      'Interpret each vendor header as evidence for that specific layer rather than collapsing the whole request into a single HIT/MISS label.',
+      ['positive_signal'=>$hit2,'other_layer_signal'=>$negative2]);
+  }
 }else{
   $cdnStatus=[];
   foreach(cache_cdn_headers($headers) as $x)$cdnStatus[$x['header']]=$x['value'];
@@ -366,7 +396,9 @@ out([
     'vary'=>$vary,
     'cdn_headers'=>$knownCdn,
     'first_hit_signal'=>$hit1,
-    'second_hit_signal'=>$hit2
+    'second_hit_signal'=>$hit2,
+    'first_negative_signal'=>$negative1,
+    'second_negative_signal'=>$negative2
   ],
   'summary'=>$counts,
   'findings'=>$findings,
