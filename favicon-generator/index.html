@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Generate a Favicon — Free Favicon Generator from Image, Text & SVG</title>
+<title>Generate a Favicon — Image, SVG & Text Favicon Generator</title>
 <meta name="description" content="Generate a favicon from an image, logo, SVG, text or emoji. Create ICO, PNG, Apple touch icons, web app icons, manifest and a complete ZIP locally.">
 <link rel="canonical" href="https://smartwebutility.com/favicon-generator/">
-<meta property="og:title" content="Generate a Favicon — Free Favicon Generator">
+<meta property="og:title" content="Generate a Favicon — Image, SVG & Text Generator">
 <meta property="og:description" content="Create favicon.ico, PNG icons, Apple touch icons, Android/PWA icons and a manifest from an image, SVG, logo, text or emoji.">
 <meta property="og:url" content="https://smartwebutility.com/favicon-generator/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Generate a Favicon — Free Favicon Generator">
+<meta name="twitter:title" content="Generate a Favicon — Image, SVG & Text Generator">
 <meta name="twitter:description" content="Generate a complete favicon package from an image, SVG, logo, text or emoji in your browser.">
 <meta name="theme-color" content="#07101b">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -130,6 +130,24 @@
 
   <h2>How to add the generated favicon to HTML</h2>
   <p>After generating the package, download the ZIP and upload its files to the public root of your website. Copy the generated link tags into the page <code>&lt;head&gt;</code>. Browsers and devices cache favicons aggressively, so an old icon can remain visible for a while even after the files change. Using consistent filenames and verifying the URLs directly helps distinguish a caching delay from a missing asset.</p>
+
+  <h2>Google favicon requirements for search results</h2>
+  <p>For Google Search, publish a crawlable favicon link on the site home page and keep the favicon URL stable. Google's current guidance requires a square icon of at least 8×8 pixels and recommends an icon larger than 48×48 pixels so it can render well across search surfaces. Googlebot must be able to crawl the home page and Googlebot-Image must be able to crawl the favicon file.</p>
+  <div class="info-grid">
+    <article><h3>Use a square favicon</h3><p>Keep the source at a 1:1 aspect ratio. This generator creates square browser, Apple and PWA assets from the same design.</p></article>
+    <article><h3>Keep the favicon URL stable</h3><p>Avoid changing the favicon path on every redesign. A stable URL makes recrawling and cache refreshes easier to reason about.</p></article>
+    <article><h3>Make the file crawlable</h3><p>Do not block the favicon file from image crawling, and make sure the home page that declares the icon remains crawlable.</p></article>
+    <article><h3>Use a recognizable brand mark</h3><p>Choose a simple icon that still represents the site at small sizes. Search engines may choose not to display a favicon even when technical requirements are met.</p></article>
+  </div>
+  <p>Reference: <a href="https://developers.google.com/search/docs/appearance/favicon-in-search" rel="noopener">Google Search favicon documentation</a>.</p>
+
+  <h2>Install the favicon on HTML, WordPress or Next.js sites</h2>
+  <div class="info-grid">
+    <article><h3>Plain HTML</h3><p>Upload the generated files to a public path and add the generated <code>&lt;link rel="icon"&gt;</code>, Apple touch icon and manifest tags inside the document <code>&lt;head&gt;</code>.</p></article>
+    <article><h3>WordPress</h3><p>Use the site's Site Icon or favicon setting when your theme exposes one, or add the generated files and link tags through your normal theme or deployment workflow. Confirm the final public favicon URL after publishing.</p></article>
+    <article><h3>Next.js and app frameworks</h3><p>Use the framework's current icon or metadata convention and supply the generated browser and app icons. The important checks are the final HTML link tags, public file URLs and cache behavior—not the framework name itself.</p></article>
+    <article><h3>After deployment</h3><p>Open the favicon URL directly, confirm a 200 response, inspect the rendered HTML, then allow browser and search caches time to refresh.</p></article>
+  </div>
 
   <h2>Favicon design tips for tiny sizes</h2>
   <p>A favicon is not a miniature billboard. At 16×16 pixels, thin strokes, detailed wordmarks and subtle gradients can collapse into visual noise. Prefer a bold silhouette, strong foreground/background contrast and enough negative space around the mark. Always inspect the 16×16 preview before downloading the final package.</p>
