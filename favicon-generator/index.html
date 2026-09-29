@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Generate a Favicon — Free Favicon Generator from Image, Text & SVG</title>
+<meta name="description" content="Generate a favicon from an image, logo, SVG, text or emoji. Create ICO, PNG, Apple touch icons, web app icons, manifest and a complete ZIP locally.">
+<link rel="canonical" href="https://smartwebutility.com/favicon-generator/">
+<meta property="og:title" content="Generate a Favicon — Free Favicon Generator">
+<meta property="og:description" content="Create favicon.ico, PNG icons, Apple touch icons, Android/PWA icons and a manifest from an image, SVG, logo, text or emoji.">
+<meta property="og:url" content="https://smartwebutility.com/favicon-generator/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Generate a Favicon — Free Favicon Generator">
+<meta name="twitter:description" content="Generate a complete favicon package from an image, SVG, logo, text or emoji in your browser.">
+<meta name="theme-color" content="#07101b">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script src="/assets/theme.js"></script>
+<link rel="stylesheet" href="/assets/styles.css">
+<link rel="stylesheet" href="/assets/favicon-generator.css?v=20260929-1">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Favicon Generator","url":"https://smartwebutility.com/favicon-generator/","description":"Generate favicon.ico, PNG, Apple touch and web app icons from an image, SVG, logo, text or emoji.","applicationCategory":"DesignApplication","operatingSystem":"Any","browserRequirements":"Requires a modern browser with Canvas support","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Generate a favicon from an image","Generate a favicon from SVG","Generate a favicon from text or emoji","Create favicon.ico","Create PNG favicon sizes","Create Apple touch icon","Create Android and PWA icons","Generate site.webmanifest","Download a complete favicon ZIP package"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I generate a favicon from an image?","acceptedAnswer":{"@type":"Answer","text":"Upload a PNG, JPG, WebP or SVG, adjust the fit, padding and background, then generate the favicon package. The image is processed locally in your browser."}},{"@type":"Question","name":"Can I create a favicon from SVG?","acceptedAnswer":{"@type":"Answer","text":"Yes. Upload an SVG file and this tool renders the required favicon sizes as PNG and ICO assets while keeping the source processing in your browser."}},{"@type":"Question","name":"What favicon sizes do I need?","acceptedAnswer":{"@type":"Answer","text":"A practical favicon package commonly includes 16x16, 32x32 and 48x48 browser icons, a 180x180 Apple touch icon, and 192x192 and 512x512 web app icons."}},{"@type":"Question","name":"Can I generate a favicon from text or emoji?","acceptedAnswer":{"@type":"Answer","text":"Yes. Switch to Text or Emoji mode, enter initials or a symbol, choose colors and spacing, and generate the same ICO, PNG and manifest package."}},{"@type":"Question","name":"Does the favicon generator upload my logo?","acceptedAnswer":{"@type":"Answer","text":"No. Favicon rendering and package generation run in the browser. Your source image does not need to be uploaded to Smart Web Utility."}}]}</script>
+</head>
+<body>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+
+<main>
+<section class="tool-hero wrap favicon-hero">
+  <div class="crumb"><a href="/">Home</a><span>/</span><a href="/website-tools/">Website Tools</a><span>/</span><span>Favicon Generator</span></div>
+  <span class="kicker">Browser-local favicon maker</span>
+  <h1>Generate a Favicon</h1>
+  <p class="lead compact">Create a complete favicon package from an image, logo, SVG, text or emoji. Generate <code>favicon.ico</code>, PNG sizes, Apple and PWA icons, a manifest and ready-to-paste HTML without uploading your source file.</p>
+  <div class="trustbar"><span>Runs locally</span><span>ICO + PNG output</span><span>SVG input supported</span><span>Complete ZIP package</span></div>
+</section>
+
+<section class="section wrap favicon-workspace" aria-label="Favicon generator">
+  <div class="favicon-builder">
+    <section class="favicon-panel source-panel">
+      <div class="panel-heading"><div><span class="step-number">1</span><div><h2>Choose your source</h2><p>Upload a logo or build an icon from text or emoji.</p></div></div></div>
+      <div class="source-tabs" role="group" aria-label="Favicon source">
+        <button type="button" class="source-tab active" data-mode="image" aria-pressed="true">Image / SVG</button>
+        <button type="button" class="source-tab" data-mode="text" aria-pressed="false">Text / Emoji</button>
+      </div>
+
+      <div id="imageSource" class="source-section">
+        <label class="favicon-drop" id="faviconDrop">
+          <input id="faviconFile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml,.svg">
+          <span class="drop-icon" aria-hidden="true">↑</span>
+          <strong>Drop an image here or choose a file</strong>
+          <small>PNG, JPG, WebP or SVG · up to 10 MB</small>
+        </label>
+        <div id="fileMeta" class="file-meta" hidden></div>
+      </div>
+
+      <div id="textSource" class="source-section" hidden>
+        <label class="field-label" for="faviconText">Initials, character or emoji</label>
+        <input id="faviconText" class="favicon-input" type="text" maxlength="4" value="SW" autocomplete="off" spellcheck="false">
+        <div class="quick-glyphs" aria-label="Quick emoji choices">
+          <button type="button" data-glyph="⚡">⚡</button><button type="button" data-glyph="★">★</button><button type="button" data-glyph="🚀">🚀</button><button type="button" data-glyph="✓">✓</button><button type="button" data-glyph="◆">◆</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="favicon-panel settings-panel">
+      <div class="panel-heading"><div><span class="step-number">2</span><div><h2>Style the icon</h2><p>Tune spacing, shape, colors and image fit.</p></div></div></div>
+      <div class="control-grid">
+        <label><span>Background</span><input id="bgColor" type="color" value="#0f172a"></label>
+        <label><span>Foreground</span><input id="fgColor" type="color" value="#ffffff"></label>
+        <label class="range-control"><span>Padding <output id="paddingValue">12%</output></span><input id="paddingRange" type="range" min="0" max="35" value="12"></label>
+        <label class="range-control"><span>Corner radius <output id="radiusValue">22%</output></span><input id="radiusRange" type="range" min="0" max="50" value="22"></label>
+        <label><span>Image fit</span><select id="fitMode"><option value="contain">Contain</option><option value="cover">Cover</option></select></label>
+        <label class="check-control"><input id="transparentBg" type="checkbox"><span>Transparent background</span></label>
+      </div>
+    </section>
+
+    <section class="favicon-panel output-panel">
+      <div class="panel-heading"><div><span class="step-number">3</span><div><h2>Generate the favicon package</h2><p>Create browser, Apple and web app icon files.</p></div></div></div>
+      <div class="package-list">
+        <span>favicon.ico <b>16 / 32 / 48</b></span>
+        <span>PNG favicons <b>16 / 32 / 48</b></span>
+        <span>Apple touch icon <b>180</b></span>
+        <span>Web app icons <b>192 / 512</b></span>
+        <span>site.webmanifest <b>JSON</b></span>
+      </div>
+      <button id="generateFavicons" class="btn primary generate-button" type="button">Generate favicon files</button>
+      <p id="faviconStatus" class="favicon-status" role="status" aria-live="polite">Choose a source or use the default text icon, then generate your package.</p>
+      <div class="download-actions">
+        <button id="downloadIco" class="btn ghost" type="button" disabled>Download favicon.ico</button>
+        <button id="downloadZip" class="btn ghost" type="button" disabled>Download complete ZIP</button>
+      </div>
+    </section>
+  </div>
+
+  <aside class="favicon-preview-panel" aria-label="Favicon preview">
+    <div class="preview-head"><div><span class="kicker">Live preview</span><h2>See it at real favicon sizes</h2></div><span id="previewMode">Text</span></div>
+    <div class="browser-preview"><div class="browser-bar"><span></span><span></span><span></span></div><div class="browser-address"><canvas id="preview32" width="32" height="32" aria-label="32 pixel favicon preview"></canvas><span>smartwebutility.com</span></div></div>
+    <div class="preview-grid">
+      <figure><div class="checker"><canvas id="preview16" width="16" height="16"></canvas></div><figcaption>16×16 <span>browser tab</span></figcaption></figure>
+      <figure><div class="checker medium"><canvas id="preview48" width="48" height="48"></canvas></div><figcaption>48×48 <span>browser icon</span></figcaption></figure>
+      <figure><div class="checker large"><canvas id="preview180" width="180" height="180"></canvas></div><figcaption>180×180 <span>Apple touch</span></figcaption></figure>
+      <figure><div class="checker large"><canvas id="preview192" width="192" height="192"></canvas></div><figcaption>192×192 <span>PWA icon</span></figcaption></figure>
+    </div>
+    <p class="preview-note">Small previews reveal details that disappear at favicon scale. Simple shapes, strong contrast and generous spacing usually survive best.</p>
+  </aside>
+</section>
+
+<section id="installCode" class="section alt" hidden>
+  <div class="wrap favicon-code-wrap">
+    <div class="section-head"><div><span class="kicker">Install the favicon</span><h2>Copy the generated HTML and manifest</h2></div><p>Upload the files from the ZIP to your site root, then add the tags to the document head.</p></div>
+    <div class="code-grid">
+      <section class="editor-panel"><div class="editor-head"><strong>HTML head tags</strong><button id="copyHtml" class="text-btn" type="button">Copy</button></div><textarea id="htmlCode" class="code-editor favicon-code" readonly></textarea></section>
+      <section class="editor-panel"><div class="editor-head"><strong>site.webmanifest</strong><button id="copyManifest" class="text-btn" type="button">Copy</button></div><textarea id="manifestCode" class="code-editor favicon-code" readonly></textarea></section>
+    </div>
+  </div>
+</section>
+
+<section class="section wrap prose" data-quality-content="v4">
+  <span class="kicker">Favicon guide</span>
+  <h2>Generate a favicon from an image, logo or SVG</h2>
+  <p>Use the Image / SVG option when you already have a logo, app mark or simple brand graphic. The generator accepts PNG, JPG, WebP and SVG files, draws the artwork into each required square canvas, and exports browser and app icon sizes. Use <strong>Contain</strong> when the complete logo must remain visible. Use <strong>Cover</strong> when edge-to-edge cropping is acceptable.</p>
+  <div class="info-grid">
+    <article><h3>Generate favicon from image</h3><p>Upload a raster image and use padding to keep important details away from the edges. The browser processes the file locally and creates the final favicon assets without a server upload.</p></article>
+    <article><h3>SVG to favicon generator</h3><p>SVG is useful when the source artwork is vector-based. This tool renders the SVG at each target size and packages PNG and ICO outputs for broad compatibility.</p></article>
+    <article><h3>Create favicon from logo</h3><p>Square or nearly square logo marks work best. If your logo is wide, use contain mode and extra padding, or create a simplified monogram for very small favicon sizes.</p></article>
+    <article><h3>Generate favicon from text or emoji</h3><p>Switch source modes to make a favicon from initials, a single character or an emoji. Choose foreground and background colors, then preview how the result reads at 16 pixels.</p></article>
+  </div>
+
+  <h2>What favicon sizes should a modern website include?</h2>
+  <p>A practical package should cover traditional browser favicons and larger home-screen or web-app icons. This generator builds <strong>16×16, 32×32 and 48×48</strong> PNG images and combines those sizes into <code>favicon.ico</code>. It also creates a <strong>180×180 Apple touch icon</strong> plus <strong>192×192 and 512×512</strong> icons referenced by the generated web manifest.</p>
+
+  <h2>How to add the generated favicon to HTML</h2>
+  <p>After generating the package, download the ZIP and upload its files to the public root of your website. Copy the generated link tags into the page <code>&lt;head&gt;</code>. Browsers and devices cache favicons aggressively, so an old icon can remain visible for a while even after the files change. Using consistent filenames and verifying the URLs directly helps distinguish a caching delay from a missing asset.</p>
+
+  <h2>Favicon design tips for tiny sizes</h2>
+  <p>A favicon is not a miniature billboard. At 16×16 pixels, thin strokes, detailed wordmarks and subtle gradients can collapse into visual noise. Prefer a bold silhouette, strong foreground/background contrast and enough negative space around the mark. Always inspect the 16×16 preview before downloading the final package.</p>
+
+  <h2>Privacy: your image stays in the browser</h2>
+  <p>The favicon editor uses browser image and canvas APIs to render the selected source. The source file does not need to be sent to Smart Web Utility to generate the icon files. This makes the tool suitable for unpublished logos and in-progress design assets that you do not want to upload to a third-party favicon service.</p>
+
+  <h2>Frequently asked favicon questions</h2>
+  <div class="faq-list">
+    <details><summary>How do I generate a favicon from an image?</summary><p>Choose Image / SVG, select a PNG, JPG, WebP or SVG file, adjust fit and padding, then click Generate favicon files. Download the ICO alone or the full ZIP package.</p></details>
+    <details><summary>Can I create a favicon from SVG?</summary><p>Yes. SVG files are accepted as source artwork and rendered into the raster sizes needed for PNG and ICO compatibility.</p></details>
+    <details><summary>Can I generate a favicon from text or emoji?</summary><p>Yes. Use Text / Emoji mode for initials, letters, symbols or emoji, then choose colors, padding and corner radius.</p></details>
+    <details><summary>Why does my old favicon still show?</summary><p>Browsers, operating systems, launchers and search services can cache favicons separately. Verify the new favicon URL loads correctly, then allow cached copies to refresh.</p></details>
+    <details><summary>Does favicon.ico still matter?</summary><p>It remains a useful compatibility fallback. Modern sites can also publish PNG and manifest icons, which is why this generator provides both.</p></details>
+  </div>
+
+  <h2>Related website tools</h2>
+  <div class="related-tools">
+    <a href="/meta-tag-generator/">Meta Tag Generator<span>Create title, description, canonical and robots markup for a page.</span></a>
+    <a href="/open-graph-preview/">Open Graph Preview<span>Build social metadata and preview how a shared page card may look.</span></a>
+    <a href="/meta-tag-checker/">Meta Tag Checker<span>Inspect the metadata published by an existing public webpage.</span></a>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></div></footer>
+<script>document.getElementById('year').textContent=new Date().getFullYear()</script>
+<script src="/assets/favicon-generator.js?v=20260929-1" defer></script>
+</body>
+</html>
