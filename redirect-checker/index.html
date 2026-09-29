@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Redirect Checker — Trace 301, 302, 307 & 308</title><meta name="description" content="Trace URL redirects hop by hop. See 301, 302, 303, 307 and 308 responses, Location headers, loops, final URL and timing."><link rel="canonical" href="https://smartwebutility.com/redirect-checker/">
+<title>301 Redirect Checker — Trace 302, 307 & 308 Redirects</title><meta name="description" content="Free 301 redirect checker and redirect chain tracer. Inspect 301, 302, 303, 307 and 308 hops, Location headers, loops, final URLs and timing."><link rel="canonical" href="https://smartwebutility.com/redirect-checker/">
 <meta property="og:title" content="Redirect Checker — Trace 301, 302, 307 & 308"><meta property="og:description" content="Trace URL redirects hop by hop. See 301, 302, 303, 307 and 308 responses, Location headers, loops, final URL and timing."><meta property="og:url" content="https://smartwebutility.com/redirect-checker/"><meta property="og:type" content="website"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Redirect Checker — Trace 301, 302, 307 & 308"><meta name="twitter:description" content="Trace URL redirects hop by hop. See 301, 302, 303, 307 and 308 responses, Location headers, loops, final URL and timing."><meta name="theme-color" content="#07101b"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Redirect Checker","url":"https://smartwebutility.com/redirect-checker/","description":"Trace HTTP redirect chains hop by hop and inspect redirect status codes, Location headers and the final destination.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["301 redirect tracing","302 redirect tracing","303 redirect tracing","307 redirect tracing","308 redirect tracing","Redirect loop detection","Final URL identification"]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smartwebutility.com/"},{"@type":"ListItem","position":2,"name":"Redirect Checker","item":"https://smartwebutility.com/redirect-checker/"}]}</script></head><body>
@@ -10,7 +10,7 @@
 <section id="result" class="result-card" hidden aria-live="polite"><div class="result-head"><div><span class="status-dot"></span><strong id="resultTitle">Result</strong></div><button id="copyBtn" class="text-btn" type="button">Copy</button></div><div id="resultBody"></div></section><div id="error" class="error" hidden role="alert"></div></section>
 <section class="section wrap prose">
   <h2>Trace a redirect chain one hop at a time</h2>
-  <p>The Redirect Checker requests the starting URL, reads its redirect status and Location header, then follows the destination one hop at a time. The result table shows the URL, status code and next Location for each step through to the final response.</p>
+  <p>Use this 301 redirect checker to inspect a URL hop by hop. It requests the starting URL, reads its redirect status and Location header, then follows the destination one step at a time. The result table shows the URL, status code and next Location for each step through to the final response.</p>
   <div class="info-grid">
     <article><h3>See every hop</h3><p>Expose intermediate 301, 302, 303, 307 and 308 responses that browsers normally follow automatically.</p></article>
     <article><h3>Find the final destination</h3><p>Confirm where an old URL, short link, campaign URL or migrated page ultimately lands.</p></article>
@@ -29,8 +29,16 @@
     <article><h3>Tracking and short links</h3><p>Inspect where marketing, affiliate or shortened links land and whether intermediate redirects introduce unexpected domains or parameters.</p></article>
   </div>
 
-  <h2>Redirect status codes in context</h2>
-  <p>301 and 308 commonly communicate permanent redirects, while 302 and 307 are commonly used for temporary routing. 303 instructs the client to retrieve the destination with GET. The correct status depends on the application and request method, so choose the code that matches the routing behavior you intend.</p>
+  <h2>301 vs 302 vs 307 vs 308 redirects</h2>
+  <p>The status code communicates whether a redirect is intended to be permanent or temporary and, for some request methods, whether the method and request body should be preserved.</p>
+  <div class="info-grid">
+    <article><h3>301 Moved Permanently</h3><p>Use a 301 when an old URL has permanently moved and clients should use the new location going forward. For site migrations and durable URL changes, Google recommends permanent server-side redirects when possible.</p></article>
+    <article><h3>308 Permanent Redirect</h3><p>Like 301, 308 communicates a permanent move, while explicitly preserving the request method and body. This distinction matters more for non-GET requests and application routes.</p></article>
+    <article><h3>302 Found</h3><p>Use a 302 for temporary routing when the original URL should remain the primary location. Historical client behavior can change non-GET requests to GET after some 302 responses.</p></article>
+    <article><h3>307 Temporary Redirect</h3><p>Use a 307 for a temporary redirect when the request method and body must be preserved. It removes the method-changing ambiguity associated with older 302 behavior.</p></article>
+  </div>
+  <p>A 303 See Other intentionally directs the client to retrieve the destination with GET. Always choose the status that matches the behavior of your application rather than selecting a code only for SEO.</p>
+  <p>Reference: <a href="https://developers.google.com/search/docs/crawling-indexing/301-redirects" rel="noopener">Google's redirect guidance</a>.</p>
 
   <h2>Limits of this checker</h2>
   <p>The server follows up to ten request steps and reports redirects visible to its HTTP client. Redirect behavior can still vary by cookie, authentication, user agent, geography, JavaScript execution or application state. Client-side JavaScript navigation is not the same as an HTTP redirect and may not appear in this chain.</p>
@@ -40,6 +48,7 @@
     <a href="/http-status-checker/">HTTP Status Checker<span>Inspect the first response without following redirects.</span></a>
     <a href="/http-header-checker/">HTTP Header Checker<span>Review Location and other response headers in detail.</span></a>
     <a href="/dns-checker/">DNS Checker<span>Confirm the hostnames in a chain resolve as expected.</span></a>
+    <a href="/canonical-tag-checker/">Canonical Tag Checker<span>Check whether the final page publishes the intended canonical URL.</span></a>
   </div>
 </section>
 <section class="section alt" data-quality-content="v2"><div class="wrap prose">
