@@ -31,6 +31,7 @@ jobs:
           node --check assets/canonical-checker.js
           node --check assets/dnssec-checker.js
           node --check assets/cache-control-checker.js
+          node --check assets/favicon-generator.js
           node --check deploy/lighthouse/worker.mjs
           node --check deploy/lighthouse/proxy.mjs
 
@@ -48,4 +49,3 @@ jobs:
           include-hidden-files: true
           retention-days: 3
           if-no-files-found: error
-\n          node --check assets/favicon-generator.js
