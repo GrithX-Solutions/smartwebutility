@@ -30,6 +30,7 @@ jobs:
           node --check assets/robots-tester.js
           node --check assets/canonical-checker.js
           node --check assets/dnssec-checker.js
+          node --check assets/cache-control-checker.js
           node --check deploy/lighthouse/worker.mjs
           node --check deploy/lighthouse/proxy.mjs
 
