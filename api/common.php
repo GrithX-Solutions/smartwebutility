@@ -1,5 +1,21 @@
 <?php
 declare(strict_types=1);
+// Never expose PHP exception HTML inside a JSON API response.
+ini_set('display_errors', '0');
+ini_set('log_errors', '1');
+set_exception_handler(static function (Throwable $e): void {
+  error_log('SmartWebUtility API exception: '.$e);
+  if (!headers_sent()) http_response_code(500);
+  echo json_encode(['error'=>'The server could not complete this check. Please try again later.']);
+});
+register_shutdown_function(static function (): void {
+  $last = error_get_last();
+  if (!$last || !in_array($last['type'], [E_ERROR,E_PARSE,E_CORE_ERROR,E_COMPILE_ERROR,E_USER_ERROR], true)) return;
+  error_log('SmartWebUtility API fatal: '.$last['message'].' in '.$last['file'].':'.$last['line']);
+  if (!headers_sent()) http_response_code(500);
+  echo json_encode(['error'=>'The server could not complete this check. Please try again later.']);
+});
+
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
 header('X-Content-Type-Options: nosniff');
