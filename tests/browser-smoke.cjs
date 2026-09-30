@@ -137,7 +137,7 @@ const cases = [
   }
   // Catch JavaScript initialization failures on all 57 indexable pages,
   // including guides and pages without explicit functional test cases.
-  const locs = [...readFileSync('sitemap.xml', 'utf8').matchAll(/<loc>([^<]+)<\\/loc>/g)]
+  const locs = [...readFileSync('sitemap.xml', 'utf8').matchAll(/<loc>([^<]+)</g)]
     .map(match => new URL(match[1]).pathname);
   assert.ok(locs.length >= 57, 'sitemap unexpectedly shrank');
   for (const path of locs) {
