@@ -35,6 +35,9 @@ jobs:
           node --check deploy/lighthouse/worker.mjs
           node --check deploy/lighthouse/proxy.mjs
 
+      - name: Validate production deploy script
+        run: bash -n deploy/deploy-site.sh
+
       - name: Static SEO QA
         run: python3 scripts/seo-static-qa.py
 
