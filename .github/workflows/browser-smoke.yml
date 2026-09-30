@@ -1,0 +1,31 @@
+name: Browser functional smoke tests
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser-tools:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright + Chromium
+        run: |
+          npm install --no-save playwright@1.55.1
+          npx playwright install --with-deps chromium
+      - name: Launch local static server
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/swu-http.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8765/json-formatter/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/swu-http.log
+          exit 1
+      - name: Test client-side tools and mobile UX in Chromium
+        run: node tests/browser-smoke.cjs
