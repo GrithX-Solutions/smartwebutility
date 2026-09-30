@@ -29,6 +29,7 @@ const cases = [
   ['hash-generator', async p => {
     await p.locator('#hashInput').fill('hello');
     await p.locator('#generateHash').click();
+    await p.waitForFunction(() => document.getElementById('hashOutput').value.trim().length >= 32);
     assert.ok((await p.locator('#hashOutput').inputValue()).trim().length >= 32);
   }],
   ['jwt-decoder', async p => {
@@ -74,6 +75,20 @@ const cases = [
   ['open-graph-preview', async p => {
     await p.locator('#ogTitle').fill('Example OG');
     assert.ok((await p.locator('#ogOutput').inputValue()).includes('Example OG'));
+  }],
+  ['word-counter', async p => {
+    await p.locator('#textInput').fill('One two three.');
+    assert.ok((await p.locator('#textStats').innerText()).includes('3'));
+  }],
+  ['character-counter', async p => {
+    await p.locator('#textInput').fill('abc def');
+    assert.ok((await p.locator('#textStats').innerText()).includes('7'));
+  }],
+  ['favicon-generator', async p => {
+    await p.locator('[data-mode="text"]').click();
+    await p.locator('#faviconText').fill('SW');
+    await p.locator('#generateFavicons').click();
+    assert.ok((await p.locator('#faviconStatus').innerText()).trim().length);
   }],
   ['case-converter', async p => {
     await p.locator('#caseInput').fill('hello world');
