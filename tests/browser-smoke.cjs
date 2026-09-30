@@ -1,5 +1,6 @@
 const { chromium } = require('playwright');
 const assert = require('node:assert/strict');
+const {readFileSync} = require('node:fs');
 
 const origin = process.env.SMOKE_ORIGIN || 'http://127.0.0.1:8765';
 const cases = [
@@ -134,6 +135,28 @@ const cases = [
       await context.close();
     }
   }
+  // Catch JavaScript initialization failures on all 57 indexable pages,
+  // including guides and pages without explicit functional test cases.
+  const locs = [...readFileSync('sitemap.xml', 'utf8').matchAll(/<loc>([^<]+)<\\/loc>/g)]
+    .map(match => new URL(match[1]).pathname);
+  assert.ok(locs.length >= 57, 'sitemap unexpectedly shrank');
+  for (const path of locs) {
+    const page = await browser.newPage();
+    const exceptions = [];
+    page.on('pageerror', error => exceptions.push(error.message));
+    try {
+      const response = await page.goto(origin + path, {waitUntil: 'domcontentloaded', timeout: 15000});
+      assert.equal(response.status(), 200);
+      await page.waitForTimeout(150);
+      assert.deepEqual(exceptions, [], path + ' initialization errors');
+    } catch (error) {
+      failures.push({slug: path, error: error.message});
+      console.error('FAIL page sweep', path, error.message);
+    } finally {
+      await page.close();
+    }
+  }
+  console.log('Browser page sweep:', locs.length, 'pages checked');
   // Mobile layout and navigation regression checks on a representative tool page.
   const mobile = await browser.newPage({viewport: {width: 390, height: 844}, isMobile: true});
   try {
@@ -151,7 +174,7 @@ const cases = [
   }
   await mobile.close();
   await browser.close();
-  console.log('Browser smoke:', cases.length + 1 - failures.length, 'passed,', failures.length, 'failed');
+  console.log('Browser smoke:', cases.length + 1 + locs.length - failures.length, 'passed,', failures.length, 'failed');
   if (failures.length) {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
