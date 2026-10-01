@@ -66,9 +66,9 @@
       <a href="/json-formatter/">JSON Formatter<span>Format and validate JSON.</span></a>
     </div>
   </section>
-</main>
+<section class="section alt" data-adsense-depth="20261001"><div class="wrap prose"><h2>When to use a UUID v4</h2><p>Random UUIDs are useful when identifiers must be created independently across browsers, services or machines without asking a central counter for the next number. Typical examples include request IDs, test fixtures, import rows, temporary client-side objects and database keys where unpredictability is preferable to sequential numbering.</p><h2>Uniqueness is probabilistic</h2><p>A UUID v4 has a very large random space, making accidental collisions extremely unlikely in normal applications, but it is not a proof that a duplicate can never exist. Systems with strict uniqueness requirements should still enforce a unique constraint at the storage layer and handle the rare conflict correctly.</p><h2>UUIDs are identifiers, not secrets</h2><p>Do not treat a UUID as an authentication token merely because it looks random. Access control should use purpose-built credentials with appropriate entropy, expiration and verification. For secret-like random strings, use the <a href="/random-string-generator/">Random String Generator</a> and follow the security requirements of the receiving system.</p></div></section></main>
 
-<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/">All tools</a><a href="/sitemap.xml">Sitemap</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></div></footer>
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
 <script src="/assets/uuid.js" defer></script>
 </body>
 </html>
