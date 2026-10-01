@@ -48,16 +48,26 @@ Implementation requirement:
 - Limit excessively long playback.
 - Explicitly state that the page generates audio but does not decode microphone/audio files.
 
-## HOLD — Hex / ASCII conversion
+## PASS — Hex / ASCII conversion
 
-Evidence:
-- ascii hex to ascii — ~9,900 US/month, KD 7.
-- hex to ascii conversion — ~1,600 US/month, KD 5.
-- neapay.com (DA 19) appeared around #3; hexcalculator.org (DA 19) around #15.
-- SERP also contains an AI overview plus several established conversion/reference sites.
+Primary query family:
+- ascii hex to ascii — ~40,500 global and ~9,900 US/month, KD 7.
+- hex to ascii conversion — ~2,400 global; US ~1,600/KD5, UK ~390/KD5, Canada ~170/KD5, Australia ~140/KD5.
+- ascii to hex conversion — ~590 US/month, KD 5, with smaller low-KD secondary-market demand.
 
-Decision:
-- Valid query family, but weaker top-10 gap than Morse. Hold until the current higher-confidence batch is complete.
+SERP evidence:
+- neapay.com — DA 19 around #3.
+- hexcalculator.org — DA 19 around #15.
+- The SERP also includes established reference/conversion sites and an AI overview, so this is not treated as a guaranteed easy rank.
+
+Implementation decision:
+- Build one bidirectional /hex-to-ascii/ page instead of separate doorway pages.
+- Strict 7-bit ASCII mode plus optional UTF-8 mode.
+- Accept continuous hex and common byte separators/0x prefixes.
+- Reject invalid or odd-length hex rather than guessing.
+- ASCII mode rejects bytes above 0x7F; UTF-8 mode validates UTF-8 byte sequences.
+- Text→hex supports spaced, continuous and 0x-prefixed output plus case control.
+- Non-printable ASCII control bytes remain visible as escapes rather than silently disappearing.
 
 ## REJECT FOR CURRENT BATCH — Decimal / Binary conversion
 
