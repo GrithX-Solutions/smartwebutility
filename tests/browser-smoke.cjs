@@ -115,6 +115,35 @@ const cases = [
     assert.equal(download.suggestedFilename(), 'converted.json');
     await assertBatchTwoSeo(p);
   }],
+  ['excel-to-json', async p => {
+    await p.waitForFunction(() => !!window.XLSX, null, {timeout:15000});
+    const workbookBase64 = await p.evaluate(() => {
+      const ws = XLSX.utils.aoa_to_sheet([
+        ['id','name','active'],
+        [101,'Ada',true],
+        [102,'Linus',false]
+      ]);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'People');
+      return XLSX.write(wb, {type:'base64', bookType:'xlsx'});
+    });
+    await p.locator('#excelJsonFile').setInputFiles({
+      name:'sample.xlsx',
+      mimeType:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      buffer:Buffer.from(workbookBase64,'base64')
+    });
+    await p.waitForFunction(() => document.getElementById('excelJsonOutput').value.includes('"Ada"'));
+    const parsed = JSON.parse(await p.locator('#excelJsonOutput').inputValue());
+    assert.equal(parsed.length, 2);
+    assert.equal(parsed[0].id, 101);
+    assert.equal(parsed[0].active, true);
+    assert.equal(await p.locator('#excelJsonSheet').inputValue(), 'People');
+    const downloadPromise = p.waitForEvent('download');
+    await p.locator('#excelJsonDownload').click();
+    const download = await downloadPromise;
+    assert.equal(download.suggestedFilename(), 'excel-to-json.json');
+    await assertBatchTwoSeo(p);
+  }],
   ['base64-encoder-decoder', async p => {
     await p.locator('#base64Input').fill('hello');
     await p.locator('#runBase64').click();
@@ -258,7 +287,7 @@ const cases = [
   // including guides and pages without explicit functional test cases.
   const locs = [...readFileSync('sitemap.xml', 'utf8').matchAll(/<loc>([^<]+)</g)]
     .map(match => new URL(match[1]).pathname);
-  assert.ok(locs.length >= 66, 'sitemap unexpectedly shrank');
+  assert.ok(locs.length >= 67, 'sitemap unexpectedly shrank');
   for (const path of locs) {
     const page = await browser.newPage();
     const exceptions = [];
