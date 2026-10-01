@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Excel to JSON Converter — Convert XLS/XLSX to JSON Online</title>
+  <meta name="description" content="Convert Excel XLS or XLSX files to formatted JSON online. Choose a worksheet, use the first row as headers, preview JSON and download locally.">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <link rel="canonical" href="https://smartwebutility.com/excel-to-json/">
+  <meta property="og:title" content="Excel to JSON Converter — Convert XLS/XLSX to JSON Online">
+  <meta property="og:description" content="Read an Excel workbook in your browser, choose a sheet and convert rows to formatted JSON objects or arrays.">
+  <meta property="og:url" content="https://smartwebutility.com/excel-to-json/">
+  <meta property="og:type" content="website"><meta property="og:site_name" content="Smart Web Utility">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Excel to JSON Converter — Convert XLS/XLSX to JSON Online">
+  <meta name="twitter:description" content="Convert XLS or XLSX worksheets to formatted JSON in your browser.">
+  <meta name="theme-color" content="#07101b">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Excel to JSON Converter","url":"https://smartwebutility.com/excel-to-json/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert XLS or XLSX worksheets into formatted JSON objects or arrays with browser-side workbook parsing.","featureList":["XLS to JSON conversion","XLSX to JSON conversion","Worksheet selection","Header row to JSON keys","Array output mode","Local workbook parsing","JSON download"]}</script>
+  <script type="application/ld+json" data-swu-breadcrumb="true">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smartwebutility.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://smartwebutility.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Excel to JSON Converter","item":"https://smartwebutility.com/excel-to-json/"}]}</script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" defer></script>
+</head>
+<body data-file-converter="excel-json">
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+<main>
+<section class="tool-hero wrap json-tool-hero">
+  <div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>Excel to JSON Converter</span></div>
+  <span class="kicker">XLS/XLSX parser · browser-side</span>
+  <h1>Excel to JSON Converter</h1>
+  <p class="lead compact">Open an Excel workbook, choose the worksheet, and convert rows to formatted JSON without uploading the file. Use the first row as object keys or export each worksheet row as a JSON array.</p>
+
+  <div class="json-toolbar">
+    <label class="file-btn">Open .xls / .xlsx<input id="excelJsonFile" type="file" accept=".xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden></label>
+    <label>Worksheet
+      <select id="excelJsonSheet" aria-label="Excel worksheet" disabled></select>
+    </label>
+    <label><input id="excelJsonHeaders" type="checkbox" checked> First row is header</label>
+    <button class="btn primary" id="excelJsonConvert" type="button" disabled>Convert sheet</button>
+    <button class="text-btn" id="excelJsonClear" type="button">Clear</button>
+  </div>
+
+  <section class="editor-panel">
+    <div class="editor-head"><div><strong>JSON output</strong><span id="excelJsonStatus">Ready</span></div><div class="editor-actions"><button class="text-btn" id="excelJsonCopy" type="button">Copy</button><button class="text-btn" id="excelJsonDownload" type="button">Download .json</button></div></div>
+    <textarea id="excelJsonOutput" class="code-editor" spellcheck="false" readonly placeholder="Choose an Excel file to generate JSON" aria-label="Excel to JSON output"></textarea>
+  </section>
+  <div id="excelJsonError" class="error" hidden role="alert"></div>
+  <div id="excelJsonStats" class="json-stats" hidden></div>
+  <div class="trustbar"><span>Reads workbook locally</span><span>Sheet selection</span><span>Files up to 5 MB</span></div>
+</section>
+
+<section class="section wrap prose" data-quality-content="batch3-excel-json">
+  <h2>Convert Excel XLS or XLSX files to JSON</h2>
+  <p>This Excel to JSON converter reads the workbook directly in your browser and turns the selected worksheet into formatted JSON. It supports both legacy <code>.xls</code> files and modern <code>.xlsx</code> workbooks through the pinned SheetJS Community Edition browser build already used by the site's Excel export tools.</p>
+
+  <h2>How to convert Excel to JSON online</h2>
+  <ol>
+    <li>Open a local <code>.xls</code> or <code>.xlsx</code> workbook up to 5 MB.</li>
+    <li>Select the worksheet you want to convert.</li>
+    <li>Keep <strong>First row is header</strong> enabled to create JSON objects, or disable it to export rows as arrays.</li>
+    <li>Review the formatted JSON, then copy it or download <code>excel-to-json.json</code>.</li>
+  </ol>
+
+  <div data-seo-example="batch3">
+    <h3>Example worksheet to JSON objects</h3>
+    <p>If an Excel sheet contains these rows:</p><pre><code>id | name  | active
+101| Ada   | TRUE
+102| Linus | FALSE</code></pre>
+    <p>With the first row used as headers, the output follows this structure:</p><pre><code>[
+  {
+    "id": 101,
+    "name": "Ada",
+    "active": true
+  },
+  {
+    "id": 102,
+    "name": "Linus",
+    "active": false
+  }
+]</code></pre>
+  </div>
+
+  <h2>Worksheet selection matters</h2>
+  <p>Excel workbooks can contain multiple sheets with different schemas. After the file is opened, the converter lists the workbook's sheet names and converts only the selected worksheet. Changing the selection regenerates the JSON instead of silently combining unrelated tables.</p>
+
+  <h2>Header rows and duplicate columns</h2>
+  <p>When headers are enabled, values from the first row become JSON property names. Blank header cells receive predictable <code>column_1</code>-style names, and duplicate names receive numeric suffixes so one column does not overwrite another. If headers are disabled, each worksheet row becomes a JSON array in the original column order.</p>
+
+  <h2>Excel numbers, booleans and dates</h2>
+  <p>Workbook values are read using their stored cell values. Numeric and boolean cells remain native JSON numbers and booleans. Date cells that are recognized by the workbook parser are serialized to ISO date-time strings. Formulas are not recalculated by this browser tool; the conversion uses the value stored in the workbook.</p>
+
+  <h2>Blank cells, merged cells and complex spreadsheets</h2>
+  <p>Blank cells are retained as empty values where needed. Merged regions, hidden rows, charts, formatting, comments and workbook macros are not represented in JSON because JSON output describes the worksheet data rather than Excel presentation features. A workbook that uses formulas or visual layout as its primary structure may need a custom export rather than a generic row converter.</p>
+
+  <h2>Excel to JSON vs CSV to JSON</h2>
+  <p>Use this page when the source is an actual Excel workbook and you need sheet selection or native workbook values. If the source is already a text CSV file, the <a href="/csv-to-json/">CSV to JSON converter</a> is lighter and provides delimiter controls that are not relevant to XLS/XLSX files.</p>
+
+  <h2>Privacy and local file handling</h2>
+  <p>The selected workbook is read locally with browser APIs and is not uploaded to a Smart Web Utility conversion endpoint. The workbook parser is loaded from the pinned SheetJS CDN dependency documented in the repository. The CDN receives the normal script request metadata, but the tool does not send your workbook contents to that CDN.</p>
+
+  <h2>Related data tools</h2>
+  <div class="related-tools">
+    <a href="/json-to-excel/">JSON to Excel<span>Create an XLSX workbook from JSON.</span></a>
+    <a href="/csv-to-json/">CSV to JSON<span>Convert delimited text into JSON objects or arrays.</span></a>
+    <a href="/xml-to-excel/">XML to Excel<span>Flatten repeated XML records into an XLSX workbook.</span></a>
+    <a href="/json-formatter/">JSON Formatter<span>Validate and format the generated JSON.</span></a>
+  </div>
+</section>
+</main>
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script src="/assets/file-converters.js?v=20261002-4" defer></script>
+</body>
+</html>
