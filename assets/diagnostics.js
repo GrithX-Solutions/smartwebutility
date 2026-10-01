@@ -16,7 +16,7 @@ function render(data){
  if(tool==='sitemap'){
   const r=data.result; title.textContent='Sitemap check'; body.innerHTML='<table class="record-table"><tbody>'+row('Status',r.status)+row('Type',r.type)+row('Entries',r.entries)+row('Response truncated',r.truncated?'Yes':'No')+'</tbody></table>'+(r.sample?.length?'<div class="result-sub"><strong>Sample entries</strong><div class="chips">'+r.sample.map(x=>'<span>'+esc(x)+'</span>').join('')+'</div></div>':'');
  } else if(tool==='meta'){
-  const r=data.result; title.textContent='Meta tag check'; body.innerHTML='<table class="record-table"><tbody>'+row('Status',r.status)+row('Title',r.title)+row('Description',r.description)+row('Canonical',r.canonical)+row('Robots',r.robots)+row('H1 count',r.h1_count)+'</tbody></table>';
+  const r=data.result; title.textContent='Meta tag check'; body.innerHTML='<table class="record-table"><tbody>'+row('Status',r.status)+row('Title',r.title)+row('Description',r.description)+row('Canonical',r.canonical)+row('Meta robots',r.robots)+row('X-Robots-Tag',r.x_robots_tag)+row('H1 count',r.h1_count)+'</tbody></table>';
  } else if(tool==='og'){
   const r=data.result.open_graph; title.textContent='Open Graph check'; body.innerHTML='<table class="record-table"><tbody>'+Object.entries(r).map(([k,v])=>row(k,v)).join('')+'</tbody></table>';
  } else if(tool==='headers'){
