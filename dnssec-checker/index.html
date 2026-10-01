@@ -1,9 +1,9 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DNSSEC Checker — Test DS, DNSKEY & Validation</title>
-<meta name="description" content="Check DNSSEC for any domain. Test Cloudflare and Google validation, inspect DS and DNSKEY records, detect broken DNSSEC and compare resolver evidence.">
+<title>DNSSEC Checker & Validator — Test DS and DNSKEY</title>
+<meta name="description" content="Free DNSSEC checker and validator. Test a domain with Cloudflare and Google, inspect DS and DNSKEY records, and diagnose broken DNSSEC or SERVFAIL.">
 <link rel="canonical" href="https://smartwebutility.com/dnssec-checker/">
-<meta property="og:title" content="DNSSEC Checker — Test DS, DNSKEY & Validation"><meta property="og:description" content="Check DNSSEC status, DS and DNSKEY records, validating resolver AD flags and broken DNSSEC evidence."><meta property="og:url" content="https://smartwebutility.com/dnssec-checker/"><meta property="og:type" content="website">
+<meta property="og:title" content="DNSSEC Checker & Validator — Test DS and DNSKEY"><meta property="og:description" content="Check DNSSEC status, DS and DNSKEY records, validating resolver AD flags and broken DNSSEC evidence."><meta property="og:url" content="https://smartwebutility.com/dnssec-checker/"><meta property="og:type" content="website">
 <meta name="twitter:card" content="summary"><meta name="twitter:title" content="DNSSEC Checker — Test DS, DNSKEY & Validation"><meta name="twitter:description" content="Compare Google and Cloudflare DNSSEC validation with DS and DNSKEY evidence.">
 <meta name="theme-color" content="#07101b"><link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css"><link rel="stylesheet" href="/assets/dnssec-checker.css?v=20260929-1">
@@ -90,6 +90,10 @@
   <h2>Why a broken DNSSEC setup can be worse than no DNSSEC</h2>
   <p>An unsigned domain can still resolve through ordinary DNS. A domain with a broken authenticated chain may instead return validation failures to security-aware resolvers. This commonly happens when a registrar DS record no longer matches the authoritative zone after an incorrect key rollover or DNS-provider migration.</p>
 
+  <h2>How to troubleshoot a DNSSEC validation failure</h2>
+  <p>If validating resolvers return SERVFAIL, compare the parent-side DS record with the DNSKEY records currently published by the authoritative DNS provider. A stale DS record after a DNS-provider move or key rollover can leave a signed delegation pointing at keys the child zone no longer serves. Confirm the intended key at the DNS provider before changing registrar DS data; removing or replacing trust data without verifying the active key can extend the outage.</p>
+  <p>When Cloudflare and Google disagree, avoid treating one observation as a final verdict. Resolver caches can temporarily contain different delegation or key material. Recheck after the relevant TTLs, compare authoritative data, and use the <a href="/dns-propagation-checker/">DNS Propagation Checker</a> to distinguish propagation from a persistent validation failure.</p>
+
   <h2>How this checker determines the result</h2>
   <p>The tool queries Cloudflare and Google DNS-over-HTTPS with DNSSEC validation enabled and requests DNSSEC records. It also runs a comparison query with validation checking disabled. The resolver's AD flag is used as validation evidence. The tool does <strong>not</strong> claim to independently verify every cryptographic signature itself.</p>
 
@@ -102,7 +106,7 @@
   </div>
 
   <h2>Primary references</h2>
-  <p><a href="https://developers.google.com/speed/public-dns/docs/doh/json" rel="noopener">Google Public DNS JSON API</a> · <a href="https://developers.cloudflare.com/1.1.1.1/encryption/dns-over-https/make-api-requests/dns-json/" rel="noopener">Cloudflare DNS-over-HTTPS JSON API</a></p>
+  <p><a href="https://developers.google.com/speed/public-dns/docs/doh/json" rel="noopener">Google Public DNS JSON API</a> · <a href="https://developers.cloudflare.com/1.1.1.1/encryption/dns-over-https/make-api-requests/dns-json/" rel="noopener">Cloudflare DNS-over-HTTPS JSON API</a> · <a href="https://www.rfc-editor.org/rfc/rfc4035" rel="noopener">RFC 4035: DNSSEC Protocol Modifications</a></p>
 </div></section>
 </main>
 
