@@ -12,8 +12,11 @@ GitHub Actions may build test artifacts. Those artifacts are validation outputs 
 
 ## Current repository gates
 
-- Static SEO QA: 62 HTML pages, 0 errors, 0 warnings.
-- AdSense readiness heuristic: 62 READY-CANDIDATE, 0 REVIEW, 0 HIGH-PRIORITY.
+Latest verified production-candidate snapshot:
+- Static SEO QA: 70 HTML pages, 0 errors, 0 warnings.
+- AdSense readiness heuristic: 70 READY-CANDIDATE, 0 REVIEW, 0 HIGH-PRIORITY.
+- Browser functional/sitemap/mobile suite: 106 passed, 0 failed.
+- Production bundle workflow: success.
 - AdSense verification script and root ads.txt seller declaration are automatically checked for presence and publisher consistency.
 - High-priority AdSense-readiness structural failures now fail CI.
 - Browser smoke covers functional tool flows plus a sitemap-wide JavaScript initialization sweep and representative mobile navigation/layout.
@@ -43,6 +46,20 @@ Completed:
 - Developer Tools hub silo integration.
 - sitemap.xml inclusion and current lastmod values.
 - Automated SEO assertions in browser smoke tests.
+
+## Additional verified low-KD tool batches
+
+Repository-only additions after Batch 1:
+- /txt-to-csv/ — bidirectional TXT↔CSV with delimiter handling.
+- /xml-to-excel/ — XML records to real XLSX.
+- /json-to-excel/ — JSON arrays/objects to real XLSX.
+- /csv-to-json/ — quoted CSV parsing to JSON objects/arrays.
+- /excel-to-json/ — real XLS/XLSX workbook parsing with worksheet selection.
+- /morse-code-translator/ — two-way Morse translation plus real Web Audio playback.
+- /hex-to-ascii/ — strict Hex↔ASCII/UTF-8 conversion.
+- /binary-to-text/ — strict 8-bit Binary↔ASCII/UTF-8 conversion.
+
+Each page was admitted only after live keyword data + SERP review, and each has a real functional implementation, task-specific supporting content, structured data, internal links, sitemap wiring and browser smoke coverage. Rejected/held candidates remain documented in the keyword research files rather than being published as filler pages.
 
 ## Publisher-content / AdSense safeguards
 
