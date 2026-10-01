@@ -41,6 +41,9 @@ jobs:
       - name: Normalize publisher trust navigation
         run: python3 scripts/normalize-trust-nav.py
 
+      - name: Normalize favicon references
+        run: python3 scripts/normalize-favicon.py
+
       - name: Static SEO QA
         run: python3 scripts/seo-static-qa.py
 
