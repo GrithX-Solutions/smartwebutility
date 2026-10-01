@@ -84,6 +84,20 @@ const cases = [
     assert.ok(download.suggestedFilename().endsWith('.xlsx'));
     await assertBatchTwoSeo(p);
   }],
+  ['json-to-excel', async p => {
+    await p.locator('#jsonExcelInput').fill('[{"id":1,"name":"Ada","address":{"city":"London"},"tags":["api","json"]},{"id":2,"name":"Linus","address":{"city":"Helsinki"},"tags":["linux"]}]');
+    await p.locator('#jsonExcelConvert').click();
+    const preview = await p.locator('#jsonExcelOutput').inputValue();
+    assert.ok(preview.includes('address.city'));
+    assert.ok(preview.includes('Ada'));
+    assert.equal(await p.locator('#jsonExcelDownload').isDisabled(), false);
+    await p.waitForFunction(() => !!window.XLSX, null, {timeout:15000});
+    const downloadPromise = p.waitForEvent('download');
+    await p.locator('#jsonExcelDownload').click();
+    const download = await downloadPromise;
+    assert.equal(download.suggestedFilename(), 'json-to-excel.xlsx');
+    await assertBatchTwoSeo(p);
+  }],
   ['base64-encoder-decoder', async p => {
     await p.locator('#base64Input').fill('hello');
     await p.locator('#runBase64').click();
@@ -227,7 +241,7 @@ const cases = [
   // including guides and pages without explicit functional test cases.
   const locs = [...readFileSync('sitemap.xml', 'utf8').matchAll(/<loc>([^<]+)</g)]
     .map(match => new URL(match[1]).pathname);
-  assert.ok(locs.length >= 64, 'sitemap unexpectedly shrank');
+  assert.ok(locs.length >= 65, 'sitemap unexpectedly shrank');
   for (const path of locs) {
     const page = await browser.newPage();
     const exceptions = [];
