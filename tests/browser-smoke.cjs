@@ -178,6 +178,22 @@ const cases = [
     assert.equal((await p.locator('#hexAsciiOutput').inputValue()).trim(), 'C3 A9');
     await assertNewToolSeo(p);
   }],
+  ['binary-to-text', async p => {
+    await p.locator('#binaryTextDirection').selectOption('binary-to-text');
+    await p.locator('#binaryTextEncoding').selectOption('ascii');
+    await p.locator('#binaryTextInput').fill('01001000 01101001');
+    await p.locator('#binaryTextConvert').click();
+    assert.equal((await p.locator('#binaryTextOutput').inputValue()).trim(), 'Hi');
+    await p.locator('#binaryTextDirection').selectOption('text-to-binary');
+    await p.locator('#binaryTextInput').fill('Hi');
+    await p.locator('#binaryTextConvert').click();
+    assert.equal((await p.locator('#binaryTextOutput').inputValue()).trim(), '01001000 01101001');
+    await p.locator('#binaryTextEncoding').selectOption('utf8');
+    await p.locator('#binaryTextInput').fill('é');
+    await p.locator('#binaryTextConvert').click();
+    assert.equal((await p.locator('#binaryTextOutput').inputValue()).trim(), '11000011 10101001');
+    await assertNewToolSeo(p);
+  }],
   ['base64-encoder-decoder', async p => {
     await p.locator('#base64Input').fill('hello');
     await p.locator('#runBase64').click();
@@ -321,7 +337,7 @@ const cases = [
   // including guides and pages without explicit functional test cases.
   const locs = [...readFileSync('sitemap.xml', 'utf8').matchAll(/<loc>([^<]+)</g)]
     .map(match => new URL(match[1]).pathname);
-  assert.ok(locs.length >= 69, 'sitemap unexpectedly shrank');
+  assert.ok(locs.length >= 70, 'sitemap unexpectedly shrank');
   for (const path of locs) {
     const page = await browser.newPage();
     const exceptions = [];
