@@ -12,6 +12,29 @@ const cases = [
     await p.locator('#validateJson').click();
     assert.equal(await p.locator('#jsonError').isHidden(), false);
   }],
+  ['xml-to-json', async p => {
+    await p.locator('#converterInput').fill('<users><user id="1"><name>Ada</name></user><user id="2"><name>Linus</name></user></users>');
+    await p.locator('#convertBtn').click();
+    assert.ok((await p.locator('#converterOutput').inputValue()).includes('"user"'));
+    assert.equal(await p.locator('#converterError').isHidden(), true);
+  }],
+  ['json-to-csv', async p => {
+    await p.locator('#converterInput').fill('[{"name":"Ada","role":"admin"},{"name":"Linus","role":"developer"}]');
+    await p.locator('#convertBtn').click();
+    const csv = await p.locator('#converterOutput').inputValue();
+    assert.ok(csv.includes('name,role'));
+    assert.ok(csv.includes('Ada,admin'));
+  }],
+  ['yaml-to-json', async p => {
+    await p.locator('#converterInput').fill('service:\n  name: api\n  port: 8080');
+    await p.locator('#convertBtn').click();
+    assert.ok((await p.locator('#converterOutput').inputValue()).includes('"service"'));
+  }],
+  ['json-to-yaml', async p => {
+    await p.locator('#converterInput').fill('{"service":{"name":"api","port":8080}}');
+    await p.locator('#convertBtn').click();
+    assert.ok((await p.locator('#converterOutput').inputValue()).includes('service:'));
+  }],
   ['base64-encoder-decoder', async p => {
     await p.locator('#base64Input').fill('hello');
     await p.locator('#runBase64').click();

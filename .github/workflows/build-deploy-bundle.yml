@@ -6,6 +6,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -32,6 +35,7 @@ jobs:
           node --check assets/dnssec-checker.js
           node --check assets/cache-control-checker.js
           node --check assets/favicon-generator.js
+          node --check assets/data-converters.js
           node --check deploy/lighthouse/worker.mjs
           node --check deploy/lighthouse/proxy.mjs
 
