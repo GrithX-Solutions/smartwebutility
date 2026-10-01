@@ -3,8 +3,8 @@ from pathlib import Path
 import re
 
 ROOT=Path(__file__).resolve().parents[1]
-VERSION="20261001c"
-ICON=f'/favicon-64.png?v={VERSION}'
+VERSION="v4"
+ICON='/favicon-sw-v4-64.png'
 ICON_TAG=f'<link rel="icon" type="image/png" sizes="64x64" href="{ICON}"><link rel="shortcut icon" type="image/png" href="{ICON}">'
 
 files=[p for p in ROOT.glob("**/index.html") if ".git" not in p.parts]
