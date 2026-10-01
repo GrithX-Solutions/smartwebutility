@@ -156,7 +156,7 @@
 
     const footerLinks = document.querySelector('.footer-links');
     if (footerLinks) {
-      footerLinks.innerHTML = '<a href="/about/">About</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a>';
+      footerLinks.innerHTML = '<a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a>';
     }
 
     setActiveNavigation(nav);
