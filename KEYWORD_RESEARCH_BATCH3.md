@@ -69,6 +69,32 @@ Implementation decision:
 - Text→hex supports spaced, continuous and 0x-prefixed output plus case control.
 - Non-printable ASCII control bytes remain visible as escapes rather than silently disappearing.
 
+## PASS — Binary to Text / Text to Binary
+
+Primary query: **binary to text conversion**
+
+Provider estimates:
+- Global search volume: ~2,900/month.
+- US: ~1,000/month, KD 5.
+- UK: ~210/month, KD 5.
+- Canada: ~140/month, KD 5.
+- Australia: ~110/month, KD 5.
+
+SERP evidence:
+- binarytotext.net — DA 26 at #2.
+- apivoid.com — DA 22 around #10.
+- binarytotext.ai — DA 11 around #13.
+- Results also include tool/reference domains and some video content; no AI overview was observed in this checked SERP.
+
+Implementation decision:
+- Build one bidirectional /binary-to-text/ page rather than separate Binary→Text and Text→Binary URLs.
+- Parse only complete 8-bit bytes; never auto-pad incomplete bit strings.
+- Strict ASCII mode rejects values above 0x7F.
+- Optional UTF-8 mode validates UTF-8 byte sequences.
+- Text→binary supports spaced, continuous and 0b-prefixed output.
+- Non-printable ASCII controls remain visible as escapes rather than silently disappearing.
+- The page explicitly does not claim numeric-base, file or executable-code decoding.
+
 ## REJECT FOR CURRENT BATCH — Decimal / Binary conversion
 
 Evidence:
