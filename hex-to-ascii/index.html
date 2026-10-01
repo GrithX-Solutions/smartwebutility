@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Hex to ASCII Converter — Hex to Text & ASCII to Hex</title>
+  <meta name="description" content="Convert hexadecimal bytes to ASCII text or text back to hex. Supports strict 7-bit ASCII, optional UTF-8, spaced or continuous hex and local browser processing.">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <link rel="canonical" href="https://smartwebutility.com/hex-to-ascii/">
+  <meta property="og:title" content="Hex to ASCII Converter — Hex to Text & ASCII to Hex">
+  <meta property="og:description" content="Convert hex bytes to ASCII or UTF-8 text and encode text back to hexadecimal locally in your browser.">
+  <meta property="og:url" content="https://smartwebutility.com/hex-to-ascii/">
+  <meta property="og:type" content="website"><meta property="og:site_name" content="Smart Web Utility">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Hex to ASCII Converter">
+  <meta name="twitter:description" content="Convert hexadecimal bytes to ASCII/UTF-8 text or encode text back to hex.">
+  <meta name="theme-color" content="#07101b">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Hex to ASCII Converter","url":"https://smartwebutility.com/hex-to-ascii/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert hexadecimal bytes to strict ASCII or UTF-8 text and encode text back to hexadecimal.","featureList":["Hex to ASCII conversion","ASCII to hex conversion","Optional UTF-8 decoding and encoding","Spaced or continuous hex output","0x-prefixed output","Strict invalid-byte validation","Local browser processing"]}</script>
+  <script type="application/ld+json" data-swu-breadcrumb="true">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smartwebutility.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://smartwebutility.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Hex to ASCII Converter","item":"https://smartwebutility.com/hex-to-ascii/"}]}</script>
+</head>
+<body>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+<main>
+<section class="tool-hero wrap json-tool-hero">
+  <div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>Hex to ASCII Converter</span></div>
+  <span class="kicker">Hex ↔ text · ASCII / UTF-8</span>
+  <h1>Hex to ASCII Converter</h1>
+  <p class="lead compact">Convert hexadecimal byte values into readable ASCII or UTF-8 text, or encode text back to hexadecimal. Invalid bytes and unsupported characters are reported instead of being silently discarded.</p>
+
+  <div class="json-toolbar">
+    <label>Direction
+      <select id="hexAsciiDirection" aria-label="Hex conversion direction">
+        <option value="hex-to-text">Hex → Text</option>
+        <option value="text-to-hex">Text → Hex</option>
+      </select>
+    </label>
+    <label>Encoding
+      <select id="hexAsciiEncoding" aria-label="Text encoding">
+        <option value="ascii">ASCII (7-bit)</option>
+        <option value="utf8">UTF-8</option>
+      </select>
+    </label>
+    <label>Hex format
+      <select id="hexAsciiFormat" aria-label="Hex output format" disabled>
+        <option value="spaced">Spaced bytes</option>
+        <option value="continuous">Continuous</option>
+        <option value="0x">0x-prefixed bytes</option>
+      </select>
+    </label>
+    <label>Hex case
+      <select id="hexAsciiCase" aria-label="Hex letter case" disabled>
+        <option value="upper">Uppercase</option>
+        <option value="lower">Lowercase</option>
+      </select>
+    </label>
+  </div>
+  <div class="json-toolbar">
+    <button class="btn primary" id="hexAsciiConvert" type="button">Convert</button>
+    <button class="text-btn" id="hexAsciiExample" type="button">Example</button>
+    <button class="text-btn" id="hexAsciiClear" type="button">Clear</button>
+  </div>
+
+  <div class="json-workspace">
+    <section class="editor-panel"><div class="editor-head"><div><strong>Input</strong><span>Hex bytes or text</span></div></div>
+      <textarea id="hexAsciiInput" class="code-editor" spellcheck="false" autocapitalize="none" autocomplete="off" aria-label="Hex or text input"></textarea>
+    </section>
+    <section class="editor-panel"><div class="editor-head"><div><strong>Output</strong><span id="hexAsciiStatus">Ready</span></div><div class="editor-actions"><button class="text-btn" id="hexAsciiCopy" type="button">Copy</button></div></div>
+      <textarea id="hexAsciiOutput" class="code-editor" spellcheck="false" readonly aria-label="Converted hex or text output"></textarea>
+    </section>
+  </div>
+  <div id="hexAsciiError" class="error" hidden role="alert"></div>
+  <div id="hexAsciiStats" class="json-stats" hidden></div>
+  <div class="trustbar"><span>Strict validation</span><span>ASCII + UTF-8 modes</span><span>Runs locally</span></div>
+</section>
+
+<section class="section wrap prose" data-quality-content="batch3-hex-ascii">
+  <h2>Convert hex bytes to ASCII text</h2>
+  <p>This converter turns hexadecimal byte values into text. In strict ASCII mode, each byte must be between <code>00</code> and <code>7F</code>. Printable ASCII characters are shown directly, tab/newline/carriage-return bytes are preserved, and other control bytes are displayed as visible <code>\xNN</code> escapes so invisible data is not silently lost.</p>
+
+  <h2>How to convert hex to ASCII online</h2>
+  <ol>
+    <li>Keep <strong>Hex → Text</strong> selected.</li>
+    <li>Paste continuous hex such as <code>48656C6C6F</code>, or spaced/prefixed bytes such as <code>0x48 0x65 0x6C 0x6C 0x6F</code>.</li>
+    <li>Use ASCII for 7-bit text or UTF-8 when the bytes represent UTF-8 characters.</li>
+    <li>Select <strong>Convert</strong> and copy the decoded text.</li>
+  </ol>
+
+  <div data-seo-example="batch3">
+    <h3>Hex to ASCII example</h3>
+    <p><strong>Hex:</strong></p><pre><code>48 65 6C 6C 6F 20 57 6F 72 6C 64</code></pre>
+    <p><strong>ASCII text:</strong></p><pre><code>Hello World</code></pre>
+  </div>
+
+  <h2>Convert ASCII or UTF-8 text back to hexadecimal</h2>
+  <p>Switch to <strong>Text → Hex</strong> to encode text into byte values. ASCII mode rejects characters outside the 7-bit ASCII range rather than truncating them. UTF-8 mode uses the browser's UTF-8 encoder, so characters such as accented letters and non-Latin scripts can be represented as their UTF-8 byte sequences.</p>
+
+  <h2>Hex input formats supported</h2>
+  <p>You can paste continuous hexadecimal digits or separate bytes with spaces, commas, colons, semicolons, underscores or hyphens. Optional <code>0x</code> prefixes are accepted. Every byte still requires two hexadecimal digits; odd-length input and non-hexadecimal tokens return an error instead of being guessed.</p>
+
+  <h2>ASCII is not the same as UTF-8</h2>
+  <p>ASCII defines 128 values from 0 through 127. UTF-8 is a variable-length encoding that preserves ASCII byte values for the first 128 characters while representing many more Unicode characters with multi-byte sequences. If a hex stream contains bytes above <code>7F</code>, strict ASCII mode reports them. Switch to UTF-8 only when the source bytes are actually UTF-8 encoded.</p>
+
+  <h2>What about endianness?</h2>
+  <p>For ordinary text byte streams, this converter processes bytes in the order they appear. Endianness is mainly relevant when interpreting multi-byte numeric values or encodings such as UTF-16. Reversing byte order is not appropriate for a normal sequence of ASCII or UTF-8 bytes, so this tool does not silently reorder them.</p>
+
+  <h2>Control characters</h2>
+  <p>ASCII includes control values in addition to printable characters. Tab (<code>09</code>), line feed (<code>0A</code>) and carriage return (<code>0D</code>) are kept as their corresponding whitespace. Other non-printable 7-bit control bytes are rendered as <code>\xNN</code> escapes so you can still see where they occur.</p>
+
+  <h2>Privacy</h2>
+  <p>All parsing, ASCII validation and UTF-8 encoding/decoding happen in browser JavaScript. The input is not sent to a Smart Web Utility conversion API.</p>
+
+  <h2>Related encoding tools</h2>
+  <div class="related-tools">
+    <a href="/base64-encoder-decoder/">Base64 Encoder / Decoder<span>Encode or decode byte-to-text Base64 data.</span></a>
+    <a href="/url-encoder-decoder/">URL Encoder / Decoder<span>Convert URL components and percent escapes.</span></a>
+    <a href="/html-entity-encoder-decoder/">HTML Entity Encoder / Decoder<span>Escape or decode HTML entities.</span></a>
+    <a href="/morse-code-translator/">Morse Code Translator<span>Translate text and Morse code with audio playback.</span></a>
+  </div>
+</section>
+</main>
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script src="/assets/hex-ascii.js?v=20261002-1" defer></script>
+</body>
+</html>
