@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Morse Code Translator with Sound — Text to Morse & Back</title>
+  <meta name="description" content="Translate text to Morse code or Morse back to text, then play standards-based Morse audio with adjustable WPM and tone frequency in your browser.">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <link rel="canonical" href="https://smartwebutility.com/morse-code-translator/">
+  <meta property="og:title" content="Morse Code Translator with Sound — Text to Morse & Back">
+  <meta property="og:description" content="Translate text and Morse code both ways and play Morse audio with adjustable speed and tone.">
+  <meta property="og:url" content="https://smartwebutility.com/morse-code-translator/">
+  <meta property="og:type" content="website"><meta property="og:site_name" content="Smart Web Utility">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Morse Code Translator with Sound">
+  <meta name="twitter:description" content="Translate text to Morse or Morse to text and play the result with browser Web Audio.">
+  <meta name="theme-color" content="#07101b">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Morse Code Translator with Sound","url":"https://smartwebutility.com/morse-code-translator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript and Web Audio for sound playback","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Translate text to International Morse code or Morse code back to text and play generated Morse audio in the browser.","featureList":["Text to Morse code","Morse code to text","Adjustable audio WPM","Adjustable tone frequency","International Morse letters and numbers","Common punctuation support","Browser-side processing"]}</script>
+  <script type="application/ld+json" data-swu-breadcrumb="true">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smartwebutility.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://smartwebutility.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Morse Code Translator","item":"https://smartwebutility.com/morse-code-translator/"}]}</script>
+</head>
+<body>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+<main>
+<section class="tool-hero wrap json-tool-hero">
+  <div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>Morse Code Translator</span></div>
+  <span class="kicker">Text ↔ Morse · audio playback</span>
+  <h1>Morse Code Translator with Sound</h1>
+  <p class="lead compact">Translate text into International Morse code or decode pasted Morse back to text. Play the Morse sequence as real browser-generated audio with adjustable words per minute and tone frequency.</p>
+
+  <div class="json-toolbar">
+    <label>Direction
+      <select id="morseDirection" aria-label="Morse translation direction">
+        <option value="text-to-morse">Text → Morse</option>
+        <option value="morse-to-text">Morse → Text</option>
+      </select>
+    </label>
+    <label>Speed <input id="morseWpm" type="range" min="5" max="40" value="18"><output id="morseWpmValue">18 WPM</output></label>
+    <label>Tone <input id="morseFrequency" type="range" min="300" max="1000" step="25" value="650"><output id="morseFrequencyValue">650 Hz</output></label>
+  </div>
+  <div class="json-toolbar">
+    <button class="btn primary" id="morseConvert" type="button">Translate</button>
+    <button class="text-btn" id="morsePlay" type="button">Play sound</button>
+    <button class="text-btn" id="morseStop" type="button">Stop sound</button>
+    <button class="text-btn" id="morseExample" type="button">Example</button>
+    <button class="text-btn" id="morseClear" type="button">Clear</button>
+  </div>
+
+  <div class="json-workspace">
+    <section class="editor-panel"><div class="editor-head"><div><strong>Input</strong><span>Text or Morse code</span></div></div>
+      <textarea id="morseInput" class="code-editor" spellcheck="false" autocomplete="off" aria-label="Morse translator input"></textarea>
+    </section>
+    <section class="editor-panel"><div class="editor-head"><div><strong>Translation</strong><span id="morseStatus">Ready</span></div><div class="editor-actions"><button class="text-btn" id="morseCopy" type="button">Copy</button></div></div>
+      <textarea id="morseOutput" class="code-editor" spellcheck="false" readonly aria-label="Morse translator output"></textarea>
+    </section>
+  </div>
+  <div id="morseError" class="error" hidden role="alert"></div>
+  <div id="morseStats" class="json-stats" hidden></div>
+  <div class="trustbar"><span>International Morse mappings</span><span>Browser Web Audio</span><span>No microphone required</span></div>
+</section>
+
+<section class="section wrap prose" data-quality-content="batch3-morse">
+  <h2>Translate text to Morse code and Morse code back to text</h2>
+  <p>This translator supports the Latin alphabet A–Z, digits 0–9 and common International Morse punctuation. Text-to-Morse mode converts letters into dots and dashes, separates letters with spaces and separates words with a slash. Morse-to-text mode accepts dots and dashes, slash-separated words and common typographic dot/dash characters.</p>
+
+  <h2>How to use the Morse code translator</h2>
+  <ol>
+    <li>Select <strong>Text → Morse</strong> or <strong>Morse → Text</strong>.</li>
+    <li>Paste or type the source message.</li>
+    <li>Select <strong>Translate</strong> to generate the result.</li>
+    <li>For Morse audio, choose a playback speed and tone frequency, then select <strong>Play sound</strong>.</li>
+  </ol>
+
+  <div data-seo-example="batch3">
+    <h3>Morse code example</h3>
+    <p><strong>Text:</strong> <code>SOS HELP</code></p>
+    <p><strong>Morse:</strong></p><pre><code>... --- ... / .... . .-.. .--.</code></pre>
+    <p>The slash marks a word boundary. Individual Morse letters are separated by spaces.</p>
+  </div>
+
+  <h2>How the Morse sound timing works</h2>
+  <p>The player follows standard relative Morse timing: a dot lasts one timing unit, a dash lasts three units, the gap inside one Morse character is one unit, the gap between letters is three units, and the gap between words is seven units. Playback speed uses the common PARIS timing relationship, where one unit is approximately <code>1200 / WPM</code> milliseconds.</p>
+  <p>The tone is generated with the browser Web Audio API rather than a prerecorded sound file. You can adjust the tone frequency from 300 Hz to 1000 Hz and playback speed from 5 to 40 WPM. Audio playback is limited to 120 seconds per run so a large pasted message does not schedule an excessive amount of browser audio.</p>
+
+  <h2>Supported Morse characters</h2>
+  <p>The translator includes A–Z, 0–9 and common punctuation such as period, comma, question mark, apostrophe, exclamation mark, slash, parentheses, ampersand, colon, semicolon, equals, plus, hyphen, underscore, quotation mark, dollar sign and @. Unsupported text characters are reported instead of silently being deleted.</p>
+
+  <h2>Morse input formats</h2>
+  <p>For Morse-to-text conversion, use spaces between encoded letters. Separate words with <code>/</code> or a long multi-space gap. The parser also normalizes common typographic dot and dash characters such as <code>·</code> and an en/em dash to ordinary Morse <code>.</code> and <code>-</code> before decoding.</p>
+
+  <h2>This page generates Morse sound; it does not decode microphone or audio files</h2>
+  <p>The audio feature plays the Morse sequence that is already present as text or generated from text. It does not listen to a microphone, upload an MP3/WAV file, identify tones from recordings or claim to decode noisy Morse audio. Audio decoding is a different signal-processing task and is intentionally outside this page's capabilities.</p>
+
+  <h2>Text to Morse vs Morse to English</h2>
+  <p>International Morse encodes characters rather than translating language meaning. In <strong>Morse → Text</strong> mode, the page converts Morse character sequences into Latin letters, numbers and supported punctuation. It does not translate the decoded words between human languages.</p>
+
+  <h2>Privacy</h2>
+  <p>Translation and audio scheduling run in browser JavaScript. The message is not submitted to a Smart Web Utility translation or audio API. Sound is generated locally through Web Audio after you press the playback button.</p>
+
+  <h2>Related developer and encoding tools</h2>
+  <div class="related-tools">
+    <a href="/base64-encoder-decoder/">Base64 Encoder / Decoder<span>Encode or decode byte-to-text Base64 data.</span></a>
+    <a href="/url-encoder-decoder/">URL Encoder / Decoder<span>Encode or decode URL components and percent escapes.</span></a>
+    <a href="/html-entity-encoder-decoder/">HTML Entity Encoder / Decoder<span>Escape and decode HTML special characters.</span></a>
+    <a href="/random-string-generator/">Random String Generator<span>Create cryptographically random strings locally.</span></a>
+  </div>
+</section>
+</main>
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script src="/assets/morse-code.js?v=20261002-1" defer></script>
+</body>
+</html>
