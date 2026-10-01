@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="SmartWebUtility">
+  <defs>
+    <linearGradient id="blue" x1="8" y1="8" x2="55" y2="55" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#19D7FF"/>
+      <stop offset=".52" stop-color="#087FE8"/>
+      <stop offset="1" stop-color="#123B9E"/>
+    </linearGradient>
+    <linearGradient id="lime" x1="35" y1="30" x2="57" y2="49" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A8F23A"/>
+      <stop offset="1" stop-color="#36D05F"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 23a15 15 0 0 1 25-10" stroke="#149BEA" stroke-width="2.4" opacity=".72"/>
+    <path d="M18 23h25M30 8c-4 5-5.5 10-5 15M36 8c4 5 5.5 10 5 15" stroke="#18CFFF" stroke-width="1.7" opacity=".72"/>
+    <path d="M46 19l7-7" stroke="#1264C8" stroke-width="4.2"/>
+    <path d="M49 8a6 6 0 0 0 7 7" stroke="#1264C8" stroke-width="4.2"/>
+    <path d="M29 17H18c-5 0-8 3-8 7s3 7 8 7h8c5 0 8 3 8 7s-3 8-9 8H10" stroke="url(#blue)" stroke-width="8"/>
+    <path d="M23 31l7 18 8-16 7 16 11-25" stroke="url(#blue)" stroke-width="7.5"/>
+    <path d="M38 33l7 16 11-25" stroke="url(#lime)" stroke-width="6.2"/>
+  </g>
+</svg>
