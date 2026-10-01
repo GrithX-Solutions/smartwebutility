@@ -144,6 +144,24 @@ const cases = [
     assert.equal(download.suggestedFilename(), 'excel-to-json.json');
     await assertBatchTwoSeo(p);
   }],
+  ['morse-code-translator', async p => {
+    await p.locator('#morseDirection').selectOption('text-to-morse');
+    await p.locator('#morseInput').fill('SOS HELP');
+    await p.locator('#morseConvert').click();
+    assert.equal((await p.locator('#morseOutput').inputValue()).trim(), '... --- ... / .... . .-.. .--.');
+    await p.locator('#morseDirection').selectOption('morse-to-text');
+    await p.locator('#morseInput').fill('... --- ... / .... . .-.. .--.');
+    await p.locator('#morseConvert').click();
+    assert.equal((await p.locator('#morseOutput').inputValue()).trim(), 'SOS HELP');
+    await p.locator('#morseDirection').selectOption('text-to-morse');
+    await p.locator('#morseInput').fill('E');
+    await p.locator('#morseConvert').click();
+    await p.locator('#morsePlay').click();
+    await p.waitForFunction(() => document.getElementById('morseStatus').textContent.includes('Playing Morse audio'), null, {timeout:5000});
+    await p.locator('#morseStop').click();
+    assert.ok((await p.locator('#morseStatus').innerText()).includes('stopped'));
+    await assertBatchTwoSeo(p);
+  }],
   ['base64-encoder-decoder', async p => {
     await p.locator('#base64Input').fill('hello');
     await p.locator('#runBase64').click();
@@ -287,7 +305,7 @@ const cases = [
   // including guides and pages without explicit functional test cases.
   const locs = [...readFileSync('sitemap.xml', 'utf8').matchAll(/<loc>([^<]+)</g)]
     .map(match => new URL(match[1]).pathname);
-  assert.ok(locs.length >= 67, 'sitemap unexpectedly shrank');
+  assert.ok(locs.length >= 68, 'sitemap unexpectedly shrank');
   for (const path of locs) {
     const page = await browser.newPage();
     const exceptions = [];
