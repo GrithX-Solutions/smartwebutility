@@ -30,6 +30,7 @@ if($mode==='meta'){
     'title'=>first_text($xpath,'//title'),
     'description'=>meta_content($xpath,'name','description'),
     'robots'=>meta_content($xpath,'name','robots'),
+    'x_robots_tag'=>$r['headers']['x-robots-tag'] ?? null,
     'canonical'=>$canonical?trim((string)$canonical->nodeValue):null,
     'h1_count'=>$xpath->query('//h1')->length
   ]]);
