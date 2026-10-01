@@ -75,9 +75,16 @@ Held or rejected for this batch despite apparently low keyword-difficulty scores
 
 Further data-format candidates must pass the same live research gate before code is added.
 
-## Batch 3 — Developer encoding & debugging expansion
+## Batch 3 — Developer encoding & debugging expansion — RESEARCH ACTIVE
 
-Candidate tools:
+Validated and implemented:
+- Morse Code Translator with Sound — ~4,400 US/mo, KD 6 and ~260 Australia/mo, KD 5; weak DA 10–14 competitors observed in prominent SERP positions. Real two-way translation and Web Audio playback implemented.
+
+Held/rejected based on live SERP evidence:
+- Hex / ASCII — hold; low KD but a weaker top-10 gap than Morse.
+- Decimal / Binary — reject for current batch; authority-heavy and AI-overview SERP despite low provider KD.
+
+Further candidates:
 - URL Query String Parser
 - JWT Expiry / Claims Inspector
 - Base64 File Encoder
