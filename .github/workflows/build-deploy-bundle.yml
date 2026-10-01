@@ -38,6 +38,7 @@ jobs:
           node --check assets/data-converters.js
           node --check assets/file-converters.js
           node --check assets/morse-code.js
+          node --check assets/hex-ascii.js
           node --check deploy/lighthouse/worker.mjs
           node --check deploy/lighthouse/proxy.mjs
 
