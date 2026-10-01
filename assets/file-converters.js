@@ -501,4 +501,111 @@
     });
   }
 
+
+  if (mode === 'csv-json') {
+    const input=$('csvJsonInput');
+    const output=$('csvJsonOutput');
+    const status=$('csvJsonStatus');
+    const error=$('csvJsonError');
+    const stats=$('csvJsonStats');
+    const fileInput=$('csvJsonFile');
+    const delimiterSelect=$('csvJsonDelimiter');
+    const headersToggle=$('csvJsonHeaders');
+    const inferToggle=$('csvJsonInfer');
+    let lastOutput='';
+
+    const delimiterFromValue = value => ({
+      comma:',', semicolon:';', tab:'\t', pipe:'|'
+    })[value] || value;
+
+    function inferValue(value) {
+      const text=String(value);
+      if(!inferToggle.checked) return text;
+      const trimmed=text.trim();
+      if(trimmed==='') return '';
+      if(/^(true|false)$/i.test(trimmed)) return trimmed.toLowerCase()==='true';
+      if(/^null$/i.test(trimmed)) return null;
+      if(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(trimmed) && !/^-?0\d+/.test(trimmed)) return Number(trimmed);
+      return text;
+    }
+
+    function uniqueHeaders(row) {
+      const used=new Map();
+      return row.map((value,index)=>{
+        const base=(String(value).trim() || 'column_'+(index+1));
+        const count=(used.get(base)||0)+1;
+        used.set(base,count);
+        return count===1 ? base : base+'_'+count;
+      });
+    }
+
+    function convert() {
+      clearError(error);
+      const raw=input.value;
+      if(!raw.trim()){output.value='';stats.hidden=true;setText(status,'Add CSV');lastOutput='';return;}
+      try{
+        const delimiter=delimiterSelect.value==='auto' ? autoDetectDelimiter(raw) : delimiterFromValue(delimiterSelect.value);
+        const rows=normalizeRows(parseDelimited(raw,delimiter),false);
+        if(!rows.length) throw new Error('No CSV rows were found.');
+        const widths=rows.map(row=>row.length);
+        const minCols=Math.min(...widths), maxCols=Math.max(...widths);
+        let result, dataRows;
+        if(headersToggle.checked){
+          const headers=uniqueHeaders(rows[0]);
+          dataRows=rows.slice(1);
+          result=dataRows.map(row=>{
+            const obj={};
+            headers.forEach((header,index)=>{obj[header]=inferValue(row[index]??'');});
+            return obj;
+          });
+        }else{
+          dataRows=rows;
+          result=rows.map(row=>row.map(inferValue));
+        }
+        lastOutput=JSON.stringify(result,null,2);
+        output.value=lastOutput;
+        stats.hidden=false;
+        stats.innerHTML='<span><b>'+dataRows.length.toLocaleString()+'</b> data rows</span><span><b>'+maxCols.toLocaleString()+'</b> max columns</span><span>source: <b>'+delimiterLabel(delimiter)+'</b></span>';
+        if(minCols!==maxCols){
+          showError(error,'Rows contain different column counts ('+minCols+'–'+maxCols+'). Missing fields are kept as empty values; review the JSON before use.');
+          setText(status,'Converted with uneven rows');
+        }else{
+          setText(status,'Converted to formatted JSON');
+        }
+      }catch(e){
+        lastOutput='';output.value='';stats.hidden=true;
+        showError(error,e&&e.message?e.message:String(e));setText(status,'Fix CSV');
+      }
+    }
+
+    $('csvJsonConvert')?.addEventListener('click',convert);
+    $('csvJsonExample')?.addEventListener('click',()=>{
+      delimiterSelect.value='comma';
+      headersToggle.checked=true;
+      inferToggle.checked=true;
+      input.value='id,name,active,city\n101,Ada,true,London\n102,Linus,false,Helsinki';
+      convert();
+    });
+    $('csvJsonClear')?.addEventListener('click',()=>{
+      input.value='';output.value='';lastOutput='';clearError(error);stats.hidden=true;setText(status,'Ready');input.focus();
+    });
+    $('csvJsonCopy')?.addEventListener('click',async()=>{
+      if(!lastOutput) return;
+      try{await navigator.clipboard.writeText(lastOutput);}catch{output.select();document.execCommand('copy');}
+      setText(status,'Copied');
+    });
+    $('csvJsonDownload')?.addEventListener('click',()=>{
+      if(!lastOutput) return;
+      const url=URL.createObjectURL(new Blob([lastOutput],{type:'application/json;charset=utf-8'}));
+      const a=document.createElement('a');a.href=url;a.download='converted.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+      setText(status,'Downloaded JSON');
+    });
+    fileInput?.addEventListener('change',async()=>{
+      const file=fileInput.files&&fileInput.files[0];if(!file)return;
+      if(file.size>MAX_FILE_BYTES){showError(error,'Please choose a CSV or text file smaller than 5 MB.');fileInput.value='';return;}
+      input.value=await file.text();convert();
+    });
+    input?.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();convert();}});
+  }
+
 })();
