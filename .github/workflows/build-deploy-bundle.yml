@@ -36,6 +36,7 @@ jobs:
           node --check assets/cache-control-checker.js
           node --check assets/favicon-generator.js
           node --check assets/data-converters.js
+          node --check assets/file-converters.js
           node --check deploy/lighthouse/worker.mjs
           node --check deploy/lighthouse/proxy.mjs
 
