@@ -107,6 +107,9 @@ Further candidates:
 
 ## Batch 4 — Date, time & DevOps utilities
 
+Current research note:
+- calculate weeks between dates — rejected for the current release despite ~2,400 US/mo and KD 5 because the checked SERP is dominated by Timeanddate, OmniCalculator/InchCalculator/education/video results and includes an AI Overview.
+
 Candidate tools:
 - Date Difference Calculator
 - Add/Subtract Days
