@@ -94,7 +94,7 @@
     const path = location.pathname.replace(/\/+$/, '') || '/';
     const groups = {
       '/developer-tools': [
-        '/developer-tools','/json-formatter','/xml-to-json','/json-to-csv','/yaml-to-json','/json-to-yaml','/txt-to-csv','/xml-to-excel','/json-to-excel','/csv-to-json','/excel-to-json','/morse-code-translator','/base64-encoder-decoder','/unix-timestamp-converter',
+        '/developer-tools','/json-formatter','/xml-to-json','/json-to-csv','/yaml-to-json','/json-to-yaml','/txt-to-csv','/xml-to-excel','/json-to-excel','/csv-to-json','/excel-to-json','/morse-code-translator','/hex-to-ascii','/base64-encoder-decoder','/unix-timestamp-converter',
         '/uuid-generator','/hash-generator','/jwt-decoder','/regex-tester','/url-encoder-decoder',
         '/html-entity-encoder-decoder','/cron-expression-helper','/password-generator','/random-string-generator'
       ],
