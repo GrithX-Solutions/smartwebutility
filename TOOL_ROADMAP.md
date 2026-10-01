@@ -6,6 +6,10 @@ Updated: 2026-10-02
 
 Grow SmartWebUtility.com into a focused, AdSense-ready utility platform by shipping useful tools in topical batches. New SEO-led tools must pass a live keyword/SERP gate before implementation. Current priority is US English, then UK/Canada/Australia.
 
+## Repository-first release policy
+
+All planned tool batches, supporting content and SEO QA are developed and reviewed in GitHub first. Production deployment is intentionally held until the planned repository work is complete and a final one-go release is explicitly approved. Pull-request CI may build test artifacts, but those artifacts must not be treated as production activation.
+
 ## Selection gate for SEO-led tools
 
 Prefer:
@@ -36,7 +40,7 @@ SEO Audit hub, Meta Tag Generator, Robots.txt Generator, Robots.txt Tester, Sche
 ### Text
 Word Counter, Character Counter, Case Converter, Lorem Ipsum Generator.
 
-## Batch 1 — Structured data converters — IN PROGRESS
+## Batch 1 — Structured data converters — SEO HARDENING IN REPO (NOT DEPLOYED)
 
 Primary SEO targets already validated in live US data:
 - XML to JSON — ~2,400 US/mo, KD 5.
@@ -51,6 +55,7 @@ Implementation:
 - /json-to-yaml/
 - Shared browser-side conversion engine.
 - Homepage + Developer hub + sitemap + nav + smoke-test integration.
+- Batch 1 SEO hardening: explicit crawl directives, breadcrumb structured data, task-specific conversion steps/examples, richer use-case copy and reinforced converter-cluster internal links.
 
 ## Batch 2 — Data-format cluster expansion
 
@@ -226,5 +231,5 @@ After the first batches index:
 11. Navigation active-state mapping updated.
 12. Browser smoke tests updated.
 13. No JavaScript initialization errors across sitemap sweep.
-14. Deploy, then submit priority URLs through existing indexing workflow.
+14. After the final repository-wide release gate is approved, deploy once; then submit priority URLs through the indexing workflow.
 15. Measure impressions, clicks and indexing before the next major expansion.
