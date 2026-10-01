@@ -57,27 +57,20 @@ Implementation:
 - Homepage + Developer hub + sitemap + nav + smoke-test integration.
 - Batch 1 SEO hardening: explicit crawl directives, breadcrumb structured data, task-specific conversion steps/examples, richer use-case copy and reinforced converter-cluster internal links.
 
-## Batch 2 — Data-format cluster expansion
+## Batch 2 — File/data conversion cluster — IN REPO, NOT DEPLOYED
 
-Research gate first. Candidate tools:
-- CSV to JSON
-- JSON to XML
-- XML to CSV
-- CSV to XML
-- HTML to JSON
-- JSON to HTML
-- JSON Viewer
-- JSON Validator
-- JSON Minifier
-- XML Formatter / Beautifier
-- XML Validator
-- YAML Formatter / Validator
-- CSV Viewer
-- CSV Cleaner
-- CSV Delimiter Converter
-- JSON Diff / Compare
+Validated and implemented:
+- TXT to CSV / CSV to TXT — one bidirectional page; primary US query ~1,900/mo, KD 6, with additional same-intent low-KD variants. Tier-1 secondary markets also remain low difficulty.
+- XML to Excel / XLSX — primary US query ~1,000/mo, KD 9, with DA 9/11/14 specialist pages observed in prominent SERP positions.
 
-Ship only the terms that pass the keyword + SERP gate, while using the remaining tools only when they materially improve topical completeness.
+Evidence and rejected/held candidates are recorded in KEYWORD_RESEARCH_BATCH2.md.
+
+Held or rejected for this batch despite apparently low keyword-difficulty scores:
+- VCF to CSV — hold; valid US opportunity but weaker Tier-1 breadth.
+- XLSX to CSV — hold; top 10 remains authority-heavy.
+- CSV to Excel — reject for this batch; high volume but authority-heavy SERP.
+
+Further data-format candidates must pass the same live research gate before code is added.
 
 ## Batch 3 — Developer encoding & debugging expansion
 
