@@ -389,4 +389,116 @@
       setText(status,'Downloaded .xlsx');
     });
   }
+
+  if (mode === 'json-excel') {
+    const input=$('jsonExcelInput');
+    const output=$('jsonExcelOutput');
+    const status=$('jsonExcelStatus');
+    const error=$('jsonExcelError');
+    const stats=$('jsonExcelStats');
+    const fileInput=$('jsonExcelFile');
+    const download=$('jsonExcelDownload');
+    let currentRows=null, currentHeaders=null;
+
+    function flattenJson(value, prefix='', out={}) {
+      if (Array.isArray(value)) {
+        out[prefix || 'value']=JSON.stringify(value);
+        return out;
+      }
+      if (value && typeof value === 'object') {
+        const entries=Object.entries(value);
+        if (!entries.length && prefix) out[prefix]='{}';
+        for (const [key,child] of entries) {
+          const path=prefix ? prefix+'.'+key : key;
+          if (Array.isArray(child)) out[path]=JSON.stringify(child);
+          else if (child && typeof child === 'object') flattenJson(child,path,out);
+          else out[path]=child;
+        }
+        return out;
+      }
+      out[prefix || 'value']=value;
+      return out;
+    }
+
+    function normalizeJsonRows(parsed) {
+      const source=Array.isArray(parsed) ? parsed : [parsed];
+      if (!source.length) return [];
+      return source.map(item => {
+        if (item && typeof item === 'object' && !Array.isArray(item)) return flattenJson(item);
+        return {value:Array.isArray(item) ? JSON.stringify(item) : item};
+      });
+    }
+
+    function convert() {
+      clearError(error);
+      download.disabled=true;
+      const raw=input.value.trim();
+      if(!raw){output.value='';stats.hidden=true;setText(status,'Add JSON');return;}
+      try{
+        const parsed=JSON.parse(raw);
+        currentRows=normalizeJsonRows(parsed);
+        if(!currentRows.length) throw new Error('The JSON array is empty.');
+        const seen=new Set();
+        currentHeaders=[];
+        currentRows.forEach(row=>Object.keys(row).forEach(key=>{
+          if(!seen.has(key)){seen.add(key);currentHeaders.push(key);}
+        }));
+        if(!currentHeaders.length) currentHeaders=['value'];
+        const preview=[currentHeaders.join('\t')];
+        currentRows.slice(0,50).forEach(row=>{
+          preview.push(currentHeaders.map(h=>{
+            const value=row[h];
+            return value == null ? '' : String(value).replace(/[\t\r\n]+/g,' ');
+          }).join('\t'));
+        });
+        output.value=preview.join('\n');
+        stats.hidden=false;
+        stats.innerHTML='<span><b>'+currentRows.length.toLocaleString()+'</b> rows</span><span><b>'+currentHeaders.length.toLocaleString()+'</b> columns</span><span><b>'+Math.min(currentRows.length,50).toLocaleString()+'</b> previewed</span>';
+        setText(status,currentRows.length>50?'Previewing first 50 rows':'Ready to download .xlsx');
+        download.disabled=false;
+      }catch(e){
+        currentRows=null;currentHeaders=null;output.value='';stats.hidden=true;
+        showError(error,e&&e.message?e.message:String(e));
+        setText(status,'Fix JSON');
+      }
+    }
+
+    $('jsonExcelConvert')?.addEventListener('click',convert);
+    $('jsonExcelExample')?.addEventListener('click',()=>{
+      input.value=JSON.stringify([
+        {id:101,name:'Ada',active:true,address:{city:'London',country:'UK'},tags:['api','json']},
+        {id:102,name:'Linus',active:false,address:{city:'Helsinki',country:'Finland'},tags:['linux','tools']}
+      ],null,2);
+      convert();
+    });
+    $('jsonExcelClear')?.addEventListener('click',()=>{
+      input.value='';output.value='';currentRows=null;currentHeaders=null;clearError(error);stats.hidden=true;download.disabled=true;setText(status,'Ready');input.focus();
+    });
+    fileInput?.addEventListener('change',async()=>{
+      const file=fileInput.files&&fileInput.files[0];if(!file)return;
+      if(file.size>MAX_FILE_BYTES){showError(error,'Please choose a JSON file smaller than 5 MB.');fileInput.value='';return;}
+      input.value=await file.text();convert();
+    });
+    input?.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();convert();}});
+    download?.addEventListener('click',()=>{
+      clearError(error);
+      if(!currentRows||!currentHeaders) return;
+      if(!window.XLSX){
+        showError(error,'Spreadsheet export library did not load. Check your network connection and reload the page.');
+        setText(status,'XLSX library unavailable');
+        return;
+      }
+      const ws=window.XLSX.utils.json_to_sheet(currentRows,{header:currentHeaders});
+      ws['!cols']=currentHeaders.map(header=>{
+        let max=String(header).length;
+        currentRows.slice(0,200).forEach(row=>{max=Math.max(max,String(row[header]??'').length);});
+        return {wch:Math.min(Math.max(max+2,10),40)};
+      });
+      const wb=window.XLSX.utils.book_new();
+      window.XLSX.utils.book_append_sheet(wb,ws,'JSON Data');
+      window.XLSX.writeFile(wb,'json-to-excel.xlsx',{compression:true});
+      setText(status,'Downloaded .xlsx');
+    });
+  }
+
 })();
