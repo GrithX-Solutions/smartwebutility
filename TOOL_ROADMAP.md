@@ -62,6 +62,7 @@ Implementation:
 Validated and implemented:
 - TXT to CSV / CSV to TXT — one bidirectional page; primary US query ~1,900/mo, KD 6, with additional same-intent low-KD variants. Tier-1 secondary markets also remain low difficulty.
 - XML to Excel / XLSX — primary US query ~1,000/mo, KD 9, with DA 9/11/14 specialist pages observed in prominent SERP positions.
+- JSON to Excel / XLSX — primary US query ~1,000/mo, KD 7; UK KD 8, Canada/Australia KD 6, with DA 10 and DA 6 specialist competitors observed.
 
 Evidence and rejected/held candidates are recorded in KEYWORD_RESEARCH_BATCH2.md.
 
