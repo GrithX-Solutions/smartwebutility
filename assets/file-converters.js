@@ -608,4 +608,109 @@
     input?.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();convert();}});
   }
 
+
+  if (mode === 'excel-json') {
+    const fileInput=$('excelJsonFile');
+    const sheetSelect=$('excelJsonSheet');
+    const headersToggle=$('excelJsonHeaders');
+    const output=$('excelJsonOutput');
+    const status=$('excelJsonStatus');
+    const error=$('excelJsonError');
+    const stats=$('excelJsonStats');
+    const convertBtn=$('excelJsonConvert');
+    let workbook=null, lastOutput='';
+
+    function normalizeCell(value) {
+      if (value instanceof Date) return value.toISOString();
+      return value;
+    }
+
+    function uniqueHeaders(row) {
+      const used=new Map();
+      return row.map((value,index)=>{
+        const base=(String(value ?? '').trim() || 'column_'+(index+1));
+        const count=(used.get(base)||0)+1;
+        used.set(base,count);
+        return count===1 ? base : base+'_'+count;
+      });
+    }
+
+    function convertSelectedSheet() {
+      clearError(error);
+      if(!workbook){showError(error,'Choose an Excel workbook first.');setText(status,'Open a workbook');return;}
+      const sheetName=sheetSelect.value;
+      const ws=workbook.Sheets[sheetName];
+      if(!ws){showError(error,'The selected sheet is not available.');return;}
+      try{
+        const matrix=window.XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:true,blankrows:false});
+        if(!matrix.length) throw new Error('The selected worksheet has no data rows.');
+        let result, dataRows, columns;
+        if(headersToggle.checked){
+          const headers=uniqueHeaders(matrix[0]);
+          dataRows=matrix.slice(1);
+          result=dataRows.map(row=>{
+            const obj={};
+            headers.forEach((header,index)=>{obj[header]=normalizeCell(row[index]??'');});
+            return obj;
+          });
+          columns=headers.length;
+        }else{
+          dataRows=matrix;
+          result=matrix.map(row=>row.map(normalizeCell));
+          columns=Math.max(...matrix.map(row=>row.length));
+        }
+        lastOutput=JSON.stringify(result,null,2);
+        output.value=lastOutput;
+        stats.hidden=false;
+        stats.innerHTML='<span><b>'+dataRows.length.toLocaleString()+'</b> rows</span><span><b>'+columns.toLocaleString()+'</b> columns</span><span>sheet: <b>'+sheetName.replace(/[<>&]/g,'')+'</b></span>';
+        setText(status,'Converted to formatted JSON');
+      }catch(e){
+        lastOutput='';output.value='';stats.hidden=true;
+        showError(error,e&&e.message?e.message:String(e));setText(status,'Fix workbook');
+      }
+    }
+
+    fileInput?.addEventListener('change',async()=>{
+      clearError(error);
+      const file=fileInput.files&&fileInput.files[0];if(!file)return;
+      if(file.size>MAX_FILE_BYTES){showError(error,'Please choose an XLS or XLSX file smaller than 5 MB.');fileInput.value='';return;}
+      if(!window.XLSX){showError(error,'Spreadsheet parser did not load. Check your network connection and reload the page.');return;}
+      try{
+        setText(status,'Reading workbook…');
+        const data=await file.arrayBuffer();
+        workbook=window.XLSX.read(data,{type:'array',cellDates:true});
+        if(!workbook.SheetNames.length) throw new Error('The workbook does not contain any worksheets.');
+        sheetSelect.innerHTML='';
+        workbook.SheetNames.forEach(name=>{
+          const option=document.createElement('option');
+          option.value=name;option.textContent=name;sheetSelect.appendChild(option);
+        });
+        sheetSelect.disabled=false;
+        convertBtn.disabled=false;
+        setText(status,'Workbook loaded');
+        convertSelectedSheet();
+      }catch(e){
+        workbook=null;lastOutput='';output.value='';sheetSelect.innerHTML='';sheetSelect.disabled=true;convertBtn.disabled=true;stats.hidden=true;
+        showError(error,e&&e.message?e.message:String(e));setText(status,'Could not read workbook');
+      }
+    });
+    sheetSelect?.addEventListener('change',convertSelectedSheet);
+    headersToggle?.addEventListener('change',()=>{if(workbook)convertSelectedSheet();});
+    convertBtn?.addEventListener('click',convertSelectedSheet);
+    $('excelJsonCopy')?.addEventListener('click',async()=>{
+      if(!lastOutput)return;
+      try{await navigator.clipboard.writeText(lastOutput);}catch{output.select();document.execCommand('copy');}
+      setText(status,'Copied');
+    });
+    $('excelJsonDownload')?.addEventListener('click',()=>{
+      if(!lastOutput)return;
+      const url=URL.createObjectURL(new Blob([lastOutput],{type:'application/json;charset=utf-8'}));
+      const a=document.createElement('a');a.href=url;a.download='excel-to-json.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+      setText(status,'Downloaded JSON');
+    });
+    $('excelJsonClear')?.addEventListener('click',()=>{
+      workbook=null;lastOutput='';fileInput.value='';sheetSelect.innerHTML='';sheetSelect.disabled=true;convertBtn.disabled=true;output.value='';stats.hidden=true;clearError(error);setText(status,'Ready');
+    });
+  }
+
 })();
