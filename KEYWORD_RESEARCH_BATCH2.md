@@ -176,6 +176,46 @@ Implementation requirement:
 - Copy and download valid formatted JSON.
 - Browser-side file processing with a documented 5 MB limit.
 
+## PASS — Excel / XLS to JSON
+
+Primary query: **convert xls to json**
+
+Provider estimates:
+- Global search volume: ~9,900/month.
+- US: ~1,000/month, KD 9, CPC ~$4.00.
+- Canada: ~110/month, KD 6.
+- Australia: ~90/month, KD 6.
+- UK: ~210/month, KD 30.
+
+This is treated as a US-led opportunity with low-difficulty support in Canada/Australia. UK was explicitly observed at higher difficulty.
+
+SERP weakness observed for convert xls to json:
+- dataformatterpro.com — DA 6 at #7.
+- tableconvert.com — DA 31 at #2.
+- localizely.com — DA 31 at #10.
+- Stack Overflow and Microsoft content are also prominent, creating mixed tool/how-to intent rather than a pure converter-brand SERP.
+
+Semantic/search-intent coverage used on the page:
+- Excel to JSON converter.
+- XLS to JSON.
+- XLSX to JSON.
+- Excel sheet to JSON array.
+- Excel workbook to JSON.
+- worksheet selection.
+- first row as JSON keys.
+- Excel to JSON file download.
+- Excel vs CSV source handling.
+
+Implementation requirement:
+- Parse actual binary XLS/XLSX workbooks; do not treat them as text.
+- Let users select a worksheet.
+- Header mode creates JSON objects; no-header mode creates arrays.
+- Duplicate/blank headers must not overwrite columns.
+- Preserve workbook number/boolean values and serialize recognized dates safely.
+- Explain that formulas are not recalculated by the converter.
+- Browser-side file parsing with a documented 5 MB limit.
+- Use the pinned SheetJS CE 0.20.3 dependency already audited for XLSX features.
+
 ## HOLD — VCF to CSV
 
 Evidence:
