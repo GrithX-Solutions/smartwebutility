@@ -41,6 +41,21 @@ class P(HTMLParser):
 def words(s): return re.findall(r"[A-Za-z0-9][A-Za-z0-9'’.-]*",s)
 
 def main():
+    global_issues=[]
+    ads_path=ROOT/"ads.txt"
+    home_path=ROOT/"index.html"
+    ads_text=ads_path.read_text(encoding="utf-8") if ads_path.exists() else ""
+    home_text=home_path.read_text(encoding="utf-8") if home_path.exists() else ""
+    ads_match=re.search(r"^google\.com,\s*(pub-\d+),\s*DIRECT,\s*f08c47fec0942fa0\s*$",ads_text,re.M)
+    verify_match=re.search(r"pagead2\.googlesyndication\.com/pagead/js/adsbygoogle\.js\?client=ca-(pub-\d+)",home_text)
+    if not ads_match:
+        global_issues.append("ads.txt missing valid Google DIRECT seller declaration")
+    if not verify_match:
+        global_issues.append("homepage missing AdSense verification script")
+    if ads_match and verify_match and ads_match.group(1)!=verify_match.group(1):
+        global_issues.append("ads.txt publisher ID does not match homepage verification script")
+    if "<ins class=\"adsbygoogle\"" in home_text or "data-ad-slot=" in home_text:
+        global_issues.append("homepage contains ad units while repository launch state is verification-only")
     rows=[]
     for path in sorted(ROOT.glob("**/index.html")):
         if ".git" in path.parts: continue
@@ -75,8 +90,10 @@ def main():
     counts={k:sum(r["bucket"]==k for r in rows) for k in ("READY-CANDIDATE","REVIEW","HIGH-PRIORITY")}
     print("AdSense readiness heuristic (not an approval prediction)")
     print(json.dumps(counts,sort_keys=True))
+    for issue in global_issues:
+        print("GLOBAL-ISSUE:",issue)
     for r in sorted(rows,key=lambda x:({"HIGH-PRIORITY":0,"REVIEW":1,"READY-CANDIDATE":2}[x["bucket"]],x["words"])):
         print(f'{r["bucket"]:15} {r["words"]:4} words  trust={r["trust_links"]} internal={r["internal_links"]:2}  {r["url"]}  {",".join(r["issues"]) or "-"}')
-    return 1 if counts["HIGH-PRIORITY"] else 0
+    return 1 if counts["HIGH-PRIORITY"] or global_issues else 0
 
 if __name__=="__main__": raise SystemExit(main())
