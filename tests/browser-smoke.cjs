@@ -171,7 +171,13 @@ const cases = [
     await p.locator('[data-mode="text"]').click();
     await p.locator('#faviconText').fill('SW');
     await p.locator('#generateFavicons').click();
+    await p.waitForFunction(() => !document.getElementById('downloadIco').disabled);
     assert.ok((await p.locator('#faviconStatus').innerText()).trim().length);
+    assert.ok((await p.locator('main').innerText()).includes('Convert PNG to ICO'));
+    const downloadPromise = p.waitForEvent('download');
+    await p.locator('#downloadIco').click();
+    const download = await downloadPromise;
+    assert.equal(download.suggestedFilename(), 'favicon.ico');
   }],
   ['case-converter', async p => {
     await p.locator('#caseInput').fill('hello world');
