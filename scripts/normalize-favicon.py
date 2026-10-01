@@ -3,9 +3,9 @@ from pathlib import Path
 import re
 
 ROOT=Path(__file__).resolve().parents[1]
-VERSION="v4"
-ICON='/favicon-sw-v4-64.png'
-ICON_TAG=f'<link rel="icon" type="image/png" sizes="64x64" href="{ICON}"><link rel="shortcut icon" type="image/png" href="{ICON}">'
+VERSION="v5"
+ICON='/favicon-sw-v5.svg?v=20261001e'
+ICON_TAG=f'<link rel="icon" href="{ICON}" type="image/svg+xml" sizes="any">'
 
 files=[p for p in ROOT.glob("**/index.html") if ".git" not in p.parts]
 not_found=ROOT/"404.html"
