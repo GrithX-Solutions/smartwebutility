@@ -6,7 +6,7 @@ Smart Web Utility prefers native browser APIs. When a specialized format require
 
 ## SheetJS Community Edition
 
-Used by: /xml-to-excel/ for writing a real XLSX workbook in the browser.
+Used by: /xml-to-excel/ and /json-to-excel/ for writing real XLSX workbooks in the browser.
 
 - Project: SheetJS Community Edition
 - Pinned browser version: 0.20.3
