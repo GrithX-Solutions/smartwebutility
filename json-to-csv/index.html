@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>JSON to CSV Converter — Convert JSON to CSV Online</title>
+  <meta name="description" content="Convert JSON arrays or objects to CSV online in your browser. Handles quoted commas, nested values and downloadable CSV output.">
+  <link rel="canonical" href="https://smartwebutility.com/json-to-csv/">
+  <meta property="og:title" content="JSON to CSV Converter — Convert JSON to CSV Online">
+  <meta property="og:description" content="Convert JSON arrays or objects to CSV online in your browser. Handles quoted commas, nested values and downloadable CSV output.">
+  <meta property="og:url" content="https://smartwebutility.com/json-to-csv/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#07101b">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"JSON to CSV Converter","url":"https://smartwebutility.com/json-to-csv/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert JSON arrays or objects to CSV online in your browser. Handles quoted commas, nested values and downloadable CSV output.","featureList":["Objects and arrays","Union of keys","CSV-safe quoting","Nested values retained"]}</script>
+  
+</head>
+<body data-converter-mode="json-to-csv">
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+<main>
+<section class="tool-hero wrap json-tool-hero">
+  <div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>JSON to CSV Converter</span></div>
+  <span class="kicker">Developer tool · runs locally</span>
+  <h1>JSON to CSV Converter</h1>
+  <p class="lead compact">Convert a JSON object or an array of objects into CSV without uploading the payload. The tool builds a union of object keys for the header row and safely quotes CSV values when needed.</p>
+  <div class="json-toolbar" aria-label="Converter actions">
+    <button class="btn primary" id="convertBtn" type="button">Convert</button>
+    <label class="file-btn">Open .json<input id="converterFile" type="file" accept=".json,application/json" hidden></label>
+    <button class="text-btn" id="exampleBtn" type="button">Example</button>
+    <button class="text-btn" id="clearBtn" type="button">Clear</button>
+  </div>
+  <div class="json-workspace">
+    <section class="editor-panel">
+      <div class="editor-head"><div><strong>JSON input</strong><span>Paste or open a local file</span></div></div>
+      <textarea id="converterInput" class="code-editor" spellcheck="false" autocapitalize="none" autocomplete="off" placeholder="[{&quot;name&quot;:&quot;Ada&quot;,&quot;role&quot;:&quot;admin&quot;},{&quot;name&quot;:&quot;Linus&quot;,&quot;role&quot;:&quot;developer&quot;}]" aria-label="JSON input"></textarea>
+    </section>
+    <section class="editor-panel">
+      <div class="editor-head"><div><strong>CSV output</strong><span id="converterStatus" data-kind="neutral">Ready</span></div><div class="editor-actions"><button id="copyBtn" class="text-btn" type="button">Copy</button><button id="downloadBtn" class="text-btn" type="button">Download</button></div></div>
+      <textarea id="converterOutput" class="code-editor" spellcheck="false" readonly placeholder="Converted output will appear here" aria-label="CSV output"></textarea>
+    </section>
+  </div>
+  <div id="converterError" class="error" hidden role="alert"></div>
+  <div id="converterStats" class="json-stats" hidden aria-label="Output statistics"></div>
+  <div class="trustbar"><span>Browser-side processing</span><span>No account</span><span>Ctrl/⌘ + Enter to convert</span></div>
+</section>
+
+<section class="section wrap prose">
+  <h2>JSON to CSV conversion: what this tool does</h2>
+  <p>Convert a JSON object or an array of objects into CSV without uploading the payload. The tool builds a union of object keys for the header row and safely quotes CSV values when needed.</p>
+  <div class="info-grid"><article><h3>Objects and arrays</h3><p>A single JSON object becomes one data row, while an array of objects becomes multiple CSV rows.</p></article><article><h3>Union of keys</h3><p>If objects contain different keys, the converter creates columns for the union of those keys and leaves missing values blank.</p></article><article><h3>CSV-safe quoting</h3><p>Commas, quotes and line breaks are escaped using standard double-quote CSV conventions.</p></article><article><h3>Nested values retained</h3><p>Nested objects and arrays are serialized as JSON strings inside CSV cells rather than silently discarded.</p></article></div>
+  <h2>Important conversion limitations</h2>
+  <p>CSV is a flat table while JSON can be deeply nested. This converter keeps nested objects and arrays inside individual CSV cells as compact JSON. If you need flattened paths such as user.address.city, use a schema-aware transformation in your application.</p>
+  <h2>When this converter is useful</h2>
+  <p>Use this page when moving configuration, API payloads, exports or test data between systems that expect different structured-data formats. Validate the result against the receiving application's documented schema before using it in production.</p>
+  <h2>Privacy and local file handling</h2>
+  <p>The selected file is read with browser file APIs and limited to 5 MB in this implementation. Conversion happens on this page. The input content is not submitted to a Smart Web Utility conversion API.</p>
+  <h2>Related developer tools</h2>
+  <div class="related-tools"><a href="/json-formatter/">JSON Formatter<span>Validate JSON before conversion.</span></a><a href="/xml-to-json/">XML to JSON<span>Convert XML data into JSON first.</span></a><a href="/json-to-yaml/">JSON to YAML<span>Create a YAML representation instead of CSV.</span></a></div>
+</section>
+<section class="section alt" data-quality-content="v1"><div class="wrap prose">
+  <h2>Frequently asked questions</h2>
+  <h3>Can I convert a JSON object instead of an array?</h3><p>Yes. A single object is treated as one CSV row.</p><h3>How are nested objects handled?</h3><p>Nested values are serialized as compact JSON inside the corresponding CSV cell.</p><h3>Will commas inside values break the CSV?</h3><p>No. Values containing commas, quotes or line breaks are escaped and wrapped in double quotes.</p>
+</div></section>
+</main>
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script src="/assets/data-converters.js?v=20261002-1" defer></script>
+</body>
+</html>
