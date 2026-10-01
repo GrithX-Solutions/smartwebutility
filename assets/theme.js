@@ -100,7 +100,7 @@
       ],
       '/website-tools': [
         '/website-tools','/dns-checker','/dns-propagation-checker','/ssl-checker',
-        '/http-status-checker','/http-header-checker','/redirect-checker','/sitemap-checker',
+        '/http-status-checker','/http-header-checker','/redirect-checker','/bulk-redirect-checker','/sitemap-checker',
         '/meta-tag-checker','/open-graph-checker','/favicon-generator'
       ],
       '/seo-tools': [
