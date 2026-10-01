@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>XML to JSON Converter — Convert XML to JSON Online</title>
+  <meta name="description" content="Convert XML to JSON online in your browser. Preserve attributes, repeated elements and text values without uploading your XML.">
+  <link rel="canonical" href="https://smartwebutility.com/xml-to-json/">
+  <meta property="og:title" content="XML to JSON Converter — Convert XML to JSON Online">
+  <meta property="og:description" content="Convert XML to JSON online in your browser. Preserve attributes, repeated elements and text values without uploading your XML.">
+  <meta property="og:url" content="https://smartwebutility.com/xml-to-json/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#07101b">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"XML to JSON Converter","url":"https://smartwebutility.com/xml-to-json/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert XML to JSON online in your browser. Preserve attributes, repeated elements and text values without uploading your XML.","featureList":["Attributes are preserved","Repeated elements become arrays","Local processing","Useful developer output"]}</script>
+  
+</head>
+<body data-converter-mode="xml-to-json">
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+<main>
+<section class="tool-hero wrap json-tool-hero">
+  <div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>XML to JSON Converter</span></div>
+  <span class="kicker">Developer tool · runs locally</span>
+  <h1>XML to JSON Converter</h1>
+  <p class="lead compact">Paste XML or open a local XML file, then convert it to readable JSON. The conversion runs in browser JavaScript, so the XML you provide is not sent to Smart Web Utility.</p>
+  <div class="json-toolbar" aria-label="Converter actions">
+    <button class="btn primary" id="convertBtn" type="button">Convert</button>
+    <label class="file-btn">Open .xml<input id="converterFile" type="file" accept=".xml,application/xml,text/xml" hidden></label>
+    <button class="text-btn" id="exampleBtn" type="button">Example</button>
+    <button class="text-btn" id="clearBtn" type="button">Clear</button>
+  </div>
+  <div class="json-workspace">
+    <section class="editor-panel">
+      <div class="editor-head"><div><strong>XML input</strong><span>Paste or open a local file</span></div></div>
+      <textarea id="converterInput" class="code-editor" spellcheck="false" autocapitalize="none" autocomplete="off" placeholder="&lt;user id=&quot;42&quot;&gt;&lt;name&gt;Ada&lt;/name&gt;&lt;/user&gt;" aria-label="XML input"></textarea>
+    </section>
+    <section class="editor-panel">
+      <div class="editor-head"><div><strong>JSON output</strong><span id="converterStatus" data-kind="neutral">Ready</span></div><div class="editor-actions"><button id="copyBtn" class="text-btn" type="button">Copy</button><button id="downloadBtn" class="text-btn" type="button">Download</button></div></div>
+      <textarea id="converterOutput" class="code-editor" spellcheck="false" readonly placeholder="Converted output will appear here" aria-label="JSON output"></textarea>
+    </section>
+  </div>
+  <div id="converterError" class="error" hidden role="alert"></div>
+  <div id="converterStats" class="json-stats" hidden aria-label="Output statistics"></div>
+  <div class="trustbar"><span>Browser-side processing</span><span>No account</span><span>Ctrl/⌘ + Enter to convert</span></div>
+</section>
+
+<section class="section wrap prose">
+  <h2>XML to JSON conversion: what this tool does</h2>
+  <p>Paste XML or open a local XML file, then convert it to readable JSON. The conversion runs in browser JavaScript, so the XML you provide is not sent to Smart Web Utility.</p>
+  <div class="info-grid"><article><h3>Attributes are preserved</h3><p>XML attributes are emitted with an @ prefix, which keeps them distinct from child elements in the generated JSON.</p></article><article><h3>Repeated elements become arrays</h3><p>Sibling XML elements with the same name are represented as JSON arrays instead of overwriting one another.</p></article><article><h3>Local processing</h3><p>DOMParser and the conversion logic run in your browser. A network request is not required for your XML content.</p></article><article><h3>Useful developer output</h3><p>Copy the JSON result or download it as a .json file for debugging, migration or API work.</p></article></div>
+  <h2>Important conversion limitations</h2>
+  <p>XML and JSON use different data models. Mixed-content XML, namespaces, comments, processing instructions and schema-specific typing may need application-specific handling after conversion. Text values remain strings unless your receiving system applies its own type rules.</p>
+  <h2>When this converter is useful</h2>
+  <p>Use this page when moving configuration, API payloads, exports or test data between systems that expect different structured-data formats. Validate the result against the receiving application's documented schema before using it in production.</p>
+  <h2>Privacy and local file handling</h2>
+  <p>The selected file is read with browser file APIs and limited to 5 MB in this implementation. Conversion happens on this page. The input content is not submitted to a Smart Web Utility conversion API.</p>
+  <h2>Related developer tools</h2>
+  <div class="related-tools"><a href="/json-formatter/">JSON Formatter<span>Validate and format the generated JSON.</span></a><a href="/json-to-yaml/">JSON to YAML<span>Convert JSON output into YAML.</span></a><a href="/json-to-csv/">JSON to CSV<span>Turn tabular JSON arrays into CSV.</span></a></div>
+</section>
+<section class="section alt" data-quality-content="v1"><div class="wrap prose">
+  <h2>Frequently asked questions</h2>
+  <h3>Does this XML to JSON converter upload my file?</h3><p>No. The selected XML file is read locally by your browser and converted on the page.</p><h3>How are XML attributes represented?</h3><p>Attributes use keys prefixed with @. This avoids collisions with child element names in common XML structures.</p><h3>What happens to repeated XML tags?</h3><p>Repeated sibling elements with the same tag name are grouped into a JSON array.</p>
+</div></section>
+</main>
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script src="/assets/data-converters.js?v=20261002-1" defer></script>
+</body>
+</html>
