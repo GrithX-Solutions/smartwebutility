@@ -79,9 +79,10 @@ Further data-format candidates must pass the same live research gate before code
 
 Validated and implemented:
 - Morse Code Translator with Sound — ~4,400 US/mo, KD 6 and ~260 Australia/mo, KD 5; weak DA 10–14 competitors observed in prominent SERP positions. Real two-way translation and Web Audio playback implemented.
+- Hex to ASCII / ASCII to Hex — ~1,600 US/mo for the direct conversion query at KD 5, with low-KD support across UK/Canada/Australia and a much larger related US variant. Strict ASCII + optional UTF-8 implementation added.
 
 Held/rejected based on live SERP evidence:
-- Hex / ASCII — hold; low KD but a weaker top-10 gap than Morse.
+- Hex / ASCII — validated and implemented after deeper Tier-1 checks: hex-to-ASCII conversion is KD 5 across US/UK/Canada/Australia, with a DA 19 result near the top.
 - Decimal / Binary — reject for current batch; authority-heavy and AI-overview SERP despite low provider KD.
 
 Further candidates:
