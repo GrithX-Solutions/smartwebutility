@@ -3,6 +3,15 @@ const assert = require('node:assert/strict');
 const {readFileSync} = require('node:fs');
 
 const origin = process.env.SMOKE_ORIGIN || 'http://127.0.0.1:8765';
+
+async function assertBatchOneSeo(p) {
+  assert.match((await p.locator('meta[name="robots"]').getAttribute('content')) || '', /index,follow/);
+  const schemas = await p.locator('script[type="application/ld+json"]').evaluateAll(nodes => nodes.map(n => JSON.parse(n.textContent || '{}')['@type']));
+  assert.ok(schemas.includes('WebApplication'), 'WebApplication schema missing');
+  assert.ok(schemas.includes('BreadcrumbList'), 'BreadcrumbList schema missing');
+  assert.equal(await p.locator('[data-seo-example="batch1"]').count(), 1, 'task-specific example missing');
+  assert.ok(await p.locator('a[href="/developer-tools/"]').count() >= 1, 'developer hub link missing');
+}
 const cases = [
   ['json-formatter', async p => {
     await p.locator('#jsonInput').fill('{"name":"SmartWebUtility","n":2}');
@@ -17,6 +26,7 @@ const cases = [
     await p.locator('#convertBtn').click();
     assert.ok((await p.locator('#converterOutput').inputValue()).includes('"user"'));
     assert.equal(await p.locator('#converterError').isHidden(), true);
+    await assertBatchOneSeo(p);
   }],
   ['json-to-csv', async p => {
     await p.locator('#converterInput').fill('[{"name":"Ada","role":"admin"},{"name":"Linus","role":"developer"}]');
@@ -24,16 +34,19 @@ const cases = [
     const csv = await p.locator('#converterOutput').inputValue();
     assert.ok(csv.includes('name,role'));
     assert.ok(csv.includes('Ada,admin'));
+    await assertBatchOneSeo(p);
   }],
   ['yaml-to-json', async p => {
     await p.locator('#converterInput').fill('service:\n  name: api\n  port: 8080');
     await p.locator('#convertBtn').click();
     assert.ok((await p.locator('#converterOutput').inputValue()).includes('"service"'));
+    await assertBatchOneSeo(p);
   }],
   ['json-to-yaml', async p => {
     await p.locator('#converterInput').fill('{"service":{"name":"api","port":8080}}');
     await p.locator('#convertBtn').click();
     assert.ok((await p.locator('#converterOutput').inputValue()).includes('service:'));
+    await assertBatchOneSeo(p);
   }],
   ['base64-encoder-decoder', async p => {
     await p.locator('#base64Input').fill('hello');
