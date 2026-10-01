@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>XML to Excel Converter — Convert XML to XLSX Online</title>
+  <meta name="description" content="Convert XML to a real Excel XLSX workbook online. Detect repeated XML records, flatten nested fields and attributes, preview rows, then download XLSX.">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <link rel="canonical" href="https://smartwebutility.com/xml-to-excel/">
+  <meta property="og:title" content="XML to Excel Converter — Convert XML to XLSX Online">
+  <meta property="og:description" content="Turn structured XML records into an XLSX workbook with local parsing, row preview and an actual Excel download.">
+  <meta property="og:url" content="https://smartwebutility.com/xml-to-excel/">
+  <meta property="og:type" content="website"><meta property="og:site_name" content="Smart Web Utility">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="XML to Excel Converter — Convert XML to XLSX Online">
+  <meta name="twitter:description" content="Flatten XML records into columns and download a real .xlsx workbook in your browser.">
+  <meta name="theme-color" content="#07101b">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"XML to Excel Converter","url":"https://smartwebutility.com/xml-to-excel/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert structured XML records into a real XLSX workbook with flattened fields and a browser-side preview.","featureList":["XML to XLSX conversion","Repeated-record detection","Nested XML field flattening","Attribute columns","Actual XLSX workbook download","Browser-side XML processing"]}</script>
+  <script type="application/ld+json" data-swu-breadcrumb="true">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smartwebutility.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://smartwebutility.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"XML to Excel Converter","item":"https://smartwebutility.com/xml-to-excel/"}]}</script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" defer></script>
+</head>
+<body data-file-converter="xml-excel">
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+<main>
+<section class="tool-hero wrap json-tool-hero">
+  <div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>XML to Excel Converter</span></div>
+  <span class="kicker">XML to XLSX · browser-side parsing</span>
+  <h1>XML to Excel Converter</h1>
+  <p class="lead compact">Paste XML or open a local file, preview the detected rows and columns, then download a real <code>.xlsx</code> workbook. Repeated XML elements are treated as records and nested fields are flattened into spreadsheet columns.</p>
+
+  <div class="json-toolbar">
+    <button class="btn primary" id="xmlExcelConvert" type="button">Convert XML</button>
+    <label class="file-btn">Open .xml<input id="xmlExcelFile" type="file" accept=".xml,application/xml,text/xml" hidden></label>
+    <button class="text-btn" id="xmlExcelExample" type="button">Example</button>
+    <button class="text-btn" id="xmlExcelClear" type="button">Clear</button>
+    <label><input id="xmlInferTypes" type="checkbox"> Infer numbers &amp; booleans</label>
+  </div>
+
+  <div class="json-workspace">
+    <section class="editor-panel"><div class="editor-head"><div><strong>XML input</strong><span>Paste XML or open a local file</span></div></div>
+      <textarea id="xmlExcelInput" class="code-editor" spellcheck="false" autocapitalize="none" autocomplete="off" placeholder="&lt;catalog&gt;&lt;product sku=&quot;A-100&quot;&gt;&lt;name&gt;Keyboard&lt;/name&gt;&lt;price&gt;79.99&lt;/price&gt;&lt;/product&gt;&lt;/catalog&gt;" aria-label="XML input"></textarea>
+    </section>
+    <section class="editor-panel"><div class="editor-head"><div><strong>Tabular preview</strong><span id="xmlExcelStatus">Ready</span></div><div class="editor-actions"><button class="text-btn" id="downloadXlsxBtn" type="button" disabled>Download .xlsx</button></div></div>
+      <textarea id="xmlExcelOutput" class="code-editor" spellcheck="false" readonly placeholder="A tab-separated preview of detected rows will appear here" aria-label="XML to Excel preview"></textarea>
+    </section>
+  </div>
+  <div id="xmlExcelError" class="error" hidden role="alert"></div>
+  <div id="xmlExcelStats" class="json-stats" hidden></div>
+  <div class="trustbar"><span>XML parsed locally</span><span>Actual XLSX download</span><span>Files up to 5 MB</span></div>
+</section>
+
+<section class="section wrap prose" data-quality-content="batch2-xml-excel">
+  <h2>Convert XML to an Excel XLSX workbook</h2>
+  <p>This XML to Excel converter turns repeated XML records into worksheet rows. It finds a repeated complex element, flattens child values into columns, includes XML attributes with an <code>@</code> prefix, shows a tabular preview, and then generates an actual <code>.xlsx</code> workbook for download.</p>
+  <p>The XLSX export uses the browser build of SheetJS Community Edition. Your XML content is parsed on the page and is not posted to a Smart Web Utility conversion API. The spreadsheet library itself is loaded from SheetJS's pinned public CDN version.</p>
+
+  <h2>How to convert XML to Excel online</h2>
+  <ol>
+    <li>Paste XML into the editor or open a local <code>.xml</code> file up to 5 MB.</li>
+    <li>Select <strong>Convert XML</strong>. The tool searches for repeated complex elements that can represent spreadsheet rows.</li>
+    <li>Review the detected row count, column count, record element and tab-separated preview.</li>
+    <li>Select <strong>Download .xlsx</strong> to create an Excel workbook named <code>xml-to-excel.xlsx</code>.</li>
+  </ol>
+
+  <div data-seo-example="batch2">
+    <h3>Example XML records mapped to Excel columns</h3>
+    <p><strong>XML input:</strong></p><pre><code>&lt;catalog&gt;
+  &lt;product sku="A-100"&gt;
+    &lt;name&gt;Keyboard&lt;/name&gt;
+    &lt;price&gt;79.99&lt;/price&gt;
+  &lt;/product&gt;
+  &lt;product sku="B-200"&gt;
+    &lt;name&gt;Mouse&lt;/name&gt;
+    &lt;price&gt;39.50&lt;/price&gt;
+  &lt;/product&gt;
+&lt;/catalog&gt;</code></pre>
+    <p>The detected <code>&lt;product&gt;</code> elements become two rows. Columns include <code>@sku</code>, <code>name</code> and <code>price</code>.</p>
+  </div>
+
+  <h2>How nested XML is flattened</h2>
+  <p>A single nested object is flattened with dot-separated paths, such as <code>address.city</code>. Repeated leaf elements are joined in one cell with a separator so their values are not silently overwritten. Repeated complex child structures are preserved as JSON text inside a cell because a generic converter cannot safely invent multiple spreadsheet tables without knowing the XML schema.</p>
+
+  <h2>XML attributes and data types</h2>
+  <p>Attributes are written as columns beginning with <code>@</code>, for example <code>@id</code> or <code>@sku</code>. By default all scalar values remain text. This protects identifiers such as ZIP codes, account-like values or product codes from accidental numeric conversion. Enable <strong>Infer numbers &amp; booleans</strong> only when the XML values are meant to become spreadsheet number or boolean cells.</p>
+
+  <h2>XML to Excel limitations</h2>
+  <p>XML can represent trees, mixed content, namespaces, schemas and nested collections that do not map perfectly to one flat worksheet. The automatic record detector is designed for common repeated-record XML such as catalogs, exports and API datasets. Schema-driven XML, deeply nested collections or mixed-content documents may need a custom transformation.</p>
+  <p>This page does not apply an XSD, infer dates, evaluate entity definitions or create multiple related worksheets. Review the preview before using the workbook in a production import.</p>
+
+  <h2>Why convert XML instead of only opening it in Excel?</h2>
+  <p>Desktop spreadsheet applications can import some XML directly, but behavior depends on the XML shape, mappings and application version. A browser converter is useful when you want a quick flat table, need an XLSX file without changing the source, or want to inspect how repeated records and nested values map before sharing the data.</p>
+
+  <h2>Related data tools</h2>
+  <div class="related-tools">
+    <a href="/xml-to-json/">XML to JSON<span>Preserve XML structure in JSON instead of flattening it to rows.</span></a>
+    <a href="/txt-to-csv/">TXT to CSV<span>Convert tab, pipe, semicolon or whitespace-delimited text into CSV.</span></a>
+    <a href="/json-to-csv/">JSON to CSV<span>Turn JSON objects or arrays into comma-separated rows.</span></a>
+  </div>
+</section>
+</main>
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script src="/assets/file-converters.js?v=20261002-1" defer></script>
+</body>
+</html>
