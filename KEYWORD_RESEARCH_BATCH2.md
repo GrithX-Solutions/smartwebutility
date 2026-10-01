@@ -135,6 +135,47 @@ Implementation requirement:
 - Browser-side JSON parsing with a documented 5 MB file limit.
 - Use the already pinned SheetJS CE 0.20.3 browser dependency.
 
+## PASS — CSV to JSON
+
+Primary query: **csv to json formatter**
+
+Provider estimates:
+- Global search volume: ~18,100/month.
+- US: ~2,400/month, KD 5, CPC ~$12.36.
+- Canada: ~590/month, KD 5.
+- UK: ~720/month, KD 33.
+- Australia: ~390/month, KD 31.
+
+This is treated as a strong US/Canada opportunity, not a universal low-difficulty Tier-1 query. UK and Australia were explicitly observed at materially higher difficulty.
+
+SERP weakness observed for csv to json formatter:
+- jsonifyit.com — DA 6 at #8.
+- tooloogle.com — DA 14 at #9.
+- smallcsv.com — DA 1 around #15.
+- Reddit also appears in the top results, indicating mixed tool/discussion intent rather than ten dominant high-authority converter pages.
+
+Semantic/search-intent coverage used on the page:
+- CSV to JSON converter.
+- CSV to JSON online.
+- CSV to JSON file.
+- CSV to JSON array.
+- CSV to JSON formatter.
+- CSV headers to JSON object keys.
+- quoted CSV fields.
+- comma / semicolon / tab / pipe delimiters.
+- optional JSON number/boolean/null inference.
+- CSV vs JSON.
+
+Implementation requirement:
+- Parse quoted fields and escaped quotes correctly.
+- Allow auto-detection plus manual delimiter selection.
+- Header row option creates JSON objects; no-header mode creates arrays.
+- Duplicate or blank headers must not overwrite data.
+- Type inference is optional and must preserve leading-zero identifiers as strings.
+- Warn about uneven row widths instead of hiding malformed data.
+- Copy and download valid formatted JSON.
+- Browser-side file processing with a documented 5 MB limit.
+
 ## HOLD — VCF to CSV
 
 Evidence:
