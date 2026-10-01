@@ -26,7 +26,7 @@ const cases = [
     assert.ok(csv.includes('Ada,admin'));
   }],
   ['yaml-to-json', async p => {
-    await p.locator('#converterInput').fill('service:\\n  name: api\\n  port: 8080');
+    await p.locator('#converterInput').fill('service:\n  name: api\n  port: 8080');
     await p.locator('#convertBtn').click();
     assert.ok((await p.locator('#converterOutput').inputValue()).includes('"service"'));
   }],
