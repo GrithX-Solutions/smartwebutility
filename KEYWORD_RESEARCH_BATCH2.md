@@ -95,6 +95,46 @@ Implementation requirement:
 - Browser-side XML parsing and preview.
 - XLSX writer pinned to SheetJS CE browser build 0.20.3.
 
+## PASS — JSON to Excel / XLSX
+
+Primary query: **conversion of json to excel**
+
+Provider estimates:
+- Global search volume: ~8,100/month.
+- US: ~1,000/month, KD 7, CPC ~$4.80.
+- UK: ~210/month, KD 8, CPC ~$5.48.
+- Canada: ~110/month, KD 6.
+- Australia: ~90/month, KD 6.
+
+Related US variant:
+- json to excel convert — ~880/month, KD 8, CPC ~$4.99.
+
+SERP weakness observed for conversion of json to excel:
+- jsontoexcel.net — DA 10 at #5.
+- gigasheet.com — DA 24 at #10.
+- jsontoexcel.cloud — DA 6 around #15.
+- Reddit and Microsoft Q&A also appear, so the result set is not exclusively dominated by major converter brands.
+
+Semantic/search-intent coverage used on the page:
+- JSON to Excel converter.
+- JSON to XLSX.
+- convert JSON array to Excel.
+- nested JSON to Excel.
+- JSON object to spreadsheet.
+- flatten nested JSON.
+- JSON arrays in spreadsheet cells.
+- real XLSX download.
+
+Implementation requirement:
+- Generate a real XLSX workbook, not a renamed CSV or HTML file.
+- Top-level JSON arrays become rows; a single object becomes one row.
+- Nested objects flatten to dot-path columns.
+- Nested arrays remain JSON text instead of being silently discarded.
+- Preserve JSON number/boolean types in XLSX cells.
+- Preview rows before download.
+- Browser-side JSON parsing with a documented 5 MB file limit.
+- Use the already pinned SheetJS CE 0.20.3 browser dependency.
+
 ## HOLD — VCF to CSV
 
 Evidence:
