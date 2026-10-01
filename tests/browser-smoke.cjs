@@ -77,6 +77,16 @@ const cases = [
     await p.locator('#ogTitle').fill('Example OG');
     assert.ok((await p.locator('#ogOutput').inputValue()).includes('Example OG'));
   }],
+  ['bulk-redirect-checker', async p => {
+    await p.route('**/api/redirect-check.php*', async route => {
+      const url = new URL(route.request().url()).searchParams.get('url');
+      await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,redirects:1,final_url:url+'/final',chain:[{url,status:301,location:url+'/final'},{url:url+'/final',status:200,location:null}]})});
+    });
+    await p.locator('#bulkRedirectInput').fill('https://example.com/a\nhttps://example.com/b');
+    await p.locator('#bulkRedirectForm button[type="submit"]').click();
+    await p.waitForFunction(() => document.getElementById('bulkRedirectStatus').textContent.includes('Completed 2'));
+    assert.ok((await p.locator('#bulkRedirectBody').innerText()).includes('example.com/a/final'));
+  }],
   ['word-counter', async p => {
     await p.locator('#textInput').fill('One two three.');
     assert.ok((await p.locator('#textStats').innerText()).includes('3'));
