@@ -75,7 +75,7 @@
     }
 
     const themeMeta = document.querySelector('meta[name="theme-color"]');
-    if (themeMeta) themeMeta.setAttribute('content', theme === 'dark' ? '#0b1120' : '#f8fafc');
+    if (themeMeta) themeMeta.setAttribute('content', theme === 'dark' ? '#071426' : '#f7fbff');
 
     const button = document.getElementById('themeToggle');
     if (button) {
