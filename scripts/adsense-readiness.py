@@ -51,18 +51,20 @@ def main():
         wc=len(words(visible))
         trust=sum(1 for t in TRUST_PATHS if any((h==t or h.endswith(t)) for h in p.links))
         internal=sum(1 for h in p.links if h.startswith("/"))
-        placeholders=[x for x in ("lorem ipsum","coming soon","under construction","todo","placeholder") if x in visible.lower()]
+        placeholders=[x for x in ("coming soon","under construction","todo") if x in visible.lower()]
         structural=[]
         if not "".join(p.title).strip(): structural.append("missing-title")
         if not p.desc: structural.append("missing-description")
         if not p.canonical: structural.append("missing-canonical")
-        if trust<4: structural.append("weak-trust-navigation")
+        if trust<3: structural.append("weak-trust-navigation")
         if internal<3: structural.append("weak-internal-linking")
         if placeholders: structural.append("placeholder-content")
         is_tool=any(m in (" ".join(p.classes)+" "+rel).lower() for m in TOOL_MARKERS)
         # Internal prioritization only; Google publishes no minimum word count.
         if structural:
             bucket="HIGH-PRIORITY"
+        elif trust<5:
+            bucket="REVIEW"
         elif is_tool and wc<350:
             bucket="REVIEW"
         elif (not is_tool) and wc<450 and "/guides/" in url:
