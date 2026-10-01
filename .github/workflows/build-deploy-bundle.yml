@@ -37,6 +37,7 @@ jobs:
           node --check assets/favicon-generator.js
           node --check assets/data-converters.js
           node --check assets/file-converters.js
+          node --check assets/morse-code.js
           node --check deploy/lighthouse/worker.mjs
           node --check deploy/lighthouse/proxy.mjs
 
