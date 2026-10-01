@@ -12,6 +12,15 @@ async function assertBatchOneSeo(p) {
   assert.equal(await p.locator('[data-seo-example="batch1"]').count(), 1, 'task-specific example missing');
   assert.ok(await p.locator('a[href="/developer-tools/"]').count() >= 1, 'developer hub link missing');
 }
+async function assertBatchTwoSeo(p) {
+  assert.match((await p.locator('meta[name="robots"]').getAttribute('content')) || '', /index,follow/);
+  const schemaTypes = await p.locator('script[type="application/ld+json"]').evaluateAll(nodes => nodes.map(n => JSON.parse(n.textContent || '{}')['@type']));
+  assert.ok(schemaTypes.includes('WebApplication'), 'Batch 2 WebApplication schema missing');
+  assert.ok(schemaTypes.includes('BreadcrumbList'), 'Batch 2 BreadcrumbList schema missing');
+  assert.equal(await p.locator('script[data-swu-breadcrumb="true"]').count(), 1, 'static breadcrumb marker missing');
+  assert.equal(await p.locator('[data-seo-example="batch2"]').count(), 1, 'Batch 2 example missing');
+  assert.ok(await p.locator('a[href="/developer-tools/"]').count() >= 1, 'developer hub link missing');
+}
 const cases = [
   ['json-formatter', async p => {
     await p.locator('#jsonInput').fill('{"name":"SmartWebUtility","n":2}');
@@ -47,6 +56,33 @@ const cases = [
     await p.locator('#convertBtn').click();
     assert.ok((await p.locator('#converterOutput').inputValue()).includes('service:'));
     await assertBatchOneSeo(p);
+  }],
+  ['txt-to-csv', async p => {
+    await p.locator('#txtCsvDirection').selectOption('txt-to-csv');
+    await p.locator('#txtSourceDelimiter').selectOption('tab');
+    await p.locator('#txtCsvInput').fill('name\tage\nAda\t37\nLinus\t56');
+    await p.locator('#txtCsvConvert').click();
+    assert.equal((await p.locator('#txtCsvOutput').inputValue()).trim(), 'name,age\nAda,37\nLinus,56');
+    await p.locator('#txtCsvDirection').selectOption('csv-to-txt');
+    await p.locator('#txtTargetDelimiter').selectOption('tab');
+    await p.locator('#txtCsvInput').fill('name,age\nAda,37');
+    await p.locator('#txtCsvConvert').click();
+    assert.ok((await p.locator('#txtCsvOutput').inputValue()).includes('name\tage'));
+    await assertBatchTwoSeo(p);
+  }],
+  ['xml-to-excel', async p => {
+    await p.locator('#xmlExcelInput').fill('<catalog><product sku="A-100"><name>Keyboard</name><price>79.99</price></product><product sku="B-200"><name>Mouse</name><price>39.50</price></product></catalog>');
+    await p.locator('#xmlExcelConvert').click();
+    const preview = await p.locator('#xmlExcelOutput').inputValue();
+    assert.ok(preview.includes('@sku'));
+    assert.ok(preview.includes('Keyboard'));
+    assert.equal(await p.locator('#downloadXlsxBtn').isDisabled(), false);
+    await p.waitForFunction(() => !!window.XLSX, null, {timeout:15000});
+    const downloadPromise = p.waitForEvent('download');
+    await p.locator('#downloadXlsxBtn').click();
+    const download = await downloadPromise;
+    assert.ok(download.suggestedFilename().endsWith('.xlsx'));
+    await assertBatchTwoSeo(p);
   }],
   ['base64-encoder-decoder', async p => {
     await p.locator('#base64Input').fill('hello');
@@ -181,11 +217,11 @@ const cases = [
       await context.close();
     }
   }
-  // Catch JavaScript initialization failures on all 57 indexable pages,
+  // Catch JavaScript initialization failures on all sitemap indexable pages,
   // including guides and pages without explicit functional test cases.
   const locs = [...readFileSync('sitemap.xml', 'utf8').matchAll(/<loc>([^<]+)</g)]
     .map(match => new URL(match[1]).pathname);
-  assert.ok(locs.length >= 57, 'sitemap unexpectedly shrank');
+  assert.ok(locs.length >= 64, 'sitemap unexpectedly shrank');
   for (const path of locs) {
     const page = await browser.newPage();
     const exceptions = [];
