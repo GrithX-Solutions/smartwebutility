@@ -12,13 +12,13 @@ async function assertBatchOneSeo(p) {
   assert.equal(await p.locator('[data-seo-example="batch1"]').count(), 1, 'task-specific example missing');
   assert.ok(await p.locator('a[href="/developer-tools/"]').count() >= 1, 'developer hub link missing');
 }
-async function assertBatchTwoSeo(p) {
+async function assertNewToolSeo(p) {
   assert.match((await p.locator('meta[name="robots"]').getAttribute('content')) || '', /index,follow/);
   const schemaTypes = await p.locator('script[type="application/ld+json"]').evaluateAll(nodes => nodes.map(n => JSON.parse(n.textContent || '{}')['@type']));
-  assert.ok(schemaTypes.includes('WebApplication'), 'Batch 2 WebApplication schema missing');
-  assert.ok(schemaTypes.includes('BreadcrumbList'), 'Batch 2 BreadcrumbList schema missing');
+  assert.ok(schemaTypes.includes('WebApplication'), 'WebApplication schema missing');
+  assert.ok(schemaTypes.includes('BreadcrumbList'), 'BreadcrumbList schema missing');
   assert.equal(await p.locator('script[data-swu-breadcrumb="true"]').count(), 1, 'static breadcrumb marker missing');
-  assert.equal(await p.locator('[data-seo-example="batch2"]').count(), 1, 'Batch 2 example missing');
+  assert.equal(await p.locator('[data-seo-example]').count(), 1, 'task-specific SEO example missing');
   assert.ok(await p.locator('a[href="/developer-tools/"]').count() >= 1, 'developer hub link missing');
 }
 const cases = [
@@ -68,7 +68,7 @@ const cases = [
     await p.locator('#txtCsvInput').fill('name,age\nAda,37');
     await p.locator('#txtCsvConvert').click();
     assert.ok((await p.locator('#txtCsvOutput').inputValue()).includes('name\tage'));
-    await assertBatchTwoSeo(p);
+    await assertNewToolSeo(p);
   }],
   ['xml-to-excel', async p => {
     await p.locator('#xmlExcelInput').fill('<catalog><product sku="A-100"><name>Keyboard</name><price>79.99</price></product><product sku="B-200"><name>Mouse</name><price>39.50</price></product></catalog>');
@@ -82,7 +82,7 @@ const cases = [
     await p.locator('#downloadXlsxBtn').click();
     const download = await downloadPromise;
     assert.ok(download.suggestedFilename().endsWith('.xlsx'));
-    await assertBatchTwoSeo(p);
+    await assertNewToolSeo(p);
   }],
   ['json-to-excel', async p => {
     await p.locator('#jsonExcelInput').fill('[{"id":1,"name":"Ada","address":{"city":"London"},"tags":["api","json"]},{"id":2,"name":"Linus","address":{"city":"Helsinki"},"tags":["linux"]}]');
@@ -96,7 +96,7 @@ const cases = [
     await p.locator('#jsonExcelDownload').click();
     const download = await downloadPromise;
     assert.equal(download.suggestedFilename(), 'json-to-excel.xlsx');
-    await assertBatchTwoSeo(p);
+    await assertNewToolSeo(p);
   }],
   ['csv-to-json', async p => {
     await p.locator('#csvJsonDelimiter').selectOption('comma');
@@ -113,7 +113,7 @@ const cases = [
     await p.locator('#csvJsonDownload').click();
     const download = await downloadPromise;
     assert.equal(download.suggestedFilename(), 'converted.json');
-    await assertBatchTwoSeo(p);
+    await assertNewToolSeo(p);
   }],
   ['excel-to-json', async p => {
     await p.waitForFunction(() => !!window.XLSX, null, {timeout:15000});
@@ -142,7 +142,7 @@ const cases = [
     await p.locator('#excelJsonDownload').click();
     const download = await downloadPromise;
     assert.equal(download.suggestedFilename(), 'excel-to-json.json');
-    await assertBatchTwoSeo(p);
+    await assertNewToolSeo(p);
   }],
   ['morse-code-translator', async p => {
     await p.locator('#morseDirection').selectOption('text-to-morse');
@@ -160,7 +160,23 @@ const cases = [
     await p.waitForFunction(() => document.getElementById('morseStatus').textContent.includes('Playing Morse audio'), null, {timeout:5000});
     await p.locator('#morseStop').click();
     assert.ok((await p.locator('#morseStatus').innerText()).includes('stopped'));
-    await assertBatchTwoSeo(p);
+    await assertNewToolSeo(p);
+  }],
+  ['hex-to-ascii', async p => {
+    await p.locator('#hexAsciiDirection').selectOption('hex-to-text');
+    await p.locator('#hexAsciiEncoding').selectOption('ascii');
+    await p.locator('#hexAsciiInput').fill('48 65 6C 6C 6F');
+    await p.locator('#hexAsciiConvert').click();
+    assert.equal((await p.locator('#hexAsciiOutput').inputValue()).trim(), 'Hello');
+    await p.locator('#hexAsciiDirection').selectOption('text-to-hex');
+    await p.locator('#hexAsciiInput').fill('Hi');
+    await p.locator('#hexAsciiConvert').click();
+    assert.equal((await p.locator('#hexAsciiOutput').inputValue()).trim(), '48 69');
+    await p.locator('#hexAsciiEncoding').selectOption('utf8');
+    await p.locator('#hexAsciiInput').fill('é');
+    await p.locator('#hexAsciiConvert').click();
+    assert.equal((await p.locator('#hexAsciiOutput').inputValue()).trim(), 'C3 A9');
+    await assertNewToolSeo(p);
   }],
   ['base64-encoder-decoder', async p => {
     await p.locator('#base64Input').fill('hello');
@@ -305,7 +321,7 @@ const cases = [
   // including guides and pages without explicit functional test cases.
   const locs = [...readFileSync('sitemap.xml', 'utf8').matchAll(/<loc>([^<]+)</g)]
     .map(match => new URL(match[1]).pathname);
-  assert.ok(locs.length >= 68, 'sitemap unexpectedly shrank');
+  assert.ok(locs.length >= 69, 'sitemap unexpectedly shrank');
   for (const path of locs) {
     const page = await browser.newPage();
     const exceptions = [];
