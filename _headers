@@ -28,3 +28,6 @@
 
 /favicon-sw-v4-64.png
   Cache-Control: public, max-age=31536000, immutable
+
+/favicon-sw-v5.svg
+  Cache-Control: public, max-age=31536000, immutable
