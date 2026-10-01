@@ -41,6 +41,9 @@ jobs:
       - name: Static SEO QA
         run: python3 scripts/seo-static-qa.py
 
+      - name: AdSense readiness heuristic
+        run: python3 scripts/adsense-readiness.py || true
+
       - name: Upload site bundle
         uses: actions/upload-artifact@v4
         with:
