@@ -10,13 +10,11 @@
     'LV','LI','LT','LU','MT','NL','NO','PL','PT','RO','SK','SI','ES','SE','GB','CH'
   ];
 
-  function initGoogleAnalytics() {
+  function queueGoogleAnalytics() {
     window.dataLayer = window.dataLayer || [];
     window.gtag = window.gtag || function(){ window.dataLayer.push(arguments); };
 
-    // Analytics is enabled by default outside the restricted regions below.
-    // Advertising-related storage and personalization remain disabled site-wide
-    // until an approved consent/CMP flow explicitly updates these signals.
+    // Set consent defaults immediately, before the network library is loaded.
     window.gtag('consent', 'default', {
       analytics_storage: 'granted',
       ad_storage: 'denied',
@@ -25,10 +23,6 @@
       functionality_storage: 'granted',
       security_storage: 'granted'
     });
-
-    // EEA + UK + Switzerland: keep Analytics storage denied until a consent
-    // mechanism updates the visitor's choice. Google may use cookieless pings
-    // while consent remains denied, depending on Consent Mode behavior.
     window.gtag('consent', 'default', {
       analytics_storage: 'denied',
       ad_storage: 'denied',
@@ -37,17 +31,33 @@
       region: restrictedAnalyticsRegions,
       wait_for_update: 500
     });
-
     window.gtag('js', new Date());
     window.gtag('config', analyticsMeasurementId);
+  }
 
+  function loadGoogleAnalytics() {
+    if (document.querySelector('script[data-swu-analytics]')) return;
     const script = document.createElement('script');
     script.async = true;
+    script.dataset.swuAnalytics = 'true';
     script.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(analyticsMeasurementId);
     document.head.appendChild(script);
   }
 
-  initGoogleAnalytics();
+  function scheduleGoogleAnalytics() {
+    const start = () => {
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(loadGoogleAnalytics, {timeout: 2000});
+      } else {
+        window.setTimeout(loadGoogleAnalytics, 1200);
+      }
+    };
+    if (document.readyState === 'complete') start();
+    else window.addEventListener('load', start, {once:true});
+  }
+
+  queueGoogleAnalytics();
+  scheduleGoogleAnalytics();
 
   function preferredTheme() {
     try {
