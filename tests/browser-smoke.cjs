@@ -92,6 +92,22 @@ const cases = [
     await p.locator('#convertCurl').click();
     assert.equal(await p.locator('#curlError').isHidden(), false);
   }],
+  ['json-escape-unescape', async p => {
+    await p.locator('#jsonEscapeInput').fill('Line 1\nLine 2\t"quoted"');
+    await p.locator('#escapeJsonString').click();
+    let value = await p.locator('#jsonEscapeOutput').inputValue();
+    assert.ok(value.includes('\\n'));
+    assert.ok(value.includes('\\t'));
+    assert.ok(value.includes('\\"quoted\\"'));
+    await p.locator('#jsonEscapeInput').fill(value);
+    await p.locator('#unescapeJsonString').click();
+    value = await p.locator('#jsonEscapeOutput').inputValue();
+    assert.ok(value.includes('Line 1\nLine 2'));
+    assert.equal(await p.locator('#jsonEscapeError').isHidden(), true);
+    await p.locator('#jsonEscapeInput').fill('\\q');
+    await p.locator('#unescapeJsonString').click();
+    assert.equal(await p.locator('#jsonEscapeError').isHidden(), false);
+  }],
   ['json-diff', async p => {
     await p.locator('#jsonDiffLeft').fill('{"port":8080,"enabled":false}');
     await p.locator('#jsonDiffRight').fill('{"port":8443,"enabled":true,"region":"us"}');
