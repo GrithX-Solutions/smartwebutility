@@ -56,6 +56,17 @@ const cases = [
     assert.ok(csv.includes('@id,name'));
     assert.ok(csv.includes('1,Ada'));
   }],
+  ['xml-formatter-validator', async p => {
+    await p.locator('#xmlFormatInput').fill('<catalog><item id="1"><name>Ada</name></item><item id="2"><name>Linus</name></item></catalog>');
+    await p.locator('#formatXml').click();
+    const formatted = await p.locator('#xmlFormatOutput').inputValue();
+    assert.ok(formatted.includes('<catalog>'));
+    assert.ok(formatted.includes('  <item id="1">'));
+    assert.equal(await p.locator('#xmlFormatError').isHidden(), true);
+    await p.locator('#xmlFormatInput').fill('<catalog><item></catalog>');
+    await p.locator('#validateXml').click();
+    assert.equal(await p.locator('#xmlFormatError').isHidden(), false);
+  }],
   ['json-diff', async p => {
     await p.locator('#jsonDiffLeft').fill('{"port":8080,"enabled":false}');
     await p.locator('#jsonDiffRight').fill('{"port":8443,"enabled":true,"region":"us"}');
