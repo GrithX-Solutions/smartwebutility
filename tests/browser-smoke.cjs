@@ -108,6 +108,24 @@ const cases = [
     await p.locator('#unescapeJsonString').click();
     assert.equal(await p.locator('#jsonEscapeError').isHidden(), false);
   }],
+  ['csv-to-json', async p => {
+    await p.locator('#csvJsonInput').fill('name,role,active,score\n"Ada Lovelace","admin,owner",true,98.5\nLinus,developer,false,100');
+    await p.locator('#convertCsvJson').click();
+    let data = JSON.parse(await p.locator('#csvJsonOutput').inputValue());
+    assert.equal(data[0].name, 'Ada Lovelace');
+    assert.equal(data[0].role, 'admin,owner');
+    assert.equal(data[0].active, 'true');
+    await p.locator('#csvJsonTypes').check();
+    data = JSON.parse(await p.locator('#csvJsonOutput').inputValue());
+    assert.equal(data[0].active, true);
+    assert.equal(data[0].score, 98.5);
+    await p.locator('#csvJsonHeader').uncheck();
+    data = JSON.parse(await p.locator('#csvJsonOutput').inputValue());
+    assert.ok(Array.isArray(data[0]));
+    await p.locator('#csvJsonInput').fill('name,role\n"Ada,admin');
+    await p.locator('#convertCsvJson').click();
+    assert.equal(await p.locator('#csvJsonError').isHidden(), false);
+  }],
   ['json-diff', async p => {
     await p.locator('#jsonDiffLeft').fill('{"port":8080,"enabled":false}');
     await p.locator('#jsonDiffRight').fill('{"port":8443,"enabled":true,"region":"us"}');
