@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reverse DNS Checker — PTR Lookup & FCrDNS Test</title>
+<meta name="description" content="Free reverse DNS checker for IPv4 and IPv6. Find PTR hostnames, inspect the reverse zone, compare Google and Cloudflare DNS, and verify FCrDNS.">
+<link rel="canonical" href="https://smartwebutility.com/reverse-dns-checker/">
+<meta property="og:title" content="Reverse DNS Checker — PTR Lookup & FCrDNS Test">
+<meta property="og:description" content="Look up PTR records for a public IPv4 or IPv6 address and verify forward-confirmed reverse DNS.">
+<meta property="og:url" content="https://smartwebutility.com/reverse-dns-checker/"><meta property="og:type" content="website">
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="Reverse DNS Checker — PTR Lookup & FCrDNS Test"><meta name="twitter:description" content="Check PTR records, reverse zones and forward-confirmed reverse DNS for IPv4 or IPv6.">
+<meta name="theme-color" content="#07101b"><link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css"><link rel="stylesheet" href="/assets/reverse-dns-checker.css?v=20261003-1">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Reverse DNS Checker & PTR Lookup","url":"https://smartwebutility.com/reverse-dns-checker/","description":"Check PTR records for public IPv4 and IPv6 addresses, inspect reverse DNS zones, compare public resolvers and verify forward-confirmed reverse DNS.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["IPv4 PTR lookup","IPv6 PTR lookup","in-addr.arpa and ip6.arpa reverse-zone display","Cloudflare and Google resolver comparison","Forward-confirmed reverse DNS (FCrDNS) verification","No-PTR detection","Public-IP safety validation"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smartwebutility.com/"},{"@type":"ListItem","position":2,"name":"Website Tools","item":"https://smartwebutility.com/website-tools/"},{"@type":"ListItem","position":3,"name":"Reverse DNS Checker","item":"https://smartwebutility.com/reverse-dns-checker/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is a reverse DNS lookup?","acceptedAnswer":{"@type":"Answer","text":"A reverse DNS lookup starts with an IP address and queries its PTR record to find the hostname published for that address."}},{"@type":"Question","name":"What is a PTR record?","acceptedAnswer":{"@type":"Answer","text":"A PTR record maps an IP address back to a hostname in the reverse DNS hierarchy. IPv4 uses in-addr.arpa and IPv6 uses ip6.arpa."}},{"@type":"Question","name":"What is forward-confirmed reverse DNS?","acceptedAnswer":{"@type":"Answer","text":"Forward-confirmed reverse DNS, or FCrDNS, means the PTR hostname resolves forward through A or AAAA records to the original IP address."}},{"@type":"Question","name":"Who controls reverse DNS?","acceptedAnswer":{"@type":"Answer","text":"PTR records are normally controlled by the organization that owns or delegates the IP address block, such as an ISP, cloud provider or hosting provider."}}]}</script>
+</head>
+<body data-reverse-dns-checker>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/" aria-current="page">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+
+<main>
+<section class="tool-hero wrap rdns-hero">
+  <div class="crumb"><a href="/">Home</a><span>/</span><a href="/website-tools/">Website Tools</a><span>/</span><span>Reverse DNS Checker</span></div>
+  <span class="kicker">DNS diagnostic · PTR / rDNS</span>
+  <h1>Reverse DNS Checker & PTR Lookup</h1>
+  <p class="lead compact">Enter a public IPv4 or IPv6 address to find its PTR hostname, see the exact reverse DNS zone, compare Google and Cloudflare resolver answers, and verify whether the hostname resolves forward to the same IP (FCrDNS).</p>
+
+  <form id="rdnsForm" class="rdns-form" novalidate>
+    <label class="sr-only" for="rdnsIp">Public IPv4 or IPv6 address</label>
+    <input id="rdnsIp" type="text" inputmode="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="8.8.8.8 or 2001:4860:4860::8888" required>
+    <button class="btn primary" type="submit">Check reverse DNS</button>
+  </form>
+  <div class="rdns-examples" aria-label="Example IP addresses">
+    <span>Try:</span>
+    <button class="text-btn rdns-example" type="button" data-ip="8.8.8.8">8.8.8.8</button>
+    <button class="text-btn rdns-example" type="button" data-ip="1.1.1.1">1.1.1.1</button>
+    <button class="text-btn rdns-example" type="button" data-ip="2001:4860:4860::8888">Google IPv6</button>
+  </div>
+  <div class="trustbar"><span>IPv4 + IPv6</span><span>PTR records</span><span>Google + Cloudflare</span><span>FCrDNS verification</span><span>No signup</span></div>
+  <div id="rdnsProgress" class="notice" role="status" aria-live="polite" hidden>Checking PTR records and forward-confirming hostnames…</div>
+  <div id="rdnsError" class="error" role="alert" hidden></div>
+</section>
+
+<section id="rdnsResults" class="section wrap rdns-results" hidden>
+  <div class="rdns-report-head">
+    <div><span class="kicker">Reverse DNS report</span><h2 id="rdnsTitle">PTR lookup result</h2><p id="rdnsMeta"></p></div>
+    <button id="rdnsCopy" class="text-btn" type="button">Copy report</button>
+  </div>
+
+  <div class="rdns-summary">
+    <article><strong id="rdnsFamily">—</strong><span>IP family</span></article>
+    <article><strong id="rdnsPtrCount">0</strong><span>PTR hostnames</span></article>
+    <article><strong id="rdnsFcrdns">—</strong><span>FCrDNS</span></article>
+    <article><strong id="rdnsAgreement">—</strong><span>Resolver agreement</span></article>
+  </div>
+
+  <section class="rdns-panel">
+    <div class="section-head"><div><span class="kicker">Reverse namespace</span><h2>Reverse DNS name</h2></div><p>The exact <code>in-addr.arpa</code> or <code>ip6.arpa</code> name queried for this IP.</p></div>
+    <code id="rdnsReverseName" class="rdns-code">—</code>
+  </section>
+
+  <section class="rdns-panel">
+    <div class="section-head"><div><span class="kicker">PTR</span><h2>PTR hostnames and forward confirmation</h2></div><p>A PTR answer identifies a hostname; FCrDNS additionally checks whether that hostname resolves back to the original IP.</p></div>
+    <div id="rdnsPtrRecords" class="rdns-records"></div>
+  </section>
+
+  <section class="rdns-panel">
+    <div class="section-head"><div><span class="kicker">Resolver comparison</span><h2>Google and Cloudflare evidence</h2></div><p>Independent public DNS-over-HTTPS answers help expose stale cache or resolver disagreement.</p></div>
+    <div id="rdnsResolvers" class="rdns-resolvers"></div>
+  </section>
+
+  <section class="rdns-panel">
+    <div class="section-head"><div><span class="kicker">Interpretation</span><h2>Findings and next actions</h2></div><p>The tool reports observed DNS evidence without inventing a reputation or deliverability score.</p></div>
+    <div id="rdnsFindings" class="rdns-findings"></div>
+  </section>
+
+  <details class="rdns-details"><summary>Methodology and limitations</summary><div id="rdnsMethodology"></div></details>
+</section>
+
+<section class="section alt"><div class="wrap prose" data-quality-content="v1">
+  <div class="section-head"><div><span class="kicker">Reverse DNS explained</span><h2>What a reverse DNS checker tells you</h2></div><p>Reverse DNS starts with an IP address and looks for the hostname published in its PTR record.</p></div>
+  <p>A normal forward DNS lookup maps a hostname to an IPv4 or IPv6 address using records such as A and AAAA. A reverse DNS lookup goes the other direction: it takes an IP address, constructs its reverse DNS name and queries for a PTR (pointer) record.</p>
+
+  <div class="info-grid">
+    <article><h3>PTR record</h3><p>A PTR record maps an IP address back to a hostname. It is the core record returned by a reverse DNS or rDNS lookup.</p></article>
+    <article><h3>IPv4 reverse DNS</h3><p>IPv4 octets are reversed under <code>in-addr.arpa</code>. For example, <code>8.8.8.8</code> is queried as <code>8.8.8.8.in-addr.arpa</code>.</p></article>
+    <article><h3>IPv6 reverse DNS</h3><p>IPv6 addresses are expanded into hexadecimal nibbles, reversed, and queried under <code>ip6.arpa</code>.</p></article>
+    <article><h3>FCrDNS</h3><p>Forward-confirmed reverse DNS checks whether a PTR hostname resolves through A or AAAA records back to the original IP address.</p></article>
+    <article><h3>Resolver agreement</h3><p>Google Public DNS and Cloudflare may temporarily show different cached answers after a PTR change. Comparing them helps distinguish propagation from a persistent configuration.</p></article>
+    <article><h3>Who controls PTR?</h3><p>The IP-space owner normally controls reverse DNS. That is often your ISP, VPS provider, cloud platform or hosting provider rather than the DNS provider for your ordinary domain zone.</p></article>
+  </div>
+
+  <h2>Reverse DNS and email server checks</h2>
+  <p>Reverse DNS is especially important for outbound mail infrastructure. Gmail's current sender guidelines require sending IP addresses to have valid forward and reverse DNS records, and the PTR hostname must resolve forward to the same sending IP. A passing PTR/FCrDNS check is only one part of mail delivery: SPF, DKIM, DMARC, TLS, reputation and sending behavior still matter.</p>
+
+  <h2>How to check reverse DNS from the command line</h2>
+  <p>On Linux and macOS, <code>dig -x 8.8.8.8 +short</code> performs a PTR lookup. <code>nslookup 8.8.8.8</code> is another common option and is also available on Windows. This web checker performs the same public-DNS task while also comparing resolvers and checking the forward path.</p>
+
+  <h2>What if an IP has no PTR record?</h2>
+  <p>No PTR result is not a browser or HTTP failure; it means the queried public reverse DNS zone did not publish a PTR hostname for that address. If the IP is yours and you need reverse DNS, configure it through the provider that controls the address block. Adding a PTR record to the ordinary forward DNS zone for your domain will not normally change reverse DNS.</p>
+
+  <h2>What this tool does not claim</h2>
+  <p>This checker does not identify every website hosted on an IP address, prove who owns a hostname, calculate sender reputation or guarantee inbox placement. It checks public PTR data and forward DNS consistency. Private, loopback, documentation and other non-public IP ranges are rejected so the tool cannot be used to probe internal network names.</p>
+
+  <h2>Related tools</h2>
+  <div class="related-tools">
+    <a href="/dns-checker/">DNS Checker<span>Inspect forward A, AAAA, MX, TXT, CNAME, NS and CAA records.</span></a>
+    <a href="/dnssec-checker/">DNSSEC Checker<span>Validate DNSSEC, DS and DNSKEY evidence.</span></a>
+    <a href="/dns-propagation-checker/">DNS Propagation Checker<span>Compare public resolver answers after DNS changes.</span></a>
+    <a href="/ssl-checker/">SSL Checker<span>Inspect the TLS certificate served for a hostname.</span></a>
+  </div>
+
+  <h2>Primary references</h2>
+  <p><a href="https://www.rfc-editor.org/rfc/rfc1035" rel="noopener">RFC 1035 — Domain Names: Implementation and Specification</a> · <a href="https://www.rfc-editor.org/rfc/rfc3596" rel="noopener">RFC 3596 — DNS Extensions to Support IP Version 6</a> · <a href="https://support.google.com/mail/answer/81126" rel="noopener">Gmail email sender guidelines</a></p>
+</div></section>
+
+<section class="section"><div class="wrap prose">
+  <h2>Reverse DNS FAQ</h2>
+  <h3>What is a reverse DNS lookup?</h3><p>A reverse DNS lookup starts with an IP address and queries its PTR record to find the hostname published for that address.</p>
+  <h3>What is a PTR record?</h3><p>A PTR record maps an IP address back to a hostname in the reverse DNS hierarchy. IPv4 uses <code>in-addr.arpa</code> and IPv6 uses <code>ip6.arpa</code>.</p>
+  <h3>What is forward-confirmed reverse DNS?</h3><p>Forward-confirmed reverse DNS, or FCrDNS, means the PTR hostname resolves forward through A or AAAA records to the original IP address.</p>
+  <h3>Who controls reverse DNS?</h3><p>PTR records are normally controlled by the organization that owns or delegates the IP block, such as an ISP, cloud provider or hosting provider.</p>
+</div></section>
+</main>
+
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script>document.getElementById('year').textContent=new Date().getFullYear()</script>
+<script src="/assets/reverse-dns-checker.js?v=20261003-1" defer></script>
+</body>
+</html>
