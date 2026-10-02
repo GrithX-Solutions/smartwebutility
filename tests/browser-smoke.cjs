@@ -363,8 +363,31 @@ const cases = [
   }],
   ['uuid-generator', async p => {
     await p.locator('#uuidCount').fill('3');
+    await p.locator('#uuidVersion').selectOption('4');
+    await p.locator('#uuidFormat').selectOption('canonical');
     await p.locator('#generateUuid').click();
-    assert.equal((await p.locator('#uuidOutput').inputValue()).trim().split(/\r?\n/).length, 3);
+    let values = (await p.locator('#uuidOutput').inputValue()).trim().split(/\r?\n/);
+    assert.equal(values.length, 3);
+    values.forEach(value => assert.match(value, /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/));
+
+    await p.locator('#uuidFormat').selectOption('braces');
+    let braced = (await p.locator('#uuidOutput').inputValue()).trim().split(/\r?\n/)[0];
+    assert.match(braced, /^\{[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\}$/);
+
+    const before = Date.now();
+    await p.locator('#uuidVersion').selectOption('7');
+    await p.locator('#uuidFormat').selectOption('canonical');
+    await p.locator('#generateUuid').click();
+    values = (await p.locator('#uuidOutput').inputValue()).trim().split(/\r?\n/);
+    values.forEach(value => assert.match(value, /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/));
+    const timestamp = parseInt(values[0].replace(/-/g, '').slice(0, 12), 16);
+    assert.ok(timestamp >= before - 1000 && timestamp <= Date.now() + 1000);
+
+    await p.locator('#uuidFormat').selectOption('urn');
+    await p.locator('#uuidUppercase').check();
+    const urn = (await p.locator('#uuidOutput').inputValue()).trim().split(/\r?\n/)[0];
+    assert.match(urn, /^urn:uuid:[0-9A-F]{8}-[0-9A-F]{4}-7[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/);
+    assert.equal(await p.locator('#uuidError').isHidden(), true);
   }],
   ['hash-generator', async p => {
     await p.locator('#hashInput').fill('hello');
