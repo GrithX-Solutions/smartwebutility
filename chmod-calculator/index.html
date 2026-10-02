@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>chmod Calculator Online — Linux File Permissions</title>
+<meta name="description" content="Calculate chmod permissions online. Convert rwx checkboxes, octal modes and symbolic permission strings, including setuid, setgid and sticky bits.">
+<link rel="canonical" href="https://smartwebutility.com/chmod-calculator/">
+<meta property="og:title" content="chmod Calculator Online — Linux File Permissions">
+<meta property="og:description" content="Convert Linux/Unix file permissions between rwx, octal and symbolic chmod forms.">
+<meta property="og:url" content="https://smartwebutility.com/chmod-calculator/"><meta property="og:type" content="website">
+<meta name="twitter:card" content="summary"><meta name="theme-color" content="#071426">
+<link rel="icon" href="/favicon-sw-v5.svg?v=20261001e" type="image/svg+xml">
+<script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"chmod Calculator Online","url":"https://smartwebutility.com/chmod-calculator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Calculate Linux and Unix chmod permissions from rwx checkboxes, octal modes or symbolic permission strings.","featureList":["chmod octal calculator","rwx permission calculator","Symbolic permission parsing","setuid support","setgid support","sticky bit support","Copy chmod command"]}</script>
+</head>
+<body data-chmod-calculator>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+<main>
+<section class="tool-hero wrap json-tool-hero">
+<div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>chmod Calculator</span></div>
+<span class="kicker">Developer tool · Linux/Unix file permissions</span>
+<h1>chmod Calculator Online</h1>
+<p class="lead compact">Convert Linux and Unix permission bits between interactive rwx controls, octal chmod modes and symbolic strings. Special setuid, setgid and sticky bits are supported explicitly.</p>
+
+<div class="json-toolbar data-view-toolbar">
+<label class="compact-control">Octal mode <input id="chmodOctal" type="text" value="0755" inputmode="numeric" maxlength="4" style="width:90px" aria-label="chmod octal mode"></label>
+<label class="compact-control">Symbolic <input id="chmodSymbolicInput" type="text" value="rwxr-xr-x" maxlength="9" style="width:145px" aria-label="symbolic permission string"></label>
+<button class="btn primary" id="applyChmodInput" type="button">Apply Input</button>
+<button class="text-btn" id="preset644" type="button">644</button>
+<button class="text-btn" id="preset755" type="button">755</button>
+<button class="text-btn" id="preset700" type="button">700</button>
+<button class="text-btn" id="clearChmod" type="button">Reset</button>
+</div>
+
+<section class="editor-panel" style="margin-top:16px">
+<div class="editor-head"><div><strong>Permission bits</strong><span>Owner, group and others</span></div></div>
+<div style="overflow:auto">
+<table id="chmodMatrix" style="width:100%;border-collapse:collapse">
+<thead><tr><th style="text-align:left;padding:8px">Class</th><th style="padding:8px">Read (4)</th><th style="padding:8px">Write (2)</th><th style="padding:8px">Execute (1)</th></tr></thead>
+<tbody>
+<tr><th style="text-align:left;padding:8px">Owner (u)</th><td style="text-align:center"><input type="checkbox" data-class="u" data-bit="4" checked></td><td style="text-align:center"><input type="checkbox" data-class="u" data-bit="2" checked></td><td style="text-align:center"><input type="checkbox" data-class="u" data-bit="1" checked></td></tr>
+<tr><th style="text-align:left;padding:8px">Group (g)</th><td style="text-align:center"><input type="checkbox" data-class="g" data-bit="4" checked></td><td style="text-align:center"><input type="checkbox" data-class="g" data-bit="2"></td><td style="text-align:center"><input type="checkbox" data-class="g" data-bit="1" checked></td></tr>
+<tr><th style="text-align:left;padding:8px">Others (o)</th><td style="text-align:center"><input type="checkbox" data-class="o" data-bit="4" checked></td><td style="text-align:center"><input type="checkbox" data-class="o" data-bit="2"></td><td style="text-align:center"><input type="checkbox" data-class="o" data-bit="1" checked></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<div class="json-toolbar data-view-toolbar" style="margin-top:14px">
+<label class="check-control"><input id="chmodSetuid" type="checkbox"> setuid (4000)</label>
+<label class="check-control"><input id="chmodSetgid" type="checkbox"> setgid (2000)</label>
+<label class="check-control"><input id="chmodSticky" type="checkbox"> sticky (1000)</label>
+<label class="compact-control">Target <input id="chmodTarget" type="text" value="file" style="width:120px" aria-label="chmod command target"></label>
+</div>
+
+<div class="json-workspace" style="margin-top:16px">
+<section class="editor-panel"><div class="editor-head"><div><strong>Calculated permissions</strong><span id="chmodStatus" data-kind="neutral">Ready</span></div></div><textarea id="chmodOutput" class="code-editor" readonly spellcheck="false" aria-label="Calculated chmod output"></textarea></section>
+<section class="editor-panel"><div class="editor-head"><div><strong>chmod command</strong><span>Numeric absolute mode</span></div><div class="editor-actions"><button id="copyChmod" class="text-btn" type="button">Copy command</button></div></div><textarea id="chmodCommand" class="code-editor" readonly spellcheck="false" aria-label="chmod command"></textarea></section>
+</div>
+<div id="chmodError" class="error" hidden role="alert"></div>
+<div id="chmodStats" class="json-stats"></div>
+<div class="trustbar"><span>Browser-side calculation</span><span>Octal + rwx conversion</span><span>Special bits supported</span><span>No file changes performed</span></div>
+</section>
+
+<section class="section wrap prose">
+<h2>Calculate chmod octal and symbolic permissions</h2>
+<p>Unix-style permission modes use three ordinary permission groups: owner, group and others. Each group has read, write and execute/search bits with octal values 4, 2 and 1. Adding the selected values produces one octal digit per class—for example, <code>rwx</code> is 7 and <code>r-x</code> is 5.</p>
+<div class="info-grid">
+<article><h3>Owner permissions</h3><p>The owner or user class is represented by <code>u</code>. Read contributes 4, write contributes 2 and execute/search contributes 1.</p></article>
+<article><h3>Group permissions</h3><p>The group class is represented by <code>g</code> and uses the same 4/2/1 calculation independently from the owner bits.</p></article>
+<article><h3>Other permissions</h3><p>The other class is represented by <code>o</code> and controls users who are neither the file owner nor members of the file's group for the permission check.</p></article>
+<article><h3>Special mode bits</h3><p>A leading octal digit can represent setuid (4), setgid (2) and the sticky/restricted-deletion bit (1), producing modes such as <code>4755</code>, <code>2755</code> or <code>1777</code>.</p></article>
+</div>
+
+<h2>What chmod 755 means</h2>
+<p><code>755</code> means the owner has read, write and execute permissions (<code>rwx</code>), while group and others have read and execute permissions (<code>r-x</code>). The symbolic nine-character form is <code>rwxr-xr-x</code>.</p>
+
+<h2>What chmod 644 means</h2>
+<p><code>644</code> maps to <code>rw-r--r--</code>: the owner can read and write, while group and others can read. It is common for ordinary non-executable files, but the correct mode always depends on the application, web server, deployment process and security requirements.</p>
+
+<h2>setuid, setgid and sticky bit</h2>
+<p>GNU's documented numeric layout assigns 4000 to setuid, 2000 to setgid and 1000 to the sticky/restricted-deletion flag. Their real effects depend on the object type, operating system, filesystem and execution context. For example, the sticky bit is commonly useful on shared writable directories, while setgid on directories often influences group inheritance. citeturn396567search1turn396567search4</p>
+
+<h2>Special letters in symbolic ls-style output</h2>
+<p>When setuid or setgid is present, the execute position can display <code>s</code> or <code>S</code> depending on whether execute is also enabled. The sticky bit can display <code>t</code> or <code>T</code> in the others execute position. The calculator shows this ls-style representation separately from the basic nine-character rwx input.</p>
+
+<h2>This calculator does not change files</h2>
+<p>The generated command is text only. Running <code>chmod</code> changes mode bits on the target system and can be affected by ownership, privileges, filesystem behavior and platform-specific rules. GNU documentation also notes special handling for setuid/setgid bits in some cases. citeturn396567search3turn396567search6</p>
+
+<h2>Related developer tools</h2>
+<div class="related-tools"><a href="/random-port-generator/">Random Port Generator<span>Generate network port numbers for test configurations.</span></a><a href="/regex-escaper/">Regex Escaper<span>Escape literal text for JavaScript regular expressions.</span></a><a href="/unix-timestamp-converter/">Unix Timestamp Converter<span>Convert Unix timestamps and dates.</span></a></div>
+</section>
+
+<section class="section alt" data-quality-content="v1"><div class="wrap prose">
+<h2>Frequently asked questions</h2>
+<h3>How do I calculate chmod permissions?</h3><p>Add read=4, write=2 and execute=1 for owner, group and others, then place the three octal digits together.</p>
+<h3>What does chmod 755 mean?</h3><p>It is <code>rwxr-xr-x</code>: full owner permissions and read/execute permissions for group and others.</p>
+<h3>Does the calculator support 4-digit chmod modes?</h3><p>Yes. The leading digit represents setuid, setgid and sticky bits.</p>
+<h3>Can I paste rwxr-xr-x?</h3><p>Yes. Enter a nine-character symbolic permission string and apply it to update the checkboxes and octal mode.</p>
+<h3>Does this tool run chmod on my files?</h3><p>No. It only calculates permission representations and generates command text in your browser.</p>
+</div></section>
+</main>
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script src="/assets/chmod-calculator.js?v=20261002-1" defer></script>
+</body></html>
