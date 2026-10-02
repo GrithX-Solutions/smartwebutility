@@ -2,25 +2,25 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>UUID Validator Online — Check UUID & GUID Format</title>
+<title>UUID & GUID Validator Online — Check Format & Version</title>
 <meta name="description" content="Validate UUIDs and GUIDs online in your browser. Check RFC 9562 format, version and variant, recognize Nil/Max UUIDs, normalize values and inspect UUID v7 timestamps.">
 <link rel="canonical" href="https://smartwebutility.com/uuid-validator/">
-<meta property="og:title" content="UUID Validator Online — Check UUID & GUID Format">
+<meta property="og:title" content="UUID & GUID Validator Online — Check Format & Version">
 <meta property="og:description" content="Check UUID/GUID format, version and variant locally, including UUID v4, v7, Nil and Max values.">
 <meta property="og:url" content="https://smartwebutility.com/uuid-validator/"><meta property="og:type" content="website">
 <meta name="twitter:card" content="summary"><meta name="theme-color" content="#071426">
 <link rel="icon" href="/favicon-sw-v5.svg?v=20261001e" type="image/svg+xml">
 <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"UUID Validator Online","url":"https://smartwebutility.com/uuid-validator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Validate UUID and GUID values locally in the browser against UUID format, version and variant rules.","featureList":["UUID format validation","GUID validation","UUID version detection","UUID variant detection","UUID v7 timestamp display","Nil and Max UUID recognition","URN and brace wrapper normalization","Bulk UUID validation"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"UUID & GUID Validator Online","url":"https://smartwebutility.com/uuid-validator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Validate UUID and GUID values locally in the browser against UUID format, version and variant rules.","featureList":["UUID format validation","GUID validation","UUID version detection","UUID variant detection","UUID v7 timestamp display","Nil and Max UUID recognition","URN and brace wrapper normalization","Bulk UUID validation"]}</script>
 </head>
 <body data-uuid-validator>
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
 <main>
 <section class="tool-hero wrap json-tool-hero">
-<div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>UUID Validator</span></div>
+<div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>UUID & GUID Validator</span></div>
 <span class="kicker">Developer tool · UUID/GUID format and version checker</span>
-<h1>UUID Validator Online</h1>
-<p class="lead compact">Check one UUID or a batch of UUID/GUID values in your browser. The validator reports canonical format, UUID version, variant, normalized value, special Nil/Max forms and a timestamp for UUID v7 values.</p>
+<h1>UUID & GUID Validator Online</h1>
+<p class="lead compact">Validate one UUID or GUID, or check a batch of values in your browser. The validator reports canonical format, UUID version, variant, normalized value, special Nil/Max forms and a timestamp for UUID v7 values.</p>
 
 <div class="json-toolbar data-view-toolbar">
 <button class="btn primary" id="validateUuid" type="button">Validate UUIDs</button>
@@ -51,6 +51,7 @@
 
 <section class="section wrap prose">
 <h2>Validate UUID and GUID values beyond a simple regex</h2>
+<p>Use this UUID validator and GUID validator for common canonical, braced, URN and compact hexadecimal inputs. It normalizes accepted text before checking UUID variant and version fields, so Microsoft-style GUID text and standards-oriented UUID text can be inspected in the same workflow.</p>
 <p>A UUID is a 128-bit identifier with defined layout fields. This validator first checks the textual shape, then inspects the variant and version bits rather than treating every 36-character hexadecimal string as the same kind of UUID. Common GUID presentation wrappers can be normalized before the standards checks.</p>
 <div class="info-grid">
 <article><h3>Version detection</h3><p>For the RFC UUID variant, the version field identifies UUID versions 1 through 8. The result distinguishes those versions from unused or future-reserved version values.</p></article>
