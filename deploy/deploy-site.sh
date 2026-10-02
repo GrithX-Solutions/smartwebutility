@@ -14,7 +14,11 @@ case "$RELEASE" in "$BASE"/releases/*) ;; *) echo "Release must be inside $BASE/
   echo "Missing required release files" >&2; exit 2;
 }
 
-# Version shared front-end assets from their release content so CDN/browser caches\n# cannot keep older global navigation/search UI after a successful deploy.\npython3 "$RELEASE/scripts/version-shared-assets.py" "$RELEASE"\n\n# Artifact ZIP extraction may create root-only (0700) directories. PHP-FPM
+# Version shared front-end assets from their release content so CDN/browser caches
+# cannot keep older global navigation/search UI after a successful deploy.
+python3 "$RELEASE/scripts/version-shared-assets.py" "$RELEASE"
+
+# Artifact ZIP extraction may create root-only (0700) directories. PHP-FPM
 # executes as an unprivileged user and requires +x access to every directory.
 find "$RELEASE" -type d -exec chmod 755 {} +
 python3 "$RELEASE/scripts/seo-static-qa.py"
