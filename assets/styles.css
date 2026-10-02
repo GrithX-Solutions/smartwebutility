@@ -1661,3 +1661,16 @@ html[data-theme="light"] .brand span:last-child{
 .csv-sort{width:100%;border:0;background:transparent;color:var(--text);text-align:left;font:inherit;font-weight:800;padding:10px 12px;cursor:pointer}
 .csv-sort:hover,.csv-sort:focus-visible{background:var(--accent-soft)}
 @media(max-width:680px){.csv-filter-row{grid-template-columns:1fr;gap:6px}.data-view-toolbar .compact-control{width:100%}.data-view-toolbar .compact-control select{width:100%}}
+
+/* Advanced structured-data tools */
+.json-diff-result{margin-top:16px;overflow:auto;border-radius:14px}
+.json-diff-equal{padding:18px;border:1px solid var(--line);border-radius:12px;background:var(--panel);font-weight:800;color:var(--brand3)}
+.json-diff-table{width:100%;border-collapse:separate;border-spacing:0;min-width:760px}
+.json-diff-table th,.json-diff-table td{padding:10px 12px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);text-align:left;vertical-align:top;background:var(--panel)}
+.json-diff-table th{background:var(--panel2);position:sticky;top:0;z-index:1}
+.json-diff-table th:last-child,.json-diff-table td:last-child{border-right:0}
+.json-diff-table pre{margin:0;white-space:pre-wrap;word-break:break-word;max-width:420px;font:inherit}
+.diff-badge{display:inline-flex;padding:3px 7px;border-radius:999px;background:var(--accent-soft);font-size:.78rem;font-weight:800;text-transform:capitalize}
+.json-diff-table tr[data-kind="added"] .diff-badge{color:var(--brand3)}
+.json-diff-table tr[data-kind="removed"] .diff-badge{color:#ff8b8b}
+.json-diff-table tr[data-kind="changed"] .diff-badge{color:var(--brand2)}
