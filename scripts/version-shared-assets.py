@@ -29,6 +29,12 @@ def main() -> int:
         r"\g<1>"+catalog_hash,
         theme_text,
     )
+    header_nav_hash=short_hash(header_nav)
+    theme_text=re.sub(
+        r"(/assets/header-nav-search\\.css\\?v=)[^\'\"]+",
+        r"\\g<1>"+header_nav_hash,
+        theme_text,
+    )
     theme.write_text(theme_text, encoding="utf-8")
 
     theme_hash=short_hash(theme)
