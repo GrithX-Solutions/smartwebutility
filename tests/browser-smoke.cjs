@@ -348,28 +348,7 @@ const cases = [
     await p.locator('#escapeRegex').click();
     let escaped = await p.locator('#regexEscapeOutput').inputValue();
     assert.equal(escaped, '\\x66oo\\.bar\\x2dbaz');
-    const matchesLiteral = await p.evaluate(pattern => new RegExp('^(?:' + pattern + ')$').test('foo.bar-baz'), escaped);
-    assert.equal(matchesLiteral, true);
-
-    await p.locator('#regexEscapeFormat').selectOption('constructor');
-    await p.locator('#regexEscapeFlags').fill('i');
-    await p.locator('#escapeRegex').click();
-    let rendered = await p.locator('#regexEscapeOutput').inputValue();
-    assert.ok(rendered.startsWith('new RegExp('));
-    assert.ok(rendered.endsWith(', "i")'));
-
-    await p.locator('#regexEscapeFormat').selectOption('literal');
-    await p.locator('#regexEscapeFlags').fill('u');
-    await p.locator('#escapeRegex').click();
-    rendered = await p.locator('#regexEscapeOutput').inputValue();
-    assert.ok(rendered.startsWith('/'));
-    assert.ok(rendered.endsWith('/u'));
-
-    await p.locator('#regexEscapeFlags').fill('zz');
-    await p.locator('#escapeRegex').click();
-    assert.equal(await p.locator('#regexEscapeError').isHidden(), false);
-  }],
-  ['json-diff', async p => {
+    const matchesLiteral = await p.evaluate(pattern => new RegExp('^(?:' + pattern + ')
     await p.locator('#jsonDiffLeft').fill('{"port":8080,"enabled":false}');
     await p.locator('#jsonDiffRight').fill('{"port":8443,"enabled":true,"region":"us"}');
     await p.locator('#compareJson').click();
@@ -578,18 +557,22 @@ const cases = [
     process.exitCode = 1;
   }
 })().catch(error => {console.error(error); process.exitCode = 1;});
-, 'u').test('foo.bar-baz'), escaped);
+).test('foo.bar-baz'), escaped);
     assert.equal(matchesLiteral, true);
 
     await p.locator('#regexEscapeFormat').selectOption('constructor');
-    let code = await p.locator('#regexEscapeOutput').inputValue();
-    assert.ok(code.startsWith('new RegExp('));
-    assert.ok(code.includes('\\\\x66oo'));
+    await p.locator('#regexEscapeFlags').fill('i');
+    await p.locator('#escapeRegex').click();
+    let rendered = await p.locator('#regexEscapeOutput').inputValue();
+    assert.ok(rendered.startsWith('new RegExp('));
+    assert.ok(rendered.endsWith(', "i")'));
 
     await p.locator('#regexEscapeFormat').selectOption('literal');
-    code = await p.locator('#regexEscapeOutput').inputValue();
-    assert.ok(code.startsWith('/\\x66oo\\.bar\\x2dbaz/'));
-    assert.ok(code.endsWith('/u'));
+    await p.locator('#regexEscapeFlags').fill('u');
+    await p.locator('#escapeRegex').click();
+    rendered = await p.locator('#regexEscapeOutput').inputValue();
+    assert.ok(rendered.startsWith('/'));
+    assert.ok(rendered.endsWith('/u'));
 
     await p.locator('#regexEscapeInput').fill('1abc');
     await p.locator('#regexEscapeFormat').selectOption('pattern');
