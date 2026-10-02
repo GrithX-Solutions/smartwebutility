@@ -62,7 +62,9 @@ Validated US opportunities on 2026-10-02:
 Implementation:
 - /csv-viewer/ — local file/paste input, delimiter detection, filtering and sortable columns.
 - /yaml-formatter/ — YAML parse/validate, 2/4-space formatting, copy/download and local file input.
-- Shared browser-side data-view engine.
+- /xml-to-csv/ — validated via “change xml to csv” (~480 US/mo, SD 7); repeated XML rows flattened to CSV locally.
+- /json-diff/ — validated via “json diff tools” (~260 US/mo, SD 13); semantic path-level comparison with optional array-order ignoring.
+- Shared browser-side data-view and advanced-data engines.
 - Homepage + Developer hub + sitemap + nav + smoke-test integration.
 
 Deferred candidates remain research-gated:
