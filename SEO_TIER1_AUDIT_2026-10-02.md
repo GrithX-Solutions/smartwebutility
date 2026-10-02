@@ -185,6 +185,25 @@ Immediate order:
 
 Supporting guides should be published or expanded only when they solve a concrete problem, link naturally to a working tool, and are supported by Search Console or attainable live SERP evidence.
 
+## Cross-market Tier-1 validation
+
+Selected existing-page targets were checked separately in UK, Canada and Australia rather than assuming US metrics transfer unchanged.
+
+| Keyword | UK volume / SD | Canada volume / SD | Australia volume / SD | Read |
+| --- | ---: | ---: | ---: | --- |
+| uuid generator | 5,400 / 26 | 3,600 / 37 | 1,900 / 27 | Strong global English demand; same canonical page |
+| website redirect checker | 1,300 / 14 | 720 / 71 | 480 / 59 | Excellent UK quick-win; materially harder in CA/AU |
+| chmod calculator | 590 / 23 | 260 / 27 | 210 / 13 | Attainable DevOps utility across all three |
+| yaml formatter | 590 / 17 | 390 / 14 | 260 / 32 | Strong UK/Canada fit; harder in Australia |
+| title case converter | 880 / 32 | 1,000 / 34 | 390 / 25 | Meaningful cross-market text-tool demand |
+| online word counter free | 210 / 15 | 260 / 17 | 320 / 14 | Low-difficulty support intent in all three |
+
+Decision:
+- Keep one English canonical URL per intent across US/UK/Canada/Australia.
+- Do not create country doorway pages.
+- Measure rankings and Search Console country performance independently because difficulty varies substantially by market.
+- UK appears especially attractive for Redirect Checker and YAML Formatter; Australia for chmod and free word-counter intent; Canada for YAML/word-counter before harder redirect terms.
+
 ## Tier-1 growth rules
 
 1. United States is the primary keyword-research and rank-tracking market.
