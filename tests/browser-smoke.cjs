@@ -318,6 +318,31 @@ const cases = [
     assert.equal(await p.locator('#uuidValidatorTable tbody tr').nth(3).getAttribute('data-format-valid'), 'false');
     assert.equal(await p.locator('#uuidValidatorError').isHidden(), true);
   }],
+  ['xml-escape-unescape', async p => {
+    await p.locator('#xmlEscapeInput').fill('Tom & Jerry < 5 > 3 "quoted" \'single\'');
+    await p.locator('#xmlEscapeContext').selectOption('text');
+    await p.locator('#runXmlEscape').click();
+    let result = await p.locator('#xmlEscapeOutput').inputValue();
+    assert.equal(result, 'Tom &amp; Jerry &lt; 5 &gt; 3 "quoted" \'single\'');
+
+    await p.locator('#xmlEscapeContext').selectOption('double');
+    result = await p.locator('#xmlEscapeOutput').inputValue();
+    assert.ok(result.includes('&quot;quoted&quot;'));
+    assert.ok(result.includes("'single'"));
+
+    await p.locator('#xmlEscapeMode').selectOption('unescape');
+    await p.locator('#xmlEscapeInput').fill('&lt;tag&gt;Tom &amp; Jerry&#33; &#x1F600; &nbsp; &#0;');
+    await p.locator('#runXmlEscape').click();
+    result = await p.locator('#xmlEscapeOutput').inputValue();
+    assert.ok(result.includes('<tag>Tom & Jerry! 😀 &nbsp; &#0;'));
+    assert.ok((await p.locator('#xmlEscapeWarnings').innerText()).includes('unknown named entity preserved'));
+    assert.ok((await p.locator('#xmlEscapeWarnings').innerText()).includes('invalid numeric reference preserved'));
+
+    await p.locator('#xmlEscapeInput').fill('&amp;lt;');
+    await p.locator('#runXmlEscape').click();
+    assert.equal(await p.locator('#xmlEscapeOutput').inputValue(), '&lt;');
+    assert.equal(await p.locator('#xmlEscapeError').isHidden(), true);
+  }],
   ['json-diff', async p => {
     await p.locator('#jsonDiffLeft').fill('{"port":8080,"enabled":false}');
     await p.locator('#jsonDiffRight').fill('{"port":8443,"enabled":true,"region":"us"}');
