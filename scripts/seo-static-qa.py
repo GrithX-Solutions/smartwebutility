@@ -125,6 +125,9 @@ def main() -> int:
         if not p.jsonld: warnings.append(f"{rel}: no JSON-LD block")
 
     sitemap=ROOT/"sitemap.xml"
+    sitemap_text=sitemap.read_text(encoding="utf-8", errors="replace") if sitemap.exists() else ""
+    if "\\n" in sitemap_text:
+        errors.append("sitemap.xml: contains literal \\\\n text; use real line breaks")
     try:
         tree=ET.parse(sitemap)
         ns={"s":"http://www.sitemaps.org/schemas/sitemap/0.9"}
