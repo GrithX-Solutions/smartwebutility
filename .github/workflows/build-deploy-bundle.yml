@@ -41,6 +41,7 @@ jobs:
           node --check assets/toml-tools.mjs
           node --check assets/curl-converter.js
           node --check assets/json-escape.js
+          node --check assets/csv-to-json.js
           node --check deploy/lighthouse/worker.mjs
           node --check deploy/lighthouse/proxy.mjs
 
