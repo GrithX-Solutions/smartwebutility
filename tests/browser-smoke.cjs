@@ -348,7 +348,28 @@ const cases = [
     await p.locator('#escapeRegex').click();
     let escaped = await p.locator('#regexEscapeOutput').inputValue();
     assert.equal(escaped, '\\x66oo\\.bar\\x2dbaz');
-    const matchesLiteral = await p.evaluate(pattern => new RegExp('^(?:' + pattern + ')
+    const matchesLiteral = await p.evaluate(pattern => new RegExp('^(?:' + pattern + ')$').test('foo.bar-baz'), escaped);
+    assert.equal(matchesLiteral, true);
+
+    await p.locator('#regexEscapeFormat').selectOption('constructor');
+    await p.locator('#regexEscapeFlags').fill('i');
+    await p.locator('#escapeRegex').click();
+    let rendered = await p.locator('#regexEscapeOutput').inputValue();
+    assert.ok(rendered.startsWith('new RegExp('));
+    assert.ok(rendered.endsWith(', "i")'));
+
+    await p.locator('#regexEscapeFormat').selectOption('literal');
+    await p.locator('#regexEscapeFlags').fill('u');
+    await p.locator('#escapeRegex').click();
+    rendered = await p.locator('#regexEscapeOutput').inputValue();
+    assert.ok(rendered.startsWith('/'));
+    assert.ok(rendered.endsWith('/u'));
+
+    await p.locator('#regexEscapeFlags').fill('zz');
+    await p.locator('#escapeRegex').click();
+    assert.equal(await p.locator('#regexEscapeError').isHidden(), false);
+  }],
+  ['json-diff', async p => {
     await p.locator('#jsonDiffLeft').fill('{"port":8080,"enabled":false}');
     await p.locator('#jsonDiffRight').fill('{"port":8443,"enabled":true,"region":"us"}');
     await p.locator('#compareJson').click();
