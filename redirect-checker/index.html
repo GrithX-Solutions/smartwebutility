@@ -3,12 +3,17 @@
 <title>Website Redirect Checker — Trace 301, 302, 307 & 308</title><meta name="description" content="Free website redirect checker. Trace URL redirect chains through 301, 302, 303, 307 and 308 hops, Location headers, loops and final destinations."><link rel="canonical" href="https://smartwebutility.com/redirect-checker/">
 <meta property="og:title" content="Website Redirect Checker — Trace 301, 302, 307 & 308"><meta property="og:description" content="Trace URL redirects hop by hop. See 301, 302, 303, 307 and 308 responses, Location headers, loops, final URL and timing."><meta property="og:url" content="https://smartwebutility.com/redirect-checker/"><meta property="og:type" content="website"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Website Redirect Checker — Trace 301, 302, 307 & 308"><meta name="twitter:description" content="Trace URL redirects hop by hop. See 301, 302, 303, 307 and 308 responses, Location headers, loops, final URL and timing."><meta name="theme-color" content="#07101b"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Redirect Checker","url":"https://smartwebutility.com/redirect-checker/","description":"Trace HTTP redirect chains hop by hop and inspect redirect status codes, Location headers and the final destination.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["301 redirect tracing","302 redirect tracing","303 redirect tracing","307 redirect tracing","308 redirect tracing","Redirect loop detection","Final URL identification"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I check where a URL redirects?","acceptedAnswer":{"@type":"Answer","text":"Enter the original URL and run the redirect check. The result shows each HTTP redirect status, Location target and the final destination."}},{"@type":"Question","name":"What is the difference between a 301 and 302 redirect?","acceptedAnswer":{"@type":"Answer","text":"A 301 communicates a permanent move, while a 302 is normally used for temporary routing. 307 and 308 provide explicit request-method preservation semantics."}},{"@type":"Question","name":"Can a redirect checker detect a redirect loop?","acceptedAnswer":{"@type":"Answer","text":"Yes. This checker records visited URLs and reports when a redirect chain returns to a URL it has already followed."}}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smartwebutility.com/"},{"@type":"ListItem","position":2,"name":"Redirect Checker","item":"https://smartwebutility.com/redirect-checker/"}]}</script></head><body>
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
 <main><section class="tool-hero wrap"><div class="crumb"><a href="/">Home</a><span>/</span><span>Redirect Checker</span></div><span class="kicker">Redirect diagnostics</span><h1>Website Redirect Checker</h1><p class="lead compact">Check a website or URL redirect chain and see every 301, 302, 303, 307 or 308 hop through to the final destination.</p>
 <form id="toolForm" class="lookup" data-tool="redirect" novalidate><label class="sr-only" for="target">Target</label><input id="target" name="target" inputmode="url" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="https://example.com/old-page" required><button class="btn primary" type="submit">Trace Redirects</button></form>
 <section id="result" class="result-card" hidden aria-live="polite"><div class="result-head"><div><span class="status-dot"></span><strong id="resultTitle">Result</strong></div><button id="copyBtn" class="text-btn" type="button">Copy</button></div><div id="resultBody"></div></section><div id="error" class="error" hidden role="alert"></div></section>
 <section class="section wrap prose">
+  <h2>Check where any URL redirects</h2>
+  <p>Paste a full website URL into the checker to see whether it returns a direct response or sends the request through one or more redirects. For every server-side hop, the report shows the HTTP status code, the current URL and the next <code>Location</code> target, ending at the final destination or a detected loop.</p>
+  <p>This is useful for SEO migrations, HTTP-to-HTTPS changes, www/non-www normalization, shortened links, campaign URLs and debugging unexpected redirects. It also helps distinguish a true HTTP redirect from client-side navigation that only happens after a page loads.</p>
+
   <h2>Trace a redirect chain one hop at a time</h2>
   <p>Use this 301 redirect checker to inspect a URL hop by hop. It requests the starting URL, reads its redirect status and Location header, then follows the destination one step at a time. The result table shows the URL, status code and next Location for each step through to the final response.</p>
   <div class="info-grid">
@@ -16,6 +21,17 @@
     <article><h3>Find the final destination</h3><p>Confirm where an old URL, short link, campaign URL or migrated page ultimately lands.</p></article>
     <article><h3>Detect redirect loops</h3><p>The checker tracks previously visited URLs and reports when a chain loops back to a URL it has already seen.</p></article>
     <article><h3>Public-target validation</h3><p>Each hop is normalized and validated before the server follows it, reducing unsafe access to private or reserved network targets.</p></article>
+  </div>
+
+  <h2>How to use the redirect checker</h2>
+  <ol><li>Enter the complete starting URL, including <code>http://</code> or <code>https://</code>.</li><li>Select <strong>Trace Redirects</strong>.</li><li>Read the chain from the original request through each 3xx response to the final status.</li><li>If there are several hops, review whether older redirects can point directly to the final canonical URL.</li><li>If a loop is reported, compare the repeated URLs and then inspect CDN, proxy, web-server and application redirect rules.</li></ol>
+
+  <h2>How to read redirect checker results</h2>
+  <div class="info-grid">
+    <article><h3>200 or another final status</h3><p>The chain has reached a non-redirect response. Confirm that the final URL and response are the destination you intended.</p></article>
+    <article><h3>301 or 308</h3><p>The server is communicating a permanent move. These are commonly used for durable URL migrations and canonical hostname changes.</p></article>
+    <article><h3>302 or 307</h3><p>The server is communicating temporary routing. Check whether the temporary behavior is intentional for the requested URL.</p></article>
+    <article><h3>Repeated URL or too many hops</h3><p>The redirect rules may conflict or form a cycle. Trace the first point where the URL starts repeating or switching between schemes, hosts or paths.</p></article>
   </div>
 
   <h2>Why redirect chains matter</h2>
@@ -62,5 +78,11 @@
   <p>Cookies, login state, user agent, geographic routing, bot protection and A/B testing can change redirect behavior between clients.</p>
   <h3>Should internal links point to redirected URLs?</h3>
   <p>Usually it is better to update internal links to the final intended URL so normal navigation does not rely on avoidable redirect hops.</p>
+  <h3>How do I check where a URL redirects?</h3>
+  <p>Enter the original URL above and run the checker. The output shows the redirect status and <code>Location</code> target for each hop until the request reaches its final destination.</p>
+  <h3>What is the difference between a 301 and 302 redirect?</h3>
+  <p>A 301 communicates a permanent move, while a 302 is normally used for temporary routing. For non-GET requests, 307 and 308 make request-method preservation explicit.</p>
+  <h3>Can this checker detect a redirect loop?</h3>
+  <p>Yes. The checker tracks URLs already visited in the current chain and reports when a later redirect returns to one of them.</p>
 </div></section></main>
 <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/">All tools</a><a href="/sitemap.xml">Sitemap</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></div></footer><script src="/assets/network-tools.js" defer></script></body></html>
