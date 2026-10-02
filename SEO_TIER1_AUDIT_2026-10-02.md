@@ -236,3 +236,8 @@ Decision:
 Do not start a new tool until this audit branch passes Build + Chromium CI, production deploy passes SEO/API smoke checks, changed priority URLs are submitted for discovery, and the post-deploy Ubersuggest crawl is clean.
 
 After that, resume keyword-first discovery. Reverse DNS is a held candidate, not an approved build yet.
+
+
+## Permanent new-page release rule — 2026-10-03
+
+Every new public page/tool/guide must satisfy `NEW_PAGE_SEO_RELEASE_STANDARD.md` in the same release. Keyword evidence, semantic content, SEO, AEO, GEO/AIO, SXO, category navigation, global search registration, functional tests and indexing are one delivery unit—not follow-up tasks.
