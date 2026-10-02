@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Regex Escaper Online — Escape Regex Special Characters</title>
+<meta name="description" content="Escape text for a JavaScript regular expression online. Generate RegExp.escape-style pattern text, constructor code or regex literal output safely in your browser.">
+<link rel="canonical" href="https://smartwebutility.com/regex-escaper/">
+<meta property="og:title" content="Regex Escaper Online — Escape Regex Special Characters">
+<meta property="og:description" content="Escape literal text for JavaScript regular expressions using RegExp.escape-compatible rules.">
+<meta property="og:url" content="https://smartwebutility.com/regex-escaper/"><meta property="og:type" content="website">
+<meta name="twitter:card" content="summary"><meta name="theme-color" content="#071426">
+<link rel="icon" href="/favicon-sw-v5.svg?v=20261001e" type="image/svg+xml">
+<script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Regex Escaper Online","url":"https://smartwebutility.com/regex-escaper/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Escape literal text for JavaScript regular expressions using ECMAScript RegExp.escape-compatible behavior.","featureList":["RegExp.escape-compatible escaping","Regex metacharacter escaping","Leading alphanumeric protection","Punctuator hex escaping","RegExp constructor output","Regex literal output","Local text file input","Copy and download"]}</script>
+</head>
+<body data-regex-escaper>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+<main>
+<section class="tool-hero wrap json-tool-hero">
+<div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>Regex Escaper</span></div>
+<span class="kicker">Developer tool · JavaScript RegExp literal escaping</span>
+<h1>Regex Escaper Online</h1>
+<p class="lead compact">Turn arbitrary text into a JavaScript regular-expression pattern that matches the text literally. The escaper follows modern <code>RegExp.escape()</code> behavior rather than only adding backslashes before obvious metacharacters.</p>
+
+<div class="json-toolbar data-view-toolbar">
+<button class="btn primary" id="escapeRegex" type="button">Escape Regex Text</button>
+<label class="file-btn">Open text<input id="regexEscapeFile" type="file" accept=".txt,.log,.csv,.json,text/plain" hidden></label>
+<button class="text-btn" id="exampleRegexEscape" type="button">Example</button>
+<button class="text-btn" id="clearRegexEscape" type="button">Clear</button>
+<label class="compact-control">Output
+<select id="regexEscapeFormat">
+<option value="pattern" selected>Escaped pattern</option>
+<option value="constructor">new RegExp() code</option>
+<option value="literal">Regex literal /.../</option>
+</select></label>
+<label class="compact-control">Flags
+<input id="regexEscapeFlags" type="text" value="u" maxlength="8" style="width:72px" aria-label="Regular expression flags">
+</label>
+</div>
+
+<div class="json-workspace">
+<section class="editor-panel"><div class="editor-head"><div><strong>Literal text input</strong><span>Text that should be matched exactly</span></div></div><textarea id="regexEscapeInput" class="code-editor" spellcheck="false" autocapitalize="none" autocomplete="off" placeholder="developer.mozilla.org/path?x=1+y" aria-label="Text to escape for regex"></textarea></section>
+<section class="editor-panel"><div class="editor-head"><div><strong>Escaped regex output</strong><span id="regexEscapeStatus" data-kind="neutral">Ready</span></div><div class="editor-actions"><button id="copyRegexEscape" class="text-btn" type="button">Copy</button><button id="downloadRegexEscape" class="text-btn" type="button">Download</button></div></div><textarea id="regexEscapeOutput" class="code-editor" readonly spellcheck="false" aria-label="Escaped regular expression output"></textarea></section>
+</div>
+<div id="regexEscapeError" class="error" hidden role="alert"></div>
+<div id="regexEscapeStats" class="json-stats" hidden></div>
+<div class="trustbar"><span>Browser-side processing</span><span>No upload</span><span>ECMAScript RegExp.escape semantics</span><span>Constructor + literal output</span><span>Local files up to 5 MB</span></div>
+</section>
+
+<section class="section wrap prose">
+<h2>Escape literal text for a regular expression</h2>
+<p>Regular-expression syntax gives special meaning to characters such as dots, parentheses, square brackets, plus signs and question marks. When a user-entered string is supposed to match literally, those characters must be escaped before the text is inserted into a JavaScript <code>RegExp</code> pattern.</p>
+<div class="info-grid">
+<article><h3>Regex syntax characters</h3><p>Characters including <code>^ $ \ . * + ? ( ) [ ] { } | /</code> are emitted in escaped form so they are treated as literal characters instead of assertions, quantifiers, groups, character classes or delimiters.</p></article>
+<article><h3>Leading letters and digits</h3><p>Modern <code>RegExp.escape()</code> hex-escapes an initial ASCII letter or digit. This prevents the escaped text from accidentally extending a preceding backreference or hexadecimal/control escape when it is embedded in a larger pattern.</p></article>
+<article><h3>Other punctuation</h3><p>Punctuation such as hyphen, comma, equals sign and quotes can require hexadecimal escapes because blindly prefixing every punctuation character with a backslash is not valid in every Unicode-aware regex context.</p></article>
+<article><h3>Whitespace and line breaks</h3><p>Tabs, newlines, carriage returns and other relevant whitespace are represented with stable escape sequences so the result can be inserted into regex source without introducing an accidental line break.</p></article>
+</div>
+
+<h2>Why a simple replace is not always enough</h2>
+<p>A common helper only backslash-escapes the traditional metacharacters. That works for many standalone patterns, but modern ECMAScript escaping handles additional edge cases: a leading alphanumeric character, punctuation that cannot safely use identity escapes under Unicode modes, slash delimiters, non-ASCII whitespace and lone surrogate code units.</p>
+
+<h2>Escaped pattern output</h2>
+<p>The default output is pattern text suitable for use as literal content inside a JavaScript regular expression. For example, a dot in a domain name becomes an escaped dot instead of the wildcard operator. The output is regex source, not a JavaScript string literal, so it may contain backslashes exactly as the regex parser should see them.</p>
+
+<h2>RegExp constructor output</h2>
+<p>Constructor mode wraps the escaped pattern in <code>new RegExp(...)</code> and quotes the pattern as a JavaScript string. This adds the extra string-literal escaping needed by source code, which is different from escaping the regular expression pattern itself.</p>
+
+<h2>Regex literal output</h2>
+<p>Literal mode produces JavaScript syntax such as <code>/escaped/u</code>. Slash characters are escaped so they do not terminate the literal. The flags field is validated by the browser before output is produced, which helps catch duplicate or unsupported flag combinations.</p>
+
+<h2>JavaScript versus Python, .NET and other regex engines</h2>
+<p>Regular-expression engines share many metacharacters but do not have identical escaping APIs or Unicode rules. This tool follows JavaScript/ECMAScript <code>RegExp.escape()</code> semantics. Python's <code>re.escape()</code>, .NET's <code>Regex.Escape()</code>, PCRE and other engines can produce different escaped text for the same input.</p>
+
+<h2>Escaping does not make a regex safe from every performance problem</h2>
+<p>Escaping literal user text prevents that text from introducing regex operators, but the surrounding pattern can still be expensive or vulnerable to excessive backtracking. Review the complete regular expression and use bounded inputs where performance matters.</p>
+
+<h2>Related developer tools</h2>
+<div class="related-tools"><a href="/regex-tester/">Regex Tester<span>Run JavaScript regex patterns against test text.</span></a><a href="/json-escape-unescape/">JSON Escape / Unescape<span>Escape text for JSON string syntax.</span></a><a href="/xml-escape-unescape/">XML Escape / Unescape<span>Encode XML text and entity references.</span></a></div>
+</section>
+
+<section class="section alt" data-quality-content="v1"><div class="wrap prose">
+<h2>Frequently asked questions</h2>
+<h3>Which regex characters does this escape?</h3><p>It follows JavaScript <code>RegExp.escape()</code> rules, including regex syntax characters, slash delimiters, leading alphanumeric protection, selected punctuation and whitespace escapes.</p>
+<h3>Why does the first letter sometimes become <code>\xNN</code>?</h3><p>That protects the escaped fragment when it follows another escape sequence inside a larger regex pattern.</p>
+<h3>Is regex escaping the same as JavaScript string escaping?</h3><p>No. Regex source escaping and JavaScript string-literal escaping happen at different parsing layers. Constructor output handles both layers for you.</p>
+<h3>Can I use the output in Python or .NET?</h3><p>The literal may work in simple cases, but this tool specifically follows ECMAScript rules. Use the target language's escaping API when exact engine compatibility is required.</p>
+<h3>Is input uploaded?</h3><p>No. Escaping runs locally in browser JavaScript.</p>
+</div></section>
+</main>
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script src="/assets/regex-escaper.js?v=20261002-1" defer></script>
+</body></html>
