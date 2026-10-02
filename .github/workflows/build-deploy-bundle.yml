@@ -64,6 +64,17 @@ jobs:
       - name: Validate production deploy script
         run: bash -n deploy/deploy-site.sh
 
+      - name: Exercise shared asset versioning
+        run: |
+          rm -rf /tmp/swu-asset-version-test
+          mkdir -p /tmp/swu-asset-version-test
+          cp -a . /tmp/swu-asset-version-test/site
+          python3 /tmp/swu-asset-version-test/site/scripts/version-shared-assets.py /tmp/swu-asset-version-test/site
+          grep -q '/assets/theme.js?v=' /tmp/swu-asset-version-test/site/index.html
+          grep -q '/assets/styles.css?v=' /tmp/swu-asset-version-test/site/index.html
+          grep -q '/assets/tool-catalog.json?v=' /tmp/swu-asset-version-test/site/assets/theme.js
+          python3 /tmp/swu-asset-version-test/site/scripts/seo-static-qa.py
+
       - name: Normalize publisher trust navigation
         run: python3 scripts/normalize-trust-nav.py
 
