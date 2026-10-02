@@ -44,6 +44,88 @@
     file.addEventListener('change',async()=>{const f=file.files?.[0];if(!f)return;if(f.size>5*1024*1024){file.value='';fail(new Error('Please choose an XML file smaller than 5 MB.'));return}input.value=await f.text();try{convert()}catch(e){fail(e)}});
   }
 
+
+  if(mode==='xml-formatter-validator'){
+    const input=document.getElementById('xmlFormatInput'), output=document.getElementById('xmlFormatOutput'), status=document.getElementById('xmlFormatStatus'), error=document.getElementById('xmlFormatError'), stats=document.getElementById('xmlFormatStats'), file=document.getElementById('xmlFormatFile'), indent=document.getElementById('xmlFormatIndent');
+    const serializer=new XMLSerializer();
+    const setStatus=(t,k='neutral')=>{status.textContent=t;status.dataset.kind=k};
+    const declaration=raw=>raw.match(/^\s*(<\?xml[\s\S]*?\?>)/i)?.[1]||'';
+    function parse(raw){
+      if(!raw.trim())throw new Error('Add XML to validate or format.');
+      const doc=new DOMParser().parseFromString(raw,'application/xml');
+      const pe=doc.querySelector('parsererror');
+      if(pe)throw new Error('Invalid XML: '+pe.textContent.replace(/\s+/g,' ').trim().slice(0,320));
+      return doc;
+    }
+    function xmlSpacePreserve(el){
+      return el?.nodeType===Node.ELEMENT_NODE && ((el.getAttributeNS('http://www.w3.org/XML/1998/namespace','space')||el.getAttribute('xml:space'))==='preserve');
+    }
+    function prettyElement(el,depth,unit){
+      const children=[...el.childNodes];
+      const serialized=serializer.serializeToString(el);
+      if(!children.length||xmlSpacePreserve(el))return unit.repeat(depth)+serialized;
+      const meaningfulText=children.some(n=>n.nodeType===Node.TEXT_NODE&&n.nodeValue.trim()!=='');
+      if(meaningfulText)return unit.repeat(depth)+serialized;
+      const shallow=serializer.serializeToString(el.cloneNode(false));
+      const open=shallow.endsWith('/>')?shallow.slice(0,-2)+'>':shallow.replace(/><\/[^>]+>$/,'>');
+      const lines=[unit.repeat(depth)+open];
+      children.forEach(ch=>{
+        if(ch.nodeType===Node.ELEMENT_NODE)lines.push(prettyElement(ch,depth+1,unit));
+        else if(ch.nodeType===Node.TEXT_NODE){if(ch.nodeValue.trim())lines.push(unit.repeat(depth+1)+esc(ch.nodeValue))}
+        else lines.push(unit.repeat(depth+1)+serializer.serializeToString(ch));
+      });
+      lines.push(unit.repeat(depth)+'</'+el.nodeName+'>');
+      return lines.join('\n');
+    }
+    function formatted(doc,raw){
+      const unit=' '.repeat(Number(indent.value)||2), parts=[], decl=declaration(raw);
+      if(decl)parts.push(decl);
+      [...doc.childNodes].forEach(ch=>{
+        if(ch.nodeType===Node.ELEMENT_NODE)parts.push(prettyElement(ch,0,unit));
+        else if(ch.nodeType!==Node.TEXT_NODE||ch.nodeValue.trim())parts.push(serializer.serializeToString(ch));
+      });
+      return parts.join('\n');
+    }
+    function compact(doc,raw){
+      const clone=doc.cloneNode(true);
+      function strip(node,preserve=false){
+        const keep=preserve||xmlSpacePreserve(node);
+        if(!keep&&(node.nodeType===Node.DOCUMENT_NODE||node.nodeType===Node.ELEMENT_NODE)){
+          const kids=[...node.childNodes];
+          const meaningful=kids.some(n=>n.nodeType===Node.TEXT_NODE&&n.nodeValue.trim()!=='');
+          if(!meaningful)kids.filter(n=>n.nodeType===Node.TEXT_NODE&&!n.nodeValue.trim()).forEach(n=>node.removeChild(n));
+          [...node.childNodes].forEach(ch=>strip(ch,keep));
+        }
+      }
+      strip(clone,false);
+      const decl=declaration(raw), body=serializer.serializeToString(clone);
+      return decl?(decl+body.replace(/^\s*<\?xml[\s\S]*?\?>/i,'')):body;
+    }
+    function metrics(doc){
+      let elements=0,attributes=0,maxDepth=0;
+      function walk(el,depth){elements++;attributes+=el.attributes.length;maxDepth=Math.max(maxDepth,depth);[...el.children].forEach(ch=>walk(ch,depth+1))}
+      if(doc.documentElement)walk(doc.documentElement,1);
+      stats.hidden=false;stats.innerHTML='<span><b>'+elements+'</b> elements</span><span><b>'+attributes+'</b> attributes</span><span><b>'+maxDepth+'</b> max depth</span>';
+    }
+    function run(kind){
+      error.hidden=true;error.textContent='';
+      const raw=input.value, doc=parse(raw);metrics(doc);
+      if(kind==='validate'){output.value='';setStatus('Valid XML','success');return}
+      output.value=kind==='minify'?compact(doc,raw):formatted(doc,raw);
+      setStatus(kind==='minify'?'Minified':'Formatted','success');
+    }
+    const fail=e=>{output.value='';stats.hidden=true;error.textContent=e?.message||String(e);error.hidden=false;setStatus('Fix XML','error')};
+    document.getElementById('formatXml').addEventListener('click',()=>{try{run('format')}catch(e){fail(e)}});
+    document.getElementById('validateXml').addEventListener('click',()=>{try{run('validate')}catch(e){fail(e)}});
+    document.getElementById('minifyXml').addEventListener('click',()=>{try{run('minify')}catch(e){fail(e)}});
+    document.getElementById('exampleXmlFormat').addEventListener('click',()=>{input.value='<?xml version="1.0" encoding="UTF-8"?><catalog><item id="1"><name>Monitor</name><price currency="USD">199.00</price></item><item id="2"><name>Keyboard</name><price currency="USD">89.00</price></item></catalog>';try{run('format')}catch(e){fail(e)}});
+    document.getElementById('clearXmlFormat').addEventListener('click',()=>{input.value='';output.value='';file.value='';error.hidden=true;stats.hidden=true;setStatus('Ready');input.focus()});
+    document.getElementById('copyXmlFormat').addEventListener('click',async()=>{if(!output.value)return;try{await navigator.clipboard.writeText(output.value)}catch{output.select();document.execCommand('copy')}setStatus('Copied','success')});
+    document.getElementById('downloadXmlFormat').addEventListener('click',()=>{if(output.value)download('formatted.xml','application/xml;charset=utf-8',output.value)});
+    file.addEventListener('change',async()=>{const f=file.files?.[0];if(!f)return;if(f.size>5*1024*1024){file.value='';fail(new Error('Please choose an XML file smaller than 5 MB.'));return}input.value=await f.text();try{run('format')}catch(e){fail(e)}});
+    input.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();try{run('format')}catch(err){fail(err)}}});
+  }
+
   if(mode==='json-diff'){
     const left=document.getElementById('jsonDiffLeft'), right=document.getElementById('jsonDiffRight'), result=document.getElementById('jsonDiffResult'), status=document.getElementById('jsonDiffStatus'), error=document.getElementById('jsonDiffError'), stats=document.getElementById('jsonDiffStats'), ignore=document.getElementById('jsonDiffIgnoreOrder');
     const setStatus=(t,k='neutral')=>{status.textContent=t;status.dataset.kind=k};
