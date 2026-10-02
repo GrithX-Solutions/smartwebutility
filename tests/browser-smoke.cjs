@@ -171,6 +171,22 @@ const cases = [
     assert.ok(minified.includes('<h1>Hello</h1>'));
     assert.equal(await p.locator('#htmlMinifierError').isHidden(), true);
   }],
+  ['jsonpath-tester', async p => {
+    await p.waitForFunction(() => document.getElementById('jsonPathStatus').textContent === 'Ready');
+    await p.locator('#jsonPathInput').fill(JSON.stringify({store:{book:[{title:'A'},{title:'B'}]}}));
+    await p.locator('#jsonPathExpression').fill('$.store.book[*].title');
+    await p.locator('#runJsonPath').click();
+    let result = JSON.parse(await p.locator('#jsonPathOutput').inputValue());
+    assert.equal(result.length, 2);
+    assert.equal(result[0].path, "$['store']['book'][0]['title']");
+    assert.equal(result[0].value, 'A');
+    await p.locator('#jsonPathOutputMode').selectOption('paths');
+    result = JSON.parse(await p.locator('#jsonPathOutput').inputValue());
+    assert.equal(result[1], "$['store']['book'][1]['title']");
+    await p.locator('#jsonPathExpression').fill('$[');
+    await p.locator('#runJsonPath').click();
+    assert.equal(await p.locator('#jsonPathError').isHidden(), false);
+  }],
   ['json-diff', async p => {
     await p.locator('#jsonDiffLeft').fill('{"port":8080,"enabled":false}');
     await p.locator('#jsonDiffRight').fill('{"port":8443,"enabled":true,"region":"us"}');
