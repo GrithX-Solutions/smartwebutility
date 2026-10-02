@@ -2,6 +2,7 @@
   'use strict';
 
   const root = document.documentElement;
+  root.classList.add('swu-enhanced-header');
   const storageKey = 'swu-theme';
 
   function ensureHeaderNavigationStyles() {
