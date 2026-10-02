@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JSONPath Tester & Evaluator Online — Find JSON Paths</title>
+<meta name="description" content="Test JSONPath expressions online in your browser. Evaluate RFC 9535 queries, inspect matched values and normalized paths, then copy or download results.">
+<link rel="canonical" href="https://smartwebutility.com/jsonpath-tester/">
+<meta property="og:title" content="JSONPath Tester & Evaluator Online — Find JSON Paths">
+<meta property="og:description" content="Evaluate JSONPath queries locally and inspect matched values or normalized JSON paths.">
+<meta property="og:url" content="https://smartwebutility.com/jsonpath-tester/"><meta property="og:type" content="website">
+<meta name="twitter:card" content="summary"><meta name="theme-color" content="#071426">
+<link rel="icon" href="/favicon-sw-v5.svg?v=20261001e" type="image/svg+xml">
+<script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"JSONPath Tester & Evaluator Online","url":"https://smartwebutility.com/jsonpath-tester/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Test RFC 9535 JSONPath expressions against JSON locally in the browser.","featureList":["JSONPath expression testing","RFC 9535 evaluation","Normalized path output","Matched value output","Path plus value output","Local JSON file input","Copy and download results"]}</script>
+</head>
+<body data-jsonpath-tester>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+<main>
+<section class="tool-hero wrap json-tool-hero">
+<div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>JSONPath Tester</span></div>
+<span class="kicker">Developer tool · JSONPath tester, evaluator and finder</span>
+<h1>JSONPath Tester & Evaluator Online</h1>
+<p class="lead compact">Paste JSON, enter an RFC 9535 JSONPath expression, and evaluate it locally in your browser. Inspect matching values, normalized JSON paths, or both together without uploading the document.</p>
+
+<div class="json-toolbar data-view-toolbar">
+<button class="btn primary" id="runJsonPath" type="button">Evaluate JSONPath</button>
+<label class="file-btn">Open .json<input id="jsonPathFile" type="file" accept=".json,application/json,text/json,text/plain" hidden></label>
+<button class="text-btn" id="exampleJsonPath" type="button">Example</button>
+<button class="text-btn" id="clearJsonPath" type="button">Clear</button>
+<label class="compact-control">Output
+<select id="jsonPathOutputMode">
+<option value="values">Matched values</option>
+<option value="paths">Normalized paths</option>
+<option value="pairs" selected>Path + value</option>
+</select></label>
+</div>
+
+<div class="editor-panel" style="margin-bottom:16px">
+<div class="editor-head"><div><strong>JSONPath expression</strong><span id="jsonPathExpressionStatus">Loading evaluator…</span></div></div>
+<input id="jsonPathExpression" class="code-editor" style="min-height:auto;height:auto" value="$.store.book[*].title" spellcheck="false" autocapitalize="none" autocomplete="off" aria-label="JSONPath expression">
+</div>
+
+<div class="json-workspace">
+<section class="editor-panel"><div class="editor-head"><div><strong>JSON input</strong><span>Paste valid JSON or open a local file</span></div></div><textarea id="jsonPathInput" class="code-editor" spellcheck="false" autocapitalize="none" autocomplete="off" aria-label="JSON input"></textarea></section>
+<section class="editor-panel"><div class="editor-head"><div><strong>Results</strong><span id="jsonPathStatus" data-kind="neutral">Loading evaluator…</span></div><div class="editor-actions"><button id="copyJsonPath" class="text-btn" type="button">Copy</button><button id="downloadJsonPath" class="text-btn" type="button">Download</button></div></div><textarea id="jsonPathOutput" class="code-editor" readonly spellcheck="false" aria-label="JSONPath results"></textarea></section>
+</div>
+<div id="jsonPathError" class="error" hidden role="alert"></div>
+<div id="jsonPathStats" class="json-stats" hidden></div>
+<div class="trustbar"><span>Browser-side evaluation</span><span>No upload</span><span>RFC 9535 JSONPath</span><span>Normalized path output</span><span>Local JSON files up to 5 MB</span></div>
+</section>
+
+<section class="section wrap prose">
+<h2>Test JSONPath expressions against real JSON</h2>
+<p>A JSONPath expression selects nodes from a JSON document in a way that is conceptually similar to using a path to navigate nested data. This tester evaluates the query against the JSON you provide and returns the matching values, their normalized paths, or a combined path-and-value result.</p>
+<div class="info-grid">
+<article><h3>Matched values</h3><p>Use value mode when you want the data selected by the JSONPath expression, such as every book title, a filtered set of records, or one deeply nested property.</p></article>
+<article><h3>Normalized paths</h3><p>Use path mode when the location of each match matters. Normalized paths identify matched nodes using canonical bracket notation such as <code>$['store']['book'][0]['title']</code>.</p></article>
+<article><h3>Path plus value</h3><p>Combined mode is useful for debugging because it shows both where a match came from and the JSON value at that location.</p></article>
+<article><h3>Expression validation</h3><p>The evaluator uses an RFC 9535 implementation that parses and validates JSONPath expressions before returning results, so malformed expressions are reported rather than silently guessed.</p></article>
+</div>
+
+<h2>Common JSONPath examples</h2>
+<p><code>$.store.book[*].title</code> selects every title in the <code>book</code> array. <code>$..author</code> finds descendant members named <code>author</code>. <code>$.store.book[0]</code> selects the first book. RFC 9535 filter expressions can select nodes based on conditions, such as price or string length, when the expression follows the standard grammar.</p>
+
+<h2>JSONPath finder versus JSON search</h2>
+<p>A text search only tells you that a string appears somewhere in a JSON document. JSONPath works on parsed structure, so it can select values by object member, array index, wildcard, descendant segment, slice or filter. Normalized-path output also makes the exact location of each selected node explicit.</p>
+
+<h2>JSONPath is not JSON Pointer</h2>
+<p>JSONPath is a query language that can return multiple nodes. JSON Pointer identifies one location with a compact slash-based syntax. A normalized JSONPath may look like a location identifier, but the query language can also include wildcards, filters and descendant selection that JSON Pointer does not provide.</p>
+
+<h2>RFC 9535 behavior</h2>
+<p>This page uses an implementation of the standardized JSONPath syntax defined by RFC 9535. Some older JSONPath tools implement historical extensions or library-specific expressions that are outside the standard. A query that works in a legacy engine may therefore need adjustment when tested against standardized JSONPath semantics.</p>
+
+<h2>Filters and data types</h2>
+<p>Filters evaluate JSON values using JSONPath rules rather than JavaScript source-code execution. Strings, numbers, booleans, null values, arrays and objects remain distinct JSON types. If a condition does not match the document shape or uses invalid function arguments, the evaluator can reject the expression or return no matches.</p>
+
+<h2>Privacy and local JSON analysis</h2>
+<p>The JSON document and JSONPath expression are processed in browser JavaScript and are not submitted to a Smart Web Utility query API. Remove secrets before sharing screenshots, downloaded results or copied output with other people.</p>
+
+<h2>Related developer tools</h2>
+<div class="related-tools"><a href="/json-formatter/">JSON Formatter<span>Validate, format and minify JSON before querying it.</span></a><a href="/json-diff/">JSON Diff<span>Compare two JSON values by structure and path.</span></a><a href="/json-escape-unescape/">JSON Escape / Unescape<span>Encode or decode JSON string content.</span></a></div>
+</section>
+
+<section class="section alt" data-quality-content="v1"><div class="wrap prose">
+<h2>Frequently asked questions</h2>
+<h3>What is a JSONPath tester?</h3><p>It evaluates a JSONPath query against JSON and shows which nodes the expression selects.</p>
+<h3>Can it show the path of every match?</h3><p>Yes. Choose normalized paths or path + value output.</p>
+<h3>Does it support JSONPath filters?</h3><p>Yes, when the expression follows the RFC 9535 grammar supported by the evaluator.</p>
+<h3>Can I open a JSON file?</h3><p>Yes. Local JSON files up to 5 MB can be opened directly in the browser.</p>
+<h3>Is my JSON uploaded?</h3><p>No. Evaluation runs locally in browser JavaScript.</p>
+</div></section>
+</main>
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script type="module" src="/assets/jsonpath-tester.mjs?v=20261002-1"></script>
+</body></html>
