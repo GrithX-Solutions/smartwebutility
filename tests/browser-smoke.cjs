@@ -203,6 +203,9 @@ const cases = [
     await p.locator('#unixInput').fill('1767225600');
     await p.locator('#convertUnix').click();
     assert.ok((await p.locator('#dateResult').innerText()).trim().length);
+    assert.match((await p.locator('meta[name="robots"]').getAttribute('content')) || '', /index,follow/);
+    assert.equal(await p.locator('script[data-swu-breadcrumb="true"]').count(), 1);
+    assert.equal(await p.locator('[data-seo-example="existing-unix"]').count(), 1);
   }],
   ['uuid-generator', async p => {
     await p.locator('#uuidCount').fill('3');
