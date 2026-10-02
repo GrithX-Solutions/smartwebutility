@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UUID Validator Online — Check UUID & GUID Format</title>
+<meta name="description" content="Validate UUIDs and GUIDs online in your browser. Check RFC 9562 format, version and variant, recognize Nil/Max UUIDs, normalize values and inspect UUID v7 timestamps.">
+<link rel="canonical" href="https://smartwebutility.com/uuid-validator/">
+<meta property="og:title" content="UUID Validator Online — Check UUID & GUID Format">
+<meta property="og:description" content="Check UUID/GUID format, version and variant locally, including UUID v4, v7, Nil and Max values.">
+<meta property="og:url" content="https://smartwebutility.com/uuid-validator/"><meta property="og:type" content="website">
+<meta name="twitter:card" content="summary"><meta name="theme-color" content="#071426">
+<link rel="icon" href="/favicon-sw-v5.svg?v=20261001e" type="image/svg+xml">
+<script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"UUID Validator Online","url":"https://smartwebutility.com/uuid-validator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Validate UUID and GUID values locally in the browser against UUID format, version and variant rules.","featureList":["UUID format validation","GUID validation","UUID version detection","UUID variant detection","UUID v7 timestamp display","Nil and Max UUID recognition","URN and brace wrapper normalization","Bulk UUID validation"]}</script>
+</head>
+<body data-uuid-validator>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+<main>
+<section class="tool-hero wrap json-tool-hero">
+<div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>UUID Validator</span></div>
+<span class="kicker">Developer tool · UUID/GUID format and version checker</span>
+<h1>UUID Validator Online</h1>
+<p class="lead compact">Check one UUID or a batch of UUID/GUID values in your browser. The validator reports canonical format, UUID version, variant, normalized value, special Nil/Max forms and a timestamp for UUID v7 values.</p>
+
+<div class="json-toolbar data-view-toolbar">
+<button class="btn primary" id="validateUuid" type="button">Validate UUIDs</button>
+<button class="text-btn" id="exampleUuidValidator" type="button">Example</button>
+<button class="text-btn" id="clearUuidValidator" type="button">Clear</button>
+<label class="check-control"><input id="uuidAcceptWrappers" type="checkbox" checked> Accept URN / braces</label>
+<label class="check-control"><input id="uuidAcceptCompact" type="checkbox" checked> Accept 32-hex compact form</label>
+</div>
+
+<div class="json-workspace">
+<section class="editor-panel"><div class="editor-head"><div><strong>UUID / GUID input</strong><span>One per line, or separate with spaces/commas</span></div></div><textarea id="uuidValidatorInput" class="code-editor" spellcheck="false" autocapitalize="none" autocomplete="off" placeholder="550e8400-e29b-41d4-a716-446655440000&#10;01890f4e-7c88-7abc-8def-0123456789ab" aria-label="UUID input"></textarea></section>
+<section class="editor-panel"><div class="editor-head"><div><strong>Normalized valid UUIDs</strong><span id="uuidValidatorStatus" data-kind="neutral">Ready</span></div><div class="editor-actions"><button id="copyUuidValidator" class="text-btn" type="button">Copy valid</button><button id="downloadUuidValidator" class="text-btn" type="button">Download report</button></div></div><textarea id="uuidValidatorOutput" class="code-editor" readonly spellcheck="false" aria-label="Normalized valid UUID output"></textarea></section>
+</div>
+<div id="uuidValidatorError" class="error" hidden role="alert"></div>
+<div id="uuidValidatorStats" class="json-stats" hidden></div>
+
+<section class="editor-panel" style="margin-top:16px">
+<div class="editor-head"><div><strong>Validation details</strong><span>Format, RFC status, version and variant</span></div></div>
+<div style="overflow:auto">
+<table id="uuidValidatorTable" style="width:100%;border-collapse:collapse">
+<thead><tr><th style="text-align:left;padding:8px">Input</th><th style="text-align:left;padding:8px">Status</th><th style="text-align:left;padding:8px">Version</th><th style="text-align:left;padding:8px">Variant</th><th style="text-align:left;padding:8px">Normalized / detail</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+</section>
+<div class="trustbar"><span>Browser-side validation</span><span>No upload</span><span>RFC 9562-aware</span><span>Bulk checking</span><span>UUID v7 timestamp</span></div>
+</section>
+
+<section class="section wrap prose">
+<h2>Validate UUID and GUID values beyond a simple regex</h2>
+<p>A UUID is a 128-bit identifier with defined layout fields. This validator first checks the textual shape, then inspects the variant and version bits rather than treating every 36-character hexadecimal string as the same kind of UUID. Common GUID presentation wrappers can be normalized before the standards checks.</p>
+<div class="info-grid">
+<article><h3>Version detection</h3><p>For the RFC UUID variant, the version field identifies UUID versions 1 through 8. The result distinguishes those versions from unused or future-reserved version values.</p></article>
+<article><h3>Variant detection</h3><p>The first hexadecimal digit of the fourth group identifies the UUID variant. Values 8, 9, A and B represent the variant used by current RFC UUID versions; other ranges are reported separately.</p></article>
+<article><h3>Nil and Max UUIDs</h3><p>The all-zero Nil UUID and all-one Max UUID are recognized as special UUID forms instead of being rejected merely because their variant/version bits differ from normal RFC-versioned UUIDs.</p></article>
+<article><h3>UUID v7 timestamp</h3><p>For a valid version 7 UUID, the first 48 bits contain a Unix-epoch timestamp in milliseconds. The validator displays that timestamp as an ISO date when it is representable.</p></article>
+</div>
+
+<h2>Canonical UUID format</h2>
+<p>The familiar text form uses five hexadecimal groups in an 8-4-4-4-12 pattern, such as <code>550e8400-e29b-41d4-a716-446655440000</code>. This page normalizes accepted values to lowercase canonical form. With the compatibility options enabled, it can also accept a <code>urn:uuid:</code> prefix, surrounding braces, or a compact 32-hex representation before validation.</p>
+
+<h2>UUID version is not the same as validity</h2>
+<p>The version nibble only has meaning together with the UUID variant. A string may have the right number of hexadecimal digits yet use a reserved variant or a version number that is currently unused or reserved for future definition. The table therefore reports format validity, variant and version context separately.</p>
+
+<h2>UUID, GUID and Microsoft compatibility</h2>
+<p>The term GUID is commonly used for identifiers with the same familiar textual shape. Microsoft also has historical binary byte-order conventions and a reserved UUID variant. This browser tool validates textual identifiers and reports the detected variant; it does not reinterpret binary COM GUID byte order.</p>
+
+<h2>Bulk UUID validation</h2>
+<p>Paste multiple values separated by lines, spaces, commas or semicolons. Valid normal UUIDs plus the special Nil and Max forms are normalized into the output panel, while each original value remains visible in the detail table with its reason and classification.</p>
+
+<h2>Validation does not prove uniqueness</h2>
+<p>A syntactically valid UUID is not evidence that an identifier has never been used elsewhere. Validation checks representation and defined bit fields. Applications that require uniqueness must enforce that requirement in their own storage or business logic.</p>
+
+<h2>Related developer tools</h2>
+<div class="related-tools"><a href="/uuid-generator/">UUID Generator<span>Generate cryptographically random UUID v4 identifiers.</span></a><a href="/random-string-generator/">Random String Generator<span>Create random strings for testing and other workflows.</span></a><a href="/json-formatter/">JSON Formatter<span>Validate and format JSON containing UUID fields.</span></a></div>
+</section>
+
+<section class="section alt" data-quality-content="v1"><div class="wrap prose">
+<h2>Frequently asked questions</h2>
+<h3>How do I check if a UUID is valid?</h3><p>Paste the value and run validation. The result checks format, variant and version rather than only counting characters.</p>
+<h3>Does it validate UUID v4 and UUID v7?</h3><p>Yes. It detects versions 1 through 8 for the current RFC UUID variant, including v4 and v7.</p>
+<h3>Can it validate GUID strings?</h3><p>Yes for common textual GUID forms. Optional braces and compact hexadecimal input can be normalized before validation.</p>
+<h3>What is the Nil UUID?</h3><p>It is the special all-zero 128-bit UUID value.</p>
+<h3>Is input uploaded?</h3><p>No. Validation runs locally in browser JavaScript.</p>
+</div></section>
+</main>
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script src="/assets/uuid-validator.js?v=20261002-1" defer></script>
+</body></html>
