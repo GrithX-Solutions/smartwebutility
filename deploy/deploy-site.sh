@@ -43,8 +43,15 @@ python3 -c '
 import json, urllib.request, urllib.error
 for p in ("seo-audit.php", "http-status.php"):
     url = "https://smartwebutility.com/api/" + p
+    request = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": "Mozilla/5.0 (compatible; SmartWebUtilityDeployHealth/1.0; +https://smartwebutility.com/)",
+            "Accept": "application/json",
+        },
+    )
     try:
-        response = urllib.request.urlopen(url, timeout=20)
+        response = urllib.request.urlopen(request, timeout=20)
     except urllib.error.HTTPError as exc:
         response = exc
     with response:
