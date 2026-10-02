@@ -187,6 +187,21 @@ const cases = [
     await p.locator('#runJsonPath').click();
     assert.equal(await p.locator('#jsonPathError').isHidden(), false);
   }],
+  ['css-minifier', async p => {
+    await p.waitForFunction(() => document.getElementById('cssMinifierStatus').textContent === 'Ready');
+    const source = '.card { color: #ff0000; margin: 0px 0px 0px 0px; padding: 16px 16px 16px 16px; }';
+    await p.locator('#cssMinifierInput').fill(source);
+    await p.locator('#minifyCss').click();
+    await p.waitForFunction(() => document.getElementById('cssMinifierStatus').textContent === 'Minified');
+    const minified = await p.locator('#cssMinifierOutput').inputValue();
+    assert.ok(minified.length < source.length);
+    assert.ok(minified.includes('.card{'));
+    assert.ok(minified.includes('color:red'));
+    assert.equal(await p.locator('#cssMinifierError').isHidden(), true);
+    await p.locator('#cssMinifierInput').fill('.broken { color: ;');
+    await p.locator('#minifyCss').click();
+    assert.equal(await p.locator('#cssMinifierError').isHidden(), false);
+  }],
   ['json-diff', async p => {
     await p.locator('#jsonDiffLeft').fill('{"port":8080,"enabled":false}');
     await p.locator('#jsonDiffRight').fill('{"port":8443,"enabled":true,"region":"us"}');
