@@ -699,6 +699,7 @@ const cases = [
     const page = await browser.newPage({viewport: {width: 1280, height: 800}});
     try {
       await page.goto(origin + '/json-formatter/', {waitUntil: 'networkidle', timeout: 20000});
+      await page.waitForFunction(() => [...document.styleSheets].some(sheet => sheet.href && sheet.href.includes('/assets/header-nav-search.css')));
       const search = page.locator('#headerToolSearch');
       await search.fill('guid');
       await page.waitForFunction(() => {
