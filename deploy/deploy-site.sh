@@ -14,6 +14,34 @@ case "$RELEASE" in "$BASE"/releases/*) ;; *) echo "Release must be inside $BASE/
   echo "Missing required release files" >&2; exit 2;
 }
 
+# Version shared front-end assets from their release content so CDN/browser caches
+# cannot keep an older global navigation/search UI after a successful deploy.
+CATALOG_HASH="$(sha256sum "$RELEASE/assets/tool-catalog.json" | awk '{print substr($1,1,12)}')"
+python3 - "$RELEASE/assets/theme.js" "$CATALOG_HASH" <<'PY'
+import re, sys
+from pathlib import Path
+path=Path(sys.argv[1])
+catalog_hash=sys.argv[2]
+text=path.read_text(encoding="utf-8")
+text=re.sub(r"(/assets/tool-catalog\.json\?v=)[^'\"]+", r"\g<1>"+catalog_hash, text)
+path.write_text(text, encoding="utf-8")
+PY
+THEME_HASH="$(sha256sum "$RELEASE/assets/theme.js" | awk '{print substr($1,1,12)}')"
+STYLE_HASH="$(sha256sum "$RELEASE/assets/styles.css" | awk '{print substr($1,1,12)}')"
+python3 - "$RELEASE" "$THEME_HASH" "$STYLE_HASH" <<'PY'
+import re, sys
+from pathlib import Path
+root=Path(sys.argv[1])
+theme_hash=sys.argv[2]
+style_hash=sys.argv[3]
+for path in root.rglob("*.html"):
+    text=path.read_text(encoding="utf-8")
+    text=re.sub(r'(/assets/theme\.js)(?:\?v=[^"\']*)?', r'\1?v='+theme_hash, text)
+    text=re.sub(r'(/assets/styles\.css)(?:\?v=[^"\']*)?', r'\1?v='+style_hash, text)
+    path.write_text(text, encoding="utf-8")
+print(f"Asset cache versions: theme={theme_hash} styles={style_hash} catalog={catalog_hash}")
+PY
+
 # Artifact ZIP extraction may create root-only (0700) directories. PHP-FPM
 # executes as an unprivileged user and requires +x access to every directory.
 find "$RELEASE" -type d -exec chmod 755 {} +
