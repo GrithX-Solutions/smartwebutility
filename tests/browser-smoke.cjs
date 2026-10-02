@@ -732,6 +732,7 @@ const cases = [
 
   // Mobile layout and navigation regression checks on a representative tool page.
   const mobile = await browser.newPage({viewport: {width: 390, height: 844}, isMobile: true});
+  await mobile.addInitScript(() => { window.__swuCls = 0; new PerformanceObserver(list => { for (const entry of list.getEntries()) if (!entry.hadRecentInput) window.__swuCls += entry.value; }).observe({type:'layout-shift', buffered:true}); });
   try {
     await mobile.goto(origin + '/json-formatter/');
     assert.equal(await mobile.locator('h1').count(), 1);
@@ -746,6 +747,9 @@ const cases = [
     const toggle = mobile.locator('#menuToggle');
     await toggle.click();
     assert.equal(await toggle.getAttribute('aria-expanded'), 'true');
+    await mobile.waitForTimeout(250);
+    const cls = await mobile.evaluate(() => window.__swuCls || 0);
+    assert.ok(cls < 0.1, 'mobile header/layout CLS too high: ' + cls);
     console.log('PASS mobile navigation/layout');
   } catch (error) {
     failures.push({slug: 'mobile-navigation', error: error.message});

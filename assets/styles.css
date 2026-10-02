@@ -1674,3 +1674,7 @@ html[data-theme="light"] .brand span:last-child{
 .json-diff-table tr[data-kind="added"] .diff-badge{color:var(--brand3)}
 .json-diff-table tr[data-kind="removed"] .diff-badge{color:#ff8b8b}
 .json-diff-table tr[data-kind="changed"] .diff-badge{color:var(--brand2)}
+
+/* Reserve responsive header-search space before DOM enhancement to prevent layout shift. */
+@media (min-width:761px) and (max-width:1080px){html.swu-enhanced-header .nav{min-height:118px}}
+@media (max-width:760px){html.swu-enhanced-header .nav{min-height:124px}}
