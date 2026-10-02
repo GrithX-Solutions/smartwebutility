@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SQL Formatter & Beautifier Online — Format SQL</title>
+  <meta name="description" content="Format and beautify SQL online in your browser. Choose a SQL dialect, keyword case and indentation, then copy or download the formatted query.">
+  <link rel="canonical" href="https://smartwebutility.com/sql-formatter/">
+  <meta property="og:title" content="SQL Formatter & Beautifier Online — Format SQL">
+  <meta property="og:description" content="Format SQL queries locally with dialect, keyword case and indentation controls.">
+  <meta property="og:url" content="https://smartwebutility.com/sql-formatter/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#071426">
+  <link rel="icon" href="/favicon-sw-v5.svg?v=20261001e" type="image/svg+xml">
+  <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"SQL Formatter & Beautifier Online","url":"https://smartwebutility.com/sql-formatter/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Format SQL queries in the browser with selectable SQL dialect and style options.","featureList":["SQL formatting and beautifying","Multiple SQL dialects","Keyword case control","2 or 4 space indentation","Multiple query formatting","Local SQL file input","Copy and download"]}</script>
+</head>
+<body data-sql-formatter>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+<main>
+<section class="tool-hero wrap json-tool-hero">
+  <div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>SQL Formatter</span></div>
+  <span class="kicker">Developer tool · SQL formatter and beautifier</span>
+  <h1>SQL Formatter & Beautifier Online</h1>
+  <p class="lead compact">Paste a SQL query or open a local <code>.sql</code> file, select the matching dialect, and rewrite the query with consistent indentation and keyword styling in your browser.</p>
+
+  <div class="json-toolbar data-view-toolbar" aria-label="SQL formatter actions">
+    <button class="btn primary" id="formatSql" type="button">Format SQL</button>
+    <label class="file-btn">Open .sql<input id="sqlFile" type="file" accept=".sql,text/plain,application/sql" hidden></label>
+    <button class="text-btn" id="exampleSql" type="button">Example</button>
+    <button class="text-btn" id="clearSql" type="button">Clear</button>
+    <label class="compact-control">Dialect
+      <select id="sqlDialect">
+        <option value="sql">Standard SQL</option>
+        <option value="postgresql">PostgreSQL</option>
+        <option value="mysql">MySQL</option>
+        <option value="mariadb">MariaDB</option>
+        <option value="transactsql">SQL Server T-SQL</option>
+        <option value="sqlite">SQLite</option>
+        <option value="bigquery">BigQuery</option>
+        <option value="snowflake">Snowflake</option>
+        <option value="redshift">Amazon Redshift</option>
+        <option value="duckdb">DuckDB</option>
+        <option value="plsql">Oracle PL/SQL</option>
+      </select>
+    </label>
+    <label class="compact-control">Keywords
+      <select id="sqlKeywordCase"><option value="preserve">Preserve</option><option value="upper" selected>UPPERCASE</option><option value="lower">lowercase</option></select>
+    </label>
+    <label class="compact-control">Indent
+      <select id="sqlTabWidth"><option value="2" selected>2 spaces</option><option value="4">4 spaces</option></select>
+    </label>
+  </div>
+
+  <div class="json-workspace">
+    <section class="editor-panel">
+      <div class="editor-head"><div><strong>SQL input</strong><span>Paste a query or open a local file</span></div></div>
+      <textarea id="sqlInput" class="code-editor" spellcheck="false" autocapitalize="none" autocomplete="off" placeholder="select u.id,u.name,count(o.id) as orders from users u left join orders o on o.user_id=u.id where u.active=true group by u.id,u.name order by orders desc;" aria-label="SQL input"></textarea>
+    </section>
+    <section class="editor-panel">
+      <div class="editor-head"><div><strong>Formatted SQL</strong><span id="sqlStatus" data-kind="neutral">Loading formatter…</span></div><div class="editor-actions"><button id="copySql" class="text-btn" type="button">Copy</button><button id="downloadSql" class="text-btn" type="button">Download</button></div></div>
+      <textarea id="sqlOutput" class="code-editor" spellcheck="false" readonly placeholder="Formatted SQL will appear here" aria-label="Formatted SQL output"></textarea>
+    </section>
+  </div>
+  <div id="sqlError" class="error" hidden role="alert"></div>
+  <div id="sqlStats" class="json-stats" hidden aria-label="SQL formatter statistics"></div>
+  <div class="trustbar"><span>Browser-side formatting</span><span>No query execution</span><span>No account</span><span>Local files up to 5 MB</span><span>Ctrl/⌘ + Enter to format</span></div>
+</section>
+
+<section class="section wrap prose">
+  <h2>Format and beautify SQL queries online</h2>
+  <p>This SQL formatter rewrites whitespace, indentation and keyword presentation so long queries are easier to read and review. It is useful when SQL copied from logs, application code, dashboards or query builders has become compressed into one line or uses inconsistent spacing.</p>
+
+  <div class="info-grid">
+    <article><h3>Choose the SQL dialect</h3><p>Select Standard SQL or a specific dialect such as PostgreSQL, MySQL, SQL Server, SQLite, BigQuery, Snowflake, Redshift, DuckDB or Oracle PL/SQL. Dialect selection matters because keywords and syntax differ between database systems.</p></article>
+    <article><h3>Control keyword case</h3><p>Preserve existing keyword case, convert recognized keywords to uppercase, or use lowercase while keeping identifiers and string values separate from formatting choices.</p></article>
+    <article><h3>Choose indentation</h3><p>Use two or four spaces for nested clauses and expressions. Formatting changes whitespace and layout; it does not execute the query.</p></article>
+    <article><h3>Open, copy or download</h3><p>Open a local <code>.sql</code> file up to 5 MB, copy the formatted result, or download it as <code>formatted.sql</code>.</p></article>
+  </div>
+
+  <h2>SQL formatting is not SQL validation</h2>
+  <p>A formatter is not a database engine. Successful formatting does not prove that a query is valid for your database, that referenced tables and columns exist, that permissions are available or that the query returns the intended result. Always test SQL against the correct database environment before production use.</p>
+
+  <h2>Why selecting the right dialect matters</h2>
+  <p>PostgreSQL, MySQL, SQL Server, BigQuery, Snowflake and other systems share much of SQL but also add their own keywords, operators and constructs. Standard SQL mode is useful when the dialect is unknown, but a specific dialect generally gives the formatter better context for vendor-specific syntax.</p>
+
+  <h2>Formatting does not optimize query performance</h2>
+  <p>Readable SQL can make query review easier, but indentation does not change the optimizer plan. Performance work still requires indexes, statistics, execution plans, data-distribution analysis and database-specific tuning. This page changes presentation rather than query semantics intentionally.</p>
+
+  <h2>Stored procedures and advanced scripts</h2>
+  <p>The formatting library is designed primarily for SQL queries rather than every procedural or scripting construct. Complex stored procedures, custom statement delimiters and database-client commands may not format correctly. Keep the original query in version control and review output when working with advanced database scripts.</p>
+
+  <h2>Privacy and local processing</h2>
+  <p>Your SQL text is processed by JavaScript in the browser and is not submitted to a Smart Web Utility formatting API. The formatter library itself is loaded as a pinned browser module. Avoid pasting production credentials or secrets into any shared browser session or generated snippet.</p>
+
+  <h2>Related developer tools</h2>
+  <div class="related-tools">
+    <a href="/json-formatter/">JSON Formatter<span>Format and validate JSON API payloads.</span></a>
+    <a href="/csv-to-json/">CSV to JSON<span>Convert tabular CSV rows into structured JSON.</span></a>
+    <a href="/regex-tester/">Regex Tester<span>Test JavaScript regular expressions and captures.</span></a>
+  </div>
+</section>
+
+<section class="section alt" data-quality-content="v1"><div class="wrap prose">
+  <h2>Frequently asked questions</h2>
+  <h3>Does this SQL formatter validate my query?</h3><p>No. It formats recognized SQL syntax but does not replace validation by the target database.</p>
+  <h3>Can I format PostgreSQL or MySQL?</h3><p>Yes. Select the matching dialect before formatting.</p>
+  <h3>Does it support SQL Server?</h3><p>Yes. Choose SQL Server T-SQL for Transact-SQL formatting.</p>
+  <h3>Does formatting change query performance?</h3><p>Whitespace formatting itself should not be treated as query optimization. Review execution plans separately.</p>
+  <h3>Is the SQL query uploaded?</h3><p>No SQL content is submitted to a Smart Web Utility formatting endpoint; formatting runs in the browser.</p>
+</div></section>
+</main>
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script type="module" src="/assets/sql-formatter.mjs?v=20261002-1"></script>
+</body>
+</html>
