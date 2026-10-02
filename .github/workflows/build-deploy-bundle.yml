@@ -45,6 +45,7 @@ jobs:
           node --check assets/regex-escaper.js
           node --check assets/ulid-generator.js
           node --check assets/random-port-generator.js
+          node --check assets/mac-address-generator.js
           node --check tests/browser-smoke.cjs
           node --check assets/data-view-tools.js
           node --check assets/data-advanced-tools.js
