@@ -44,6 +44,7 @@ jobs:
           node --check assets/csv-to-json.js
           node --check assets/sql-formatter.mjs
           node --check assets/markdown-html-tools.mjs
+          node --check assets/html-minifier.js
           node --check deploy/lighthouse/worker.mjs
           node --check deploy/lighthouse/proxy.mjs
 
