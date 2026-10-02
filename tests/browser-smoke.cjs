@@ -498,6 +498,7 @@ const cases = [
   ['mac-address-generator', async p => {
     await p.locator('#macCount').fill('25');
     await p.locator('#macFormat').selectOption('colon');
+    await p.locator('#macListFormat').selectOption('lines');
     await p.locator('#macUppercase').check();
     await p.locator('#generateMac').click();
 
@@ -510,11 +511,22 @@ const cases = [
       assert.equal(first & 1, 0);
       assert.equal(first & 2, 2);
     });
+    const canonical = values.map(value => value.replace(/:/g, '').toLowerCase());
 
-    await p.locator('#macFormat').selectOption('compact');
+    await p.locator('#macFormat').selectOption('cisco');
     await p.locator('#macUppercase').uncheck();
     values = (await p.locator('#macOutput').inputValue()).trim().split(/\r?\n/);
-    values.forEach(value => assert.match(value, /^[0-9a-f]{12}$/));
+    values.forEach(value => assert.match(value, /^[0-9a-f]{4}(?:\.[0-9a-f]{4}){2}$/));
+    assert.deepEqual(values.map(value => value.replace(/\./g, '')), canonical);
+
+    await p.locator('#macListFormat').selectOption('json');
+    const jsonValues = JSON.parse(await p.locator('#macOutput').inputValue());
+    assert.equal(jsonValues.length, 25);
+
+    await p.locator('#macListFormat').selectOption('csv');
+    const csv = await p.locator('#macOutput').inputValue();
+    assert.match(csv, /^mac_address\n/);
+    assert.equal(csv.trim().split(/\r?\n/).length, 26);
     assert.equal(await p.locator('#macError').isHidden(), true);
   }],
   ['hash-generator', async p => {
