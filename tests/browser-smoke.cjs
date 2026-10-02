@@ -204,6 +204,27 @@ const cases = [
     assert.ok(restructured.length > 0);
     assert.equal(await p.locator('#cssMinifierError').isHidden(), true);
   }],
+  ['json-to-xml', async p => {
+    await p.locator('#converterInput').fill(JSON.stringify({store:{book:[{title:'A'},{title:'B'}]},'first name':'Ada',active:true,note:null}));
+    await p.locator('#convertBtn').click();
+    let xml = await p.locator('#converterOutput').inputValue();
+    assert.ok(xml.includes('<root>'));
+    assert.ok(xml.includes('<book>'));
+    assert.ok(xml.includes('<title>A</title>'));
+    assert.ok(xml.includes('<property name="first name">Ada</property>'));
+    assert.ok(xml.includes('<note />'));
+    assert.equal(await p.locator('#converterError').isHidden(), true);
+    await p.locator('#converterInput').fill('[1,2]');
+    await p.locator('#jsonXmlRoot').fill('records');
+    await p.locator('#jsonXmlItem').fill('row');
+    await p.locator('#convertBtn').click();
+    xml = await p.locator('#converterOutput').inputValue();
+    assert.ok(xml.includes('<records>'));
+    assert.ok(xml.includes('<row>1</row>'));
+    await p.locator('#jsonXmlRoot').fill('123bad');
+    await p.locator('#convertBtn').click();
+    assert.equal(await p.locator('#converterError').isHidden(), false);
+  }],
   ['json-diff', async p => {
     await p.locator('#jsonDiffLeft').fill('{"port":8080,"enabled":false}');
     await p.locator('#jsonDiffRight').fill('{"port":8443,"enabled":true,"region":"us"}');
