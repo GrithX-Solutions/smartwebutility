@@ -17,7 +17,8 @@ def main() -> int:
     theme=root/"assets/theme.js"
     styles=root/"assets/styles.css"
     catalog=root/"assets/tool-catalog.json"
-    for path in (theme,styles,catalog):
+    header_nav=root/"assets/header-nav-search.css"
+    for path in (theme,styles,catalog,header_nav):
         if not path.is_file():
             raise SystemExit(f"Missing shared asset: {path}")
 
@@ -40,7 +41,7 @@ def main() -> int:
         if updated != text:
             path.write_text(updated, encoding="utf-8")
             changed += 1
-    print(f"Asset cache versions: theme={theme_hash} styles={style_hash} catalog={catalog_hash} html={changed}")
+    print(f"Asset cache versions: theme={theme_hash} styles={style_hash} catalog={catalog_hash} header={header_nav_hash} html={changed}")
     return 0
 
 if __name__=="__main__":
