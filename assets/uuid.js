@@ -6,6 +6,7 @@
   const countEl = document.getElementById('uuidCount');
   const formatEl = document.getElementById('uuidFormat');
   const uppercaseEl = document.getElementById('uuidUppercase');
+  const listFormatEl = document.getElementById('uuidListFormat');
   const output = document.getElementById('uuidOutput');
   const outputTitle = document.getElementById('uuidOutputTitle');
   const status = document.getElementById('uuidStatus');
@@ -75,6 +76,7 @@
 
     if (format === 'compact') return hex.replace(/-/g, '');
     if (format === 'braces') return '{' + hex + '}';
+    if (format === 'parentheses') return '(' + hex + ')';
     if (format === 'urn') return 'urn:uuid:' + hex;
     return hex;
   }
@@ -83,8 +85,8 @@
     clearError();
 
     const count = Number(countEl.value);
-    if (!Number.isInteger(count) || count < 1 || count > 500) {
-      showError('Choose an identifier count between 1 and 500.');
+    if (!Number.isInteger(count) || count < 1 || count > 1000) {
+      showError('Choose an identifier count between 1 and 1,000.');
       return;
     }
 
@@ -92,7 +94,9 @@
     const generator = version === '7' ? uuidV7 : uuidV4;
     const values = Array.from({ length: count }, () => applyFormat(generator()));
 
-    output.value = values.join('\n');
+    if (listFormatEl.value === 'json') output.value = JSON.stringify(values, null, 2);
+    else if (listFormatEl.value === 'comma') output.value = values.join(', ');
+    else output.value = values.join('\n');
     outputTitle.textContent = version === '7' ? 'UUID v7 output' : 'UUID v4 / GUID output';
 
     stats.hidden = false;
@@ -100,7 +104,8 @@
       '<span><b>' + count.toLocaleString() + '</b> generated</span>' +
       '<span><b>v' + version + '</b> UUID version</span>' +
       '<span><b>' + formatEl.options[formatEl.selectedIndex].text + '</b> format</span>' +
-      '<span><b>' + (uppercaseEl.checked ? 'Uppercase' : 'Lowercase') + '</b> hex</span>';
+      '<span><b>' + (uppercaseEl.checked ? 'Uppercase' : 'Lowercase') + '</b> hex</span>' +
+      '<span><b>' + listFormatEl.options[listFormatEl.selectedIndex].text + '</b> list output</span>';
 
     setStatus(count + ' ' + (version === '4' ? 'UUID/GUID' : 'UUID v7') + (count === 1 ? '' : ' values') + ' generated', 'success');
   }
@@ -140,7 +145,7 @@
     setStatus('Downloaded', 'success');
   });
 
-  [versionEl, formatEl, uppercaseEl].forEach(control => {
+  [versionEl, formatEl, listFormatEl, uppercaseEl].forEach(control => {
     control.addEventListener('change', () => {
       if (output.value) generate();
     });

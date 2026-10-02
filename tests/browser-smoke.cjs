@@ -419,6 +419,16 @@ const cases = [
     await p.locator('#uuidUppercase').check();
     const urn = (await p.locator('#uuidOutput').inputValue()).trim().split(/\r?\n/)[0];
     assert.match(urn, /^urn:uuid:[0-9A-F]{8}-[0-9A-F]{4}-7[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/);
+
+    await p.locator('#uuidVersion').selectOption('4');
+    await p.locator('#uuidUppercase').uncheck();
+    await p.locator('#uuidFormat').selectOption('parentheses');
+    await p.locator('#uuidListFormat').selectOption('json');
+    await p.locator('#uuidCount').fill('2');
+    await p.locator('#generateUuid').click();
+    const jsonValues = JSON.parse(await p.locator('#uuidOutput').inputValue());
+    assert.equal(jsonValues.length, 2);
+    jsonValues.forEach(value => assert.match(value, /^\([0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\)$/));
     assert.equal(await p.locator('#uuidError').isHidden(), true);
   }],
   ['ulid-generator', async p => {
