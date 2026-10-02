@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>UUID & GUID Generator Online — UUID v4 & v7</title>
-<meta name="description" content="Generate UUID v4, UUID v7 and GUID values online in your browser. Create up to 500 IDs with canonical, braced, compact or URN output formats.">
+<meta name="description" content="Generate UUID v4, UUID v7 and GUID values online in your browser. Create up to 1,000 UUID/GUID values with RFC UUID and Microsoft-friendly output formats.">
 <link rel="canonical" href="https://smartwebutility.com/uuid-generator/">
 <meta property="og:title" content="UUID & GUID Generator Online — UUID v4 & v7">
 <meta property="og:description" content="Generate UUID v4/v7 or GUID-style identifiers locally with bulk and format options.">
@@ -11,7 +11,7 @@
 <meta name="twitter:card" content="summary"><meta name="theme-color" content="#071426">
 <link rel="icon" href="/favicon-sw-v5.svg?v=20261001e" type="image/svg+xml">
 <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"UUID & GUID Generator Online","url":"https://smartwebutility.com/uuid-generator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Generate UUID v4, UUID v7 and GUID-style identifiers locally in the browser.","featureList":["UUID v4 generation","UUID v7 generation","GUID-compatible canonical text","Bulk generation up to 500","Braced GUID format","Compact UUID format","UUID URN format","Uppercase hexadecimal option","Copy and download"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"UUID & GUID Generator Online","url":"https://smartwebutility.com/uuid-generator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Generate UUID v4, UUID v7 and GUID-style identifiers locally in the browser.","featureList":["UUID v4 generation","UUID v7 generation","GUID-compatible canonical text","Bulk generation up to 1,000","Microsoft GUID D/B/P/N text formats","UUID URN format","Line, comma or JSON list output","Uppercase hexadecimal option","Copy and download"]}</script>
 </head>
 <body data-uuid-generator>
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
@@ -29,15 +29,18 @@
 <option value="7">UUID v7 / Unix time</option>
 </select></label>
 <label class="compact-control">Count
-<input id="uuidCount" type="number" min="1" max="500" value="10" style="width:82px">
+<input id="uuidCount" type="number" min="1" max="1000" value="1" style="width:82px">
 </label>
 <label class="compact-control">Format
 <select id="uuidFormat">
-<option value="canonical" selected>Canonical 8-4-4-4-12</option>
-<option value="braces">Braced GUID {…}</option>
-<option value="compact">Compact 32 hex</option>
-<option value="urn">URN urn:uuid:…</option>
+<option value="canonical" selected>Canonical / GUID D (8-4-4-4-12)</option>
+<option value="braces">Braced GUID / B {…}</option>
+<option value="parentheses">Parenthesized GUID / P (…)</option>
+<option value="compact">Compact GUID / N (32 hex)</option>
+<option value="urn">UUID URN urn:uuid:…</option>
 </select></label>
+<label class="compact-control">List output
+<select id="uuidListFormat"><option value="lines" selected>One per line</option><option value="comma">Comma separated</option><option value="json">JSON array</option></select></label>
 <label class="check-control"><input id="uuidUppercase" type="checkbox"> Uppercase hex</label>
 <button class="btn primary" id="generateUuid" type="button">Generate UUIDs</button>
 <button class="text-btn" id="clearUuid" type="button">Clear</button>
@@ -50,7 +53,7 @@
 </section>
 <div id="uuidError" class="error" hidden role="alert"></div>
 <div id="uuidStats" class="json-stats" hidden></div>
-<div class="trustbar"><span>Browser-side generation</span><span>Web Crypto randomness</span><span>UUID v4 + v7</span><span>Bulk up to 500</span><span>No server request</span></div>
+<div class="trustbar"><span>Browser-side generation</span><span>Web Crypto randomness</span><span>UUID v4 + v7</span><span>Bulk up to 1,000</span><span>No server request</span></div>
 </section>
 
 <section class="section wrap prose">
@@ -59,12 +62,12 @@
 <div class="info-grid">
 <article><h3>UUID v4</h3><p>Version 4 uses random or pseudorandom bits with the required UUID version and variant fields. It is a common choice for independent identifiers, database keys, test data and Microsoft-style random GUID workflows.</p></article>
 <article><h3>UUID v7</h3><p>Version 7 places a Unix-epoch millisecond timestamp in the leading 48 bits and uses random bits for the remainder. That makes values sortable by creation time at millisecond granularity without exposing a machine identifier.</p></article>
-<article><h3>Bulk generation</h3><p>Create up to 500 identifiers in one run. Each item gets fresh random data; v7 values also include their generation timestamp.</p></article>
+<article><h3>Bulk generation</h3><p>Create up to 1,000 identifiers in one run. Export one value per line, a comma-separated list or a JSON array for fixtures, scripts and database workflows.</p></article>
 <article><h3>Private by design</h3><p>Generation happens in browser JavaScript using Web Crypto. The page does not send a UUID or GUID generation request to Smart Web Utility's server.</p></article>
 </div>
 
-<h2>GUID generator formats</h2>
-<p>The canonical UUID text form is five hexadecimal groups in an 8-4-4-4-12 pattern. GUID-consuming applications sometimes expect the same hexadecimal identifier wrapped in braces, while APIs, databases and configuration files may prefer canonical, compact or URN notation. The format option changes presentation only; it does not change the underlying 128-bit identifier.</p>
+<h2>GUID generator formats for .NET, C# and SQL workflows</h2>
+<p>The same 128-bit identifier can be rendered in several common text forms. Canonical UUID text matches the .NET <code>Guid</code> D format, braces match B, parentheses match P and compact 32-hex output matches N. The UUID URN form is also available for standards-oriented workflows. These options change presentation only; they do not change the identifier bits.</p>
 
 <h2>Canonical, braced, compact and URN output</h2>
 <p><strong>Canonical</strong> output looks like <code>550e8400-e29b-41d4-a716-446655440000</code>. <strong>Braced GUID</strong> wraps that text in <code>{ }</code>. <strong>Compact</strong> removes hyphens for a 32-character hexadecimal representation. <strong>URN</strong> prefixes the canonical value with <code>urn:uuid:</code>. Uppercase changes hexadecimal letter case without changing identifier bits.</p>
@@ -89,8 +92,8 @@
 <h2>Frequently asked questions</h2>
 <h3>Is a GUID the same as a UUID?</h3><p>The terms overlap heavily in practical software development. GUID is common in Microsoft ecosystems, while UUID is the standards terminology. Microsoft <code>Guid.NewGuid()</code> creates a version 4 UUID.</p>
 <h3>Can I generate UUID v7?</h3><p>Yes. Choose UUID v7 in the version menu. The leading 48 bits encode the current Unix time in milliseconds and the remaining applicable fields use random data.</p>
-<h3>Can I generate GUIDs with braces?</h3><p>Yes. Choose Braced GUID format to produce values such as <code>{550e8400-e29b-41d4-a716-446655440000}</code>.</p>
-<h3>Can I generate multiple UUIDs at once?</h3><p>Yes. The bulk generator supports 1 to 500 identifiers per run.</p>
+<h3>Can I generate GUIDs in Microsoft .NET formats?</h3><p>Yes. Choose canonical D, braced B, parenthesized P or compact N formatting. For example, B produces <code>{550e8400-e29b-41d4-a716-446655440000}</code>.</p>
+<h3>Can I generate multiple UUIDs or GUIDs at once?</h3><p>Yes. The bulk generator supports 1 to 1,000 identifiers per run and can return line-separated, comma-separated or JSON-array output.</p>
 <h3>Are generated values sent to the server?</h3><p>No. Generation happens locally in browser JavaScript.</p>
 </div></section>
 </main>
