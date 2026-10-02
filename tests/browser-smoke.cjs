@@ -464,6 +464,28 @@ const cases = [
     await p.locator('#generatePorts').click();
     assert.equal(await p.locator('#portError').isHidden(), false);
   }],
+  ['mac-address-generator', async p => {
+    await p.locator('#macCount').fill('25');
+    await p.locator('#macFormat').selectOption('colon');
+    await p.locator('#macUppercase').check();
+    await p.locator('#generateMac').click();
+
+    let values = (await p.locator('#macOutput').inputValue()).trim().split(/\r?\n/);
+    assert.equal(values.length, 25);
+    assert.equal(new Set(values).size, 25);
+    values.forEach(value => {
+      assert.match(value, /^[0-9A-F]{2}(?::[0-9A-F]{2}){5}$/);
+      const first = parseInt(value.slice(0,2), 16);
+      assert.equal(first & 1, 0);
+      assert.equal(first & 2, 2);
+    });
+
+    await p.locator('#macFormat').selectOption('compact');
+    await p.locator('#macUppercase').uncheck();
+    values = (await p.locator('#macOutput').inputValue()).trim().split(/\r?\n/);
+    values.forEach(value => assert.match(value, /^[0-9a-f]{12}$/));
+    assert.equal(await p.locator('#macError').isHidden(), true);
+  }],
   ['hash-generator', async p => {
     await p.locator('#hashInput').fill('hello');
     await p.locator('#generateHash').click();
