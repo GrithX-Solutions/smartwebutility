@@ -239,3 +239,135 @@ Decision:
 - /seo-tools/ owns the broad free website/SEO audit intent and differentiates through real crawl functionality.
 - Ranking strategy depends on product usefulness, semantic coverage, internal links and future first-party query data rather than keyword stuffing.
 - International keyword research will be market-specific when multilingual rollout resumes.
+
+
+## Full-site SEO hardening audit — 2026-10-02
+
+### Technical baseline
+
+Fresh Ubersuggest crawl after the October 2 releases:
+- 88/88 URLs crawled successfully.
+- Site Health: 100/100.
+- 0 errors, 0 warnings, 0 recommendations.
+- No 4xx pages, broken internal links, duplicate titles/descriptions, missing H1s or missing sitemap findings in the completed crawl.
+
+Repository/static QA independently confirms:
+- 88 public HTML pages.
+- Unique titles and meta descriptions.
+- Exactly one H1 and canonical per page.
+- No thin public pages under the local audit threshold.
+- All functional tool pages have browser smoke coverage.
+- Literal escaped-newline markup is now a CI failure condition after a developer-hub regression was found during this audit.
+
+### Performance baseline
+
+Ubersuggest PageSpeed audit on 2026-10-02:
+- Desktop: LCP 1.4 s, FCP 1.0 s, CLS 0.000, TBT 2.8 s.
+- Mobile: LCP 6.7 s, FCP 3.7 s, CLS 0, TBT 35 ms.
+- Main mobile opportunities reported: redirects (~630 ms) and unused JavaScript (~223 KB / ~1.5 s estimated savings).
+
+Decision:
+- Keep functionality/SEO releases lightweight.
+- Do not add large front-end frameworks.
+- Reduce third-party-script priority where safe; preserve AdSense/analytics correctness rather than using unsupported hacks.
+- Treat mobile LCP as the main performance constraint for the next performance-specific sprint.
+
+### Google Search Console evidence
+
+Cached Search Console data available through 2026-10-02 shows early indexing and impressions rather than a site-wide indexability failure.
+
+Near-miss / already-associated URLs:
+- /dnssec-checker/ — 7 impressions; avg position ~10.3. Queries include “dnssec checker” (~10.2) and “dnssec validator” (~11).
+- /canonical-tag-checker/ — query “canonical tag checker” at position 10.
+- /guides/ssl-certificate-still-old-after-renewal/ — avg page position ~8.3.
+- /guides/too-many-redirects-loop/ — avg page position ~3.5.
+- /http-status-checker/ — avg page position ~8.5.
+- /json-formatter/ — avg page position 7.
+- /guides/mobile-vs-desktop-lighthouse-speed/ — avg page position ~9.5.
+- /website-speed-test/ — query “website speed test lighthouse” at position 34.
+- /meta-tag-checker/ — query “x robots tag checker” at position 80.
+- /redirect-checker/ — query “301 redirect checker” at position ~84.5.
+
+Country evidence:
+- United States: 20 impressions, avg position ~49.4.
+- Australia: 2 impressions, avg position ~9.5.
+- Canada: 1 impression, avg position 80.
+- Germany: 3 impressions, avg position ~42.7.
+- Pakistan currently supplies the observed clicks, but Tier-1 impressions have begun.
+
+Sitemap evidence:
+- Google last downloaded https://smartwebutility.com/sitemap.xml on 2026-09-30.
+- That Search Console snapshot reported 57 submitted URLs with 0 errors / 0 warnings.
+- The current sitemap contains 88 public HTML URLs. Keep the same sitemap URL and accurate lastmod values so the next Google fetch discovers the expanded inventory.
+
+### Authority constraint
+
+Ubersuggest backlink baseline:
+- SmartWebUtility: DA 2, 8 referring domains.
+- utilitycove.com: DA 6, 127 referring domains and meaningful US organic visibility.
+- devina.io: DA 18, 356 referring domains and meaningful US organic visibility.
+- it-tools.tech demonstrates that tool usefulness/intent fit can rank even with a low reported DA, although its backlink profile is unusually large and should not be treated as a low-link benchmark.
+
+Decision:
+- Do not assume on-page changes alone will produce Tier-1 scale.
+- Continue building indexable utility depth while pursuing legitimate mentions/links from developer, hosting, SEO and technical-resource contexts.
+- No purchased/spam links or mass directory submissions.
+
+### Canonical keyword ownership map
+
+Keep one primary URL per intent cluster; do not create thin keyword-variant pages.
+
+| Intent cluster | Canonical owner | Validated / observed semantic targets |
+| --- | --- | --- |
+| Global DNS propagation | / | global/worldwide DNS propagation, DNS propagation map |
+| Focused DNS lookup | /dns-checker/ | DNS checker, DNS records, A/AAAA/MX/TXT/CNAME/NS |
+| DNSSEC validation | /dnssec-checker/ | dnssec checker, dnssec validator, DS, DNSKEY, validating resolvers |
+| Redirect tracing | /redirect-checker/ | website redirect checker, 301 redirect checker, 301/302/307/308 chain |
+| Bulk redirect checking | /bulk-redirect-checker/ | bulk URL redirect checker |
+| SSL diagnostics | /ssl-checker/ | SSL checker, web SSL checker, online SSL checker, expiry, issuer, SAN |
+| Canonical diagnostics | /canonical-tag-checker/ | canonical tag checker, canonical URL checker |
+| Meta / robots inspection | /meta-tag-checker/ | meta tag checker, X-Robots-Tag checker |
+| Lighthouse website speed | /website-speed-test/ | website speed test, Lighthouse mobile/desktop |
+| JSON formatting | /json-formatter/ | JSON formatter, validator, minifier/check |
+| XML format + validation | /xml-formatter-validator/ | XML formatter, XML validator, XML formatter and validator |
+| YAML format + validation | /yaml-formatter/ | YAML formatter, YAML formatter online, YAML validator intent where satisfied |
+| XML → CSV | /xml-to-csv/ | change XML to CSV, XML to CSV converter |
+| JSON comparison | /json-diff/ | JSON diff tools, JSON compare |
+| TOML formatting/validation | /toml-formatter-validator/ | TOML formatter, TOML validator |
+| UUID/GUID generation | /uuid-generator/ | uuid generator, guid generator, UUID/GUID online |
+| UUID/GUID validation | /uuid-validator/ | uuid validator, guid validator |
+| chmod / Unix permissions | /chmod-calculator/ | chmod calculator, Unix permissions calculator |
+| MAC generation | /mac-address-generator/ | mac address generator, generate/random MAC address |
+| Random ports | /random-port-generator/ | random port generator, random TCP port generator |
+| Case conversion | /case-converter/ | title case converter, lowercase converter, uppercase/sentence/camel/snake/kebab case |
+| Word counting | /word-counter/ | free online word counter, word counter checker, letter and word counter |
+| Character counting | /character-counter/ | character counter, with/without spaces |
+
+### Existing-page quick-win evidence (US English)
+
+Use only where the current tool actually satisfies the query:
+- title case converter — 8,100/mo, SD 25 → /case-converter/
+- lower case converter — 27,100/mo, SD 33 → /case-converter/
+- online word counter free — 720/mo, SD 13 → /word-counter/
+- letter and word counter — 320/mo, SD 7 → /word-counter/
+- web SSL checker — 880/mo, SD 14 → /ssl-checker/
+- online SSL checker — 590/mo, SD 20 → /ssl-checker/
+- website redirect checker — 3,600/mo, SD 15 → /redirect-checker/
+- UUID generator — 22,200/mo, SD 28 → /uuid-generator/
+- GUID generator — 9,900/mo, SD 23 → /uuid-generator/
+- chmod calculator — 1,900/mo, SD 27 → /chmod-calculator/
+- MAC address generator — 1,900/mo, SD 29 → /mac-address-generator/
+- YAML formatter — 2,400/mo, SD 18 → /yaml-formatter/
+- JSON diff tools — 260/mo, SD 13 → /json-diff/
+- change XML to CSV — 480/mo, SD 7 → /xml-to-csv/
+- regex escaper — 720/mo, SD 18 → /regex-escaper/
+
+Do not target mismatched variants such as PDF/Excel-specific counters unless the product actually supports those inputs.
+
+### Content priority after this hardening sprint
+
+1. Strengthen pages already receiving Google impressions before adding unrelated tools.
+2. Protect near-page-one pages with better internal linking, precise snippets, useful examples and stable functionality.
+3. Use supporting guides only for distinct troubleshooting/informational intent; do not split transactional tool keywords into doorway pages.
+4. Evaluate Tier-1 performance separately (US first, then UK/Canada/Australia) before multilingual expansion.
+5. Use Search Console queries as the primary feedback loop once impressions grow; Ubersuggest remains the metric/SERP validation layer for planned targets.

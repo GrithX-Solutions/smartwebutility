@@ -84,6 +84,8 @@ def main() -> int:
     warnings=[]
     pages={}
     canonicals={}
+    titles={}
+    descriptions={}
     for path in sorted(ROOT.glob("**/index.html")):
         if any(part.startswith(".") for part in path.parts):
             continue
@@ -98,7 +100,13 @@ def main() -> int:
         exp=expected_url(path)
         pages[exp]=path
         if not title: errors.append(f"{rel}: missing <title>")
+        else:
+            if title in titles: errors.append(f"{rel}: duplicate title also used by {titles[title]}")
+            titles[title]=rel
         if not desc: errors.append(f"{rel}: missing meta description")
+        else:
+            if desc in descriptions: errors.append(f"{rel}: duplicate meta description also used by {descriptions[desc]}")
+            descriptions[desc]=rel
         if len(p.canonical)!=1: errors.append(f"{rel}: expected exactly one canonical, found {len(p.canonical)}")
         elif p.canonical[0]!=exp: errors.append(f"{rel}: canonical {p.canonical[0]!r} != expected {exp!r}")
         else:
@@ -112,6 +120,8 @@ def main() -> int:
             if not raw: continue
             try: json.loads(raw)
             except Exception as exc: errors.append(f"{rel}: invalid JSON-LD block {idx}: {exc}")
+        if re.search(r"</[^>]+>\\\\n\\s*<", path.read_text(encoding="utf-8", errors="replace")):
+            errors.append(f"{rel}: suspicious literal \\\\n between HTML elements")
         for href in p.links:
             if not target_exists(href,path):
                 errors.append(f"{rel}: broken internal link {href!r}")
@@ -125,6 +135,9 @@ def main() -> int:
         if not p.jsonld: warnings.append(f"{rel}: no JSON-LD block")
 
     sitemap=ROOT/"sitemap.xml"
+    sitemap_text=sitemap.read_text(encoding="utf-8", errors="replace") if sitemap.exists() else ""
+    if "\\n" in sitemap_text:
+        errors.append("sitemap.xml: contains literal \\\\n text; use real line breaks")
     try:
         tree=ET.parse(sitemap)
         ns={"s":"http://www.sitemaps.org/schemas/sitemap/0.9"}

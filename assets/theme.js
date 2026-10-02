@@ -94,18 +94,18 @@
     const path = location.pathname.replace(/\/+$/, '') || '/';
     const groups = {
       '/developer-tools': [
-        '/developer-tools','/json-formatter','/xml-to-json','/json-to-csv','/yaml-to-json','/json-to-yaml','/csv-viewer','/yaml-formatter','/xml-to-csv','/json-diff','/xml-formatter-validator','/toml-formatter-validator','/curl-converter','/json-escape-unescape','/csv-to-json','/sql-formatter','/markdown-to-html','/html-to-markdown','/html-minifier','/jsonpath-tester','/css-minifier','/json-to-xml','/csv-to-xml','/html-to-json','/json-to-html','/uuid-validator','/xml-escape-unescape','/regex-escaper','/ulid-generator','/random-port-generator','/mac-address-generator','/base64-encoder-decoder','/unix-timestamp-converter',
+        '/developer-tools','/json-formatter','/xml-to-json','/json-to-csv','/yaml-to-json','/json-to-yaml','/csv-viewer','/yaml-formatter','/xml-to-csv','/json-diff','/xml-formatter-validator','/toml-formatter-validator','/curl-converter','/json-escape-unescape','/csv-to-json','/sql-formatter','/markdown-to-html','/html-to-markdown','/html-minifier','/jsonpath-tester','/css-minifier','/json-to-xml','/csv-to-xml','/html-to-json','/json-to-html','/uuid-validator','/xml-escape-unescape','/regex-escaper','/ulid-generator','/random-port-generator','/mac-address-generator','/chmod-calculator','/base64-encoder-decoder','/unix-timestamp-converter',
         '/uuid-generator','/hash-generator','/jwt-decoder','/regex-tester','/url-encoder-decoder',
         '/html-entity-encoder-decoder','/cron-expression-helper','/password-generator','/random-string-generator'
       ],
       '/website-tools': [
         '/website-tools','/dns-checker','/dns-propagation-checker','/ssl-checker',
         '/http-status-checker','/http-header-checker','/redirect-checker','/bulk-redirect-checker','/sitemap-checker',
-        '/meta-tag-checker','/open-graph-checker','/favicon-generator'
+        '/meta-tag-checker','/open-graph-checker','/favicon-generator','/cache-control-checker','/security-headers-checker','/dnssec-checker','/website-speed-test'
       ],
       '/seo-tools': [
-        '/seo-tools','/meta-tag-generator','/robots-txt-generator','/schema-markup-generator',
-        '/open-graph-preview','/slug-generator'
+        '/seo-tools','/meta-tag-generator','/robots-txt-generator','/robots-txt-tester','/schema-markup-generator',
+        '/canonical-tag-checker','/open-graph-preview','/slug-generator'
       ],
       '/text-tools': [
         '/text-tools','/word-counter','/character-counter','/case-converter','/lorem-ipsum-generator'

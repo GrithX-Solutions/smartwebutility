@@ -647,11 +647,11 @@ const cases = [
       await context.close();
     }
   }
-  // Catch JavaScript initialization failures on all 57 indexable pages,
+  // Catch JavaScript initialization failures across the full current indexable inventory,
   // including guides and pages without explicit functional test cases.
   const locs = [...readFileSync('sitemap.xml', 'utf8').matchAll(/<loc>([^<]+)</g)]
     .map(match => new URL(match[1]).pathname);
-  assert.ok(locs.length >= 57, 'sitemap unexpectedly shrank');
+  assert.ok(locs.length >= 88, 'sitemap unexpectedly shrank below the 88-page audit baseline');
   for (const path of locs) {
     const page = await browser.newPage();
     const exceptions = [];
@@ -669,6 +669,31 @@ const cases = [
     }
   }
   console.log('Browser page sweep:', locs.length, 'pages checked');
+
+  // Keep category navigation aligned as new tools are added.
+  const navCases = [
+    ['/chmod-calculator/', '/developer-tools/'],
+    ['/dnssec-checker/', '/website-tools/'],
+    ['/cache-control-checker/', '/website-tools/'],
+    ['/website-speed-test/', '/website-tools/'],
+    ['/canonical-tag-checker/', '/seo-tools/'],
+    ['/robots-txt-tester/', '/seo-tools/']
+  ];
+  for (const [path, expectedHref] of navCases) {
+    const page = await browser.newPage();
+    try {
+      await page.goto(origin + path, {waitUntil: 'domcontentloaded', timeout: 15000});
+      const active = page.locator('#primaryNav a[aria-current="page"]');
+      assert.equal(await active.getAttribute('href'), expectedHref, path + ' active category');
+      console.log('PASS active navigation', path);
+    } catch (error) {
+      failures.push({slug: 'active-nav:' + path, error: error.message});
+      console.error('FAIL active-nav', path, error.message);
+    } finally {
+      await page.close();
+    }
+  }
+
   // Mobile layout and navigation regression checks on a representative tool page.
   const mobile = await browser.newPage({viewport: {width: 390, height: 844}, isMobile: true});
   try {
