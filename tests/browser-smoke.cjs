@@ -266,6 +266,29 @@ const cases = [
     assert.equal(tables[0].rows[0].Name, 'Ada');
     assert.equal(tables[0].rows[1].Role, 'Developer');
   }],
+  ['json-to-html', async p => {
+    await p.locator('#jsonHtmlInput').fill(JSON.stringify([
+      {name:'Ada',role:'Admin',payload:'<script>window.__jsonHtmlExecuted=1</script>'},
+      {name:'Linus',role:'Developer',active:true}
+    ]));
+    await p.locator('#convertJsonHtml').click();
+    let html = await p.locator('#jsonHtmlOutput').inputValue();
+    assert.ok(html.includes('<table>'));
+    assert.ok(html.includes('<th>name</th>'));
+    assert.ok(html.includes('&lt;script&gt;window.__jsonHtmlExecuted=1&lt;/script&gt;'));
+    assert.ok(!html.includes('<script>window.__jsonHtmlExecuted=1</script>'));
+    assert.equal(await p.locator('#jsonHtmlPreview').getAttribute('sandbox'), '');
+    assert.equal(await p.evaluate(() => window.__jsonHtmlExecuted), undefined);
+    assert.equal(await p.locator('#jsonHtmlError').isHidden(), true);
+
+    await p.locator('#jsonHtmlMode').selectOption('nested');
+    await p.locator('#jsonHtmlInput').fill(JSON.stringify({user:{name:'Ada'},roles:['admin','editor']}));
+    await p.locator('#convertJsonHtml').click();
+    html = await p.locator('#jsonHtmlOutput').inputValue();
+    assert.ok(html.includes('<dl>'));
+    assert.ok(html.includes('<ol>'));
+    assert.ok(html.includes('<dt>user</dt>'));
+  }],
   ['json-diff', async p => {
     await p.locator('#jsonDiffLeft').fill('{"port":8080,"enabled":false}');
     await p.locator('#jsonDiffRight').fill('{"port":8443,"enabled":true,"region":"us"}');
