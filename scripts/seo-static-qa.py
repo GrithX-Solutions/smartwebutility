@@ -53,6 +53,21 @@ class PageParser(HTMLParser):
         if self.in_title: self.title_parts.append(data)
         if self._json_script: self._json_buf.append(data)
 
+
+class ToolHubParser(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.live_tool_urls=[]
+    def handle_starttag(self, tag, attrs):
+        if tag.lower() != "a":
+            return
+        a={str(k).lower():(v or "") for k,v in attrs}
+        classes=set(a.get("class","").split())
+        href=a.get("href","").strip()
+        if {"tool-card","live"}.issubset(classes) and href.startswith("/"):
+            self.live_tool_urls.append(href)
+
+
 def expected_url(path: Path) -> str:
     rel=path.relative_to(ROOT).as_posix()
     if rel=="index.html": return BASE+"/"
@@ -133,6 +148,42 @@ def main() -> int:
             if not p.meta.get(key): warnings.append(f"{rel}: missing optional social field {key}")
         if not p.meta.get("twitter:card"): warnings.append(f"{rel}: missing optional twitter:card")
         if not p.jsonld: warnings.append(f"{rel}: no JSON-LD block")
+
+    # Global header search/navigation catalog must stay synchronized with live category hubs.
+    catalog_path=ROOT/"assets/tool-catalog.json"
+    catalog_urls=set()
+    try:
+        catalog=json.loads(catalog_path.read_text(encoding="utf-8"))
+        if not isinstance(catalog,list): raise ValueError("root must be a JSON array")
+        allowed_categories={"Developer","Website","SEO","Text"}
+        seen_urls=set()
+        for idx,item in enumerate(catalog,1):
+            if not isinstance(item,dict): errors.append(f"tool catalog row {idx}: expected object"); continue
+            url=str(item.get("url","")).strip()
+            title=str(item.get("title","")).strip()
+            category=str(item.get("category","")).strip()
+            keywords=item.get("keywords",[])
+            if not url.startswith("/") or not url.endswith("/"): errors.append(f"tool catalog row {idx}: invalid URL {url!r}")
+            if not title: errors.append(f"tool catalog row {idx}: missing title")
+            if category not in allowed_categories: errors.append(f"tool catalog row {idx}: invalid category {category!r}")
+            if not isinstance(keywords,list) or any(not isinstance(k,str) for k in keywords): errors.append(f"tool catalog row {idx}: keywords must be strings")
+            if url in seen_urls: errors.append(f"tool catalog: duplicate URL {url!r}")
+            seen_urls.add(url)
+            catalog_urls.add(url)
+            if url and not target_exists(url,ROOT/"index.html"): errors.append(f"tool catalog: broken URL {url!r}")
+    except Exception as exc:
+        errors.append(f"assets/tool-catalog.json: parse failure: {exc}")
+
+    hub_urls=set()
+    for hub in ("developer-tools/index.html","website-tools/index.html","seo-tools/index.html","text-tools/index.html"):
+        hp=ToolHubParser()
+        try: hp.feed((ROOT/hub).read_text(encoding="utf-8"))
+        except Exception as exc: errors.append(f"{hub}: tool-card parse failure: {exc}"); continue
+        hub_urls.update(hp.live_tool_urls)
+    for url in sorted(hub_urls-catalog_urls):
+        errors.append(f"tool catalog: live hub tool missing {url!r}")
+    for url in sorted(catalog_urls-hub_urls):
+        errors.append(f"tool catalog: stale/unlisted tool {url!r}")
 
     sitemap=ROOT/"sitemap.xml"
     sitemap_text=sitemap.read_text(encoding="utf-8", errors="replace") if sitemap.exists() else ""
