@@ -225,6 +225,27 @@ const cases = [
     await p.locator('#convertBtn').click();
     assert.equal(await p.locator('#converterError').isHidden(), false);
   }],
+  ['csv-to-xml', async p => {
+    const csv = 'name,role,first name\n"Ada Lovelace","admin,owner",Ada\nLinus,developer,Linus';
+    await p.locator('#csvXmlInput').fill(csv);
+    await p.locator('#convertCsvXml').click();
+    let xml = await p.locator('#csvXmlOutput').inputValue();
+    assert.ok(xml.includes('<rows>'));
+    assert.ok(xml.includes('<role>admin,owner</role>'));
+    assert.ok(xml.includes('<field name="first name">Ada</field>'));
+    assert.equal(await p.locator('#csvXmlError').isHidden(), true);
+
+    await p.locator('#csvXmlHeader').uncheck();
+    await p.locator('#csvXmlInput').fill('a,b\n1,2');
+    await p.locator('#convertCsvXml').click();
+    xml = await p.locator('#csvXmlOutput').inputValue();
+    assert.ok(xml.includes('<column index="1">a</column>'));
+    assert.ok(xml.includes('<column index="2">2</column>'));
+
+    await p.locator('#csvXmlRoot').fill('123bad');
+    await p.locator('#convertCsvXml').click();
+    assert.equal(await p.locator('#csvXmlError').isHidden(), false);
+  }],
   ['json-diff', async p => {
     await p.locator('#jsonDiffLeft').fill('{"port":8080,"enabled":false}');
     await p.locator('#jsonDiffRight').fill('{"port":8443,"enabled":true,"region":"us"}');
