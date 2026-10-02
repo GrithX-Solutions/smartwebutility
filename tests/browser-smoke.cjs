@@ -694,6 +694,41 @@ const cases = [
     }
   }
 
+  // Global service navigation and type-ahead tool search.
+  {
+    const page = await browser.newPage({viewport: {width: 1280, height: 800}});
+    try {
+      await page.goto(origin + '/json-formatter/', {waitUntil: 'networkidle', timeout: 20000});
+      const search = page.locator('#headerToolSearch');
+      await search.fill('guid');
+      await page.waitForFunction(() => {
+        const box = document.getElementById('headerToolResults');
+        return box && !box.hidden && box.querySelectorAll('[role="option"]').length > 0;
+      });
+      assert.equal(await page.locator('#headerToolResults [role="option"]').first().getAttribute('href'), '/uuid-generator/');
+
+      await search.fill('301');
+      await page.waitForFunction(() => [...document.querySelectorAll('#headerToolResults [role="option"]')].some(a => a.getAttribute('href') === '/redirect-checker/'));
+      assert.ok(await page.locator('#headerToolResults a[href="/redirect-checker/"]').count());
+
+      await search.fill('lower');
+      await page.waitForFunction(() => [...document.querySelectorAll('#headerToolResults [role="option"]')].some(a => a.getAttribute('href') === '/case-converter/'));
+      assert.ok(await page.locator('#headerToolResults a[href="/case-converter/"]').count());
+
+      const developerGroup = page.locator('[data-nav-group="developer"]');
+      assert.equal(await developerGroup.count(), 1);
+      await developerGroup.locator('.nav-group-toggle').click();
+      assert.equal(await developerGroup.locator('.nav-group-toggle').getAttribute('aria-expanded'), 'true');
+      assert.ok(await developerGroup.locator('.nav-direct-list a[href="/uuid-generator/"]').count());
+      console.log('PASS global tool search/navigation');
+    } catch (error) {
+      failures.push({slug: 'global-tool-search-navigation', error: error.message});
+      console.error('FAIL global-tool-search-navigation', error.message);
+    } finally {
+      await page.close();
+    }
+  }
+
   // Mobile layout and navigation regression checks on a representative tool page.
   const mobile = await browser.newPage({viewport: {width: 390, height: 844}, isMobile: true});
   try {
@@ -701,6 +736,12 @@ const cases = [
     assert.equal(await mobile.locator('h1').count(), 1);
     const width = await mobile.evaluate(() => ({scroll: document.documentElement.scrollWidth, view: window.innerWidth}));
     assert.ok(width.scroll <= width.view + 3, 'mobile horizontal overflow ' + JSON.stringify(width));
+    const mobileSearch = mobile.locator('#headerToolSearch');
+    assert.equal(await mobileSearch.isVisible(), true);
+    await mobileSearch.fill('ssl cert');
+    await mobile.waitForFunction(() => [...document.querySelectorAll('#headerToolResults [role="option"]')].some(a => a.getAttribute('href') === '/ssl-checker/'));
+    assert.ok(await mobile.locator('#headerToolResults a[href="/ssl-checker/"]').count());
+    await mobileSearch.fill('');
     const toggle = mobile.locator('#menuToggle');
     await toggle.click();
     assert.equal(await toggle.getAttribute('aria-expanded'), 'true');

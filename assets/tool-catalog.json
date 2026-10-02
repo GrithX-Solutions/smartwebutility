@@ -1,0 +1,558 @@
+[
+  {
+    "category": "Developer",
+    "url": "/base64-encoder-decoder/",
+    "title": "Base64 Encoder / Decoder",
+    "description": "Encode and decode UTF-8 and Base64URL data.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/chmod-calculator/",
+    "title": "chmod Calculator",
+    "description": "Convert Linux permissions between octal, rwx and chmod commands.",
+    "keywords": [
+      "chmod calculator",
+      "unix permissions calculator",
+      "linux permissions"
+    ]
+  },
+  {
+    "category": "Developer",
+    "url": "/cron-expression-helper/",
+    "title": "Cron Expression Helper",
+    "description": "Understand common cron schedules.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/css-minifier/",
+    "title": "CSS Minifier",
+    "description": "Compress CSS with conservative defaults and optional restructuring.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/csv-to-json/",
+    "title": "CSV to JSON",
+    "description": "Convert quoted CSV rows into formatted JSON locally.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/csv-to-xml/",
+    "title": "CSV to XML",
+    "description": "Convert quoted CSV records into XML with configurable row and root elements.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/csv-viewer/",
+    "title": "CSV Viewer Online",
+    "description": "Open CSV locally, then filter rows and sort columns.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/curl-converter/",
+    "title": "cURL Converter",
+    "description": "Convert cURL API commands to Python, fetch, Axios or PHP.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/hash-generator/",
+    "title": "Hash Generator",
+    "description": "Generate SHA hashes for text and files.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/html-entity-encoder-decoder/",
+    "title": "HTML Entity Encoder / Decoder",
+    "description": "Escape and decode HTML entities.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/html-minifier/",
+    "title": "HTML Minifier",
+    "description": "Minify HTML with conservative defaults and measurable byte savings.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/html-to-json/",
+    "title": "HTML to JSON",
+    "description": "Serialize parsed HTML into a JSON DOM tree or extract HTML tables.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/html-to-markdown/",
+    "title": "HTML to Markdown",
+    "description": "Convert semantic HTML into readable Markdown with GFM table support.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/json-diff/",
+    "title": "JSON Diff",
+    "description": "Compare two JSON structures by semantic path.",
+    "keywords": [
+      "json diff tools",
+      "json compare"
+    ]
+  },
+  {
+    "category": "Developer",
+    "url": "/json-escape-unescape/",
+    "title": "JSON Escape / Unescape",
+    "description": "Escape JSON string content or decode JSON escape sequences.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/json-formatter/",
+    "title": "JSON Formatter",
+    "description": "Format, validate and minify JSON.",
+    "keywords": [
+      "json validator",
+      "json minifier",
+      "json beautifier"
+    ]
+  },
+  {
+    "category": "Developer",
+    "url": "/json-to-csv/",
+    "title": "JSON to CSV",
+    "description": "Convert JSON objects and arrays into CSV rows.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/json-to-html/",
+    "title": "JSON to HTML",
+    "description": "Convert JSON into escaped HTML tables or nested semantic markup.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/json-to-xml/",
+    "title": "JSON to XML",
+    "description": "Convert nested JSON into readable XML with explicit mapping rules.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/json-to-yaml/",
+    "title": "JSON to YAML",
+    "description": "Convert JSON objects and arrays into clean YAML.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/jsonpath-tester/",
+    "title": "JSONPath Tester",
+    "description": "Evaluate RFC 9535 JSONPath and inspect values or normalized paths.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/jwt-decoder/",
+    "title": "JWT Decoder",
+    "description": "Inspect JWT headers, payloads and claims.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/mac-address-generator/",
+    "title": "MAC Address Generator",
+    "description": "Generate locally administered unicast MAC-48 addresses for testing.",
+    "keywords": [
+      "mac address generator",
+      "generate mac address",
+      "random mac generator"
+    ]
+  },
+  {
+    "category": "Developer",
+    "url": "/markdown-to-html/",
+    "title": "Markdown to HTML",
+    "description": "Convert Markdown and GFM content into HTML with a sandboxed preview.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/password-generator/",
+    "title": "Password Generator",
+    "description": "Create secure random passwords locally.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/random-port-generator/",
+    "title": "Random Port Generator",
+    "description": "Generate unique TCP/UDP port numbers from standard or custom ranges.",
+    "keywords": [
+      "random port generator",
+      "random tcp port generator"
+    ]
+  },
+  {
+    "category": "Developer",
+    "url": "/random-string-generator/",
+    "title": "Random String Generator",
+    "description": "Generate cryptographically random strings.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/regex-escaper/",
+    "title": "Regex Escaper",
+    "description": "Escape literal text using modern JavaScript RegExp.escape semantics.",
+    "keywords": [
+      "regex escape",
+      "regex escaper"
+    ]
+  },
+  {
+    "category": "Developer",
+    "url": "/regex-tester/",
+    "title": "Regex Tester",
+    "description": "Test expressions, groups and replacements.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/sql-formatter/",
+    "title": "SQL Formatter",
+    "description": "Format and beautify SQL with dialect and style controls.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/toml-formatter-validator/",
+    "title": "TOML Formatter & Validator",
+    "description": "Format and validate TOML configuration files locally.",
+    "keywords": [
+      "toml formatter",
+      "toml validator"
+    ]
+  },
+  {
+    "category": "Developer",
+    "url": "/ulid-generator/",
+    "title": "ULID Generator",
+    "description": "Generate monotonic time-sortable ULIDs with decoded timestamps.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/unix-timestamp-converter/",
+    "title": "Unix Timestamp Converter",
+    "description": "Convert epoch timestamps and dates.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/url-encoder-decoder/",
+    "title": "URL Encoder / Decoder",
+    "description": "Encode and decode URLs and components.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/uuid-generator/",
+    "title": "UUID & GUID Generator",
+    "description": "Generate UUID v4/v7 values with GUID-friendly output formats.",
+    "keywords": [
+      "uuid generator",
+      "guid generator",
+      "guid generator online",
+      "uuid generator online",
+      "uuid v4",
+      "uuid v7"
+    ]
+  },
+  {
+    "category": "Developer",
+    "url": "/uuid-validator/",
+    "title": "UUID Validator",
+    "description": "Check UUID/GUID format, version, variant and UUID v7 timestamps.",
+    "keywords": [
+      "uuid validator",
+      "guid validator"
+    ]
+  },
+  {
+    "category": "Developer",
+    "url": "/xml-escape-unescape/",
+    "title": "XML Escape / Unescape",
+    "description": "Escape XML text or attributes and decode predefined or numeric entities.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/xml-formatter-validator/",
+    "title": "XML Formatter & Validator",
+    "description": "Format, validate and minify XML locally in your browser.",
+    "keywords": [
+      "xml formatter",
+      "xml validator",
+      "xml formatter and validator"
+    ]
+  },
+  {
+    "category": "Developer",
+    "url": "/xml-to-csv/",
+    "title": "XML to CSV",
+    "description": "Flatten repeated XML records into CSV rows locally.",
+    "keywords": [
+      "change xml to csv",
+      "xml csv converter"
+    ]
+  },
+  {
+    "category": "Developer",
+    "url": "/xml-to-json/",
+    "title": "XML to JSON",
+    "description": "Convert XML elements and attributes to JSON locally.",
+    "keywords": []
+  },
+  {
+    "category": "Developer",
+    "url": "/yaml-formatter/",
+    "title": "YAML Formatter",
+    "description": "Format and validate YAML with consistent indentation.",
+    "keywords": [
+      "yaml validator",
+      "format yaml"
+    ]
+  },
+  {
+    "category": "Developer",
+    "url": "/yaml-to-json/",
+    "title": "YAML to JSON",
+    "description": "Parse YAML into readable JSON in the browser.",
+    "keywords": []
+  },
+  {
+    "category": "SEO",
+    "url": "/canonical-tag-checker/",
+    "title": "Canonical Tag Checker",
+    "description": "Verify canonical tags, HTTP Link canonicals, targets, redirects and noindex conflicts.",
+    "keywords": [
+      "canonical tag checker",
+      "canonical url checker"
+    ]
+  },
+  {
+    "category": "SEO",
+    "url": "/meta-tag-generator/",
+    "title": "Meta Tag Generator",
+    "description": "Create title, description, canonical and robots markup.",
+    "keywords": []
+  },
+  {
+    "category": "SEO",
+    "url": "/open-graph-preview/",
+    "title": "Open Graph Preview",
+    "description": "Generate OG tags and preview social-card metadata.",
+    "keywords": []
+  },
+  {
+    "category": "SEO",
+    "url": "/robots-txt-generator/",
+    "title": "Robots.txt Generator",
+    "description": "Build common crawler directives and sitemap references.",
+    "keywords": []
+  },
+  {
+    "category": "SEO",
+    "url": "/robots-txt-tester/",
+    "title": "Robots.txt Tester",
+    "description": "Test crawler access, winning Allow/Disallow rules, syntax and sitemap directives.",
+    "keywords": []
+  },
+  {
+    "category": "SEO",
+    "url": "/schema-markup-generator/",
+    "title": "Schema Markup Generator",
+    "description": "Create starter JSON-LD for common entity types.",
+    "keywords": []
+  },
+  {
+    "category": "SEO",
+    "url": "/slug-generator/",
+    "title": "Slug Generator",
+    "description": "Create readable lowercase URL slugs from titles.",
+    "keywords": []
+  },
+  {
+    "category": "Text",
+    "url": "/case-converter/",
+    "title": "Case Converter",
+    "description": "Convert between common writing and code cases.",
+    "keywords": [
+      "title case converter",
+      "lower case converter",
+      "lowercase converter",
+      "uppercase converter",
+      "sentence case converter"
+    ]
+  },
+  {
+    "category": "Text",
+    "url": "/character-counter/",
+    "title": "Character Counter",
+    "description": "Count characters with and without spaces.",
+    "keywords": []
+  },
+  {
+    "category": "Text",
+    "url": "/lorem-ipsum-generator/",
+    "title": "Lorem Ipsum Generator",
+    "description": "Generate placeholder text for layouts.",
+    "keywords": []
+  },
+  {
+    "category": "Text",
+    "url": "/word-counter/",
+    "title": "Word Counter",
+    "description": "Count words, characters, sentences and paragraphs.",
+    "keywords": [
+      "online word counter free",
+      "letter and word counter",
+      "word count checker"
+    ]
+  },
+  {
+    "category": "Website",
+    "url": "/bulk-redirect-checker/",
+    "title": "Bulk URL Redirect Checker",
+    "description": "Check up to 10 URL redirect chains, final status codes and destinations in one run.",
+    "keywords": [
+      "bulk url redirect checker",
+      "bulk redirect checker"
+    ]
+  },
+  {
+    "category": "Website",
+    "url": "/cache-control-checker/",
+    "title": "Cache-Control Checker",
+    "description": "Analyze browser/CDN cache policy, TTLs, validators and repeated-request cache evidence.",
+    "keywords": []
+  },
+  {
+    "category": "Website",
+    "url": "/dns-checker/",
+    "title": "DNS Checker",
+    "description": "Lookup A, AAAA, MX, TXT, CNAME, NS and CAA records.",
+    "keywords": []
+  },
+  {
+    "category": "Website",
+    "url": "/dns-propagation-checker/",
+    "title": "DNS Propagation Checker",
+    "description": "Compare answers across independent resolvers.",
+    "keywords": []
+  },
+  {
+    "category": "Website",
+    "url": "/dnssec-checker/",
+    "title": "DNSSEC Checker & Validator",
+    "description": "Validate DNSSEC with Google and Cloudflare, DS and DNSKEY evidence.",
+    "keywords": [
+      "dnssec checker",
+      "dnssec validator"
+    ]
+  },
+  {
+    "category": "Website",
+    "url": "/favicon-generator/",
+    "title": "Favicon Generator",
+    "description": "Generate favicon.ico, PNG, Apple and PWA icons from an image, SVG, logo, text or emoji.",
+    "keywords": []
+  },
+  {
+    "category": "Website",
+    "url": "/http-header-checker/",
+    "title": "HTTP Header Checker",
+    "description": "Inspect HTTP response headers.",
+    "keywords": []
+  },
+  {
+    "category": "Website",
+    "url": "/http-status-checker/",
+    "title": "HTTP Status Checker",
+    "description": "Check response status, IP and timing.",
+    "keywords": []
+  },
+  {
+    "category": "Website",
+    "url": "/open-graph-checker/",
+    "title": "Open Graph Checker",
+    "description": "Inspect social metadata on public pages.",
+    "keywords": []
+  },
+  {
+    "category": "Website",
+    "url": "/security-headers-checker/",
+    "title": "Security Headers Checker",
+    "description": "Review HSTS, CSP, framing, MIME sniffing and browser security policies.",
+    "keywords": []
+  },
+  {
+    "category": "Website",
+    "url": "/meta-tag-checker/",
+    "title": "SEO Meta Tag Checker",
+    "description": "Inspect title, description, canonical, meta robots and X-Robots-Tag.",
+    "keywords": [
+      "meta tag checker",
+      "x robots tag checker"
+    ]
+  },
+  {
+    "category": "Website",
+    "url": "/sitemap-checker/",
+    "title": "Sitemap Checker",
+    "description": "Validate XML sitemaps and sitemap indexes.",
+    "keywords": []
+  },
+  {
+    "category": "Website",
+    "url": "/ssl-checker/",
+    "title": "SSL Checker",
+    "description": "Inspect certificate issuer, validity and expiry.",
+    "keywords": [
+      "web ssl checker",
+      "online ssl checker",
+      "ssl certificate checker",
+      "certificate expiry"
+    ]
+  },
+  {
+    "category": "Website",
+    "url": "/redirect-checker/",
+    "title": "Website Redirect Checker",
+    "description": "Trace 301, 302, 307 and 308 redirect chains and final destinations.",
+    "keywords": [
+      "website redirect checker",
+      "301 redirect checker",
+      "302 redirect checker",
+      "redirect chain checker"
+    ]
+  },
+  {
+    "category": "Website",
+    "url": "/website-speed-test/",
+    "title": "Website Speed Test",
+    "description": "Test mobile and desktop Lighthouse performance, Core Web Vitals and optimization opportunities.",
+    "keywords": [
+      "website speed test lighthouse",
+      "lighthouse speed test",
+      "core web vitals"
+    ]
+  }
+]
