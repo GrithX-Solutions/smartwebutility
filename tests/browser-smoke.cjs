@@ -318,6 +318,32 @@ const cases = [
     assert.equal(await p.locator('#uuidValidatorTable tbody tr').nth(3).getAttribute('data-format-valid'), 'false');
     assert.equal(await p.locator('#uuidValidatorError').isHidden(), true);
   }],
+  ['xml-escape-unescape', async p => {
+    await p.locator('#xmlEscapeInput').fill('Tom & Jerry <tag>]]>');
+    await p.locator('#runXmlEscape').click();
+    let value = await p.locator('#xmlEscapeOutput').inputValue();
+    assert.equal(value, 'Tom &amp; Jerry &lt;tag&gt;]]&gt;');
+    assert.equal(await p.locator('#xmlEscapeError').isHidden(), true);
+
+    await p.locator('#xmlEscapeMode').selectOption('double');
+    await p.locator('#xmlEscapeInput').fill('"Tom & Jerry" <x>');
+    await p.locator('#runXmlEscape').click();
+    value = await p.locator('#xmlEscapeOutput').inputValue();
+    assert.ok(value.includes('&quot;Tom &amp; Jerry&quot;'));
+    assert.ok(value.includes('&lt;x&gt;'));
+
+    await p.locator('#xmlEscapeMode').selectOption('unescape');
+    await p.locator('#xmlEscapeInput').fill('&amp;lt; &lt; &#38; &#x26; &copy;');
+    await p.locator('#runXmlEscape').click();
+    value = await p.locator('#xmlEscapeOutput').inputValue();
+    assert.equal(value, '&lt; < & & &copy;');
+    assert.equal(await p.locator('#xmlEscapeWarnings').isHidden(), false);
+
+    await p.locator('#xmlEscapeMode').selectOption('text');
+    await p.locator('#xmlEscapeInput').fill('ok' + String.fromCharCode(1) + 'bad');
+    await p.locator('#runXmlEscape').click();
+    assert.equal(await p.locator('#xmlEscapeError').isHidden(), false);
+  }],
   ['json-diff', async p => {
     await p.locator('#jsonDiffLeft').fill('{"port":8080,"enabled":false}');
     await p.locator('#jsonDiffRight').fill('{"port":8443,"enabled":true,"region":"us"}');
