@@ -94,7 +94,7 @@
     const path = location.pathname.replace(/\/+$/, '') || '/';
     const groups = {
       '/developer-tools': [
-        '/developer-tools','/json-formatter','/xml-to-json','/json-to-csv','/yaml-to-json','/json-to-yaml','/csv-viewer','/yaml-formatter','/xml-to-csv','/json-diff','/xml-formatter-validator','/toml-formatter-validator','/curl-converter','/json-escape-unescape','/csv-to-json','/sql-formatter','/markdown-to-html','/html-to-markdown','/html-minifier','/jsonpath-tester','/css-minifier','/json-to-xml','/csv-to-xml','/html-to-json','/json-to-html','/base64-encoder-decoder','/unix-timestamp-converter',
+        '/developer-tools','/json-formatter','/xml-to-json','/json-to-csv','/yaml-to-json','/json-to-yaml','/csv-viewer','/yaml-formatter','/xml-to-csv','/json-diff','/xml-formatter-validator','/toml-formatter-validator','/curl-converter','/json-escape-unescape','/csv-to-json','/sql-formatter','/markdown-to-html','/html-to-markdown','/html-minifier','/jsonpath-tester','/css-minifier','/json-to-xml','/csv-to-xml','/html-to-json','/json-to-html','/uuid-validator','/base64-encoder-decoder','/unix-timestamp-converter',
         '/uuid-generator','/hash-generator','/jwt-decoder','/regex-tester','/url-encoder-decoder',
         '/html-entity-encoder-decoder','/cron-expression-helper','/password-generator','/random-string-generator'
       ],
