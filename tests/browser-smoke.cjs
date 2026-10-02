@@ -343,6 +343,38 @@ const cases = [
     assert.equal(await p.locator('#xmlEscapeOutput').inputValue(), '&lt;');
     assert.equal(await p.locator('#xmlEscapeError').isHidden(), true);
   }],
+  ['regex-escaper', async p => {
+    await p.locator('#regexEscapeInput').fill('foo.bar-baz');
+    await p.locator('#escapeRegex').click();
+    let escaped = await p.locator('#regexEscapeOutput').inputValue();
+    assert.equal(escaped, '\\x66oo\\.bar\\x2dbaz');
+    const matchesLiteral = await p.evaluate(({pattern, value}) => new RegExp(pattern).test(value), {pattern: escaped, value: 'foo.bar-baz'});
+    assert.equal(matchesLiteral, true);
+
+    await p.locator('#regexEscapeFormat').selectOption('constructor');
+    await p.locator('#regexEscapeFlags').fill('i');
+    await p.locator('#escapeRegex').click();
+    let rendered = await p.locator('#regexEscapeOutput').inputValue();
+    assert.ok(rendered.startsWith('new RegExp('));
+    assert.ok(rendered.endsWith(', "i")'));
+
+    await p.locator('#regexEscapeFormat').selectOption('literal');
+    await p.locator('#regexEscapeFlags').fill('u');
+    await p.locator('#escapeRegex').click();
+    rendered = await p.locator('#regexEscapeOutput').inputValue();
+    assert.ok(rendered.startsWith('/'));
+    assert.ok(rendered.endsWith('/u'));
+
+    await p.locator('#regexEscapeInput').fill('1abc');
+    await p.locator('#regexEscapeFormat').selectOption('pattern');
+    await p.locator('#escapeRegex').click();
+    assert.equal(await p.locator('#regexEscapeOutput').inputValue(), '\\x31abc');
+
+    await p.locator('#regexEscapeFormat').selectOption('constructor');
+    await p.locator('#regexEscapeFlags').fill('gg');
+    await p.locator('#escapeRegex').click();
+    assert.equal(await p.locator('#regexEscapeError').isHidden(), false);
+  }],
   ['json-diff', async p => {
     await p.locator('#jsonDiffLeft').fill('{"port":8080,"enabled":false}');
     await p.locator('#jsonDiffRight').fill('{"port":8443,"enabled":true,"region":"us"}');

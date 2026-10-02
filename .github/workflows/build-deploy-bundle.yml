@@ -42,6 +42,8 @@ jobs:
           node --check assets/uuid-validator.js
           node --check assets/uuid.js
           node --check assets/xml-escape.js
+          node --check assets/regex-escaper.js
+          node --check tests/browser-smoke.cjs
           node --check assets/data-view-tools.js
           node --check assets/data-advanced-tools.js
           node --check assets/toml-tools.mjs
