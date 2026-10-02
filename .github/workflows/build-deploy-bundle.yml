@@ -40,6 +40,7 @@ jobs:
           node --check assets/html-to-json.js
           node --check assets/json-to-html.js
           node --check assets/uuid-validator.js
+          node --check assets/uuid.js
           node --check assets/xml-escape.js
           node --check assets/data-view-tools.js
           node --check assets/data-advanced-tools.js

@@ -1,74 +1,99 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>UUID Generator — Generate UUID v4 Online | Smart Web Utility</title>
-  <meta name="description" content="Free UUID v4 generator. Create one or hundreds of cryptographically random UUIDs in your browser, with uppercase and hyphen options.">
-  <link rel="canonical" href="https://smartwebutility.com/uuid-generator/">
-  <meta property="og:title" content="UUID Generator | Smart Web Utility">
-  <meta property="og:description" content="Generate secure UUID v4 values instantly in your browser.">
-  <meta property="og:url" content="https://smartwebutility.com/uuid-generator/">
-  <meta property="og:type" content="website"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="UUID Generator — Generate UUID v4 Online | Smart Web Utility"><meta name="twitter:description" content="Free UUID v4 generator. Create one or hundreds of cryptographically random UUIDs in your browser, with uppercase and hyphen options.">
-  <meta name="theme-color" content="#07101b">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"UUID Generator","url":"https://smartwebutility.com/uuid-generator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["UUID v4 generation","Bulk UUID generation","Uppercase option","Hyphen toggle","Copy UUIDs","Download UUIDs"]}</script>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UUID & GUID Generator Online — UUID v4 & v7</title>
+<meta name="description" content="Generate UUID v4, UUID v7 and GUID values online in your browser. Create up to 500 IDs with canonical, braced, compact or URN output formats.">
+<link rel="canonical" href="https://smartwebutility.com/uuid-generator/">
+<meta property="og:title" content="UUID & GUID Generator Online — UUID v4 & v7">
+<meta property="og:description" content="Generate UUID v4/v7 or GUID-style identifiers locally with bulk and format options.">
+<meta property="og:url" content="https://smartwebutility.com/uuid-generator/"><meta property="og:type" content="website">
+<meta name="twitter:card" content="summary"><meta name="theme-color" content="#071426">
+<link rel="icon" href="/favicon-sw-v5.svg?v=20261001e" type="image/svg+xml">
+<script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"UUID & GUID Generator Online","url":"https://smartwebutility.com/uuid-generator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Generate UUID v4, UUID v7 and GUID-style identifiers locally in the browser.","featureList":["UUID v4 generation","UUID v7 generation","GUID-compatible canonical text","Bulk generation up to 500","Braced GUID format","Compact UUID format","UUID URN format","Uppercase hexadecimal option","Copy and download"]}</script>
 </head>
-<body>
+<body data-uuid-generator>
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
-
 <main>
-  <section class="tool-hero wrap json-tool-hero">
-    <div class="crumb"><a href="/">Home</a><span>/</span><span>UUID Generator</span></div>
-    <span class="kicker">Developer tool · runs locally</span>
-    <h1>UUID Generator</h1>
-    <p class="lead compact">Generate secure UUID v4 identifiers instantly in your browser. Create one UUID or a bulk list for development, testing and data generation.</p>
+<section class="tool-hero wrap json-tool-hero">
+<div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>UUID & GUID Generator</span></div>
+<span class="kicker">Developer tool · UUID v4, UUID v7 and GUID generation</span>
+<h1>UUID & GUID Generator Online</h1>
+<p class="lead compact">Generate one or hundreds of UUID/GUID identifiers locally in your browser. Choose random UUID v4 or time-ordered UUID v7, then format the result as canonical UUID text, a braced GUID, compact hexadecimal or a UUID URN.</p>
 
-    <div class="json-toolbar">
-      <label class="file-btn">Count
-        <input id="uuidCount" type="number" min="1" max="500" value="10" style="width:82px;margin-left:8px">
-      </label>
-      <label class="file-btn"><input id="uuidUppercase" type="checkbox"> Uppercase</label>
-      <label class="file-btn"><input id="uuidHyphens" type="checkbox" checked> Hyphens</label>
-      <button class="btn primary" id="generateUuid" type="button">Generate UUIDs</button>
-      <button class="text-btn" id="clearUuid" type="button">Clear</button>
-      <span id="uuidStatus" data-kind="neutral">Ready</span>
-    </div>
+<div class="json-toolbar data-view-toolbar">
+<label class="compact-control">Version
+<select id="uuidVersion">
+<option value="4" selected>UUID v4 / random GUID</option>
+<option value="7">UUID v7 / Unix time</option>
+</select></label>
+<label class="compact-control">Count
+<input id="uuidCount" type="number" min="1" max="500" value="10" style="width:82px">
+</label>
+<label class="compact-control">Format
+<select id="uuidFormat">
+<option value="canonical" selected>Canonical 8-4-4-4-12</option>
+<option value="braces">Braced GUID {…}</option>
+<option value="compact">Compact 32 hex</option>
+<option value="urn">URN urn:uuid:…</option>
+</select></label>
+<label class="check-control"><input id="uuidUppercase" type="checkbox"> Uppercase hex</label>
+<button class="btn primary" id="generateUuid" type="button">Generate UUIDs</button>
+<button class="text-btn" id="clearUuid" type="button">Clear</button>
+<span id="uuidStatus" data-kind="neutral">Ready</span>
+</div>
 
-    <section class="editor-panel" style="margin-top:14px">
-      <div class="editor-head">
-        <div><strong>UUID v4 output</strong><span>One UUID per line</span></div>
-        <div class="editor-actions"><button id="copyUuid" class="text-btn" type="button">Copy</button><button id="downloadUuid" class="text-btn" type="button">Download</button></div>
-      </div>
-      <textarea id="uuidOutput" class="code-editor" spellcheck="false" readonly aria-label="Generated UUIDs"></textarea>
-    </section>
+<section class="editor-panel" style="margin-top:14px">
+<div class="editor-head"><div><strong id="uuidOutputTitle">UUID v4 / GUID output</strong><span>One identifier per line</span></div><div class="editor-actions"><button id="copyUuid" class="text-btn" type="button">Copy</button><button id="downloadUuid" class="text-btn" type="button">Download</button></div></div>
+<textarea id="uuidOutput" class="code-editor" spellcheck="false" readonly aria-label="Generated UUID and GUID values"></textarea>
+</section>
+<div id="uuidError" class="error" hidden role="alert"></div>
+<div id="uuidStats" class="json-stats" hidden></div>
+<div class="trustbar"><span>Browser-side generation</span><span>Web Crypto randomness</span><span>UUID v4 + v7</span><span>Bulk up to 500</span><span>No server request</span></div>
+</section>
 
-    <div id="uuidError" class="error" hidden role="alert"></div>
-    <div class="trustbar"><span>Cryptographic randomness</span><span>Bulk generation</span><span>No server request</span></div>
-  </section>
+<section class="section wrap prose">
+<h2>Generate UUIDs and GUIDs in one tool</h2>
+<p>UUID and GUID terminology often overlaps in developer workflows. UUID is the standards term for a 128-bit universally unique identifier, while GUID is the name widely used in Microsoft APIs and tooling. This page keeps one canonical generator instead of splitting those search terms into duplicate utilities.</p>
+<div class="info-grid">
+<article><h3>UUID v4</h3><p>Version 4 uses random or pseudorandom bits with the required UUID version and variant fields. It is a common choice for independent identifiers, database keys, test data and Microsoft-style random GUID workflows.</p></article>
+<article><h3>UUID v7</h3><p>Version 7 places a Unix-epoch millisecond timestamp in the leading 48 bits and uses random bits for the remainder. That makes values sortable by creation time at millisecond granularity without exposing a machine identifier.</p></article>
+<article><h3>Bulk generation</h3><p>Create up to 500 identifiers in one run. Each item gets fresh random data; v7 values also include their generation timestamp.</p></article>
+<article><h3>Private by design</h3><p>Generation happens in browser JavaScript using Web Crypto. The page does not send a UUID or GUID generation request to Smart Web Utility's server.</p></article>
+</div>
 
-  <section class="section wrap prose">
-    <h2>Generate UUID v4 identifiers</h2>
-    <p>UUID v4 values are 128-bit identifiers generated from random data. They are widely used for database keys, request IDs, test fixtures, distributed systems and other cases where globally unique identifiers are useful without coordinating a central counter.</p>
+<h2>GUID generator formats</h2>
+<p>The canonical UUID text form is five hexadecimal groups in an 8-4-4-4-12 pattern. GUID-consuming applications sometimes expect the same hexadecimal identifier wrapped in braces, while APIs, databases and configuration files may prefer canonical, compact or URN notation. The format option changes presentation only; it does not change the underlying 128-bit identifier.</p>
 
-    <div class="info-grid">
-      <article><h3>Version 4 UUIDs</h3><p>This tool generates standards-compatible random UUID v4 values with the correct version and variant bits.</p></article>
-      <article><h3>Bulk generation</h3><p>Create up to 500 UUIDs at once and copy or download them as plain text.</p></article>
-      <article><h3>Format options</h3><p>Switch between lowercase and uppercase and optionally remove hyphens from the output.</p></article>
-      <article><h3>Private by design</h3><p>Generation uses the browser's cryptographic random-number API and does not send UUID requests to the server.</p></article>
-    </div>
+<h2>Canonical, braced, compact and URN output</h2>
+<p><strong>Canonical</strong> output looks like <code>550e8400-e29b-41d4-a716-446655440000</code>. <strong>Braced GUID</strong> wraps that text in <code>{ }</code>. <strong>Compact</strong> removes hyphens for a 32-character hexadecimal representation. <strong>URN</strong> prefixes the canonical value with <code>urn:uuid:</code>. Uppercase changes hexadecimal letter case without changing identifier bits.</p>
 
-    <h2>Related tools</h2>
-    <div class="related-tools">
-      <a href="/unix-timestamp-converter/">Unix Timestamp Converter<span>Convert epoch values and dates.</span></a>
-      <a href="/base64-encoder-decoder/">Base64 Encoder / Decoder<span>Encode and decode Base64 text.</span></a>
-      <a href="/json-formatter/">JSON Formatter<span>Format and validate JSON.</span></a>
-    </div>
-  </section>
-<section class="section alt" data-adsense-depth="20261001"><div class="wrap prose"><h2>When to use a UUID v4</h2><p>Random UUIDs are useful when identifiers must be created independently across browsers, services or machines without asking a central counter for the next number. Typical examples include request IDs, test fixtures, import rows, temporary client-side objects and database keys where unpredictability is preferable to sequential numbering.</p><h2>Uniqueness is probabilistic</h2><p>A UUID v4 has a very large random space, making accidental collisions extremely unlikely in normal applications, but it is not a proof that a duplicate can never exist. Systems with strict uniqueness requirements should still enforce a unique constraint at the storage layer and handle the rare conflict correctly.</p><h2>UUIDs are identifiers, not secrets</h2><p>Do not treat a UUID as an authentication token merely because it looks random. Access control should use purpose-built credentials with appropriate entropy, expiration and verification. For secret-like random strings, use the <a href="/random-string-generator/">Random String Generator</a> and follow the security requirements of the receiving system.</p></div></section></main>
+<h2>UUID v4 versus UUID v7</h2>
+<p>Choose v4 when you primarily want random identifiers with no timestamp ordering requirement. Choose v7 when chronological database locality or approximate creation-time ordering is useful. The generator sets the standardized version and RFC variant bits for both versions. UUID v7 values generated within the same millisecond use random suffixes and are not promised to be strictly monotonic relative to one another.</p>
 
+<h2>GUID and UUID are identifiers, not secrets</h2>
+<p>Do not use a UUID or GUID as an authentication secret merely because it appears random. UUID v4 reserves fixed version and variant bits, and UUID v7 intentionally exposes a timestamp prefix. Use purpose-built cryptographic tokens when secrecy or authorization is required.</p>
+
+<h2>Collision handling still belongs in your application</h2>
+<p>The random space of UUID v4 and the random portion of UUID v7 make accidental collisions extremely unlikely in normal systems, but a generator cannot prove global uniqueness. Databases and applications with strict uniqueness requirements should still use unique constraints and handle a duplicate insertion correctly.</p>
+
+<h2>Validate an existing UUID or GUID</h2>
+<p>If you already have an identifier and need to check its textual format, version or variant, use the <a href="/uuid-validator/">UUID Validator</a>. It can also recognize special Nil/Max UUID forms and display the timestamp embedded in a version 7 UUID.</p>
+
+<h2>Related developer tools</h2>
+<div class="related-tools"><a href="/uuid-validator/">UUID Validator<span>Check UUID/GUID format, version and variant.</span></a><a href="/unix-timestamp-converter/">Unix Timestamp Converter<span>Inspect Unix timestamps and date conversions.</span></a><a href="/random-string-generator/">Random String Generator<span>Create random text for testing or non-UUID workflows.</span></a></div>
+</section>
+
+<section class="section alt" data-quality-content="v1"><div class="wrap prose">
+<h2>Frequently asked questions</h2>
+<h3>Is a GUID the same as a UUID?</h3><p>The terms overlap heavily in practical software development. GUID is common in Microsoft ecosystems, while UUID is the standards terminology. Microsoft <code>Guid.NewGuid()</code> creates a version 4 UUID.</p>
+<h3>Can I generate UUID v7?</h3><p>Yes. Choose UUID v7 in the version menu. The leading 48 bits encode the current Unix time in milliseconds and the remaining applicable fields use random data.</p>
+<h3>Can I generate GUIDs with braces?</h3><p>Yes. Choose Braced GUID format to produce values such as <code>{550e8400-e29b-41d4-a716-446655440000}</code>.</p>
+<h3>Can I generate multiple UUIDs at once?</h3><p>Yes. The bulk generator supports 1 to 500 identifiers per run.</p>
+<h3>Are generated values sent to the server?</h3><p>No. Generation happens locally in browser JavaScript.</p>
+</div></section>
+</main>
 <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
-<script src="/assets/uuid.js" defer></script>
-</body>
-</html>
+<script src="/assets/uuid.js?v=20261002-2" defer></script>
+</body></html>
