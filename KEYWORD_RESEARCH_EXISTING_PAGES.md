@@ -37,3 +37,26 @@ Implementation evidence:
 - SVG → PNG: ~1,600 US / KD 5; SERP has some mid-authority specialists but is not as compelling as the existing PNG→ICO consolidation opportunity.
 - TIFF → JPG: ~1,900 US / KD 8 and a DA ~18 result near the top, but robust TIFF decoding requires an additional codec/library. Hold until the implementation and dependency are fully audited.
 - HEIC → JPG: brand-heavy/autocomplete-heavy variants appeared; a correct browser implementation requires a real HEIC decoder. Do not publish a fake Canvas-only converter.
+
+
+## Unix timestamp to date/time → consolidate into /unix-timestamp-converter/
+
+Validated query: **unix timestamp to date time**
+
+Provider estimates:
+- Global: ~12,100/month.
+- US: ~1,900/month, KD 5.
+- UK: ~390/month, KD 5.
+- Canada: ~260/month, KD 5.
+- Australia: ~170/month, KD 6.
+
+SERP observation:
+- The checked SERP is authority-heavy, including established timestamp/reference sites and an AI Overview.
+- Because Smart Web Utility already has a real bidirectional Unix timestamp converter, the right move is to strengthen the existing page instead of publishing a duplicate landing page.
+
+Decision:
+- Keep /unix-timestamp-converter/ as the canonical page.
+- Add explicit index/follow crawl metadata.
+- Add static BreadcrumbList structured data.
+- Add a crawlable timestamp-to-date/time example and clearer seconds-vs-milliseconds guidance.
+- Retain both Unix→Date and Date→Unix functionality on one page.
