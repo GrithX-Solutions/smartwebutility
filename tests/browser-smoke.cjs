@@ -442,6 +442,28 @@ const cases = [
     assert.equal(decodedMs, expectedMs);
     assert.equal(await p.locator('#ulidError').isHidden(), true);
   }],
+  ['random-port-generator', async p => {
+    await p.locator('#portRangePreset').selectOption('dynamic');
+    await p.locator('#portCount').fill('20');
+    await p.locator('#portUnique').check();
+    await p.locator('#portSort').check();
+    await p.locator('#generatePorts').click();
+
+    let values = (await p.locator('#portOutput').inputValue()).trim().split(/\r?\n/).map(Number);
+    assert.equal(values.length, 20);
+    assert.equal(new Set(values).size, 20);
+    values.forEach(value => assert.ok(value >= 49152 && value <= 65535));
+    assert.deepEqual(values, [...values].sort((a,b) => a-b));
+    assert.equal(await p.locator('#portError').isHidden(), true);
+
+    await p.locator('#portRangePreset').selectOption('custom');
+    await p.locator('#portMin').fill('5000');
+    await p.locator('#portMax').fill('5002');
+    await p.locator('#portCount').fill('4');
+    await p.locator('#portUnique').check();
+    await p.locator('#generatePorts').click();
+    assert.equal(await p.locator('#portError').isHidden(), false);
+  }],
   ['hash-generator', async p => {
     await p.locator('#hashInput').fill('hello');
     await p.locator('#generateHash').click();
