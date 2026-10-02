@@ -1,23 +1,23 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DNSSEC Checker — Test DS, DNSKEY & Validation</title>
+<title>DNSSEC Checker & Validator — Test DS, DNSKEY & Validation</title>
 <meta name="description" content="Check DNSSEC for any domain. Test Cloudflare and Google validation, inspect DS and DNSKEY records, detect broken DNSSEC and compare resolver evidence.">
 <link rel="canonical" href="https://smartwebutility.com/dnssec-checker/">
-<meta property="og:title" content="DNSSEC Checker — Test DS, DNSKEY & Validation"><meta property="og:description" content="Check DNSSEC status, DS and DNSKEY records, validating resolver AD flags and broken DNSSEC evidence."><meta property="og:url" content="https://smartwebutility.com/dnssec-checker/"><meta property="og:type" content="website">
-<meta name="twitter:card" content="summary"><meta name="twitter:title" content="DNSSEC Checker — Test DS, DNSKEY & Validation"><meta name="twitter:description" content="Compare Google and Cloudflare DNSSEC validation with DS and DNSKEY evidence.">
+<meta property="og:title" content="DNSSEC Checker & Validator — Test DS, DNSKEY & Validation"><meta property="og:description" content="Check DNSSEC status, DS and DNSKEY records, validating resolver AD flags and broken DNSSEC evidence."><meta property="og:url" content="https://smartwebutility.com/dnssec-checker/"><meta property="og:type" content="website">
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="DNSSEC Checker & Validator — Test DS, DNSKEY & Validation"><meta name="twitter:description" content="Compare Google and Cloudflare DNSSEC validation with DS and DNSKEY evidence.">
 <meta name="theme-color" content="#07101b"><link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css"><link rel="stylesheet" href="/assets/dnssec-checker.css?v=20260929-1">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"DNSSEC Checker","url":"https://smartwebutility.com/dnssec-checker/","description":"Check DNSSEC validation using Cloudflare and Google validating resolvers, inspect DS and DNSKEY records and diagnose unsigned, partial or broken DNSSEC states.","applicationCategory":"SecurityApplication","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Cloudflare DNSSEC validation","Google Public DNS validation","Authenticated Data flag comparison","DS record inspection","DNSKEY inspection","Broken DNSSEC detection","Unsigned-domain detection","Resolver disagreement detection"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"DNSSEC Checker & Validator","url":"https://smartwebutility.com/dnssec-checker/","description":"Check DNSSEC validation using Cloudflare and Google validating resolvers, inspect DS and DNSKEY records and diagnose unsigned, partial or broken DNSSEC states.","applicationCategory":"SecurityApplication","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Cloudflare DNSSEC validation","Google Public DNS validation","Authenticated Data flag comparison","DS record inspection","DNSKEY inspection","Broken DNSSEC detection","Unsigned-domain detection","Resolver disagreement detection"]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smartwebutility.com/"},{"@type":"ListItem","position":2,"name":"Website Tools","item":"https://smartwebutility.com/website-tools/"},{"@type":"ListItem","position":3,"name":"DNSSEC Checker","item":"https://smartwebutility.com/dnssec-checker/"}]}</script>
 </head><body>
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/" aria-current="page">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
 
 <main>
 <section class="tool-hero wrap dnssec-hero">
-  <div class="crumb"><a href="/">Home</a><span>/</span><a href="/website-tools/">Website Tools</a><span>/</span><span>DNSSEC Checker</span></div>
+  <div class="crumb"><a href="/">Home</a><span>/</span><a href="/website-tools/">Website Tools</a><span>/</span><span>DNSSEC Checker & Validator</span></div>
   <span class="kicker">DNS security diagnostic</span>
-  <h1>DNSSEC Checker</h1>
-  <p class="lead compact">Check whether a domain's DNSSEC configuration validates through independent public resolvers. Compare Cloudflare and Google, inspect DS and DNSKEY records, and distinguish secure, unsigned, partial and broken DNSSEC states.</p>
+  <h1>DNSSEC Checker & Validator</h1>
+  <p class="lead compact">Check and validate a domain's DNSSEC configuration through independent public resolvers. Compare Cloudflare and Google validation, inspect DS and DNSKEY records, and distinguish secure, unsigned, partial and broken DNSSEC states.</p>
 
   <form id="dnssecForm" class="dnssec-form" novalidate>
     <label class="sr-only" for="dnssecDomain">Domain name</label>
@@ -71,7 +71,7 @@
 </section>
 
 <section class="section alt"><div class="wrap prose" data-quality-content="v3">
-  <div class="section-head"><div><span class="kicker">DNSSEC explained</span><h2>What a DNSSEC checker should verify</h2></div><p>Publishing DNSSEC records is not the same as passing end-to-end validation. The resolver verdict and the delegation chain both matter.</p></div>
+  <div class="section-head"><div><span class="kicker">DNSSEC explained</span><h2>What a DNSSEC checker and validator should verify</h2></div><p>Publishing DNSSEC records is not the same as passing end-to-end validation. The resolver verdict and the delegation chain both matter.</p></div>
 
   <p>DNSSEC adds cryptographic signatures to DNS data so validating resolvers can detect tampering. A signed child zone publishes DNSKEY records, while the parent publishes a DS record that links the child into the DNSSEC chain of trust. If the chain is broken, validating resolvers can reject the response instead of silently accepting bad data.</p>
 
