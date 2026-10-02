@@ -126,6 +126,19 @@ const cases = [
     await p.locator('#convertCsvJson').click();
     assert.equal(await p.locator('#csvJsonError').isHidden(), false);
   }],
+  ['sql-formatter', async p => {
+    await p.waitForFunction(() => document.getElementById('sqlStatus').textContent === 'Ready');
+    await p.locator('#sqlInput').fill('select u.id,u.name from users u where u.active=true order by u.name;');
+    await p.locator('#sqlDialect').selectOption('postgresql');
+    await p.locator('#sqlKeywordCase').selectOption('upper');
+    await p.locator('#formatSql').click();
+    const sql = await p.locator('#sqlOutput').inputValue();
+    assert.ok(sql.includes('SELECT'));
+    assert.ok(sql.includes('FROM'));
+    assert.ok(sql.includes('WHERE'));
+    assert.ok(sql.includes('\n'));
+    assert.equal(await p.locator('#sqlError').isHidden(), true);
+  }],
   ['json-diff', async p => {
     await p.locator('#jsonDiffLeft').fill('{"port":8080,"enabled":false}');
     await p.locator('#jsonDiffRight').fill('{"port":8443,"enabled":true,"region":"us"}');
