@@ -62,7 +62,10 @@ jobs:
           node --check deploy/lighthouse/proxy.mjs
 
       - name: Validate production deploy script
-        run: bash -n deploy/deploy-site.sh
+        run: |
+          bash -n deploy/deploy-site.sh
+          grep -Fq 'python3 "$RELEASE/scripts/version-shared-assets.py" "$RELEASE"' deploy/deploy-site.sh
+          if grep -Fq 'caches\\n# cannot keep older' deploy/deploy-site.sh; then echo "escaped newline corrupted deploy asset versioning block" >&2; exit 1; fi
 
       - name: Exercise shared asset versioning
         run: |
@@ -73,6 +76,7 @@ jobs:
           grep -q '/assets/theme.js?v=' /tmp/swu-asset-version-test/site/index.html
           grep -q '/assets/styles.css?v=' /tmp/swu-asset-version-test/site/index.html
           grep -q '/assets/tool-catalog.json?v=' /tmp/swu-asset-version-test/site/assets/theme.js
+          grep -q '/assets/header-nav-search.css?v=' /tmp/swu-asset-version-test/site/assets/theme.js
           python3 /tmp/swu-asset-version-test/site/scripts/seo-static-qa.py
 
       - name: Normalize publisher trust navigation
