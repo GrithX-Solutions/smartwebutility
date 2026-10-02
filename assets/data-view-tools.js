@@ -107,7 +107,8 @@
         setStatus('Add CSV', 'neutral');
         return false;
       }
-      const chosen = delimiterSelect.value === 'auto' ? detectDelimiter(raw) : delimiterSelect.value;
+      const selected = delimiterSelect.value;
+      const chosen = selected === 'auto' ? detectDelimiter(raw) : (selected === '\\t' ? '\t' : selected);
       const rows = parseDelimited(raw, chosen);
       if (!rows.length) throw new Error('No CSV rows found.');
       const width = Math.max(...rows.map(r => r.length));
