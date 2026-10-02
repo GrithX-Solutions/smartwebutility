@@ -49,6 +49,21 @@ const cases = [
     assert.ok((await p.locator('#yamlOutput').inputValue()).includes('service:'));
     assert.equal(await p.locator('#yamlError').isHidden(), true);
   }],
+  ['xml-to-csv', async p => {
+    await p.locator('#xmlCsvInput').fill('<users><user id="1"><name>Ada</name></user><user id="2"><name>Linus</name></user></users>');
+    await p.locator('#convertXmlCsv').click();
+    const csv = await p.locator('#xmlCsvOutput').inputValue();
+    assert.ok(csv.includes('@id,name'));
+    assert.ok(csv.includes('1,Ada'));
+  }],
+  ['json-diff', async p => {
+    await p.locator('#jsonDiffLeft').fill('{"port":8080,"enabled":false}');
+    await p.locator('#jsonDiffRight').fill('{"port":8443,"enabled":true,"region":"us"}');
+    await p.locator('#compareJson').click();
+    const text = await p.locator('#jsonDiffResult').innerText();
+    assert.ok(text.includes('$.port'));
+    assert.ok(text.includes('$.region'));
+  }],
   ['base64-encoder-decoder', async p => {
     await p.locator('#base64Input').fill('hello');
     await p.locator('#runBase64').click();
