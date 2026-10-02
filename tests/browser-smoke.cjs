@@ -183,7 +183,7 @@ const cases = [
     await p.locator('#jsonPathOutputMode').selectOption('paths');
     result = JSON.parse(await p.locator('#jsonPathOutput').inputValue());
     assert.equal(result[1], "$['store']['book'][1]['title']");
-    await p.locator('#jsonPathExpression').fill('$');
+    await p.locator('#jsonPathExpression').fill('$[');
     await p.locator('#runJsonPath').click();
     assert.equal(await p.locator('#jsonPathError').isHidden(), false);
   }],
