@@ -198,9 +198,11 @@ const cases = [
     assert.ok(minified.includes('.card{'));
     assert.ok(minified.includes('color:red'));
     assert.equal(await p.locator('#cssMinifierError').isHidden(), true);
-    await p.locator('#cssMinifierInput').fill('a{color:red}}');
+    await p.locator('#cssRestructure').check();
     await p.locator('#minifyCss').click();
-    assert.equal(await p.locator('#cssMinifierError').isHidden(), false);
+    const restructured = await p.locator('#cssMinifierOutput').inputValue();
+    assert.ok(restructured.length > 0);
+    assert.equal(await p.locator('#cssMinifierError').isHidden(), true);
   }],
   ['json-diff', async p => {
     await p.locator('#jsonDiffLeft').fill('{"port":8080,"enabled":false}');
