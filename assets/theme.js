@@ -4,6 +4,16 @@
   const root = document.documentElement;
   const storageKey = 'swu-theme';
 
+  function ensureHeaderNavigationStyles() {
+    if (document.querySelector('link[data-swu-header-nav]')) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '/assets/header-nav-search.css?v=20261003-1';
+    link.dataset.swuHeaderNav = 'true';
+    document.head.appendChild(link);
+  }
+  ensureHeaderNavigationStyles();
+
   const analyticsMeasurementId = 'G-TKF8FWKQN6';
   const restrictedAnalyticsRegions = [
     'AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IS','IE','IT',
