@@ -77,6 +77,21 @@ const cases = [
     await p.locator('#validateToml').click();
     assert.equal(await p.locator('#tomlError').isHidden(), false);
   }],
+  ['curl-converter', async p => {
+    await p.locator('#curlInput').fill("curl -X POST https://api.example.com/v1/items -H 'Content-Type: application/json' -H 'Authorization: Bearer test-token' -d '{\"name\":\"Ada\",\"active\":true}'");
+    await p.locator('#convertCurl').click();
+    let code = await p.locator('#curlOutput').inputValue();
+    assert.ok(code.includes('requests.request'));
+    assert.ok(code.includes('api.example.com/v1/items'));
+    assert.equal(await p.locator('#curlError').isHidden(), true);
+    await p.locator('#curlTarget').selectOption('fetch');
+    code = await p.locator('#curlOutput').inputValue();
+    assert.ok(code.includes('fetch('));
+    assert.ok(code.includes('JSON.stringify'));
+    await p.locator('#curlInput').fill("curl https://example.com -F 'file=@demo.txt'");
+    await p.locator('#convertCurl').click();
+    assert.equal(await p.locator('#curlError').isHidden(), false);
+  }],
   ['json-diff', async p => {
     await p.locator('#jsonDiffLeft').fill('{"port":8080,"enabled":false}');
     await p.locator('#jsonDiffRight').fill('{"port":8443,"enabled":true,"region":"us"}');
