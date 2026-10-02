@@ -246,6 +246,26 @@ const cases = [
     await p.locator('#convertCsvXml').click();
     assert.equal(await p.locator('#csvXmlError').isHidden(), false);
   }],
+  ['html-to-json', async p => {
+    const html = '<main id="app"><h1>Hello <em>world</em></h1><p data-x="1">Text</p><script>window.__htmlJsonExecuted=1</script></main>';
+    await p.locator('#htmlJsonInput').fill(html);
+    await p.locator('#convertHtmlJson').click();
+    let tree = JSON.parse(await p.locator('#htmlJsonOutput').inputValue());
+    assert.equal(tree.tag, 'html');
+    const asText = JSON.stringify(tree);
+    assert.ok(asText.includes('"tag":"main"') || asText.includes('"tag": "main"'));
+    assert.ok(asText.includes('"id":"app"') || asText.includes('"id": "app"'));
+    assert.equal(await p.evaluate(() => window.__htmlJsonExecuted), undefined);
+    assert.equal(await p.locator('#htmlJsonError').isHidden(), true);
+
+    await p.locator('#htmlJsonMode').selectOption('tables');
+    await p.locator('#htmlJsonInput').fill('<table><tr><th>Name</th><th>Role</th></tr><tr><td>Ada</td><td>Admin</td></tr><tr><td>Linus</td><td>Developer</td></tr></table>');
+    await p.locator('#convertHtmlJson').click();
+    const tables = JSON.parse(await p.locator('#htmlJsonOutput').inputValue());
+    assert.equal(tables.length, 1);
+    assert.equal(tables[0].rows[0].Name, 'Ada');
+    assert.equal(tables[0].rows[1].Role, 'Developer');
+  }],
   ['json-diff', async p => {
     await p.locator('#jsonDiffLeft').fill('{"port":8080,"enabled":false}');
     await p.locator('#jsonDiffRight').fill('{"port":8443,"enabled":true,"region":"us"}');

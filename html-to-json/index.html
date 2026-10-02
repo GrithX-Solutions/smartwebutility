@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HTML to JSON Converter Online — Convert HTML to JSON</title>
+<meta name="description" content="Convert HTML to JSON online in your browser. Export a DOM tree with tags, attributes and text, or extract HTML tables into JSON rows.">
+<link rel="canonical" href="https://smartwebutility.com/html-to-json/">
+<meta property="og:title" content="HTML to JSON Converter Online — Convert HTML to JSON">
+<meta property="og:description" content="Convert HTML structure to JSON locally, or extract HTML tables into JSON rows.">
+<meta property="og:url" content="https://smartwebutility.com/html-to-json/"><meta property="og:type" content="website">
+<meta name="twitter:card" content="summary"><meta name="theme-color" content="#071426">
+<link rel="icon" href="/favicon-sw-v5.svg?v=20261001e" type="image/svg+xml">
+<script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"HTML to JSON Converter Online","url":"https://smartwebutility.com/html-to-json/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert HTML structure or HTML tables into JSON locally in the browser.","featureList":["HTML DOM tree to JSON","HTML table to JSON extraction","Element attributes","Text nodes","Optional comments","Optional whitespace-only text nodes","Local HTML file input","Copy and download JSON"]}</script>
+</head>
+<body data-html-json-tool>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+<main>
+<section class="tool-hero wrap json-tool-hero">
+<div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>HTML to JSON</span></div>
+<span class="kicker">Developer tool · HTML structure converter</span>
+<h1>HTML to JSON Converter Online</h1>
+<p class="lead compact">Convert HTML into structured JSON without uploading the source. Use DOM tree mode for tags, attributes and text nodes, or table mode to turn HTML tables into JSON rows.</p>
+
+<div class="json-toolbar data-view-toolbar" aria-label="HTML to JSON actions">
+<button class="btn primary" id="convertHtmlJson" type="button">Convert to JSON</button>
+<label class="file-btn">Open .html<input id="htmlJsonFile" type="file" accept=".html,.htm,text/html,text/plain" hidden></label>
+<button class="text-btn" id="exampleHtmlJson" type="button">Example</button>
+<button class="text-btn" id="clearHtmlJson" type="button">Clear</button>
+<label class="compact-control">Output mode
+<select id="htmlJsonMode">
+<option value="tree" selected>DOM tree</option>
+<option value="tables">HTML tables</option>
+</select></label>
+</div>
+
+<div class="json-toolbar data-view-toolbar" aria-label="HTML to JSON options">
+<label class="check-control"><input id="htmlJsonComments" type="checkbox"> Include comments</label>
+<label class="check-control"><input id="htmlJsonWhitespace" type="checkbox"> Keep whitespace-only text nodes</label>
+<label class="check-control"><input id="htmlJsonTableHeader" type="checkbox" checked> First table row is header</label>
+</div>
+
+<div class="json-workspace">
+<section class="editor-panel"><div class="editor-head"><div><strong>HTML input</strong><span>Paste HTML or open a local file</span></div></div><textarea id="htmlJsonInput" class="code-editor" spellcheck="false" autocapitalize="none" autocomplete="off" placeholder="&lt;article id=&quot;post&quot;&gt;&#10;  &lt;h1&gt;Hello&lt;/h1&gt;&#10;  &lt;p data-id=&quot;42&quot;&gt;Text&lt;/p&gt;&#10;&lt;/article&gt;" aria-label="HTML input"></textarea></section>
+<section class="editor-panel"><div class="editor-head"><div><strong>JSON output</strong><span id="htmlJsonStatus" data-kind="neutral">Ready</span></div><div class="editor-actions"><button id="copyHtmlJson" class="text-btn" type="button">Copy</button><button id="downloadHtmlJson" class="text-btn" type="button">Download</button></div></div><textarea id="htmlJsonOutput" class="code-editor" readonly spellcheck="false" aria-label="JSON output"></textarea></section>
+</div>
+<div id="htmlJsonError" class="error" hidden role="alert"></div>
+<div id="htmlJsonStats" class="json-stats" hidden aria-label="HTML to JSON statistics"></div>
+<div id="htmlJsonWarnings" class="json-stats" hidden aria-label="HTML to JSON warnings"></div>
+<div class="trustbar"><span>Browser-side conversion</span><span>No upload</span><span>Scripts are parsed, not executed</span><span>Local HTML files up to 5 MB</span><span>Ctrl/⌘ + Enter to convert</span></div>
+</section>
+
+<section class="section wrap prose">
+<h2>Convert HTML structure into JSON</h2>
+<p>HTML and JSON describe information in different ways, so “HTML to JSON” can mean more than one thing. This tool makes the output model explicit. DOM tree mode serializes HTML structure, while table mode extracts tabular data into JSON rows.</p>
+<div class="info-grid">
+<article><h3>DOM tree mode</h3><p>Each HTML element becomes a JSON object with a lowercase <code>tag</code>, an <code>attributes</code> object when attributes exist, and a <code>children</code> array for nested elements, text nodes and optional comments.</p></article>
+<article><h3>Table extraction mode</h3><p>Each HTML table becomes a JSON object containing rows. With the header option enabled, the first row becomes object keys; otherwise every row is returned as an array of cell text values.</p></article>
+<article><h3>Text and comments</h3><p>Non-empty text nodes are preserved in DOM tree mode. Whitespace-only text and comments are excluded by default to keep JSON compact, but both behaviors can be changed with the options above.</p></article>
+<article><h3>Attributes stay explicit</h3><p>HTML attributes are written into an <code>attributes</code> object instead of being mixed with child content, which keeps element metadata separate from text and nested elements.</p></article>
+</div>
+
+<h2>What the DOM tree JSON looks like</h2>
+<p>An element such as <code>&lt;p data-id="42"&gt;Hello&lt;/p&gt;</code> becomes a JSON object with <code>tag: "p"</code>, <code>attributes: {"data-id":"42"}</code>, and a child text node containing <code>Hello</code>. This representation is descriptive rather than a browser DOM API snapshot, so it avoids implementation-specific properties that are not useful for portable JSON.</p>
+
+<h2>HTML fragments and browser parsing</h2>
+<p>The browser parses input with its built-in HTML parser. A fragment can therefore be wrapped into an implied document structure such as <code>html</code>, <code>head</code> and <code>body</code>, and malformed HTML can be repaired according to browser parsing rules. The output represents the parsed DOM, not a byte-for-byte copy of the source.</p>
+
+<h2>Scripts are not executed during conversion</h2>
+<p>HTML is parsed with <code>DOMParser</code>; embedded scripts are represented as inert parsed elements and are not inserted into the live page. The converter does not fetch linked resources or execute source JavaScript as part of the transformation.</p>
+
+<h2>HTML table to JSON behavior</h2>
+<p>Table mode reads rows and cell text from <code>th</code> and <code>td</code> elements. When the first row is used as a header, blank names receive generated <code>Column N</code> labels and duplicate names receive suffixes so one value does not overwrite another. Complex <code>rowspan</code> and <code>colspan</code> layout is not expanded into a spreadsheet-style grid.</p>
+
+<h2>What this converter does not infer</h2>
+<p>It does not guess application-specific schemas, scrape remote URLs, execute JavaScript to render dynamic content, infer microdata semantics, or turn arbitrary visual layout into business objects. If an application expects a particular JSON contract, transform this neutral output into that contract explicitly.</p>
+
+<h2>Related developer tools</h2>
+<div class="related-tools"><a href="/html-to-markdown/">HTML to Markdown<span>Convert HTML content into Markdown.</span></a><a href="/json-formatter/">JSON Formatter<span>Validate and format generated JSON.</span></a><a href="/html-minifier/">HTML Minifier<span>Compress HTML source with conservative defaults.</span></a></div>
+</section>
+
+<section class="section alt" data-quality-content="v1"><div class="wrap prose">
+<h2>Frequently asked questions</h2>
+<h3>Can I convert an HTML file to JSON online?</h3><p>Yes. Open a local HTML file up to 5 MB or paste HTML source, then convert it in the browser.</p>
+<h3>Does it convert HTML tables to JSON?</h3><p>Yes. Choose HTML tables mode to extract table rows into JSON arrays or header-keyed objects.</p>
+<h3>Are scripts executed?</h3><p>No. The input is parsed as inert HTML and is not inserted into the live page for execution.</p>
+<h3>Does malformed HTML cause an error?</h3><p>Not necessarily. Browser HTML parsers repair many malformed structures, so the JSON reflects the parsed DOM.</p>
+<h3>Is the HTML uploaded?</h3><p>No. Conversion runs locally in browser JavaScript.</p>
+</div></section>
+</main>
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script src="/assets/html-to-json.js?v=20261002-1" defer></script>
+</body></html>
