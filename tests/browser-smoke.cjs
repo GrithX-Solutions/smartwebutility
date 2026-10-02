@@ -421,6 +421,27 @@ const cases = [
     assert.match(urn, /^urn:uuid:[0-9A-F]{8}-[0-9A-F]{4}-7[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/);
     assert.equal(await p.locator('#uuidError').isHidden(), true);
   }],
+  ['ulid-generator', async p => {
+    await p.locator('#ulidCount').fill('3');
+    await p.locator('#ulidCustomTime').check();
+    await p.locator('#ulidTimestamp').fill('2026-01-02T03:04:05.006');
+    await p.locator('#ulidMonotonic').check();
+    await p.locator('#generateUlid').click();
+
+    const values = (await p.locator('#ulidOutput').inputValue()).trim().split(/\r?\n/);
+    assert.equal(values.length, 3);
+    values.forEach(value => assert.match(value, /^[0-7][0-9A-HJKMNP-TV-Z]{25}$/));
+    assert.deepEqual(values, [...values].sort());
+    assert.equal(new Set(values.map(value => value.slice(0, 10))).size, 1);
+
+    const rows = p.locator('#ulidTable tbody tr');
+    assert.equal(await rows.count(), 3);
+    const expectedMs = await p.locator('#ulidTimestamp').evaluate(el => new Date(el.value).getTime());
+    const firstMsText = await rows.nth(0).locator('td').nth(1).innerText();
+    const decodedMs = Number(firstMsText.replace(/,/g, ''));
+    assert.equal(decodedMs, expectedMs);
+    assert.equal(await p.locator('#ulidError').isHidden(), true);
+  }],
   ['hash-generator', async p => {
     await p.locator('#hashInput').fill('hello');
     await p.locator('#generateHash').click();
