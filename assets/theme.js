@@ -112,7 +112,7 @@
       '/website-tools': [
         '/website-tools','/dns-checker','/dns-propagation-checker','/ssl-checker',
         '/http-status-checker','/http-header-checker','/redirect-checker','/bulk-redirect-checker','/sitemap-checker',
-        '/meta-tag-checker','/open-graph-checker','/favicon-generator','/cache-control-checker','/security-headers-checker','/dnssec-checker','/website-speed-test'
+        '/meta-tag-checker','/open-graph-checker','/favicon-generator','/cache-control-checker','/security-headers-checker','/dnssec-checker','/reverse-dns-checker','/website-speed-test'
       ],
       '/seo-tools': [
         '/seo-tools','/meta-tag-generator','/robots-txt-generator','/robots-txt-tester','/schema-markup-generator',
@@ -143,7 +143,7 @@
     },
     '/website-tools/': {
       label:'Website', icon:'globe', shortcuts:[
-        ['DNS Checker','/dns-checker/'],['DNSSEC Validator','/dnssec-checker/'],['SSL Checker','/ssl-checker/'],
+        ['DNS Checker','/dns-checker/'],['Reverse DNS','/reverse-dns-checker/'],['DNSSEC Validator','/dnssec-checker/'],['SSL Checker','/ssl-checker/'],
         ['Redirect Checker','/redirect-checker/'],['HTTP Status','/http-status-checker/'],['Speed Test','/website-speed-test/']
       ]
     },

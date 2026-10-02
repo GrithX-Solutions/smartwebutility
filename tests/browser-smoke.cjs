@@ -597,6 +597,22 @@ const cases = [
     await p.locator('#textInput').fill('abc def');
     assert.ok((await p.locator('#textStats').innerText()).includes('7'));
   }],
+  ['reverse-dns-checker', async p => {
+    await p.route('**/api/reverse-dns-check.php**', route => route.fulfill({
+      status: 400,
+      contentType: 'application/json',
+      body: JSON.stringify({error:'Private, reserved, loopback and documentation IP addresses are not allowed.'})
+    }));
+    await p.locator('#rdnsIp').fill('127.0.0.1');
+    await p.locator('#rdnsForm button[type="submit"]').click();
+    await p.waitForFunction(() => {
+      const e = document.getElementById('rdnsError');
+      return e && !e.hidden && e.textContent.length > 0;
+    });
+    assert.match(await p.locator('#rdnsError').innerText(), /Private|reserved|loopback/i);
+    await p.locator('.rdns-example[data-ip="8.8.8.8"]').click();
+    assert.equal(await p.locator('#rdnsIp').inputValue(), '8.8.8.8');
+  }],
   ['favicon-generator', async p => {
     await p.locator('[data-mode="text"]').click();
     await p.locator('#faviconText').fill('SW');
@@ -651,7 +667,7 @@ const cases = [
   // including guides and pages without explicit functional test cases.
   const locs = [...readFileSync('sitemap.xml', 'utf8').matchAll(/<loc>([^<]+)</g)]
     .map(match => new URL(match[1]).pathname);
-  assert.ok(locs.length >= 88, 'sitemap unexpectedly shrank below the 88-page audit baseline');
+  assert.ok(locs.length >= 89, 'sitemap unexpectedly shrank below the 89-page audit baseline');
   for (const path of locs) {
     const page = await browser.newPage();
     const exceptions = [];
@@ -674,6 +690,7 @@ const cases = [
   const navCases = [
     ['/chmod-calculator/', '/developer-tools/'],
     ['/dnssec-checker/', '/website-tools/'],
+    ['/reverse-dns-checker/', '/website-tools/'],
     ['/cache-control-checker/', '/website-tools/'],
     ['/website-speed-test/', '/website-tools/'],
     ['/canonical-tag-checker/', '/seo-tools/'],

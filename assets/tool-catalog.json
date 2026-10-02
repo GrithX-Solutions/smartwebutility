@@ -498,6 +498,23 @@
   },
   {
     "category": "Website",
+    "url": "/reverse-dns-checker/",
+    "title": "Reverse DNS Checker",
+    "description": "Look up PTR hostnames for public IPv4/IPv6 addresses and verify forward-confirmed reverse DNS.",
+    "keywords": [
+      "reverse dns checker",
+      "reverse dns lookup",
+      "ptr lookup",
+      "ptr record checker",
+      "rdns lookup",
+      "ip to hostname lookup",
+      "ip to dns checker",
+      "forward confirmed reverse dns",
+      "fcrdns"
+    ]
+  },
+  {
+    "category": "Website",
     "url": "/security-headers-checker/",
     "title": "Security Headers Checker",
     "description": "Review HSTS, CSP, framing, MIME sniffing and browser security policies.",

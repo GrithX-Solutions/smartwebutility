@@ -371,3 +371,36 @@ Do not target mismatched variants such as PDF/Excel-specific counters unless the
 3. Use supporting guides only for distinct troubleshooting/informational intent; do not split transactional tool keywords into doorway pages.
 4. Evaluate Tier-1 performance separately (US first, then UK/Canada/Australia) before multilingual expansion.
 5. Use Search Console queries as the primary feedback loop once impressions grow; Ubersuggest remains the metric/SERP validation layer for planned targets.
+
+
+## Reverse DNS Checker opportunity — 2026-10-03
+
+Decision: BUILD one canonical page at `/reverse-dns-checker/`.
+
+Validated Ubersuggest US-English baseline from the 2026-10-02 research pass:
+- `reverse dns checker` — 6,600 searches/month, SD 16.
+- `ip to dns checker` — 880 searches/month, SD 6.
+
+Fresh SERP intent revalidation on 2026-10-03 shows dedicated reverse-DNS/PTR utilities rather than a mixed informational SERP. The recurring product expectations are:
+- public IPv4 and IPv6 input;
+- PTR hostname lookup;
+- visible `in-addr.arpa` / `ip6.arpa` reverse name;
+- forward-confirmed reverse DNS (FCrDNS);
+- email/server troubleshooting context;
+- clear no-PTR handling.
+
+Canonical semantic ownership:
+- Primary: reverse dns checker.
+- Same-page variants: reverse dns lookup, PTR lookup, PTR record checker, rDNS lookup, IP to hostname lookup, IP to DNS checker, FCrDNS.
+- Do not create separate thin pages for these variants.
+- Do not claim generic “reverse IP lookup” / co-hosted-domain enumeration; that is a different product/data-source intent.
+
+Product differentiation:
+- Compare Google Public DNS and Cloudflare resolver evidence.
+- Show exact reverse namespace for IPv4/IPv6.
+- Forward-confirm every returned PTR hostname through A/AAAA.
+- Reject private/reserved/loopback/documentation IP ranges.
+- Report evidence and actions without a fabricated reputation/deliverability score.
+- Use Gmail sender requirements only as a concrete mail-server use case; PTR/FCrDNS alone never guarantees inbox placement.
+
+Fresh deep keyword expansion could not be rerun on 2026-10-03 because the Ubersuggest daily report quota was already exhausted. No substitute SEO-volume numbers were invented.
