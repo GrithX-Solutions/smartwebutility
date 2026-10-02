@@ -84,6 +84,8 @@ def main() -> int:
     warnings=[]
     pages={}
     canonicals={}
+    titles={}
+    descriptions={}
     for path in sorted(ROOT.glob("**/index.html")):
         if any(part.startswith(".") for part in path.parts):
             continue
@@ -98,7 +100,13 @@ def main() -> int:
         exp=expected_url(path)
         pages[exp]=path
         if not title: errors.append(f"{rel}: missing <title>")
+        else:
+            if title in titles: errors.append(f"{rel}: duplicate title also used by {titles[title]}")
+            titles[title]=rel
         if not desc: errors.append(f"{rel}: missing meta description")
+        else:
+            if desc in descriptions: errors.append(f"{rel}: duplicate meta description also used by {descriptions[desc]}")
+            descriptions[desc]=rel
         if len(p.canonical)!=1: errors.append(f"{rel}: expected exactly one canonical, found {len(p.canonical)}")
         elif p.canonical[0]!=exp: errors.append(f"{rel}: canonical {p.canonical[0]!r} != expected {exp!r}")
         else:
