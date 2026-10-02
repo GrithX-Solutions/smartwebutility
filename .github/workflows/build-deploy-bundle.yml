@@ -40,6 +40,7 @@ jobs:
           node --check assets/data-advanced-tools.js
           node --check assets/toml-tools.mjs
           node --check assets/curl-converter.js
+          node --check assets/json-escape.js
           node --check deploy/lighthouse/worker.mjs
           node --check deploy/lighthouse/proxy.mjs
 
