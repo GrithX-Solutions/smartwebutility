@@ -598,6 +598,11 @@ const cases = [
     assert.ok((await p.locator('#textStats').innerText()).includes('7'));
   }],
   ['reverse-dns-checker', async p => {
+    await p.route('**/api/reverse-dns-check.php**', route => route.fulfill({
+      status: 400,
+      contentType: 'application/json',
+      body: JSON.stringify({error:'Private, reserved, loopback and documentation IP addresses are not allowed.'})
+    }));
     await p.locator('#rdnsIp').fill('127.0.0.1');
     await p.locator('#rdnsForm button[type="submit"]').click();
     await p.waitForFunction(() => {
