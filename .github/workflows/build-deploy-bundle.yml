@@ -46,6 +46,7 @@ jobs:
           node --check assets/markdown-html-tools.mjs
           node --check assets/html-minifier.js
           node --check assets/jsonpath-tester.mjs
+          node --check assets/css-minifier.js
           node --check deploy/lighthouse/worker.mjs
           node --check deploy/lighthouse/proxy.mjs
 
