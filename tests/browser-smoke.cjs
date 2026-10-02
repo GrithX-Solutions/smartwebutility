@@ -198,7 +198,7 @@ const cases = [
     assert.ok(minified.includes('.card{'));
     assert.ok(minified.includes('color:red'));
     assert.equal(await p.locator('#cssMinifierError').isHidden(), true);
-    await p.locator('#cssMinifierInput').fill('.broken { color: ;');
+    await p.locator('#cssMinifierInput').fill('a{color:red}}');
     await p.locator('#minifyCss').click();
     assert.equal(await p.locator('#cssMinifierError').isHidden(), false);
   }],
