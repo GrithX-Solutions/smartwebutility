@@ -36,7 +36,7 @@ SEO Audit hub, Meta Tag Generator, Robots.txt Generator, Robots.txt Tester, Sche
 ### Text
 Word Counter, Character Counter, Case Converter, Lorem Ipsum Generator.
 
-## Batch 1 — Structured data converters — IN PROGRESS
+## Batch 1 — Structured data converters — LIVE
 
 Primary SEO targets already validated in live US data:
 - XML to JSON — ~2,400 US/mo, KD 5.
@@ -52,27 +52,21 @@ Implementation:
 - Shared browser-side conversion engine.
 - Homepage + Developer hub + sitemap + nav + smoke-test integration.
 
-## Batch 2 — Data-format cluster expansion
+## Batch 2 — Data-format cluster expansion — IN PROGRESS
 
-Research gate first. Candidate tools:
-- CSV to JSON
-- JSON to XML
-- XML to CSV
-- CSV to XML
-- HTML to JSON
-- JSON to HTML
-- JSON Viewer
-- JSON Validator
-- JSON Minifier
-- XML Formatter / Beautifier
-- XML Validator
-- YAML Formatter / Validator
-- CSV Viewer
-- CSV Cleaner
-- CSV Delimiter Converter
-- JSON Diff / Compare
+Validated US opportunities on 2026-10-02:
+- CSV Viewer Online — ~880 US/mo, SD 6. SERP has DA 4, 6 and 9 utility sites in prominent positions, so a focused browser-local viewer is a realistic new-domain target.
+- YAML Formatter — ~2,400 US/mo, SD 18. SERP includes DA 9 at position 3 and DA 4 at position 9, validating a practical entry path despite moderate difficulty.
+- Online XML Validator Tool — ~1,600 US/mo, SD 5, but the actual top SERP is materially stronger (multiple DA 39–90 domains). Hold as a secondary candidate rather than treating keyword SD alone as sufficient.
 
-Ship only the terms that pass the keyword + SERP gate, while using the remaining tools only when they materially improve topical completeness.
+Implementation:
+- /csv-viewer/ — local file/paste input, delimiter detection, filtering and sortable columns.
+- /yaml-formatter/ — YAML parse/validate, 2/4-space formatting, copy/download and local file input.
+- Shared browser-side data-view engine.
+- Homepage + Developer hub + sitemap + nav + smoke-test integration.
+
+Deferred candidates remain research-gated:
+CSV to JSON, JSON to XML, XML to CSV, CSV to XML, HTML to JSON, JSON to HTML, JSON Viewer, JSON Validator, JSON Minifier, XML Formatter, XML Validator, YAML Validator, CSV Cleaner, CSV Delimiter Converter and JSON Diff/Compare.
 
 ## Batch 3 — Developer encoding & debugging expansion
 
