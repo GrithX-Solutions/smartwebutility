@@ -38,6 +38,7 @@ jobs:
           node --check assets/data-converters.js
           node --check assets/csv-to-xml.js
           node --check assets/html-to-json.js
+          node --check assets/json-to-html.js
           node --check assets/data-view-tools.js
           node --check assets/data-advanced-tools.js
           node --check assets/toml-tools.mjs
