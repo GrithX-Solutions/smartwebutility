@@ -647,11 +647,11 @@ const cases = [
       await context.close();
     }
   }
-  // Catch JavaScript initialization failures on all 57 indexable pages,
+  // Catch JavaScript initialization failures across the full current indexable inventory,
   // including guides and pages without explicit functional test cases.
   const locs = [...readFileSync('sitemap.xml', 'utf8').matchAll(/<loc>([^<]+)</g)]
     .map(match => new URL(match[1]).pathname);
-  assert.ok(locs.length >= 57, 'sitemap unexpectedly shrank');
+  assert.ok(locs.length >= 88, 'sitemap unexpectedly shrank below the 88-page audit baseline');
   for (const path of locs) {
     const page = await browser.newPage();
     const exceptions = [];
