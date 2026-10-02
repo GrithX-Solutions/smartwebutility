@@ -35,6 +35,20 @@ const cases = [
     await p.locator('#convertBtn').click();
     assert.ok((await p.locator('#converterOutput').inputValue()).includes('service:'));
   }],
+  ['csv-viewer', async p => {
+    await p.locator('#csvInput').fill('name,role\nAda,admin\nLinus,developer');
+    await p.locator('#viewCsv').click();
+    assert.ok((await p.locator('#csvTable').innerText()).includes('Ada'));
+    await p.locator('#csvFilter').fill('Linus');
+    assert.ok((await p.locator('#csvTable').innerText()).includes('Linus'));
+    assert.equal((await p.locator('#csvTable').innerText()).includes('Ada'), false);
+  }],
+  ['yaml-formatter', async p => {
+    await p.locator('#yamlInput').fill('service:\n name: api\n port: 8080');
+    await p.locator('#formatYaml').click();
+    assert.ok((await p.locator('#yamlOutput').inputValue()).includes('service:'));
+    assert.equal(await p.locator('#yamlError').isHidden(), true);
+  }],
   ['base64-encoder-decoder', async p => {
     await p.locator('#base64Input').fill('hello');
     await p.locator('#runBase64').click();
