@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://smartwebutility.com/</loc><lastmod>2026-10-02</lastmod></url>
   <url><loc>https://smartwebutility.com/developer-tools/</loc><lastmod>2026-10-02</lastmod></url>
-  <url><loc>https://smartwebutility.com/website-tools/</loc><lastmod>2026-10-02</lastmod></url>
+  <url><loc>https://smartwebutility.com/website-tools/</loc><lastmod>2026-10-03</lastmod></url>
   <url><loc>https://smartwebutility.com/seo-tools/</loc><lastmod>2026-10-02</lastmod></url>
   <url><loc>https://smartwebutility.com/text-tools/</loc><lastmod>2026-09-28</lastmod></url>
   <url><loc>https://smartwebutility.com/dns-checker/</loc><lastmod>2026-09-28</lastmod></url>
@@ -86,6 +86,7 @@
   <url><loc>https://smartwebutility.com/robots-txt-tester/</loc><lastmod>2026-10-02</lastmod></url>
   <url><loc>https://smartwebutility.com/canonical-tag-checker/</loc><lastmod>2026-09-29</lastmod></url>
   <url><loc>https://smartwebutility.com/dnssec-checker/</loc><lastmod>2026-10-02</lastmod></url>
+  <url><loc>https://smartwebutility.com/reverse-dns-checker/</loc><lastmod>2026-10-03</lastmod></url>
   <url><loc>https://smartwebutility.com/cache-control-checker/</loc><lastmod>2026-10-02</lastmod></url>
   <url><loc>https://smartwebutility.com/favicon-generator/</loc><lastmod>2026-09-29</lastmod></url>
 </urlset>
