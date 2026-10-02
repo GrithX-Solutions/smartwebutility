@@ -159,6 +159,18 @@ const cases = [
     assert.ok(markdown.includes('| A'));
     assert.equal(await p.locator('#htmlMarkdownError').isHidden(), true);
   }],
+  ['html-minifier', async p => {
+    await p.waitForFunction(() => document.getElementById('htmlMinifierStatus').textContent === 'Ready');
+    const source = '<!doctype html>\n<html>\n  <body>\n    <!-- remove me -->\n    <main>\n      <h1>Hello</h1>\n      <p>World</p>\n    </main>\n  </body>\n</html>';
+    await p.locator('#htmlMinifierInput').fill(source);
+    await p.locator('#minifyHtml').click();
+    await p.waitForFunction(() => document.getElementById('htmlMinifierStatus').textContent === 'Minified');
+    const minified = await p.locator('#htmlMinifierOutput').inputValue();
+    assert.ok(minified.length < source.length);
+    assert.ok(!minified.includes('remove me'));
+    assert.ok(minified.includes('<h1>Hello</h1>'));
+    assert.equal(await p.locator('#htmlMinifierError').isHidden(), true);
+  }],
   ['json-diff', async p => {
     await p.locator('#jsonDiffLeft').fill('{"port":8080,"enabled":false}');
     await p.locator('#jsonDiffRight').fill('{"port":8443,"enabled":true,"region":"us"}');
