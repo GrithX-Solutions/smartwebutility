@@ -67,6 +67,16 @@ const cases = [
     await p.locator('#validateXml').click();
     assert.equal(await p.locator('#xmlFormatError').isHidden(), false);
   }],
+  ['toml-formatter-validator', async p => {
+    await p.locator('#tomlInput').fill('title = "Example"\n\n[database]\nserver = "db.example.com"\n');
+    await p.locator('#formatToml').click();
+    await p.waitForFunction(() => document.getElementById('tomlStatus').textContent === 'Formatted');
+    assert.ok((await p.locator('#tomlOutput').inputValue()).includes('[database]'));
+    assert.equal(await p.locator('#tomlError').isHidden(), true);
+    await p.locator('#tomlInput').fill('title = ');
+    await p.locator('#validateToml').click();
+    assert.equal(await p.locator('#tomlError').isHidden(), false);
+  }],
   ['json-diff', async p => {
     await p.locator('#jsonDiffLeft').fill('{"port":8080,"enabled":false}');
     await p.locator('#jsonDiffRight').fill('{"port":8443,"enabled":true,"region":"us"}');
