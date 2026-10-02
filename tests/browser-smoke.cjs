@@ -431,6 +431,27 @@ const cases = [
     jsonValues.forEach(value => assert.match(value, /^\([0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\)$/));
     assert.equal(await p.locator('#uuidError').isHidden(), true);
   }],
+  ['chmod-calculator', async p => {
+    await p.locator('#chmodOctal').fill('644');
+    assert.equal(await p.locator('#chmodSymbolic').inputValue(), 'rw-r--r--');
+    assert.equal(await p.locator('#chmodOctalResult').innerText(), '644');
+
+    await p.locator('#chmodSymbolic').fill('rwxr-xr-x');
+    assert.equal(await p.locator('#chmodOctal').inputValue(), '755');
+
+    await p.locator('[data-mode="1777"]').click();
+    assert.equal(await p.locator('#chmodOctal').inputValue(), '1777');
+    assert.equal(await p.locator('#chmodSymbolic').inputValue(), 'rwxrwxrwt');
+
+    await p.locator('#chmodTarget').fill('/srv/app');
+    await p.locator('#chmodRecursive').check();
+    assert.match(await p.locator('#chmodCommand').innerText(), /chmod -R 1777 \/srv\/app/);
+
+    await p.locator('#umaskValue').fill('027');
+    assert.equal(await p.locator('#umaskFileResult').innerText(), '640');
+    assert.equal(await p.locator('#umaskDirResult').innerText(), '750');
+    assert.equal(await p.locator('#chmodError').isHidden(), true);
+  }],
   ['ulid-generator', async p => {
     await p.locator('#ulidCount').fill('3');
     await p.locator('#ulidCustomTime').check();
