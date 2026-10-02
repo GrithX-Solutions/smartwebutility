@@ -14,14 +14,16 @@
     'xml-to-json': '<user id="42"><name>Ada</name><roles><role>admin</role><role>editor</role></roles><active>true</active></user>',
     'json-to-csv': '[{"name":"Ada","role":"admin","active":true},{"name":"Linus","role":"developer","active":true}]',
     'yaml-to-json': 'service:\n  name: api\n  port: 8080\n  enabled: true\nregions:\n  - us-east\n  - eu-west',
-    'json-to-yaml': '{"service":{"name":"api","port":8080,"enabled":true},"regions":["us-east","eu-west"]}'
+    'json-to-yaml': '{"service":{"name":"api","port":8080,"enabled":true},"regions":["us-east","eu-west"]}',
+    'json-to-xml': '{"store":{"book":[{"title":"Moby Dick","price":8.99},{"title":"Sword of Honour","price":12.99}],"open":true},"note":null}'
   };
 
   const downloads = {
     'xml-to-json': ['converted.json','application/json'],
     'json-to-csv': ['converted.csv','text/csv;charset=utf-8'],
     'yaml-to-json': ['converted.json','application/json'],
-    'json-to-yaml': ['converted.yaml','text/yaml;charset=utf-8']
+    'json-to-yaml': ['converted.yaml','text/yaml;charset=utf-8'],
+    'json-to-xml': ['converted.xml','application/xml;charset=utf-8']
   };
 
   function setStatus(message, kind='neutral') {
@@ -116,6 +118,88 @@
     return window.jsyaml.dump(parsed, {noRefs:true, lineWidth:-1, sortKeys:false});
   }
 
+  function validXmlName(name) {
+    return /^[A-Za-z_][A-Za-z0-9._-]*$/.test(name);
+  }
+
+  function xmlEscapeText(value) {
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function xmlEscapeAttr(value) {
+    return xmlEscapeText(value)
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;');
+  }
+
+  function xmlElement(name, value, depth, itemName) {
+    const indent = '  '.repeat(depth);
+    const safeName = validXmlName(name);
+    const tag = safeName ? name : 'property';
+    const nameAttr = safeName ? '' : ' name="' + xmlEscapeAttr(name) + '"';
+
+    if (value === null) return indent + '<' + tag + nameAttr + ' />';
+
+    if (Array.isArray(value)) {
+      if (!value.length) return indent + '<' + tag + nameAttr + ' />';
+      return value.map(item => xmlElement(name, item, depth, itemName)).join('\n');
+    }
+
+    if (typeof value === 'object') {
+      const entries = Object.entries(value);
+      if (!entries.length) return indent + '<' + tag + nameAttr + ' />';
+      const children = entries.map(([key, child]) => {
+        if (Array.isArray(child)) {
+          if (!child.length) return xmlElement(key, [], depth + 1, itemName);
+          return child.map(item => xmlElement(key, item, depth + 1, itemName)).join('\n');
+        }
+        return xmlElement(key, child, depth + 1, itemName);
+      }).join('\n');
+      return indent + '<' + tag + nameAttr + '>\n' + children + '\n' + indent + '</' + tag + '>';
+    }
+
+    if (typeof value === 'number' && !Number.isFinite(value)) {
+      throw new Error('JSON contains a non-finite number, which is not valid JSON data.');
+    }
+
+    return indent + '<' + tag + nameAttr + '>' + xmlEscapeText(value) + '</' + tag + '>';
+  }
+
+  function jsonToXml(text) {
+    const parsed = JSON.parse(text);
+    const rootEl = document.getElementById('jsonXmlRoot');
+    const itemEl = document.getElementById('jsonXmlItem');
+    const rootName = (rootEl?.value || 'root').trim();
+    const itemName = (itemEl?.value || 'item').trim();
+
+    if (!validXmlName(rootName)) throw new Error('Root element must start with a letter or underscore and use only letters, numbers, dot, underscore or hyphen.');
+    if (!validXmlName(itemName)) throw new Error('Array item element must start with a letter or underscore and use only letters, numbers, dot, underscore or hyphen.');
+
+    let body = '';
+    if (Array.isArray(parsed)) {
+      body = parsed.length
+        ? parsed.map(item => xmlElement(itemName, item, 1, itemName)).join('\n')
+        : '';
+    } else if (parsed && typeof parsed === 'object') {
+      body = Object.entries(parsed).map(([key, value]) => {
+        if (Array.isArray(value)) {
+          if (!value.length) return xmlElement(key, [], 1, itemName);
+          return value.map(item => xmlElement(key, item, 1, itemName)).join('\n');
+        }
+        return xmlElement(key, value, 1, itemName);
+      }).join('\n');
+    } else {
+      body = xmlElement(itemName, parsed, 1, itemName);
+    }
+
+    return '<?xml version="1.0" encoding="UTF-8"?>\n<' + rootName + '>' +
+      (body ? '\n' + body + '\n' : '') +
+      '</' + rootName + '>';
+  }
+
   function convert() {
     clearError();
     const raw = input.value.trim();
@@ -131,6 +215,7 @@
       else if (mode === 'json-to-csv') result = jsonToCsv(raw);
       else if (mode === 'yaml-to-json') result = yamlToJson(raw);
       else if (mode === 'json-to-yaml') result = jsonToYaml(raw);
+      else if (mode === 'json-to-xml') result = jsonToXml(raw);
       else throw new Error('Unknown converter mode.');
       output.value = result;
       updateStats(result);
@@ -197,4 +282,10 @@
       convert();
     }
   });
+
+  for (const controlId of ['jsonXmlRoot','jsonXmlItem']) {
+    document.getElementById(controlId)?.addEventListener('change', () => {
+      if (mode === 'json-to-xml' && input.value.trim()) convert();
+    });
+  }
 })();
