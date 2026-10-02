@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CSV to JSON Converter Online — Convert CSV to JSON</title>
+  <meta name="description" content="Convert CSV to JSON online in your browser. Handle quoted fields, detect common delimiters, choose header mode, then copy or download formatted JSON.">
+  <link rel="canonical" href="https://smartwebutility.com/csv-to-json/">
+  <meta property="og:title" content="CSV to JSON Converter Online — Convert CSV to JSON">
+  <meta property="og:description" content="Convert CSV rows to JSON locally in your browser with delimiter detection, quoted-field parsing and optional type inference.">
+  <meta property="og:url" content="https://smartwebutility.com/csv-to-json/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#071426">
+  <link rel="icon" href="/favicon-sw-v5.svg?v=20261001e" type="image/svg+xml">
+  <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"CSV to JSON Converter Online","url":"https://smartwebutility.com/csv-to-json/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert CSV to formatted JSON locally in the browser.","featureList":["CSV to JSON conversion","Automatic comma/tab/semicolon/pipe detection","Quoted field support","Header or array mode","Optional simple type inference","Local CSV file input","Copy and download JSON"]}</script>
+</head>
+<body data-csv-json-tool>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+<main>
+<section class="tool-hero wrap json-tool-hero">
+  <div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>CSV to JSON</span></div>
+  <span class="kicker">Developer tool · browser-side data conversion</span>
+  <h1>CSV to JSON Converter Online</h1>
+  <p class="lead compact">Paste CSV or open a local <code>.csv</code> file to convert rows into formatted JSON. The converter handles quoted fields, embedded delimiters and line breaks without uploading your data.</p>
+  <div class="json-toolbar data-view-toolbar" aria-label="CSV to JSON actions">
+    <button class="btn primary" id="convertCsvJson" type="button">Convert to JSON</button>
+    <label class="file-btn">Open .csv<input id="csvJsonFile" type="file" accept=".csv,text/csv,text/plain" hidden></label>
+    <button class="text-btn" id="exampleCsvJson" type="button">Example</button>
+    <button class="text-btn" id="clearCsvJson" type="button">Clear</button>
+    <label class="compact-control">Delimiter
+      <select id="csvJsonDelimiter">
+        <option value="auto">Auto</option>
+        <option value=",">Comma</option>
+        <option value=";">Semicolon</option>
+        <option value="\t">Tab</option>
+        <option value="|">Pipe</option>
+      </select>
+    </label>
+    <label class="check-control"><input id="csvJsonHeader" type="checkbox" checked> First row is header</label>
+    <label class="check-control"><input id="csvJsonTypes" type="checkbox"> Infer booleans, nulls and safe numbers</label>
+  </div>
+
+  <div class="json-workspace">
+    <section class="editor-panel">
+      <div class="editor-head"><div><strong>CSV input</strong><span>Paste CSV or open a local file</span></div></div>
+      <textarea id="csvJsonInput" class="code-editor csv-input" spellcheck="false" autocapitalize="none" autocomplete="off" placeholder="name,role,active&#10;Ada,admin,true&#10;Linus,developer,true" aria-label="CSV input"></textarea>
+    </section>
+    <section class="editor-panel">
+      <div class="editor-head"><div><strong>JSON output</strong><span id="csvJsonStatus" data-kind="neutral">Ready</span></div><div class="editor-actions"><button id="copyCsvJson" class="text-btn" type="button">Copy</button><button id="downloadCsvJson" class="text-btn" type="button">Download</button></div></div>
+      <textarea id="csvJsonOutput" class="code-editor" spellcheck="false" readonly placeholder="Formatted JSON will appear here" aria-label="JSON output"></textarea>
+    </section>
+  </div>
+  <div id="csvJsonError" class="error" hidden role="alert"></div>
+  <div id="csvJsonStats" class="json-stats" hidden aria-label="CSV to JSON statistics"></div>
+  <div id="csvJsonWarnings" class="json-stats" hidden aria-label="CSV to JSON warnings"></div>
+  <div class="trustbar"><span>Browser-side conversion</span><span>No upload</span><span>Local files up to 5 MB</span><span>Ctrl/⌘ + Enter to convert</span></div>
+</section>
+
+<section class="section wrap prose">
+  <h2>Convert CSV to JSON without uploading the file</h2>
+  <p>This CSV to JSON converter reads delimited text directly in your browser and converts each record into JSON. It is useful for API fixtures, small data migrations, configuration work, test datasets, exported spreadsheets and developer debugging where you need structured JSON quickly.</p>
+
+  <div class="info-grid">
+    <article><h3>Quoted CSV fields</h3><p>The parser supports double-quoted values, doubled quotes, delimiters inside quoted values and line breaks inside quoted fields.</p></article>
+    <article><h3>Delimiter detection</h3><p>Auto mode checks common comma, tab, semicolon and pipe delimiters, or you can select the delimiter explicitly when you know the file format.</p></article>
+    <article><h3>Header or array mode</h3><p>With the header option enabled, the first row becomes JSON object keys. Without a header, each CSV row becomes a JSON array.</p></article>
+    <article><h3>Optional type inference</h3><p>By default every CSV cell stays a string. Enable type inference only when you want simple booleans, null values and safely representable numbers converted to native JSON values.</p></article>
+  </div>
+
+  <h2>How CSV headers become JSON keys</h2>
+  <p>When “First row is header” is enabled, blank header cells are named <code>Column 1</code>, <code>Column 2</code> and so on. Duplicate header names are made unique with suffixes such as <code>name_2</code> so one column does not silently overwrite another in the generated JSON object.</p>
+
+  <h2>Why values remain strings by default</h2>
+  <p>CSV itself does not carry a reliable type system. A value such as <code>00123</code> might be an identifier rather than a number, and a word such as <code>true</code> may be literal text in the source dataset. Preserving strings by default avoids changing source meaning. Type inference is opt-in and intentionally limited.</p>
+
+  <h2>Rows with different numbers of columns</h2>
+  <p>The converter preserves the widest row found in the CSV. Shorter rows are padded with empty values. If data rows contain more fields than the header row, additional generated column names are created so values are not dropped.</p>
+
+  <h2>CSV dialect limitations</h2>
+  <p>CSV formats vary between spreadsheet applications and data systems. This implementation targets common RFC-style quoting and the most common delimiters. Files that depend on unusual escaping rules, non-text encodings, comments, multi-character delimiters or application-specific parsing rules may require the source application or a dedicated data-processing tool.</p>
+
+  <h2>Large CSV files</h2>
+  <p>Local file input is capped at 5 MB to keep browser processing responsive. Large datasets are better handled with a command-line tool, database, ETL workflow or streaming parser where memory use and data types can be controlled explicitly.</p>
+
+  <h2>Related developer tools</h2>
+  <div class="related-tools">
+    <a href="/json-to-csv/">JSON to CSV<span>Convert JSON objects or arrays back into CSV.</span></a>
+    <a href="/csv-viewer/">CSV Viewer Online<span>Inspect, filter and sort CSV before conversion.</span></a>
+    <a href="/json-formatter/">JSON Formatter<span>Validate, format or minify generated JSON.</span></a>
+  </div>
+</section>
+
+<section class="section alt" data-quality-content="v1"><div class="wrap prose">
+  <h2>Frequently asked questions</h2>
+  <h3>Can I convert a CSV file to JSON online?</h3><p>Yes. Open a local CSV file up to 5 MB or paste CSV text, then convert it to JSON in the browser.</p>
+  <h3>Does it handle commas inside CSV values?</h3><p>Yes, when the field is quoted correctly. Quoted delimiters remain part of the field value rather than splitting the row.</p>
+  <h3>Can CSV rows become JSON objects?</h3><p>Yes. Keep “First row is header” enabled and each data row becomes an object keyed by the header row.</p>
+  <h3>Can it output arrays when there is no header?</h3><p>Yes. Disable the header option and each parsed row is emitted as a JSON array.</p>
+  <h3>Is my CSV uploaded?</h3><p>No. Conversion runs in browser JavaScript for this tool.</p>
+</div></section>
+</main>
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script src="/assets/csv-to-json.js?v=20261002-1" defer></script>
+</body>
+</html>
