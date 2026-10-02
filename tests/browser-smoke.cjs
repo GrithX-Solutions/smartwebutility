@@ -3,6 +3,24 @@ const assert = require('node:assert/strict');
 const {readFileSync} = require('node:fs');
 
 const origin = process.env.SMOKE_ORIGIN || 'http://127.0.0.1:8765';
+
+async function assertBatchOneSeo(p) {
+  assert.match((await p.locator('meta[name="robots"]').getAttribute('content')) || '', /index,follow/);
+  const schemas = await p.locator('script[type="application/ld+json"]').evaluateAll(nodes => nodes.map(n => JSON.parse(n.textContent || '{}')['@type']));
+  assert.ok(schemas.includes('WebApplication'), 'WebApplication schema missing');
+  assert.ok(schemas.includes('BreadcrumbList'), 'BreadcrumbList schema missing');
+  assert.equal(await p.locator('[data-seo-example="batch1"]').count(), 1, 'task-specific example missing');
+  assert.ok(await p.locator('a[href="/developer-tools/"]').count() >= 1, 'developer hub link missing');
+}
+async function assertNewToolSeo(p) {
+  assert.match((await p.locator('meta[name="robots"]').getAttribute('content')) || '', /index,follow/);
+  const schemaTypes = await p.locator('script[type="application/ld+json"]').evaluateAll(nodes => nodes.map(n => JSON.parse(n.textContent || '{}')['@type']));
+  assert.ok(schemaTypes.includes('WebApplication'), 'WebApplication schema missing');
+  assert.ok(schemaTypes.includes('BreadcrumbList'), 'BreadcrumbList schema missing');
+  assert.equal(await p.locator('script[data-swu-breadcrumb="true"]').count(), 1, 'static breadcrumb marker missing');
+  assert.equal(await p.locator('[data-seo-example]').count(), 1, 'task-specific SEO example missing');
+  assert.ok(await p.locator('a[href="/developer-tools/"]').count() >= 1, 'developer hub link missing');
+}
 const cases = [
   ['json-formatter', async p => {
     await p.locator('#jsonInput').fill('{"name":"SmartWebUtility","n":2}');
@@ -17,6 +35,7 @@ const cases = [
     await p.locator('#convertBtn').click();
     assert.ok((await p.locator('#converterOutput').inputValue()).includes('"user"'));
     assert.equal(await p.locator('#converterError').isHidden(), true);
+    await assertBatchOneSeo(p);
   }],
   ['json-to-csv', async p => {
     await p.locator('#converterInput').fill('[{"name":"Ada","role":"admin"},{"name":"Linus","role":"developer"}]');
@@ -24,16 +43,156 @@ const cases = [
     const csv = await p.locator('#converterOutput').inputValue();
     assert.ok(csv.includes('name,role'));
     assert.ok(csv.includes('Ada,admin'));
+    await assertBatchOneSeo(p);
   }],
   ['yaml-to-json', async p => {
     await p.locator('#converterInput').fill('service:\n  name: api\n  port: 8080');
     await p.locator('#convertBtn').click();
     assert.ok((await p.locator('#converterOutput').inputValue()).includes('"service"'));
+    await assertBatchOneSeo(p);
   }],
   ['json-to-yaml', async p => {
     await p.locator('#converterInput').fill('{"service":{"name":"api","port":8080}}');
     await p.locator('#convertBtn').click();
     assert.ok((await p.locator('#converterOutput').inputValue()).includes('service:'));
+    await assertBatchOneSeo(p);
+  }],
+  ['txt-to-csv', async p => {
+    await p.locator('#txtCsvDirection').selectOption('txt-to-csv');
+    await p.locator('#txtSourceDelimiter').selectOption('tab');
+    await p.locator('#txtCsvInput').fill('name\tage\nAda\t37\nLinus\t56');
+    await p.locator('#txtCsvConvert').click();
+    assert.equal((await p.locator('#txtCsvOutput').inputValue()).trim(), 'name,age\nAda,37\nLinus,56');
+    await p.locator('#txtCsvDirection').selectOption('csv-to-txt');
+    await p.locator('#txtTargetDelimiter').selectOption('tab');
+    await p.locator('#txtCsvInput').fill('name,age\nAda,37');
+    await p.locator('#txtCsvConvert').click();
+    assert.ok((await p.locator('#txtCsvOutput').inputValue()).includes('name\tage'));
+    await assertNewToolSeo(p);
+  }],
+  ['xml-to-excel', async p => {
+    await p.locator('#xmlExcelInput').fill('<catalog><product sku="A-100"><name>Keyboard</name><price>79.99</price></product><product sku="B-200"><name>Mouse</name><price>39.50</price></product></catalog>');
+    await p.locator('#xmlExcelConvert').click();
+    const preview = await p.locator('#xmlExcelOutput').inputValue();
+    assert.ok(preview.includes('@sku'));
+    assert.ok(preview.includes('Keyboard'));
+    assert.equal(await p.locator('#downloadXlsxBtn').isDisabled(), false);
+    await p.waitForFunction(() => !!window.XLSX, null, {timeout:15000});
+    const downloadPromise = p.waitForEvent('download');
+    await p.locator('#downloadXlsxBtn').click();
+    const download = await downloadPromise;
+    assert.ok(download.suggestedFilename().endsWith('.xlsx'));
+    await assertNewToolSeo(p);
+  }],
+  ['json-to-excel', async p => {
+    await p.locator('#jsonExcelInput').fill('[{"id":1,"name":"Ada","address":{"city":"London"},"tags":["api","json"]},{"id":2,"name":"Linus","address":{"city":"Helsinki"},"tags":["linux"]}]');
+    await p.locator('#jsonExcelConvert').click();
+    const preview = await p.locator('#jsonExcelOutput').inputValue();
+    assert.ok(preview.includes('address.city'));
+    assert.ok(preview.includes('Ada'));
+    assert.equal(await p.locator('#jsonExcelDownload').isDisabled(), false);
+    await p.waitForFunction(() => !!window.XLSX, null, {timeout:15000});
+    const downloadPromise = p.waitForEvent('download');
+    await p.locator('#jsonExcelDownload').click();
+    const download = await downloadPromise;
+    assert.equal(download.suggestedFilename(), 'json-to-excel.xlsx');
+    await assertNewToolSeo(p);
+  }],
+  ['csv-to-json', async p => {
+    await p.locator('#csvJsonDelimiter').selectOption('comma');
+    await p.locator('#csvJsonHeaders').check();
+    await p.locator('#csvJsonInfer').check();
+    await p.locator('#csvJsonInput').fill('id,name,city,active\n101,Ada,"London, UK",true\n102,Linus,Helsinki,false');
+    await p.locator('#csvJsonConvert').click();
+    const parsed = JSON.parse(await p.locator('#csvJsonOutput').inputValue());
+    assert.equal(parsed.length, 2);
+    assert.equal(parsed[0].id, 101);
+    assert.equal(parsed[0].city, 'London, UK');
+    assert.equal(parsed[0].active, true);
+    const downloadPromise = p.waitForEvent('download');
+    await p.locator('#csvJsonDownload').click();
+    const download = await downloadPromise;
+    assert.equal(download.suggestedFilename(), 'converted.json');
+    await assertNewToolSeo(p);
+  }],
+  ['excel-to-json', async p => {
+    await p.waitForFunction(() => !!window.XLSX, null, {timeout:15000});
+    const workbookBase64 = await p.evaluate(() => {
+      const ws = XLSX.utils.aoa_to_sheet([
+        ['id','name','active'],
+        [101,'Ada',true],
+        [102,'Linus',false]
+      ]);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'People');
+      return XLSX.write(wb, {type:'base64', bookType:'xlsx'});
+    });
+    await p.locator('#excelJsonFile').setInputFiles({
+      name:'sample.xlsx',
+      mimeType:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      buffer:Buffer.from(workbookBase64,'base64')
+    });
+    await p.waitForFunction(() => document.getElementById('excelJsonOutput').value.includes('"Ada"'));
+    const parsed = JSON.parse(await p.locator('#excelJsonOutput').inputValue());
+    assert.equal(parsed.length, 2);
+    assert.equal(parsed[0].id, 101);
+    assert.equal(parsed[0].active, true);
+    assert.equal(await p.locator('#excelJsonSheet').inputValue(), 'People');
+    const downloadPromise = p.waitForEvent('download');
+    await p.locator('#excelJsonDownload').click();
+    const download = await downloadPromise;
+    assert.equal(download.suggestedFilename(), 'excel-to-json.json');
+    await assertNewToolSeo(p);
+  }],
+  ['morse-code-translator', async p => {
+    await p.locator('#morseDirection').selectOption('text-to-morse');
+    await p.locator('#morseInput').fill('SOS HELP');
+    await p.locator('#morseConvert').click();
+    assert.equal((await p.locator('#morseOutput').inputValue()).trim(), '... --- ... / .... . .-.. .--.');
+    await p.locator('#morseDirection').selectOption('morse-to-text');
+    await p.locator('#morseInput').fill('... --- ... / .... . .-.. .--.');
+    await p.locator('#morseConvert').click();
+    assert.equal((await p.locator('#morseOutput').inputValue()).trim(), 'SOS HELP');
+    await p.locator('#morseDirection').selectOption('text-to-morse');
+    await p.locator('#morseInput').fill('E');
+    await p.locator('#morseConvert').click();
+    await p.locator('#morsePlay').click();
+    await p.waitForFunction(() => document.getElementById('morseStatus').textContent.includes('Playing Morse audio'), null, {timeout:5000});
+    await p.locator('#morseStop').click();
+    assert.ok((await p.locator('#morseStatus').innerText()).includes('stopped'));
+    await assertNewToolSeo(p);
+  }],
+  ['hex-to-ascii', async p => {
+    await p.locator('#hexAsciiDirection').selectOption('hex-to-text');
+    await p.locator('#hexAsciiEncoding').selectOption('ascii');
+    await p.locator('#hexAsciiInput').fill('48 65 6C 6C 6F');
+    await p.locator('#hexAsciiConvert').click();
+    assert.equal((await p.locator('#hexAsciiOutput').inputValue()).trim(), 'Hello');
+    await p.locator('#hexAsciiDirection').selectOption('text-to-hex');
+    await p.locator('#hexAsciiInput').fill('Hi');
+    await p.locator('#hexAsciiConvert').click();
+    assert.equal((await p.locator('#hexAsciiOutput').inputValue()).trim(), '48 69');
+    await p.locator('#hexAsciiEncoding').selectOption('utf8');
+    await p.locator('#hexAsciiInput').fill('é');
+    await p.locator('#hexAsciiConvert').click();
+    assert.equal((await p.locator('#hexAsciiOutput').inputValue()).trim(), 'C3 A9');
+    await assertNewToolSeo(p);
+  }],
+  ['binary-to-text', async p => {
+    await p.locator('#binaryTextDirection').selectOption('binary-to-text');
+    await p.locator('#binaryTextEncoding').selectOption('ascii');
+    await p.locator('#binaryTextInput').fill('01001000 01101001');
+    await p.locator('#binaryTextConvert').click();
+    assert.equal((await p.locator('#binaryTextOutput').inputValue()).trim(), 'Hi');
+    await p.locator('#binaryTextDirection').selectOption('text-to-binary');
+    await p.locator('#binaryTextInput').fill('Hi');
+    await p.locator('#binaryTextConvert').click();
+    assert.equal((await p.locator('#binaryTextOutput').inputValue()).trim(), '01001000 01101001');
+    await p.locator('#binaryTextEncoding').selectOption('utf8');
+    await p.locator('#binaryTextInput').fill('é');
+    await p.locator('#binaryTextConvert').click();
+    assert.equal((await p.locator('#binaryTextOutput').inputValue()).trim(), '11000011 10101001');
+    await assertNewToolSeo(p);
   }],
   ['base64-encoder-decoder', async p => {
     await p.locator('#base64Input').fill('hello');
@@ -44,6 +203,9 @@ const cases = [
     await p.locator('#unixInput').fill('1767225600');
     await p.locator('#convertUnix').click();
     assert.ok((await p.locator('#dateResult').innerText()).trim().length);
+    assert.match((await p.locator('meta[name="robots"]').getAttribute('content')) || '', /index,follow/);
+    assert.equal(await p.locator('script[data-swu-breadcrumb="true"]').count(), 1);
+    assert.equal(await p.locator('[data-seo-example="existing-unix"]').count(), 1);
   }],
   ['uuid-generator', async p => {
     await p.locator('#uuidCount').fill('3');
@@ -122,7 +284,13 @@ const cases = [
     await p.locator('[data-mode="text"]').click();
     await p.locator('#faviconText').fill('SW');
     await p.locator('#generateFavicons').click();
+    await p.waitForFunction(() => !document.getElementById('downloadIco').disabled);
     assert.ok((await p.locator('#faviconStatus').innerText()).trim().length);
+    assert.ok((await p.locator('main').innerText()).includes('Convert PNG to ICO'));
+    const downloadPromise = p.waitForEvent('download');
+    await p.locator('#downloadIco').click();
+    const download = await downloadPromise;
+    assert.equal(download.suggestedFilename(), 'favicon.ico');
   }],
   ['case-converter', async p => {
     await p.locator('#caseInput').fill('hello world');
@@ -168,11 +336,11 @@ const cases = [
       await context.close();
     }
   }
-  // Catch JavaScript initialization failures on all 57 indexable pages,
+  // Catch JavaScript initialization failures on all sitemap indexable pages,
   // including guides and pages without explicit functional test cases.
   const locs = [...readFileSync('sitemap.xml', 'utf8').matchAll(/<loc>([^<]+)</g)]
     .map(match => new URL(match[1]).pathname);
-  assert.ok(locs.length >= 57, 'sitemap unexpectedly shrank');
+  assert.ok(locs.length >= 70, 'sitemap unexpectedly shrank');
   for (const path of locs) {
     const page = await browser.newPage();
     const exceptions = [];

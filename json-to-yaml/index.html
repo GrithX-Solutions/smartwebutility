@@ -5,16 +5,21 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>JSON to YAML Converter — Convert JSON to YAML Online</title>
   <meta name="description" content="Convert valid JSON to clean YAML online in your browser. Preserve arrays, objects, booleans and numbers and download YAML output.">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
   <link rel="canonical" href="https://smartwebutility.com/json-to-yaml/">
   <meta property="og:title" content="JSON to YAML Converter — Convert JSON to YAML Online">
   <meta property="og:description" content="Convert valid JSON to clean YAML online in your browser. Preserve arrays, objects, booleans and numbers and download YAML output.">
   <meta property="og:url" content="https://smartwebutility.com/json-to-yaml/">
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Smart Web Utility">
   <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="JSON to YAML Converter — Convert JSON to YAML Online">
+  <meta name="twitter:description" content="Convert valid JSON to clean YAML online in your browser. Preserve arrays, objects, booleans and numbers and download YAML output.">
   <meta name="theme-color" content="#07101b">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"JSON to YAML Converter","url":"https://smartwebutility.com/json-to-yaml/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert valid JSON to clean YAML online in your browser. Preserve arrays, objects, booleans and numbers and download YAML output.","featureList":["Objects become mappings","Arrays become sequences","Data types preserved","Local conversion"]}</script>
+  <script type="application/ld+json" data-swu-breadcrumb="true">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smartwebutility.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://smartwebutility.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"JSON to YAML Converter","item":"https://smartwebutility.com/json-to-yaml/"}]}</script>
   <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js" defer></script>
 </head>
 <body data-converter-mode="json-to-yaml">
@@ -50,13 +55,24 @@
   <h2>JSON to YAML conversion: what this tool does</h2>
   <p>Turn valid JSON into readable YAML for configuration files, documentation and deployment workflows. JSON parsing and YAML generation run in your browser, so pasted JSON is not uploaded to Smart Web Utility.</p>
   <div class="info-grid"><article><h3>Objects become mappings</h3><p>JSON objects are written as YAML key-value mappings with readable indentation.</p></article><article><h3>Arrays become sequences</h3><p>JSON arrays are emitted as YAML lists while preserving item order.</p></article><article><h3>Data types preserved</h3><p>Numbers, booleans and null values are represented as YAML scalar values rather than forced to text.</p></article><article><h3>Local conversion</h3><p>The page parses JSON and generates YAML in browser JavaScript, with copy and download controls.</p></article></div>
+  <h2>How to convert JSON to YAML</h2>
+  <ol><li>Paste valid JSON into the input editor or open a local .json file.</li><li>Select Convert, or use Ctrl/⌘ + Enter.</li><li>Review the YAML indentation and scalar representation.</li><li>Copy the result or download it as a .yaml file.</li></ol>
+  <div data-seo-example="batch1">
+    <h3>Example json input and yaml output</h3>
+    <p><strong>JSON input:</strong></p><pre><code>{"service":{"name":"api","port":8080,"enabled":true}}</code></pre>
+    <p><strong>YAML output:</strong></p><pre><code>service:
+  name: api
+  port: 8080
+  enabled: true</code></pre>
+  </div>
   <h2>Important conversion limitations</h2>
   <p>YAML can express aliases, comments, custom tags and stylistic choices that do not exist in JSON. Converting from JSON therefore produces clean data-oriented YAML rather than reconstructing authoring details that were never present in the JSON input.</p>
   <h2>When this converter is useful</h2>
-  <p>Use this page when moving configuration, API payloads, exports or test data between systems that expect different structured-data formats. Validate the result against the receiving application's documented schema before using it in production.</p>
+  <p>JSON to YAML is useful when JSON-based API data or configuration needs a more human-readable YAML representation for documentation, deployment files, CI/CD examples or infrastructure tooling. Always validate the generated YAML against the target system because application-specific schemas can impose rules beyond syntax.</p>
   <h2>Privacy and local file handling</h2>
   <p>The selected file is read with browser file APIs and limited to 5 MB in this implementation. Conversion happens on this page. The input content is not submitted to a Smart Web Utility conversion API.</p>
   <h2>Related developer tools</h2>
+  <p><strong>Structured data converter cluster:</strong> <a href="/xml-to-json/">XML to JSON</a> · <a href="/json-to-csv/">JSON to CSV</a> · <a href="/yaml-to-json/">YAML to JSON</a> · <a href="/json-to-yaml/">JSON to YAML</a></p>
   <div class="related-tools"><a href="/yaml-to-json/">YAML to JSON<span>Convert YAML back into JSON.</span></a><a href="/json-formatter/">JSON Formatter<span>Validate JSON before conversion.</span></a><a href="/json-to-csv/">JSON to CSV<span>Create tabular CSV from JSON.</span></a></div>
 </section>
 <section class="section alt" data-quality-content="v1"><div class="wrap prose">

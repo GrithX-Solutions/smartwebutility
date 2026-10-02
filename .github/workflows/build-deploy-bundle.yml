@@ -36,6 +36,10 @@ jobs:
           node --check assets/cache-control-checker.js
           node --check assets/favicon-generator.js
           node --check assets/data-converters.js
+          node --check assets/file-converters.js
+          node --check assets/morse-code.js
+          node --check assets/hex-ascii.js
+          node --check assets/binary-text.js
           node --check deploy/lighthouse/worker.mjs
           node --check deploy/lighthouse/proxy.mjs
 
@@ -52,7 +56,7 @@ jobs:
         run: python3 scripts/seo-static-qa.py
 
       - name: AdSense readiness heuristic
-        run: python3 scripts/adsense-readiness.py || true
+        run: python3 scripts/adsense-readiness.py
 
       - name: Upload site bundle
         uses: actions/upload-artifact@v4

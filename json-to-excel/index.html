@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>JSON to Excel Converter — Convert JSON to XLSX Online</title>
+  <meta name="description" content="Convert JSON to a real Excel XLSX workbook online. Flatten nested objects, preserve arrays as JSON text, preview rows and download XLSX in your browser.">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <link rel="canonical" href="https://smartwebutility.com/json-to-excel/">
+  <meta property="og:title" content="JSON to Excel Converter — Convert JSON to XLSX Online">
+  <meta property="og:description" content="Turn JSON arrays or objects into an XLSX workbook with nested-field flattening and browser-side processing.">
+  <meta property="og:url" content="https://smartwebutility.com/json-to-excel/">
+  <meta property="og:type" content="website"><meta property="og:site_name" content="Smart Web Utility">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="JSON to Excel Converter — Convert JSON to XLSX Online">
+  <meta name="twitter:description" content="Convert JSON arrays or objects to a real Excel XLSX workbook in your browser.">
+  <meta name="theme-color" content="#07101b">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"JSON to Excel Converter","url":"https://smartwebutility.com/json-to-excel/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert JSON arrays or objects into a real XLSX workbook with flattened nested fields and browser-side processing.","featureList":["JSON to XLSX conversion","Nested object flattening","JSON arrays preserved as cell text","Tabular preview","Actual Excel workbook download","Local JSON processing"]}</script>
+  <script type="application/ld+json" data-swu-breadcrumb="true">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smartwebutility.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://smartwebutility.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"JSON to Excel Converter","item":"https://smartwebutility.com/json-to-excel/"}]}</script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" defer></script>
+</head>
+<body data-file-converter="json-excel">
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+<main>
+<section class="tool-hero wrap json-tool-hero">
+  <div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>JSON to Excel Converter</span></div>
+  <span class="kicker">JSON to XLSX · browser-side</span>
+  <h1>JSON to Excel Converter</h1>
+  <p class="lead compact">Paste JSON or open a local file, preview the rows and columns, then download a real <code>.xlsx</code> workbook. Nested objects are flattened into dot-path columns while arrays remain visible as JSON text instead of being silently discarded.</p>
+
+  <div class="json-toolbar">
+    <button class="btn primary" id="jsonExcelConvert" type="button">Convert JSON</button>
+    <label class="file-btn">Open .json<input id="jsonExcelFile" type="file" accept=".json,application/json" hidden></label>
+    <button class="text-btn" id="jsonExcelExample" type="button">Example</button>
+    <button class="text-btn" id="jsonExcelClear" type="button">Clear</button>
+  </div>
+
+  <div class="json-workspace">
+    <section class="editor-panel"><div class="editor-head"><div><strong>JSON input</strong><span>Array of objects or one object</span></div></div>
+      <textarea id="jsonExcelInput" class="code-editor" spellcheck="false" autocapitalize="none" autocomplete="off" placeholder='[{"id":101,"name":"Ada","address":{"city":"London"}},{"id":102,"name":"Linus","address":{"city":"Helsinki"}}]' aria-label="JSON input"></textarea>
+    </section>
+    <section class="editor-panel"><div class="editor-head"><div><strong>Tabular preview</strong><span id="jsonExcelStatus">Ready</span></div><div class="editor-actions"><button class="text-btn" id="jsonExcelDownload" type="button" disabled>Download .xlsx</button></div></div>
+      <textarea id="jsonExcelOutput" class="code-editor" spellcheck="false" readonly placeholder="A tab-separated preview will appear here" aria-label="JSON to Excel preview"></textarea>
+    </section>
+  </div>
+  <div id="jsonExcelError" class="error" hidden role="alert"></div>
+  <div id="jsonExcelStats" class="json-stats" hidden></div>
+  <div class="trustbar"><span>JSON parsed locally</span><span>Actual XLSX workbook</span><span>Files up to 5 MB</span></div>
+</section>
+
+<section class="section wrap prose" data-quality-content="batch3-json-excel">
+  <h2>Convert JSON to an Excel XLSX workbook</h2>
+  <p>This converter accepts a top-level JSON array or a single JSON object and writes the resulting rows into a real Excel workbook. A JSON array of objects becomes multiple spreadsheet rows. A single object becomes one row. The workbook is generated in your browser using the pinned SheetJS Community Edition browser build.</p>
+
+  <h2>How to convert JSON to Excel online</h2>
+  <ol>
+    <li>Paste valid JSON into the editor or open a local <code>.json</code> file up to 5 MB.</li>
+    <li>Select <strong>Convert JSON</strong> to parse the data and build a tabular preview.</li>
+    <li>Review the row and column counts, especially flattened nested fields and array values.</li>
+    <li>Select <strong>Download .xlsx</strong> to create <code>json-to-excel.xlsx</code>.</li>
+  </ol>
+
+  <div data-seo-example="batch3">
+    <h3>Example JSON array converted to Excel columns</h3>
+    <p><strong>JSON input:</strong></p><pre><code>[
+  {
+    "id": 101,
+    "name": "Ada",
+    "active": true,
+    "address": {"city": "London", "country": "UK"},
+    "tags": ["api", "json"]
+  },
+  {
+    "id": 102,
+    "name": "Linus",
+    "active": false,
+    "address": {"city": "Helsinki", "country": "Finland"},
+    "tags": ["linux", "tools"]
+  }
+]</code></pre>
+    <p>The generated sheet includes columns such as <code>id</code>, <code>name</code>, <code>active</code>, <code>address.city</code>, <code>address.country</code> and <code>tags</code>.</p>
+  </div>
+
+  <h2>How nested JSON is handled</h2>
+  <p>Nested objects are flattened with dot-separated paths. For example, <code>{"address":{"city":"London"}}</code> becomes a column named <code>address.city</code>. This keeps common API-style objects readable in a single worksheet without silently dropping nested fields.</p>
+  <p>Arrays are preserved as compact JSON text inside the cell. A generic converter cannot safely decide whether an array should become extra rows, extra worksheets or a many-to-one relation without knowing the application schema, so the page preserves the array instead of inventing a structure.</p>
+
+  <h2>JSON values and Excel cell types</h2>
+  <p>Numbers and booleans remain typed values when the workbook is generated. Null or missing properties appear as blank cells. Strings remain strings. This is different from a CSV export, where every value ultimately passes through a text representation.</p>
+
+  <h2>JSON array vs single object</h2>
+  <p>A top-level array is the best fit for tabular exports because each item can become one row. If the JSON contains one object, the converter creates one row from that object. Primitive array items are written into a single <code>value</code> column. Empty arrays are reported instead of producing a misleading blank workbook.</p>
+
+  <h2>Limitations of JSON to XLSX conversion</h2>
+  <p>Excel is a table-oriented format while JSON can represent arbitrary trees and nested collections. Deeply nested data, arrays of objects inside rows, or schemas that require multiple related sheets may need a custom transformation. This page intentionally creates one worksheet and preserves ambiguous arrays as JSON text rather than guessing.</p>
+  <p>The preview shows up to the first 50 rows for readability, while the downloaded workbook contains all parsed rows within the local 5 MB input limit.</p>
+
+  <h2>Privacy and local file handling</h2>
+  <p>The JSON file is read and parsed in your browser and is not submitted to a Smart Web Utility conversion API. The XLSX writer is loaded from the pinned SheetJS CDN dependency already documented in the repository. As with any external script request, the CDN receives normal request metadata, but it does not receive your JSON payload from this tool.</p>
+
+  <h2>Related data tools</h2>
+  <div class="related-tools">
+    <a href="/excel-to-json/">Excel to JSON<span>Convert an XLS/XLSX worksheet back into JSON.</span></a><a href="/json-to-csv/">JSON to CSV<span>Create a text-based CSV export from JSON.</span></a>
+    <a href="/json-formatter/">JSON Formatter<span>Validate and format JSON before conversion.</span></a>
+    <a href="/xml-to-excel/">XML to Excel<span>Convert repeated XML records into an XLSX workbook.</span></a>
+    <a href="/txt-to-csv/">TXT to CSV<span>Convert delimited text files into standard CSV.</span></a>
+  </div>
+</section>
+</main>
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script src="/assets/file-converters.js?v=20261002-2" defer></script>
+</body>
+</html>

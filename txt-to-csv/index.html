@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>TXT to CSV Converter — Convert Text Files to CSV Online</title>
+  <meta name="description" content="Convert TXT or delimited text to CSV online, or CSV back to TXT. Detect tab, comma, semicolon, pipe or whitespace delimiters in your browser.">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <link rel="canonical" href="https://smartwebutility.com/txt-to-csv/">
+  <meta property="og:title" content="TXT to CSV Converter — Convert Text Files to CSV Online">
+  <meta property="og:description" content="Convert delimited TXT files to CSV or CSV back to text with browser-side processing and delimiter controls.">
+  <meta property="og:url" content="https://smartwebutility.com/txt-to-csv/">
+  <meta property="og:type" content="website"><meta property="og:site_name" content="Smart Web Utility">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="TXT to CSV Converter — Convert Text Files to CSV Online">
+  <meta name="twitter:description" content="Convert delimited text to CSV or CSV back to TXT with automatic and manual delimiter controls.">
+  <meta name="theme-color" content="#07101b">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"TXT to CSV Converter","url":"https://smartwebutility.com/txt-to-csv/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert delimited TXT files to CSV or CSV back to text with configurable delimiters in the browser.","featureList":["TXT to CSV conversion","CSV to TXT conversion","Automatic delimiter detection","Tab, comma, semicolon, pipe and whitespace support","Local file processing"]}</script>
+  <script type="application/ld+json" data-swu-breadcrumb="true">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smartwebutility.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://smartwebutility.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"TXT to CSV Converter","item":"https://smartwebutility.com/txt-to-csv/"}]}</script>
+</head>
+<body data-file-converter="txt-csv">
+<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
+<main>
+<section class="tool-hero wrap json-tool-hero">
+  <div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>TXT to CSV Converter</span></div>
+  <span class="kicker">File converter · browser-side</span>
+  <h1>TXT to CSV Converter</h1>
+  <p class="lead compact">Convert a delimited text file to CSV without uploading it, or reverse a CSV file back to plain text. Choose the delimiter yourself or let the tool detect common tab, comma, semicolon, pipe and whitespace-separated data.</p>
+
+  <div class="json-toolbar" aria-label="TXT and CSV converter controls">
+    <label>Direction
+      <select id="txtCsvDirection" aria-label="Conversion direction">
+        <option value="txt-to-csv">TXT → CSV</option>
+        <option value="csv-to-txt">CSV → TXT</option>
+      </select>
+    </label>
+    <label id="txtSourceDelimiterWrap">Source delimiter
+      <select id="txtSourceDelimiter" aria-label="Source text delimiter">
+        <option value="auto">Auto detect</option><option value="tab">Tab</option><option value="comma">Comma</option>
+        <option value="semicolon">Semicolon</option><option value="pipe">Pipe</option><option value="space">Whitespace</option>
+      </select>
+    </label>
+    <label id="txtTargetDelimiterWrap" hidden>TXT delimiter
+      <select id="txtTargetDelimiter" aria-label="Output text delimiter">
+        <option value="tab">Tab</option><option value="pipe">Pipe</option><option value="semicolon">Semicolon</option>
+        <option value="space">Space</option><option value="comma">Comma</option>
+      </select>
+    </label>
+    <label><input id="txtTrimFields" type="checkbox" checked> Trim fields</label>
+  </div>
+  <div class="json-toolbar">
+    <button class="btn primary" id="txtCsvConvert" type="button">Convert</button>
+    <label class="file-btn">Open .txt / .csv<input id="txtCsvFile" type="file" accept=".txt,.csv,text/plain,text/csv" hidden></label>
+    <button class="text-btn" id="txtCsvExample" type="button">Example</button>
+    <button class="text-btn" id="txtCsvClear" type="button">Clear</button>
+  </div>
+
+  <div class="json-workspace">
+    <section class="editor-panel"><div class="editor-head"><div><strong>Input</strong><span>Paste text or open a file</span></div></div>
+      <textarea id="txtCsvInput" class="code-editor" spellcheck="false" autocapitalize="none" autocomplete="off" aria-label="TXT or CSV input"></textarea>
+    </section>
+    <section class="editor-panel"><div class="editor-head"><div><strong>Converted output</strong><span id="txtCsvStatus">Ready</span></div><div class="editor-actions"><button class="text-btn" id="txtCsvCopy" type="button">Copy</button><button class="text-btn" id="txtCsvDownload" type="button">Download</button></div></div>
+      <textarea id="txtCsvOutput" class="code-editor" spellcheck="false" readonly aria-label="Converted TXT or CSV output"></textarea>
+    </section>
+  </div>
+  <div id="txtCsvError" class="error" hidden role="alert"></div>
+  <div id="txtCsvStats" class="json-stats" hidden></div>
+  <div class="trustbar"><span>Runs in your browser</span><span>Files up to 5 MB</span><span>Ctrl/⌘ + Enter to convert</span></div>
+</section>
+
+<section class="section wrap prose" data-quality-content="batch2-txt-csv">
+  <h2>Convert a TXT file to CSV with the correct delimiter</h2>
+  <p>A text file can hold tabular data without using the <code>.csv</code> extension. The important part is the delimiter between fields. This converter can read tab-delimited text, comma-delimited text, semicolon-separated values, pipe-separated rows and simple whitespace-separated columns, then write standard comma-separated CSV output.</p>
+  <p>Auto detection compares multiple non-empty lines and only selects a delimiter when the column pattern is reasonably consistent. If the source is unusual, select the delimiter manually instead of relying on a guess.</p>
+
+  <h2>How to convert TXT to CSV online</h2>
+  <ol>
+    <li>Keep <strong>TXT → CSV</strong> selected and paste the text or open a local <code>.txt</code> file.</li>
+    <li>Use <strong>Auto detect</strong> for regular delimited data, or choose Tab, Comma, Semicolon, Pipe or Whitespace.</li>
+    <li>Select <strong>Convert</strong> and review the row and column counts. Uneven rows are flagged for review rather than silently normalized.</li>
+    <li>Copy the CSV result or download <code>converted.csv</code>.</li>
+  </ol>
+
+  <div data-seo-example="batch2">
+    <h3>Example: tab-delimited TXT to CSV</h3>
+    <p><strong>TXT input:</strong></p><pre><code>name	age	city
+Ada	37	London
+Linus	56	Helsinki</code></pre>
+    <p><strong>CSV output:</strong></p><pre><code>name,age,city
+Ada,37,London
+Linus,56,Helsinki</code></pre>
+  </div>
+
+  <h2>CSV to TXT conversion is included on the same page</h2>
+  <p>Changing the direction to <strong>CSV → TXT</strong> parses comma-separated input, including quoted CSV fields, and writes a text file using the delimiter you choose. Tab-delimited output is useful for spreadsheet imports, while pipe or semicolon output can be useful when commas appear frequently inside values.</p>
+
+  <h2>TXT vs CSV: what actually changes?</h2>
+  <p>CSV is itself a text format with rules for separators and quoted values. A generic <code>.txt</code> file has no universal table schema. Renaming a file does not reliably convert its structure; the fields need to be parsed using the delimiter that the source actually uses. This tool performs that parsing and rewrites the rows instead of only changing the extension.</p>
+
+  <h2>Quoted fields, blank cells and uneven rows</h2>
+  <p>The CSV parser supports double-quoted fields and escaped double quotes. Blank cells are retained. The converter does not invent missing fields when one line contains fewer columns than another; it reports the range of column counts so you can decide whether the source needs cleanup.</p>
+  <p>Whitespace mode is intended for simple columns separated by spaces or tabs. It is not a fixed-width-file parser, and it cannot infer column boundaries from visual alignment when spaces are part of the values.</p>
+
+  <h2>Privacy and local file handling</h2>
+  <p>Conversion is performed by JavaScript in the browser. The selected TXT or CSV file is read locally and is not submitted to a Smart Web Utility conversion API. This implementation limits opened files to 5 MB to keep browser memory use predictable.</p>
+
+  <h2>Related data tools</h2>
+  <div class="related-tools">
+    <a href="/json-to-csv/">JSON to CSV<span>Convert JSON objects or arrays into CSV rows.</span></a>
+    <a href="/xml-to-excel/">XML to Excel<span>Flatten XML records and download an actual XLSX workbook.</span></a>
+    <a href="/json-formatter/">JSON Formatter<span>Validate and format JSON before another conversion.</span></a>
+  </div>
+</section>
+</main>
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script src="/assets/file-converters.js?v=20261002-1" defer></script>
+</body>
+</html>

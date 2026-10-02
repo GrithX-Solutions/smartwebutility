@@ -6,6 +6,10 @@ Updated: 2026-10-02
 
 Grow SmartWebUtility.com into a focused, AdSense-ready utility platform by shipping useful tools in topical batches. New SEO-led tools must pass a live keyword/SERP gate before implementation. Current priority is US English, then UK/Canada/Australia.
 
+## Repository-first release policy
+
+All planned tool batches, supporting content and SEO QA are developed and reviewed in GitHub first. Production deployment is intentionally held until the planned repository work is complete and a final one-go release is explicitly approved. Pull-request CI may build test artifacts, but those artifacts must not be treated as production activation.
+
 ## Selection gate for SEO-led tools
 
 Prefer:
@@ -36,7 +40,7 @@ SEO Audit hub, Meta Tag Generator, Robots.txt Generator, Robots.txt Tester, Sche
 ### Text
 Word Counter, Character Counter, Case Converter, Lorem Ipsum Generator.
 
-## Batch 1 — Structured data converters — IN PROGRESS
+## Batch 1 — Structured data converters — SEO HARDENING IN REPO (NOT DEPLOYED)
 
 Primary SEO targets already validated in live US data:
 - XML to JSON — ~2,400 US/mo, KD 5.
@@ -51,32 +55,38 @@ Implementation:
 - /json-to-yaml/
 - Shared browser-side conversion engine.
 - Homepage + Developer hub + sitemap + nav + smoke-test integration.
+- Batch 1 SEO hardening: explicit crawl directives, breadcrumb structured data, task-specific conversion steps/examples, richer use-case copy and reinforced converter-cluster internal links.
 
-## Batch 2 — Data-format cluster expansion
+## Batch 2 — File/data conversion cluster — IN REPO, NOT DEPLOYED
 
-Research gate first. Candidate tools:
-- CSV to JSON
-- JSON to XML
-- XML to CSV
-- CSV to XML
-- HTML to JSON
-- JSON to HTML
-- JSON Viewer
-- JSON Validator
-- JSON Minifier
-- XML Formatter / Beautifier
-- XML Validator
-- YAML Formatter / Validator
-- CSV Viewer
-- CSV Cleaner
-- CSV Delimiter Converter
-- JSON Diff / Compare
+Validated and implemented:
+- TXT to CSV / CSV to TXT — one bidirectional page; primary US query ~1,900/mo, KD 6, with additional same-intent low-KD variants. Tier-1 secondary markets also remain low difficulty.
+- XML to Excel / XLSX — primary US query ~1,000/mo, KD 9, with DA 9/11/14 specialist pages observed in prominent SERP positions.
+- JSON to Excel / XLSX — primary US query ~1,000/mo, KD 7; UK KD 8, Canada/Australia KD 6, with DA 10 and DA 6 specialist competitors observed.
+- CSV to JSON — ~2,400 US/mo, KD 5 and ~590 Canada/mo, KD 5; UK/Australia are materially harder and are not treated as low-KD markets for this query.
+- Excel/XLS to JSON — ~1,000 US/mo, KD 9; Canada/Australia KD 6, while UK is materially harder. Real XLS/XLSX parsing and sheet selection are implemented.
 
-Ship only the terms that pass the keyword + SERP gate, while using the remaining tools only when they materially improve topical completeness.
+Evidence and rejected/held candidates are recorded in KEYWORD_RESEARCH_BATCH2.md.
 
-## Batch 3 — Developer encoding & debugging expansion
+Held or rejected for this batch despite apparently low keyword-difficulty scores:
+- VCF to CSV — hold; valid US opportunity but weaker Tier-1 breadth.
+- XLSX to CSV — hold; top 10 remains authority-heavy.
+- CSV to Excel — reject for this batch; high volume but authority-heavy SERP.
 
-Candidate tools:
+Further data-format candidates must pass the same live research gate before code is added.
+
+## Batch 3 — Developer encoding & debugging expansion — RESEARCH ACTIVE
+
+Validated and implemented:
+- Morse Code Translator with Sound — ~4,400 US/mo, KD 6 and ~260 Australia/mo, KD 5; weak DA 10–14 competitors observed in prominent SERP positions. Real two-way translation and Web Audio playback implemented.
+- Hex to ASCII / ASCII to Hex — ~1,600 US/mo for the direct conversion query at KD 5, with low-KD support across UK/Canada/Australia and a much larger related US variant. Strict ASCII + optional UTF-8 implementation added.
+- Binary to Text / Text to Binary — ~1,000 US/mo, KD 5 with KD 5 across UK/Canada/Australia. Strict 8-bit ASCII/UTF-8 implementation added.
+
+Held/rejected based on live SERP evidence:
+- Hex / ASCII — validated and implemented after deeper Tier-1 checks: hex-to-ASCII conversion is KD 5 across US/UK/Canada/Australia, with a DA 19 result near the top.
+- Decimal / Binary — reject for current batch; authority-heavy and AI-overview SERP despite low provider KD.
+
+Further candidates:
 - URL Query String Parser
 - JWT Expiry / Claims Inspector
 - Base64 File Encoder
@@ -96,6 +106,9 @@ Candidate tools:
 - IP to Integer Converter
 
 ## Batch 4 — Date, time & DevOps utilities
+
+Current research note:
+- calculate weeks between dates — rejected for the current release despite ~2,400 US/mo and KD 5 because the checked SERP is dominated by Timeanddate, OmniCalculator/InchCalculator/education/video results and includes an AI Overview.
 
 Candidate tools:
 - Date Difference Calculator
@@ -226,5 +239,5 @@ After the first batches index:
 11. Navigation active-state mapping updated.
 12. Browser smoke tests updated.
 13. No JavaScript initialization errors across sitemap sweep.
-14. Deploy, then submit priority URLs through existing indexing workflow.
+14. After the final repository-wide release gate is approved, deploy once; then submit priority URLs through the indexing workflow.
 15. Measure impressions, clicks and indexing before the next major expansion.

@@ -4,7 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Unix Timestamp Converter — Epoch to Date & Back</title>
-  <meta name="description" content="Convert Unix timestamps to readable dates and dates back to epoch time. Inspect UTC and local time quickly in your browser.">
+  <meta name="description" content="Convert Unix timestamps to readable date and time values, or convert dates back to epoch seconds or milliseconds. Compare UTC and local time in your browser.">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
   <link rel="canonical" href="https://smartwebutility.com/unix-timestamp-converter/">
   <meta property="og:title" content="Unix Timestamp Converter — Epoch to Date & Back">
   <meta property="og:description" content="Convert Unix timestamps to readable dates and dates back to epoch time. Inspect UTC and local time quickly in your browser.">
@@ -13,7 +14,8 @@
   <meta name="theme-color" content="#07101b">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Unix Timestamp Converter","url":"https://smartwebutility.com/unix-timestamp-converter/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Unix seconds to date","Unix milliseconds to date","Date to Unix timestamp","UTC output","ISO 8601 output"]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Unix Timestamp Converter","url":"https://smartwebutility.com/unix-timestamp-converter/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Unix seconds to date and time","Unix milliseconds to date and time","Date to Unix timestamp","UTC output","Local-time output","ISO 8601 output"]}</script>
+  <script type="application/ld+json" data-swu-breadcrumb="true">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smartwebutility.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://smartwebutility.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Unix Timestamp Converter","item":"https://smartwebutility.com/unix-timestamp-converter/"}]}</script>
 </head>
 <body>
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
@@ -75,7 +77,12 @@
   </section>
 
   <section class="section wrap prose">
-    <h2>What is a Unix timestamp?</h2>
+    <div data-seo-example="existing-unix">
+    <h2>Unix timestamp to date and time example</h2>
+    <p>For example, the Unix timestamp <code>0</code> represents <strong>1970-01-01 00:00:00 UTC</strong>. A current epoch value can be shown as UTC, ISO 8601 and your browser's local date/time without changing the underlying instant.</p>
+    <p>If an API returns milliseconds instead of seconds, use the unit selector or Auto detect. A millisecond timestamp is 1,000 times larger than the corresponding Unix-seconds value, so confusing the two units can produce a date far outside the expected year.</p>
+  </div>
+  <h2>What is a Unix timestamp?</h2>
     <p>A Unix timestamp represents a point in time as the number of seconds since 00:00:00 UTC on January 1, 1970. Many systems also use milliseconds, especially JavaScript APIs and event logs.</p>
 
     <div class="info-grid">
