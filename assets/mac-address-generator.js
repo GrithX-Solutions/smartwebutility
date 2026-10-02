@@ -4,12 +4,14 @@
 
   const countEl = document.getElementById('macCount');
   const formatEl = document.getElementById('macFormat');
+  const listFormatEl = document.getElementById('macListFormat');
   const uppercaseEl = document.getElementById('macUppercase');
   const sortEl = document.getElementById('macSort');
   const output = document.getElementById('macOutput');
   const status = document.getElementById('macStatus');
   const error = document.getElementById('macError');
   const stats = document.getElementById('macStats');
+  let currentBatch = [];
 
   const setStatus = (text, kind = 'neutral') => {
     status.textContent = text;
@@ -24,7 +26,7 @@
   }
 
   function hexByte(value) {
-    let text = value.toString(16).padStart(2, '0');
+    const text = value.toString(16).padStart(2, '0');
     return uppercaseEl.checked ? text.toUpperCase() : text.toLowerCase();
   }
 
@@ -32,6 +34,7 @@
     const parts = [...bytes].map(hexByte);
     if (formatEl.value === 'compact') return parts.join('');
     if (formatEl.value === 'hyphen') return parts.join('-');
+    if (formatEl.value === 'cisco') return [parts[0] + parts[1], parts[2] + parts[3], parts[4] + parts[5]].join('.');
     return parts.join(':');
   }
 
@@ -39,44 +42,58 @@
     return [...bytes].map(value => value.toString(16).padStart(2, '0')).join('');
   }
 
+  function serialize(values) {
+    if (listFormatEl.value === 'json') return JSON.stringify(values, null, 2);
+    if (listFormatEl.value === 'csv') return 'mac_address\n' + values.map(value => '"' + value.replace(/"/g, '""') + '"').join('\n');
+    if (listFormatEl.value === 'comma') return values.join(', ');
+    return values.join('\n');
+  }
+
+  function render() {
+    if (!currentBatch.length) {
+      output.value = '';
+      stats.hidden = true;
+      return;
+    }
+    let values = currentBatch.map(formatMac);
+    if (sortEl.checked) values = [...values].sort((a, b) => a.localeCompare(b, 'en', {sensitivity:'base'}));
+    output.value = serialize(values);
+
+    stats.hidden = false;
+    stats.innerHTML =
+      '<span><b>' + values.length.toLocaleString() + '</b> generated</span>' +
+      '<span><b>48-bit</b> address width</span>' +
+      '<span><b>Local</b> U/L bit</span>' +
+      '<span><b>Unicast</b> I/G bit</span>' +
+      '<span><b>' + formatEl.options[formatEl.selectedIndex].text.split(' · ')[0] + '</b> MAC format</span>' +
+      '<span><b>' + listFormatEl.options[listFormatEl.selectedIndex].text + '</b> list output</span>';
+  }
+
   function generate() {
     error.hidden = true;
     error.textContent = '';
 
     const count = Number(countEl.value);
-    if (!Number.isInteger(count) || count < 1 || count > 500) {
-      throw new Error('Choose a MAC address count between 1 and 500.');
+    if (!Number.isInteger(count) || count < 1 || count > 1000) {
+      throw new Error('Choose a MAC address count between 1 and 1,000.');
     }
 
     const seen = new Set();
-    const values = [];
-
-    while (values.length < count) {
+    currentBatch = [];
+    while (currentBatch.length < count) {
       const bytes = randomMacBytes();
       const key = canonicalKey(bytes);
       if (seen.has(key)) continue;
       seen.add(key);
-      values.push(formatMac(bytes));
+      currentBatch.push(bytes);
     }
 
-    if (sortEl.checked) {
-      values.sort((a, b) => a.localeCompare(b, 'en', {sensitivity:'base'}));
-    }
-
-    output.value = values.join('\n');
-
-    stats.hidden = false;
-    stats.innerHTML =
-      '<span><b>' + count.toLocaleString() + '</b> generated</span>' +
-      '<span><b>48-bit</b> address width</span>' +
-      '<span><b>Local</b> U/L bit</span>' +
-      '<span><b>Unicast</b> I/G bit</span>' +
-      '<span><b>' + formatEl.options[formatEl.selectedIndex].text.split(' · ')[0] + '</b> format</span>';
-
+    render();
     setStatus(count + ' MAC address' + (count === 1 ? '' : 'es') + ' generated', 'success');
   }
 
   function fail(caught) {
+    currentBatch = [];
     output.value = '';
     stats.hidden = true;
     error.textContent = caught?.message || String(caught);
@@ -89,10 +106,12 @@
   });
 
   document.getElementById('clearMac').addEventListener('click', () => {
-    countEl.value = '10';
+    countEl.value = '1';
     formatEl.value = 'colon';
+    listFormatEl.value = 'lines';
     uppercaseEl.checked = true;
     sortEl.checked = false;
+    currentBatch = [];
     output.value = '';
     stats.hidden = true;
     error.hidden = true;
@@ -111,10 +130,13 @@
 
   document.getElementById('downloadMac').addEventListener('click', () => {
     if (!output.value) return;
-    const url = URL.createObjectURL(new Blob([output.value + '\n'], {type:'text/plain;charset=utf-8'}));
+    const type = listFormatEl.value === 'json' ? 'application/json' : (listFormatEl.value === 'csv' ? 'text/csv' : 'text/plain');
+    const ext = listFormatEl.value === 'json' ? 'json' : (listFormatEl.value === 'csv' ? 'csv' : 'txt');
+    const suffix = listFormatEl.value === 'json' ? '' : '\n';
+    const url = URL.createObjectURL(new Blob([output.value + suffix], {type:type + ';charset=utf-8'}));
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'random-mac-addresses.txt';
+    link.download = 'random-mac-addresses.' + ext;
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -122,10 +144,11 @@
     setStatus('Downloaded', 'success');
   });
 
-  for (const control of [formatEl, uppercaseEl, sortEl]) {
+  for (const control of [formatEl, listFormatEl, uppercaseEl, sortEl]) {
     control.addEventListener('change', () => {
-      if (!output.value) return;
-      try { generate(); } catch (caught) { fail(caught); }
+      if (!currentBatch.length) return;
+      render();
+      setStatus('Batch re-rendered', 'success');
     });
   }
 
