@@ -139,6 +139,26 @@ const cases = [
     assert.ok(sql.includes('\n'));
     assert.equal(await p.locator('#sqlError').isHidden(), true);
   }],
+  ['markdown-to-html', async p => {
+    await p.waitForFunction(() => document.getElementById('markdownHtmlStatus').textContent === 'Ready');
+    await p.locator('#markdownInput').fill('# Hello\n\n| A | B |\n| --- | --- |\n| one | two |');
+    await p.locator('#convertMarkdownHtml').click();
+    const html = await p.locator('#markdownHtmlOutput').inputValue();
+    assert.ok(html.includes('<h1>Hello</h1>'));
+    assert.ok(html.includes('<table>'));
+    assert.equal(await p.locator('#markdownHtmlPreview').getAttribute('sandbox'), '');
+    assert.equal(await p.locator('#markdownHtmlError').isHidden(), true);
+  }],
+  ['html-to-markdown', async p => {
+    await p.waitForFunction(() => document.getElementById('htmlMarkdownStatus').textContent === 'Ready');
+    await p.locator('#htmlMarkdownInput').fill('<h1>Hello</h1><p>A <strong>bold</strong> paragraph.</p><table><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td>one</td><td>two</td></tr></tbody></table>');
+    await p.locator('#convertHtmlMarkdown').click();
+    const markdown = await p.locator('#htmlMarkdownOutput').inputValue();
+    assert.ok(markdown.includes('# Hello'));
+    assert.ok(markdown.includes('**bold**'));
+    assert.ok(markdown.includes('| A'));
+    assert.equal(await p.locator('#htmlMarkdownError').isHidden(), true);
+  }],
   ['json-diff', async p => {
     await p.locator('#jsonDiffLeft').fill('{"port":8080,"enabled":false}');
     await p.locator('#jsonDiffRight').fill('{"port":8443,"enabled":true,"region":"us"}');
