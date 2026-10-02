@@ -120,6 +120,8 @@ def main() -> int:
             if not raw: continue
             try: json.loads(raw)
             except Exception as exc: errors.append(f"{rel}: invalid JSON-LD block {idx}: {exc}")
+        if re.search(r"</[^>]+>\\\\n\\s*<", path.read_text(encoding="utf-8", errors="replace")):
+            errors.append(f"{rel}: suspicious literal \\\\n between HTML elements")
         for href in p.links:
             if not target_exists(href,path):
                 errors.append(f"{rel}: broken internal link {href!r}")
