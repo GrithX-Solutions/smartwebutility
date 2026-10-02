@@ -36,6 +36,7 @@ jobs:
           node --check assets/cache-control-checker.js
           node --check assets/favicon-generator.js
           node --check assets/data-converters.js
+          node --check assets/csv-to-xml.js
           node --check assets/data-view-tools.js
           node --check assets/data-advanced-tools.js
           node --check assets/toml-tools.mjs
