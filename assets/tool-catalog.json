@@ -97,8 +97,8 @@
     "category": "Developer",
     "url": "/html-to-markdown/",
     "title": "HTML to Markdown",
-    "description": "Convert semantic HTML into readable Markdown with GFM table support.",
-    "keywords": []
+    "description": "Convert semantic HTML into readable Markdown with GFM tables and fenced-code language hints.",
+    "keywords": ["html to markdown", "html to markdown converter", "html to markdown converter online", "online html to markdown converter", "html to markdown online", "convert html to markdown", "html to markdown table"]
   },
   {
     "category": "Developer",
