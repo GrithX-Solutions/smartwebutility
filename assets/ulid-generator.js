@@ -90,21 +90,24 @@
     return value;
   }
 
-  function nextRandom(timestamp) {
-    if (monotonicEl.checked && lastTimestamp === timestamp && lastRandom !== null) {
-      if (lastRandom >= MAX_RANDOM) throw new Error('ULID monotonic randomness overflowed for this millisecond.');
+  function nextMonotonicParts(timestamp) {
+    if (monotonicEl.checked && lastTimestamp !== null && lastRandom !== null && timestamp <= lastTimestamp) {
+      if (lastRandom >= MAX_RANDOM) throw new Error('ULID monotonic randomness overflowed for this logical millisecond.');
       lastRandom += 1n;
-      return lastRandom;
+      return {timestamp:lastTimestamp, random:lastRandom};
     }
 
     lastTimestamp = timestamp;
     lastRandom = random80();
-    return lastRandom;
+    return {timestamp:lastTimestamp, random:lastRandom};
   }
 
   function generateOne(timestamp) {
-    const random = nextRandom(timestamp);
-    return encodeBigInt(timestamp, 10) + encodeBigInt(random, 16);
+    const parts = nextMonotonicParts(timestamp);
+    return {
+      value: encodeBigInt(parts.timestamp, 10) + encodeBigInt(parts.random, 16),
+      timestamp: parts.timestamp
+    };
   }
 
   function decodeUlid(raw) {
@@ -181,9 +184,10 @@
 
     for (let i = 0; i < count; i++) {
       const timestamp = resolveTimestamp();
-      if (firstTime === null) firstTime = timestamp;
-      lastTime = timestamp;
-      values.push(generateOne(timestamp));
+      const generated = generateOne(timestamp);
+      if (firstTime === null) firstTime = generated.timestamp;
+      lastTime = generated.timestamp;
+      values.push(generated.value);
     }
 
     lastValues = values;
