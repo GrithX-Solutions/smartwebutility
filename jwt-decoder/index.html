@@ -2,112 +2,123 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>JWT Decoder Online — Decode JSON Web Tokens</title>
-  <meta name="description" content="Decode a JWT header and payload locally, inspect iss, sub, aud, exp, nbf, iat and jti claims, and convert JWT time claims to ISO dates. Signature is not verified.">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>JWT Decoder Online — Inspect Claims & Expiry</title>
+  <meta name="description" content="Decode JWT header, payload and signature locally. Inspect iss, aud, exp, nbf and iat, remove Bearer prefixes, and check token timing without verification.">
   <link rel="canonical" href="https://smartwebutility.com/jwt-decoder/">
-  <meta property="og:title" content="JWT Decoder | Smart Web Utility">
-  <meta property="og:description" content="Decode JWT header and payload and inspect common claims directly in your browser.">
+  <meta property="og:title" content="JWT Decoder Online — Inspect Claims & Expiry">
+  <meta property="og:description" content="Decode JWT parts locally, inspect registered claims and check exp/nbf timing without uploading the token or verifying its signature.">
   <meta property="og:url" content="https://smartwebutility.com/jwt-decoder/">
-  <meta property="og:type" content="website"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="JWT Decoder Online — Decode JSON Web Tokens"><meta name="twitter:description" content="Decode a JWT header and payload locally, inspect iss, sub, aud, exp, nbf, iat and jti claims, and convert JWT time claims to ISO dates. Signature is not verified.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
   <meta name="theme-color" content="#0b1120">
-  <link rel="icon" href="/favicon-64.png" sizes="64x64" type="image/png"><link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"JWT Decoder","url":"https://smartwebutility.com/jwt-decoder/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Decode JWT header and payload locally, inspect standard claims and convert exp, iat and nbf timestamps without verifying the signature.","featureList":["Decode JWT header","Decode JWT payload","Inspect iss, sub, aud, exp, nbf, iat and jti claims","Convert JWT timestamps to ISO dates","Local browser processing","Signature verification warning"]}</script>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <script src="/assets/theme.js"></script>
+  <link rel="stylesheet" href="/assets/styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"JWT Decoder","url":"https://smartwebutility.com/jwt-decoder/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Decode JWT header, payload and signature locally, inspect registered claims and evaluate exp/nbf timing without signature verification.","featureList":["Decode JWT header","Decode JWT payload","Display signature segment","Remove Bearer prefix","Inspect iss sub aud exp nbf iat and jti claims","Convert JWT NumericDate values to ISO dates","Show expired or not-before timing state","Local browser processing","Explicit no-signature-verification boundary"]}</script>
 </head>
 <body>
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
 
 <main>
-  <section class="tool-hero wrap json-tool-hero">
-    <div class="crumb"><a href="/">Home</a><span>/</span><span>JWT Decoder</span></div>
-    <span class="kicker">Developer tool · runs locally</span>
-    <h1>JWT Decoder</h1>
-    <p class="lead compact">Decode a JSON Web Token into its header and payload, inspect common claims and read Unix claim timestamps as ISO dates.</p>
+<section class="tool-hero wrap json-tool-hero">
+  <div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>JWT Decoder</span></div>
+  <span class="kicker">Developer tool · local token inspection</span>
+  <h1>JWT Decoder</h1>
+  <p class="lead compact">Paste a compact signed JWT—or a full <code>Bearer …</code> Authorization value—to inspect its header, payload, signature segment and registered claims locally. The page also checks <code>exp</code> and <code>nbf</code> against your browser clock without pretending to verify the token.</p>
 
-    <div class="json-toolbar">
-      <button class="btn primary" id="decodeJwt" type="button">Decode JWT</button>
-      <button class="text-btn" id="exampleJwt" type="button">Example</button>
-      <button class="text-btn" id="clearJwt" type="button">Clear</button>
-      <span id="jwtStatus" data-kind="neutral">Ready</span>
-    </div>
-
-    <section class="editor-panel" style="margin-top:14px">
-      <div class="editor-head"><div><strong>JWT input</strong><span>header.payload.signature</span></div></div>
-      <textarea id="jwtInput" class="code-editor" spellcheck="false" autocapitalize="none" autocomplete="off" placeholder="Paste JWT here" aria-label="JWT input"></textarea>
-    </section>
-
-    <div class="json-workspace">
-      <section class="editor-panel">
-        <div class="editor-head">
-          <div><strong>Header</strong><span>Decoded JSON</span></div>
-          <button id="copyJwtHeader" class="text-btn" type="button">Copy</button>
-        </div>
-        <textarea id="jwtHeader" class="code-editor" spellcheck="false" readonly placeholder="Decoded header will appear here" aria-label="Decoded JWT header"></textarea>
-      </section>
-
-      <section class="editor-panel">
-        <div class="editor-head">
-          <div><strong>Payload</strong><span>Decoded JSON</span></div>
-          <button id="copyJwtPayload" class="text-btn" type="button">Copy</button>
-        </div>
-        <textarea id="jwtPayload" class="code-editor" spellcheck="false" readonly placeholder="Decoded payload will appear here" aria-label="Decoded JWT payload"></textarea>
-      </section>
-    </div>
-
-    <section class="result-card">
-      <div class="result-head"><strong>Standard claims</strong></div>
-      <div id="jwtClaims"><div class="empty">Decode a JWT to inspect standard claims.</div></div>
-    </section>
-
-    <div id="jwtError" class="error" hidden role="alert"></div>
-    <div class="trustbar"><span>Local decoding</span><span>Claim timestamps</span><span>Signature not verified</span></div>
-  </section>
-
-<section class="section wrap prose">
-  <h2>Decode a JWT without sending it to an API</h2>
-  <p>A JSON Web Token normally has three dot-separated sections: header, payload and signature. This decoder Base64URL-decodes the first two sections, parses them as JSON and displays common registered claims. All decoding in this tool happens in browser JavaScript.</p>
-  <div class="info-grid">
-    <article><h3>Header</h3><p>Inspect fields such as <code>alg</code> and <code>typ</code>. The algorithm value tells you what the token claims was used, but it is not proof that the signature is valid.</p></article>
-    <article><h3>Payload</h3><p>Read the JSON claims carried by the token, including both registered claims and application-specific values.</p></article>
-    <article><h3>Registered claims</h3><p>The tool highlights <code>iss</code>, <code>sub</code>, <code>aud</code>, <code>exp</code>, <code>nbf</code>, <code>iat</code> and <code>jti</code> when present.</p></article>
-    <article><h3>Time conversion</h3><p>Numeric <code>exp</code>, <code>nbf</code> and <code>iat</code> values are interpreted as Unix seconds and shown alongside an ISO timestamp.</p></article>
+  <div class="json-toolbar">
+    <button class="btn primary" id="decodeJwt" type="button">Decode JWT</button>
+    <button class="text-btn" id="exampleJwt" type="button">Example</button>
+    <button class="text-btn" id="clearJwt" type="button">Clear</button>
+    <span id="jwtStatus" data-kind="neutral">Ready</span>
   </div>
 
-  <h2>Decoding is not verification</h2>
-  <p>Anyone can create a string with JWT-like header and payload sections. Trusting a token requires cryptographic signature verification with the expected key and algorithm plus application-level validation of claims such as issuer, audience, expiration and not-before time. This page intentionally does not ask for secrets or verification keys and does not verify signatures.</p>
+  <section class="editor-panel" style="margin-top:14px">
+    <div class="editor-head"><div><strong>JWT input</strong><span>Bearer prefix optional · header.payload.signature</span></div></div>
+    <textarea id="jwtInput" class="code-editor" spellcheck="false" autocapitalize="none" autocomplete="off" placeholder="Paste JWT or Bearer JWT here" aria-label="JWT input"></textarea>
+  </section>
 
-  <h2>Security precautions when inspecting tokens</h2>
-  <p>JWT payloads are encoded, not encrypted by default. Anyone who obtains a normal signed JWT can often read its header and payload. Bearer tokens can also grant access while they remain valid, so avoid posting live production tokens in tickets, chats or public tools. This decoder processes the token locally, but minimizing exposure of active credentials is still the safer operational practice.</p>
+  <div class="json-workspace">
+    <section class="editor-panel">
+      <div class="editor-head"><div><strong>Header</strong><span>Decoded JSON</span></div><button id="copyJwtHeader" class="text-btn" type="button">Copy</button></div>
+      <textarea id="jwtHeader" class="code-editor" spellcheck="false" readonly placeholder="Decoded header will appear here" aria-label="Decoded JWT header"></textarea>
+    </section>
+    <section class="editor-panel">
+      <div class="editor-head"><div><strong>Payload</strong><span>Decoded JSON</span></div><button id="copyJwtPayload" class="text-btn" type="button">Copy</button></div>
+      <textarea id="jwtPayload" class="code-editor" spellcheck="false" readonly placeholder="Decoded payload will appear here" aria-label="Decoded JWT payload"></textarea>
+    </section>
+  </div>
+
+  <section class="editor-panel" style="margin-top:14px">
+    <div class="editor-head"><div><strong>Signature segment</strong><span>Raw Base64URL text · not verified</span></div><button id="copyJwtSignature" class="text-btn" type="button">Copy</button></div>
+    <textarea id="jwtSignature" class="code-editor" spellcheck="false" readonly placeholder="Signature segment will appear here" aria-label="JWT signature segment"></textarea>
+  </section>
+
+  <section class="result-card" style="margin-top:14px">
+    <div class="result-head"><strong>Time-claim check</strong><span>Browser clock only</span></div>
+    <div id="jwtTimeStatus" data-kind="neutral"><strong>No token decoded</strong><span>Temporal checks will appear here.</span></div>
+  </section>
+
+  <section class="result-card">
+    <div class="result-head"><strong>Registered claims</strong></div>
+    <div id="jwtClaims"><div class="empty">Decode a JWT to inspect registered claims.</div></div>
+  </section>
+
+  <div id="jwtError" class="error" hidden role="alert"></div>
+  <div class="trustbar"><span>Local decoding</span><span>Bearer prefix accepted</span><span>exp / nbf timing check</span><span>Signature shown, not verified</span><span>No server request</span></div>
+</section>
+
+<section class="section wrap prose" data-quality-content="v2">
+  <h2>Decode a JWT locally without uploading the token</h2>
+  <p>A compact signed JSON Web Token normally contains three dot-separated Base64URL sections: header, payload and signature. This decoder removes an optional <code>Bearer </code> prefix, decodes the first two sections as UTF-8 JSON and displays the third section exactly as it appears. Smart Web Utility does not send the token to a decoding API.</p>
+
+  <div class="info-grid">
+    <article><h3>Header</h3><p>Inspect fields such as <code>alg</code>, <code>typ</code> and <code>kid</code>. These values describe what the token claims about its signing metadata; they do not prove authenticity.</p></article>
+    <article><h3>Payload</h3><p>Read registered and application-specific claims carried by the token. A normal signed JWT payload is encoded, not encrypted.</p></article>
+    <article><h3>Registered claims</h3><p>The tool highlights <code>iss</code>, <code>sub</code>, <code>aud</code>, <code>exp</code>, <code>nbf</code>, <code>iat</code> and <code>jti</code> when present.</p></article>
+    <article><h3>Signature segment</h3><p>The raw third segment is visible for debugging and copying. This page does not verify it with a secret, public key or JWKS endpoint.</p></article>
+  </div>
+
+  <h2>Check exp and nbf without confusing time checks with trust</h2>
+  <p>JWT <code>exp</code> and <code>nbf</code> use the NumericDate convention defined by RFC 7519: seconds since the Unix epoch. The page converts numeric values to ISO dates and compares them with the current browser clock. It can show that a token is expired by <code>exp</code> or not active yet by <code>nbf</code>, but that result is not a validity verdict because the signature, issuer, audience and application policy remain unverified.</p>
+
+  <h2>Decoding is not signature verification</h2>
+  <p>Anyone can construct JWT-shaped text. A production application must verify the signature with the expected algorithm and trusted key, then validate the claims required by that application. RFC 8725 also warns implementations not to trust an attacker-controlled algorithm choice without an explicit verification policy. This decoder intentionally does not collect HMAC secrets, private keys or public keys.</p>
+
+  <h2>Why Bearer tokens should still be treated as credentials</h2>
+  <p>A bearer access token can grant API access while it remains valid. Local processing reduces one exposure path, but it does not make a live credential harmless. Prefer test or redacted tokens when possible, and avoid putting production tokens into tickets, screenshots, chats or shared notes.</p>
 
   <h2>Common JWT debugging scenarios</h2>
   <div class="info-grid">
-    <article><h3>Unexpected expiration</h3><p>Inspect <code>exp</code> and compare the converted date with the application's clock and intended token lifetime.</p></article>
-    <article><h3>Audience mismatch</h3><p>Check <code>aud</code> when an API rejects a token issued for a different service or client.</p></article>
-    <article><h3>Issuer mismatch</h3><p>Inspect <code>iss</code> when multiple identity providers, tenants or environments are involved.</p></article>
-    <article><h3>Token not active yet</h3><p>Review <code>nbf</code> and <code>iat</code> when clock skew or issuance timing may be affecting validation.</p></article>
+    <article><h3>Expired access token</h3><p>Inspect <code>exp</code> and compare the decoded timestamp with the application's clock, expected token lifetime and renewal flow.</p></article>
+    <article><h3>Token not active yet</h3><p>Review <code>nbf</code> when clock skew or an issuance delay could explain why an otherwise readable token is rejected.</p></article>
+    <article><h3>Audience or issuer mismatch</h3><p>Inspect <code>aud</code> and <code>iss</code> when an API expects a token from a different client, tenant, identity provider or environment.</p></article>
+    <article><h3>Key selection</h3><p>Check header values such as <code>kid</code> when a verifier selects among several trusted public keys. A displayed <code>kid</code> is metadata, not proof.</p></article>
   </div>
+
+  <h2>Scope and format limits</h2>
+  <p>This page targets the common three-part compact signed-JWT shape. It does not decrypt JWE tokens, validate detached payloads, verify JSON serializations, call issuer metadata endpoints or fetch JWKS keys. It also warns when the header declares <code>alg: none</code>, but the warning is not a substitute for a verifier that rejects algorithms outside an explicit allowlist.</p>
 
   <h2>Related developer tools</h2>
   <div class="related-tools">
     <a href="/base64-encoder-decoder/">Base64 Encoder / Decoder<span>Work with Base64 and Base64URL text.</span></a>
-    <a href="/json-formatter/">JSON Formatter<span>Format and validate decoded JSON.</span></a>
-    <a href="/unix-timestamp-converter/">Unix Timestamp Converter<span>Convert epoch values independently.</span></a>
+    <a href="/json-formatter/">JSON Formatter<span>Format and validate decoded JSON independently.</span></a>
+    <a href="/unix-timestamp-converter/">Unix Timestamp Converter<span>Inspect epoch values with additional date conversions.</span></a>
   </div>
 </section>
+
 <section class="section alt" data-quality-content="v2"><div class="wrap prose">
   <h2>Frequently asked JWT questions</h2>
-  <h3>Can I trust a JWT because it decodes correctly?</h3>
-  <p>No. Correct Base64URL and JSON structure says nothing about authenticity. Verify the signature and the claims your application relies on.</p>
-  <h3>Is a JWT encrypted?</h3>
-  <p>A typical signed JWT is not encrypted, so its header and payload can be decoded by anyone who has the token. Encrypted JOSE formats are a separate mechanism.</p>
-  <h3>Why does the decoder require three parts?</h3>
-  <p>This implementation targets the common compact signed-JWT form <code>header.payload.signature</code>. Other JOSE serialization formats are outside the scope of this page.</p>
-  <h3>Does this page store the token?</h3>
-  <p>The decoding logic runs locally in the browser and does not submit the JWT to a Smart Web Utility API.</p>
-</div></section></main>
+  <h3>Can I paste an Authorization header value?</h3><p>Yes. A leading <code>Bearer </code> prefix is removed before the JWT is split and decoded.</p>
+  <h3>Can I trust a JWT because the page says it is not expired?</h3><p>No. The time check only compares numeric <code>exp</code>/<code>nbf</code> claims with the browser clock. It does not verify the signature, issuer, audience or authorization policy.</p>
+  <h3>Does this JWT decoder verify signatures?</h3><p>No. It displays the signature segment but intentionally does not ask for secrets or keys and does not verify authenticity.</p>
+  <h3>Is a JWT encrypted?</h3><p>A typical signed JWT is not encrypted, so its header and payload can be decoded by anyone who has the token. JWE encryption is a separate JOSE mechanism.</p>
+  <h3>Does this page store the token?</h3><p>The decoding logic runs locally in browser JavaScript and does not submit the JWT to a Smart Web Utility API.</p>
+</div></section>
+</main>
 
-<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/">All tools</a><a href="/sitemap.xml">Sitemap</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></div></footer>
-<script src="/assets/jwt.js" defer></script>
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script src="/assets/jwt.js?v=20261003-2" defer></script>
 </body>
 </html>
