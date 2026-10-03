@@ -60,25 +60,25 @@ Research record:
 
 ## Current page
 
-### Page 7 — /ulid-generator/
+### Page 8 — /random-port-generator/
 
-Status: VERIFIED ON BRANCH.
+Status: IMPLEMENTED ON BRANCH; CI PENDING.
 
 Research evidence:
-- `ulid generator`: 210 US searches/month, SD 17, transactional.
-- Current U.S. SERP includes several DA 1–6 utility domains.
+- `random port generator`: 170 US searches/month, SD 11.
+- `random tcp port generator`: 170, SD 10.
+- Current SERP includes multiple DA 1–10 utilities.
 
 Confirmed gap:
-- same-millisecond monotonicity worked;
-- automatic clock rollback could still produce a lexically older ULID.
+- generator logic was already correct;
+- page needed a precise distinction between IANA Dynamic/Private 49152–65535 and host-specific ephemeral/local source-port ranges.
 
 Implemented:
-- preserve previous logical timestamp when automatic time is equal/lower;
-- increment prior 80-bit randomness under rollback;
-- seed fresh randomness only when time advances;
-- keep custom timestamp changes as explicit state resets;
-- update visible monotonic/rollback guidance;
-- add frozen/rollback clock Chromium regression.
+- content-only IANA/OS range clarification;
+- preserved no-availability-scan guidance;
+- added direct FAQ for ephemeral-range interpretation;
+- expanded relevant search aliases;
+- updated sitemap lastmod.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
