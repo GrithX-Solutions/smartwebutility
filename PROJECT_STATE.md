@@ -25,7 +25,7 @@ ACTIVE:
 - Do not merge/deploy piecemeal to production.
 - After the complete batch is finished, use one final merge/release/deploy sequence.
 
-## Current page
+## Completed page
 
 ### Page 1 — /uuid-generator/
 
@@ -57,6 +57,39 @@ Implemented:
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
+
+## Current page
+
+### Page 2 — /favicon-generator/
+
+Status: IMPLEMENTED ON BRANCH; CI PENDING.
+
+Research evidence:
+- `favicon generator`: 14,800 US searches/month, SD 24, CPC $2.92.
+- `favicon maker`: 1,600, SD 47.
+- `favicon generator from image`: 210, SD 57.
+- `image to favicon generator`: 140, SD 33.
+- `svg favicon generator`: 90, SD 29.
+- `favicon generator for website`: 50, SD 6.
+- Smart Web Utility currently has no Ubersuggest US ranking-keyword data for this page.
+
+Confirmed gap:
+- existing package had ordinary 192/512 PWA icons only;
+- it had no dedicated maskable icons or manifest `purpose: "maskable"` entries;
+- current MDN guidance requires mask-safe artwork and an opaque full-canvas background for maskable icons.
+
+Implemented:
+- dedicated maskable 192×192 and 512×512 PNG files;
+- opaque selected background for maskable exports even when ordinary icons use transparency;
+- conservative artwork placement inside the 80%-diameter mask-safe circle;
+- explicit ordinary `purpose: "any"` and maskable manifest entries;
+- safe-zone preview;
+- visible maskable/PWA guidance;
+- favicon search aliases and sitemap lastmod;
+- Chromium checks for manifest entries and opaque maskable corner pixels.
+
+Security:
+- raw uploaded SVG is not copied into the ZIP; the tool continues to rasterize uploaded SVG to generated PNG/ICO assets rather than redistribute unsanitized SVG markup.
 
 ## Tests / evidence
 
@@ -93,12 +126,21 @@ Page 1 branch validation:
 
 ## Work in progress
 
-Page 1 UUID Generator is implemented and fully green. Production remains unchanged.
+Page 1 UUID Generator is fully green. Page 2 Favicon Generator is implemented and awaiting full CI. Production remains unchanged.
 
-## Affected files — Page 1 only
+## Affected files — completed/current pages
 
+Page 1:
 - `uuid-generator/index.html`
 - `assets/uuid.js`
+
+Page 2:
+- `favicon-generator/index.html`
+- `assets/favicon-generator.js`
+- `assets/favicon-generator.css`
+- `sitemap.xml`
+
+Shared direct requirements:
 - `assets/tool-catalog.json`
 - `tests/browser-smoke.cjs`
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
@@ -106,4 +148,4 @@ Page 1 UUID Generator is implemented and fully green. Production remains unchang
 
 ## NEXT ACTION
 
-Verify the documentation-only Page 1 state head. If green, research exactly one next page from demand + current US SERP evidence and do not modify any second page until that selection is complete.
+Run Build and Chromium CI for the final Page 2 branch head. Fix any favicon/SEO/content/browser failure before selecting Page 3. Do not deploy production.
