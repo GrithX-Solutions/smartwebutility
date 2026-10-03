@@ -430,6 +430,15 @@ const cases = [
     assert.equal(jsonValues.length, 2);
     jsonValues.forEach(value => assert.match(value, /^\([0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\)$/));
     assert.equal(await p.locator('#uuidError').isHidden(), true);
+
+    await p.locator('#uuidListFormat').selectOption('lines');
+    await p.locator('#uuidFormat').selectOption('canonical');
+    await p.locator('#uuidUppercase').uncheck();
+    await p.locator('#uuidNil').click();
+    assert.equal((await p.locator('#uuidOutput').inputValue()).trim(), '00000000-0000-0000-0000-000000000000');
+    await p.locator('#uuidMax').click();
+    assert.equal((await p.locator('#uuidOutput').inputValue()).trim(), 'ffffffff-ffff-ffff-ffff-ffffffffffff');
+    assert.match(await p.locator('#uuidOutputTitle').innerText(), /Max UUID/);
   }],
   ['chmod-calculator', async p => {
     await p.locator('#chmodOctal').fill('644');
