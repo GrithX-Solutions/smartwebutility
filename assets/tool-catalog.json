@@ -174,9 +174,13 @@
     "category": "Developer",
     "url": "/mac-address-generator/",
     "title": "MAC Address Generator",
-    "description": "Generate locally administered unicast MAC-48 addresses for testing.",
+    "description": "Generate random MAC-48 addresses with local/universal-style and unicast/multicast bit controls.",
     "keywords": [
       "mac address generator",
+      "random mac address generator",
+      "mac address generator unicast",
+      "unicast mac address generator",
+      "mac address generator online",
       "generate mac address",
       "random mac generator"
     ]
