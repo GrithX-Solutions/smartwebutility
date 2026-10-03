@@ -197,6 +197,19 @@ const cases = [
     assert.ok(minified.length < source.length);
     assert.ok(!minified.includes('remove me'));
     assert.ok(minified.includes('<h1>Hello</h1>'));
+
+    const legacy = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html><head><style type="text/css">body { color: red; }</style><script type="text/javascript">console.log("x");</script></head><body><input disabled="disabled"></body></html>';
+    await p.locator('#htmlMinifierInput').fill(legacy);
+    await p.locator('#minHtml5Cleanup').check();
+    await p.locator('#minifyHtml').click();
+    await p.waitForFunction(() => document.getElementById('htmlMinifierStatus').textContent === 'Minified');
+    const html5 = await p.locator('#htmlMinifierOutput').inputValue();
+    assert.match(html5, /^<!doctype html>/i);
+    assert.ok(!html5.includes('type="text/css"'));
+    assert.ok(!html5.includes('type="text/javascript"'));
+    assert.ok(html5.includes(' disabled'));
+    assert.ok(!html5.includes('disabled="disabled"'));
+
     assert.equal(await p.locator('#htmlMinifierError').isHidden(), true);
   }],
   ['jsonpath-tester', async p => {
