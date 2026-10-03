@@ -60,25 +60,34 @@ Research record:
 
 ## Current page
 
-### Page 8 — /random-port-generator/
+### Page 9 — /markdown-to-html/
 
-Status: VERIFIED ON BRANCH.
+Status: IMPLEMENTED ON BRANCH; CI PENDING.
 
 Research evidence:
-- `random port generator`: 170 US searches/month, SD 11.
-- `random tcp port generator`: 170, SD 10.
-- Current SERP includes multiple DA 1–10 utilities.
+- `markdown to html`: 2,400 US searches/month, SD 27, CPC $10.12.
+- `markdown to html converter`: 320, SD 31.
+- `markdown to html converter online`: 50, SD 12.
+- Current SERP includes DA 3–25 converter sites.
 
 Confirmed gap:
-- generator logic was already correct;
-- page needed a precise distinction between IANA Dynamic/Private 49152–65535 and host-specific ephemeral/local source-port ranges.
+- Marked does not sanitize generated HTML;
+- existing preview isolation was strong, but copied/downloaded HTML remained raw.
 
 Implemented:
-- content-only IANA/OS range clarification;
-- preserved no-availability-scan guidance;
-- added direct FAQ for ephemeral-range interpretation;
-- expanded relevant search aliases;
-- updated sitemap lastmod.
+- pinned DOMPurify 3.4.16 browser-side sanitization;
+- sanitized output enabled by default;
+- explicit raw-output opt-out;
+- output/copy/download/preview all use selected mode;
+- sandbox + restrictive CSP retained in both modes;
+- Chromium XSS regression for script/event attributes and raw-preview non-execution;
+- updated semantic copy, search aliases and sitemap lastmod.
+
+Dependency decision:
+- security gap justifies the additional pinned browser ESM;
+- no server package/framework/backend added;
+- conversion content remains local;
+- CDN runtime dependency is explicitly retained/known.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
