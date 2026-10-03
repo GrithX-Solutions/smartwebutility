@@ -128,6 +128,23 @@ const cases = [
     data = JSON.parse(await p.locator('#csvJsonOutput').inputValue());
     assert.equal(data[0].active, true);
     assert.equal(data[0].score, 98.5);
+
+    await p.locator('#csvJsonOutputFormat').selectOption('jsonl');
+    const jsonLines = (await p.locator('#csvJsonOutput').inputValue()).trim().split(/\r?\n/);
+    assert.equal(jsonLines.length, 2);
+    assert.equal(JSON.parse(jsonLines[0]).name, 'Ada Lovelace');
+    assert.equal(JSON.parse(jsonLines[0]).active, true);
+
+    await p.locator('#csvJsonOutputFormat').selectOption('compact');
+    const compact = await p.locator('#csvJsonOutput').inputValue();
+    assert.equal(compact.includes('\n'), false);
+    assert.equal(JSON.parse(compact).length, 2);
+
+    await p.locator('#csvJsonOutputFormat').selectOption('pretty4');
+    const pretty4 = await p.locator('#csvJsonOutput').inputValue();
+    assert.match(pretty4, /\n {4}\{/);
+
+    await p.locator('#csvJsonOutputFormat').selectOption('pretty2');
     await p.locator('#csvJsonHeader').uncheck();
     data = JSON.parse(await p.locator('#csvJsonOutput').inputValue());
     assert.ok(Array.isArray(data[0]));
