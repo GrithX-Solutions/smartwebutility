@@ -774,7 +774,7 @@ Chromium coverage now verifies:
 
 ## Page 4 — /cron-expression-helper/
 
-Status: IMPLEMENTED, CI PENDING
+Status: VERIFIED ON BRANCH
 
 ### Primary intent
 
@@ -901,5 +901,10 @@ Chromium coverage now verifies:
 - Product/intent gap: VERIFIED.
 - Implementation: COMPLETED on working branch.
 - Browser regression coverage: COMPLETED.
-- Static/Build/Chromium CI: PENDING.
+- Build run 618: SUCCESS.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings on Password Generator and Text Tools.
+- Chromium run 302: SUCCESS.
+- Cron builder/parser/next-run regressions: PASS.
+- Sitemap-wide browser initialization: PASS.
 - Production deployment: NOT STARTED.
