@@ -211,10 +211,13 @@
     "category": "Developer",
     "url": "/random-port-generator/",
     "title": "Random Port Generator",
-    "description": "Generate unique TCP/UDP port numbers from standard or custom ranges.",
+    "description": "Generate random TCP/UDP port numbers from IANA or custom ranges.",
     "keywords": [
       "random port generator",
-      "random tcp port generator"
+      "random tcp port generator",
+      "random port number generator",
+      "port number generator",
+      "random port number"
     ]
   },
   {
