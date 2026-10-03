@@ -62,7 +62,7 @@ Research record:
 
 ### Page 2 — /chmod-calculator/
 
-Status: IMPLEMENTED ON BRANCH; CI PENDING.
+Status: VERIFIED ON BRANCH.
 
 Research evidence:
 - `chmod calculator`: 1,900 US searches/month, SD 27, CPC $10.41.
