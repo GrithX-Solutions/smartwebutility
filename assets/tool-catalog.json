@@ -167,8 +167,16 @@
     "category": "Developer",
     "url": "/jwt-decoder/",
     "title": "JWT Decoder",
-    "description": "Inspect JWT headers, payloads and claims.",
-    "keywords": []
+    "description": "Decode JWT parts locally, inspect claims and check exp/nbf timing without signature verification.",
+    "keywords": [
+      "jwt decoder",
+      "jwt decoder online",
+      "online jwt decoder",
+      "jwt token decoder",
+      "decode jwt",
+      "jwt claims decoder",
+      "local jwt decoder"
+    ]
   },
   {
     "category": "Developer",
