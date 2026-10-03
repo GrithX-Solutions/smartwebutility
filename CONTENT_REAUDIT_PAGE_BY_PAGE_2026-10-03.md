@@ -1658,3 +1658,114 @@ No fake freshness is introduced. The page remains in the audit as a verified no-
 - Material competitor/product gap: NOT FOUND.
 - Public page modification: NOT JUSTIFIED.
 - Production deployment for this page: NOT APPLICABLE.
+
+
+---
+
+## Page 7 — /meta-tag-generator/
+
+Status: IMPLEMENTED, CI PENDING
+
+### Primary intent
+Generate copy-ready page meta tags for SEO and social sharing.
+
+Canonical owner:
+- `https://smartwebutility.com/meta-tag-generator/`
+
+Related intent owners remain separate:
+- `/meta-tag-checker/` — inspect a live page's returned metadata.
+- `/open-graph-preview/` — focused social-card/Open Graph workflow.
+- `/schema-markup-generator/` — structured data, not meta tags.
+
+### Ubersuggest US evidence
+- `meta tag generator`: 260 searches/month, SD 11, CPC $6.65.
+- `meta tag generator seo`: 90, SD 28, CPC $10.69.
+- `og meta tag generator`: 40, SD 32.
+- Several long-tail variants have SD 5–23.
+
+Current SERP includes very low-authority domains:
+- Pikasso Studio — DA 8
+- Flyn — DA 7
+- PromoToAI — DA 4
+- Zynfo — DA 8
+- TopRankerTools — DA 10
+- Multi-Toolkit — DA 9
+
+### Current SERP feature pattern
+Current tools commonly generate:
+- title and meta description;
+- canonical and robots;
+- Open Graph tags;
+- Twitter/X card tags;
+- character guidance;
+- search/social previews;
+- escaped copy-ready markup.
+
+Some tools fetch URLs or generate copy with AI. This page intentionally stays local and deterministic.
+
+### Current Smart Web Utility behavior before this change
+Already present:
+- title;
+- meta description;
+- canonical;
+- robots;
+- optional author;
+- simple search-style preview;
+- local generation and copy.
+
+Missing:
+- Open Graph;
+- Twitter/X cards;
+- social metadata preview;
+- visible character counts;
+- broader output escaping test coverage.
+
+### Google guidance check
+Current Google Search Central guidance states:
+- Google Search does not use the `meta keywords` tag.
+- supplied title/meta-description text does not guarantee the exact title link or snippet shown in Search.
+
+Decision:
+- do not add a meta-keywords field merely because related searches mention keywords;
+- do not present character counts as ranking scores or fixed Google truncation limits;
+- keep preview language explicitly illustrative.
+
+### Implementation
+`assets/meta-generator.js` now:
+- generates primary metadata, Open Graph and Twitter/X sections;
+- escapes ampersands, quotes and angle brackets;
+- shows title and description character counts;
+- produces an illustrative search preview;
+- produces a social preview without fetching the remote image URL;
+- supports site name, OG type, social image, image alt, Twitter/X card and site handle;
+- preserves browser-local operation and clipboard fallback.
+
+`meta-tag-generator/index.html` now:
+- exposes the social metadata fields;
+- explains the difference between social meta tags and structured data;
+- explains why meta keywords are intentionally excluded;
+- explains that search previews are not ranking/snippet guarantees;
+- explains why remote image URLs are not automatically fetched.
+
+### Regression tests
+Chromium coverage now verifies:
+- HTML attribute escaping for quotes and ampersands;
+- canonical URL escaping;
+- Open Graph output;
+- image-alt output;
+- Twitter/X output;
+- absence of meta-keywords output;
+- character counts;
+- search/social preview rendering;
+- no `img` element is inserted into the social preview, preventing automatic remote image fetch.
+
+### Page 7 acceptance status
+- Demand / difficulty: VERIFIED.
+- Current SERP intent: VERIFIED.
+- Google guidance: VERIFIED.
+- Canonical ownership/cannibalization: VERIFIED.
+- Product/content gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Browser regression coverage: COMPLETED.
+- Static/Build/Chromium CI: PENDING.
+- Production deployment: NOT STARTED.
