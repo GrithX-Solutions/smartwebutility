@@ -62,7 +62,7 @@ Research record:
 
 ### Page 6 — /ulid-generator/
 
-Status: IMPLEMENTED ON BRANCH; CI PENDING.
+Status: VERIFIED ON BRANCH.
 
 Research evidence:
 - `ulid generator`: 210 US searches/month, SD 17, transactional.
