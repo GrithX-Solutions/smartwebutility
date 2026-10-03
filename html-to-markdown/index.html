@@ -20,7 +20,7 @@
 <div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>HTML to Markdown</span></div>
 <span class="kicker">Developer tool · HTML converter</span>
 <h1>HTML to Markdown Converter Online</h1>
-<p class="lead compact">Paste HTML or open a local file and convert semantic content into readable Markdown. Headings, links, lists, code, tables and other common content structures are handled in your browser.</p>
+<p class="lead compact">Paste HTML or open a local file and convert semantic content into readable Markdown. Your browser handles headings, links, lists, code, tables and other common content structures locally.</p>
 <div class="json-toolbar">
 <button class="btn primary" id="convertHtmlMarkdown" type="button">Convert to Markdown</button>
 <label class="file-btn">Open .html<input id="htmlMarkdownFile" type="file" accept=".html,.htm,text/html,text/plain" hidden></label>
@@ -41,28 +41,28 @@
 
 <section class="section wrap prose">
 <h2>Convert HTML to Markdown locally</h2>
-<p>This HTML to Markdown converter is designed for content migration and editing workflows where existing HTML needs to become portable Markdown. Common use cases include moving CMS content into documentation, cleaning copied article markup, preparing text for a repository, converting notes, or simplifying content before importing it into a Markdown-based publishing system.</p>
+<p>We designed this HTML to Markdown converter for content migration and editing workflows where existing HTML needs to become portable Markdown. Common use cases include moving CMS content into documentation, cleaning copied article markup, preparing text for a repository, converting notes, or simplifying content before importing it into a Markdown publishing system.</p>
 <div class="info-grid">
-<article><h3>Semantic headings and paragraphs</h3><p>HTML headings become Markdown headings and paragraph structure is retained without carrying across CSS classes or presentational layout attributes.</p></article>
+<article><h3>Semantic headings and paragraphs</h3><p>HTML headings become Markdown headings, and the converter retains paragraph structure without carrying across CSS classes or presentational layout attributes.</p></article>
 <article><h3>Links and emphasis</h3><p>Anchor elements become Markdown links, while strong and emphasis elements map to familiar Markdown syntax.</p></article>
-<article><h3>Lists and code</h3><p>Ordered and unordered lists, inline code and preformatted code blocks are converted to readable Markdown representations.</p></article>
-<article><h3>GFM tables and tasks</h3><p>With GFM support enabled, compatible HTML tables, task-list items and strikethrough markup can be represented using GitHub Flavored Markdown syntax.</p></article>
+<article><h3>Lists and code</h3><p>The converter turns ordered and unordered lists, inline code and preformatted code blocks into readable Markdown representations.</p></article>
+<article><h3>GFM tables and tasks</h3><p>When you enable GFM support, the converter can represent compatible HTML tables, task-list items and strikethrough markup with GitHub Flavored Markdown syntax.</p></article>
 </div>
 
 <h2>What happens to scripts, styles and embedded content</h2>
-<p>The converter parses the input as an HTML document but does not execute it. Active or non-content elements such as <code>script</code>, <code>style</code>, <code>iframe</code>, <code>object</code>, <code>embed</code>, <code>template</code> and <code>noscript</code> are removed before conversion. The goal is to convert document content, not reproduce a webpage runtime.</p>
+<p>The converter parses the input as an HTML document but does not execute it. It removes active or non-content elements such as <code>script</code>, <code>style</code>, <code>iframe</code>, <code>object</code>, <code>embed</code>, <code>template</code> and <code>noscript</code> before conversion. The goal is to convert document content, not reproduce a webpage runtime.</p>
 
 <h2>HTML layout does not map perfectly to Markdown</h2>
 <p>Markdown intentionally has a smaller formatting vocabulary than HTML. Complex grids, forms, positioned elements, interactive widgets, deeply nested tables and CSS-driven presentation may not have a faithful Markdown equivalent. The output focuses on readable content structure rather than pixel-perfect webpage reconstruction.</p>
 
 <h2>Tables need a Markdown dialect</h2>
-<p>Standard Markdown does not define tables, while GitHub Flavored Markdown does. Keep GFM support enabled when table preservation matters. Disable it when your destination accepts only a minimal Markdown subset and you prefer unsupported table markup to be simplified.</p>
+<p>Standard Markdown does not define tables, while GitHub Flavored Markdown does. Keep GFM support on when table preservation matters. Turn it off when your destination accepts only a minimal Markdown subset and you prefer the converter to simplify unsupported table markup.</p>
 
 <h2>Why CSS classes and inline styles disappear</h2>
 <p>Markdown describes content structure rather than browser presentation. Classes, IDs, inline styles, data attributes and most layout-specific properties therefore do not survive normal conversion. That is expected behavior and often desirable when migrating content out of a page builder or CMS.</p>
 
 <h2>Conversion is not webpage scraping</h2>
-<p>This tool converts HTML that you provide. It does not fetch a remote URL, run JavaScript on another site, bypass access controls or attempt to extract content from an arbitrary webpage. If a website is rendered dynamically, obtain the HTML you are authorized to use before converting it here.</p>
+<p>This tool converts HTML that you provide. It does not fetch a remote URL, run JavaScript on another site, bypass access controls or attempt to extract content from an arbitrary webpage. If JavaScript renders a website dynamically, obtain the HTML you are authorized to use before converting it here.</p>
 
 <h2>Related developer tools</h2>
 <div class="related-tools"><a href="/markdown-to-html/">Markdown to HTML<span>Convert Markdown back into HTML source.</span></a><a href="/html-entity-encoder-decoder/">HTML Entity Encoder / Decoder<span>Encode and decode HTML entity syntax.</span></a><a href="/text-tools/">Text Tools<span>Clean and transform plain text content.</span></a></div>
@@ -70,8 +70,8 @@
 
 <section class="section alt" data-quality-content="v1"><div class="wrap prose">
 <h2>Frequently asked questions</h2>
-<h3>Can it convert HTML tables to Markdown?</h3><p>Yes, for compatible tables when GFM support is enabled.</p>
-<h3>Does it execute scripts in the HTML?</h3><p>No. The source is parsed as data, and active embedded elements are removed before conversion.</p>
+<h3>Can it convert HTML tables to Markdown?</h3><p>Yes, for compatible tables when you enable GFM support.</p>
+<h3>Does it execute scripts in the HTML?</h3><p>No. The converter parses the source as data and removes active embedded elements before conversion.</p>
 <h3>Will CSS be converted?</h3><p>No. Markdown does not provide a general equivalent for CSS layout and styling.</p>
 <h3>Can I convert an HTML file?</h3><p>Yes. Open a local <code>.html</code> or <code>.htm</code> file up to 5 MB.</p>
 <h3>Is my HTML uploaded?</h3><p>No. Conversion runs locally in browser JavaScript on this page.</p>
