@@ -83,8 +83,8 @@
     "category": "Developer",
     "url": "/html-minifier/",
     "title": "HTML Minifier",
-    "description": "Minify HTML with conservative defaults and measurable byte savings.",
-    "keywords": []
+    "description": "Minify HTML with conservative defaults, optional HTML5 cleanup and measurable byte savings.",
+    "keywords": ["html minifier", "online html minifier", "html minifier online", "minify html", "html compressor", "compress html"]
   },
   {
     "category": "Developer",
