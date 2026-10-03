@@ -60,30 +60,21 @@ Research record:
 
 ## Current page
 
-### Page 5 — /jwt-decoder/
+### Page 6 — /csv-to-json/
 
-Status: VERIFIED ON BRANCH.
+Status: VERIFIED NO-CHANGE DECISION.
 
 Research evidence:
-- `jwt decoder`: 18,100 US searches/month, SD 42.
-- `jwt decoder online`: 880, SD 27.
-- Current SERP includes multiple DA 9–27 utility domains.
+- `csv to json`: 2,400 US searches/month, SD 39, CPC $10.34.
+- `csv to json format`: 3,600, SD 34.
+- `csv to json conversion`: 1,900, SD 31.
+- `online csv to json converter`: 480, SD 26.
 
-Confirmed gap:
-- page decoded JSON but lacked Bearer-prefix handling, raw signature display and explicit exp/nbf state.
-
-Implemented:
-- optional Bearer-prefix stripping;
-- raw signature segment output;
-- expired/not-before timing states from the browser clock;
-- strict local inspection/trust boundary;
-- `alg:none` warning;
-- current-time sample token;
-- updated semantic copy, search aliases and sitemap lastmod;
-- Chromium coverage for future/expired/Bearer/malformed cases.
-
-Security decision:
-- no signature verification or key/secret collection added.
+Decision:
+- current page already covers the dominant SERP functionality and several useful gaps;
+- no material content/product deficiency was verified;
+- no copy/parser/title/canonical/sitemap change is justified;
+- no fake freshness update.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
