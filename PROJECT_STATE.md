@@ -62,7 +62,7 @@ Research record:
 
 ### Page 2 — /favicon-generator/
 
-Status: IMPLEMENTED ON BRANCH; CI PENDING.
+Status: VERIFIED ON BRANCH.
 
 Research evidence:
 - `favicon generator`: 14,800 US searches/month, SD 24, CPC $2.92.
