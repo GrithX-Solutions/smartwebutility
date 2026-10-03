@@ -56,13 +56,13 @@
   <div class="info-grid">
     <article><h3>Automatic delimiter detection</h3><p>Auto mode samples commas, tabs, semicolons and pipes, or you can select the delimiter explicitly when the file uses a known format.</p></article>
     <article><h3>Search across all cells</h3><p>Type in the filter box to narrow the displayed rows without changing the original CSV text.</p></article>
-    <article><h3>Sort any column</h3><p>Click a column heading to toggle ascending and descending order. Numeric-looking values are sorted numerically when possible.</p></article>
-    <article><h3>Header control</h3><p>Turn off “First row is header” when the file contains only data rows; generic column labels are generated automatically.</p></article>
+    <article><h3>Sort any column</h3><p>Click a column heading to toggle ascending and descending order. The viewer sorts numeric-looking values numerically when possible.</p></article>
+    <article><h3>Header control</h3><p>Turn off “First row is header” when the file contains only data rows; the viewer generates generic column labels automatically.</p></article>
   </div>
   <h2>CSV parsing limitations</h2>
-  <p>The parser handles quoted fields, embedded delimiters, doubled quotes and line breaks inside quoted cells. CSV dialects still vary between software. Files that depend on unusual escape rules, encodings other than browser-readable text, or application-specific type inference may need to be opened in the source application.</p>
+  <p>The parser handles quoted fields, embedded delimiters, doubled quotes and line breaks inside quoted cells. CSV dialects still vary between software. Open files that depend on unusual escape rules, encodings other than browser-readable text, or application-specific type inference in the source application when needed.</p>
   <h2>Large CSV files</h2>
-  <p>The local file control is intentionally capped at 5 MB for responsive browser use. Very large datasets are better handled by a desktop data tool, database or command-line workflow where memory and rendering can be controlled more explicitly.</p>
+  <p>The local file control intentionally caps files at 5 MB for responsive browser use. For very large datasets, use a desktop data tool, database or command-line workflow that gives you more explicit control over memory and rendering.</p>
   <h2>Related data tools</h2>
   <div class="related-tools"><a href="/json-to-csv/">JSON to CSV<span>Create CSV rows from JSON objects or arrays.</span></a><a href="/json-formatter/">JSON Formatter<span>Validate and format API data before conversion.</span></a><a href="/yaml-formatter/">YAML Formatter<span>Format and validate YAML configuration locally.</span></a></div>
 </section>
@@ -70,7 +70,7 @@
   <h2>Frequently asked questions</h2>
   <h3>Does the CSV viewer upload my file?</h3><p>No. The selected file is read by browser JavaScript and rendered locally on this page.</p>
   <h3>Can it open semicolon- or tab-delimited files?</h3><p>Yes. Choose Semicolon, Tab or Pipe explicitly, or leave Auto selected for common delimiter detection.</p>
-  <h3>Can I sort numeric columns?</h3><p>Yes. Values that can be parsed as numbers are compared numerically; other values use locale-aware text comparison.</p>
+  <h3>Can I sort numeric columns?</h3><p>Yes. The viewer compares numeric values numerically and uses locale-aware text comparison for other values.</p>
 </div></section>
 </main>
 <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
