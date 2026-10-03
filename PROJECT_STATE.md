@@ -60,28 +60,31 @@ Research record:
 
 ## Current page
 
-### Page 6 — /ulid-generator/
+### Page 4 — /cron-expression-helper/
 
-Status: VERIFIED ON BRANCH.
+Status: IMPLEMENTED ON BRANCH; CI PENDING.
 
 Research evidence:
-- `ulid generator`: 210 US searches/month, SD 17, transactional.
-- Current US SERP contains several DA 1–6 utility domains.
+- `cron expression generator`: 1,300 US searches/month, SD 31, CPC $6.54.
+- `cron generator`: 1,600, SD 41, CPC $17.20.
+- Current U.S. SERP contains several low-authority generator sites, including DA 1–10 utilities.
 - Smart Web Utility currently has no Ubersuggest US ranking-keyword data for this page.
 
 Confirmed gap:
-- existing generator already covered monotonic bulk generation, custom timestamps and generated-value timestamp decoding;
-- it could not validate/decode an arbitrary existing ULID.
+- existing page was parser/explainer only;
+- current search intent expects a builder/generator plus run verification;
+- no next-run preview or robust list/range/step validation existed.
 
 Implemented:
-- arbitrary 26-character ULID validation;
-- case-insensitive input with uppercase normalization;
-- 48-bit timestamp decode to milliseconds and UTC;
-- 80-bit randomness display in Base32 and hex;
-- overflow/alphabet rejection;
-- inspector UI and “Use first generated” workflow;
-- updated semantic/schema/search metadata and sitemap lastmod;
-- Chromium coverage for valid/lowercase/invalid inspection cases.
+- standard five-field cron builder;
+- parser/validator for ranges, lists and steps;
+- three-letter month/weekday names;
+- five-run local-time preview;
+- Vixie-style DOM/DOW OR semantics;
+- strict rejection of six/seven-field expressions;
+- platform/timezone/DST compatibility guidance;
+- updated title/metadata/search aliases and sitemap lastmod;
+- Chromium regression coverage for builder, named weekdays, next-run rendering and six-field rejection.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
