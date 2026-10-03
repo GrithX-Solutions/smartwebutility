@@ -4,6 +4,8 @@ Updated: 2026-10-03
 
 This checklist is mandatory for every new public page, tool or guide. A page is not production-ready when only the functionality is complete.
 
+The hard editorial requirements in `CONTENT_QUALITY_STANDARD.md` are part of this release gate. Every public page must be semantically optimized, skimmable, more useful than relevant current competitors for its target intent, easy to read, native-quality in its published language, free of known grammar/punctuation errors, and written in active voice by default.
+
 ## 1. Keyword and intent evidence
 
 Before implementation:
@@ -14,9 +16,17 @@ Before implementation:
 - Check Tier-1 transferability where material: United Kingdom, Canada and Australia are tracked separately rather than assumed to match US difficulty.
 - Do not add unsupported keyword variants merely for volume.
 
-## 2. Semantic content
+## 2. Semantic content and editorial quality
 
-Every tool page must explain the topic in natural language, not keyword repetitions:
+Every tool page must explain the topic in natural language, not keyword repetitions. The full hard rule is defined in `CONTENT_QUALITY_STANDARD.md`.
+
+Before a new search-targeted page or material rewrite is approved:
+- Review the current live SERP in the target market and record the useful coverage of leading relevant results.
+- State the concrete value advantage Smart Web Utility adds; do not use length alone as the comparison.
+- Confirm native-language editorial quality, grammar, punctuation, readability and active-voice review.
+- Confirm the page answers the real task completely enough that the user should not need another result for basic interpretation or next steps.
+
+Required page coverage:
 - Clear H1 matching the actual task.
 - Answer-first introduction explaining what the tool does and what input/output the user gets.
 - Relevant semantic concepts, standards, entities and terminology needed to understand the task.
@@ -93,6 +103,7 @@ Before merge:
 - Ensure the sitemap-wide browser initialization sweep stays clean.
 - Run JavaScript/PHP/deploy-script validation.
 - Run static SEO QA.
+- Run content-quality QA.
 - Test mobile navigation and layout.
 - Test any new structured exports, edge cases or state transitions.
 - Performance-test changes that add meaningful script/network/layout cost.
