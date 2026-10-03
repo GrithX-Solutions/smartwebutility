@@ -60,29 +60,29 @@ Research record:
 
 ## Current page
 
-### Page 3 — /mac-address-generator/
+### Page 4 — /cron-expression-helper/
 
-Status: VERIFIED ON BRANCH.
+Status: IMPLEMENTED ON BRANCH; CI PENDING.
 
 Research evidence:
-- `mac address generator`: 1,900 US searches/month, SD 29.
-- `random mac address generator`: 390, SD 22.
-- `mac address generator unicast`: 210, SD 22.
-- Current Ubersuggest SERP includes multiple low-authority utility domains, including IT-Tools at DA 1.
+- `cron expression generator`: 1,300 US searches/month, SD 31, CPC $6.54.
+- `cron generator`: 1,600, SD 41, CPC about $17.20.
+- Current Ubersuggest/live SERPs consistently expect a builder + parser + next-run preview.
 - Smart Web Utility currently has no Ubersuggest US ranking-keyword data for this page.
 
 Confirmed gap:
-- existing generator hard-coded locally administered + unicast;
-- current SERPs repeatedly expose explicit U/L and I/G controls;
-- test workflows may need multicast or the universal bit cleared.
+- previous page was a parser/preset helper only;
+- it did not satisfy generator intent with field controls or next-run verification.
 
 Implemented:
-- local vs universal-style U/L control;
-- unicast vs multicast I/G control;
-- local + unicast remains the default;
-- explicit warning that a random universal-style prefix is not an IEEE-assigned vendor OUI;
-- updated visible semantic guidance, WebApplication/FAQ metadata, tool-search aliases and sitemap lastmod;
-- Chromium coverage for all four U/L + I/G combinations.
+- dependency-free 5-field cron builder/parser;
+- lists, ranges, wildcard/range steps, month/weekday names;
+- browser-local next-run preview and timezone display;
+- traditional day-of-month/day-of-week OR semantics;
+- explicit rejection of 6/7-field cron variants;
+- stronger semantic/compatibility guidance;
+- updated tool-search aliases and sitemap lastmod;
+- Chromium coverage for builder sync, named weekdays, next runs and 6-field rejection.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
