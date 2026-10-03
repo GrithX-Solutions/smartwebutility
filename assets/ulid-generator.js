@@ -16,6 +16,14 @@
   const error = document.getElementById('ulidError');
   const stats = document.getElementById('ulidStats');
   const tbody = document.querySelector('#ulidTable tbody');
+  const inspectInput = document.getElementById('ulidInspectInput');
+  const inspectError = document.getElementById('ulidInspectError');
+  const inspectResult = document.getElementById('ulidInspectResult');
+  const inspectNormalized = document.getElementById('ulidInspectNormalized');
+  const inspectTimestampMs = document.getElementById('ulidInspectTimestampMs');
+  const inspectTimestampUtc = document.getElementById('ulidInspectTimestampUtc');
+  const inspectRandomBase32 = document.getElementById('ulidInspectRandomBase32');
+  const inspectRandomHex = document.getElementById('ulidInspectRandomHex');
 
   let lastTimestamp = null;
   let lastRandom = null;
@@ -99,15 +107,52 @@
     return encodeBigInt(timestamp, 10) + encodeBigInt(random, 16);
   }
 
-  function decodeTime(ulid) {
-    if (!/^[0-7][0-9A-HJKMNP-TV-Z]{25}$/.test(ulid)) throw new Error('Generated ULID failed canonical validation.');
+  function decodeUlid(raw) {
+    const ulid = String(raw || '').trim().toUpperCase();
+    if (ulid.length !== 26) throw new Error('A ULID must contain exactly 26 Crockford Base32 characters.');
+    if (!/^[0-7][0-9A-HJKMNP-TV-Z]{25}$/.test(ulid)) {
+      throw new Error('Invalid ULID. Use Crockford Base32 characters only; I, L, O and U are not valid.');
+    }
+
     const time = decodeBase32(ulid.slice(0, 10));
-    if (time > MAX_TIME) throw new Error('ULID timestamp exceeds 48-bit range.');
+    if (time > MAX_TIME) throw new Error('ULID timestamp exceeds the 48-bit maximum.');
+    const randomness = decodeBase32(ulid.slice(10));
     const milliseconds = Number(time);
+
     return {
+      ulid,
       milliseconds,
-      iso: new Date(milliseconds).toISOString()
+      iso: new Date(milliseconds).toISOString(),
+      randomBase32: ulid.slice(10),
+      randomHex: randomness.toString(16).padStart(20, '0').toUpperCase()
     };
+  }
+
+  function decodeTime(ulid) {
+    const decoded = decodeUlid(ulid);
+    return {
+      milliseconds: decoded.milliseconds,
+      iso: decoded.iso
+    };
+  }
+
+  function inspectUlid() {
+    inspectError.hidden = true;
+    inspectError.textContent = '';
+    inspectResult.hidden = true;
+
+    try {
+      const decoded = decodeUlid(inspectInput.value);
+      inspectNormalized.textContent = decoded.ulid;
+      inspectTimestampMs.textContent = decoded.milliseconds.toLocaleString();
+      inspectTimestampUtc.textContent = decoded.iso;
+      inspectRandomBase32.textContent = decoded.randomBase32;
+      inspectRandomHex.textContent = decoded.randomHex;
+      inspectResult.hidden = false;
+    } catch (caught) {
+      inspectError.textContent = caught?.message || String(caught);
+      inspectError.hidden = false;
+    }
   }
 
   function renderTable(values) {
@@ -235,6 +280,19 @@
     if (event.key === 'Enter') {
       event.preventDefault();
       try { generate(); } catch (caught) { fail(caught); }
+    }
+  });
+
+  document.getElementById('inspectUlid').addEventListener('click', inspectUlid);
+  document.getElementById('useFirstUlid').addEventListener('click', () => {
+    if (!lastValues.length) return;
+    inspectInput.value = lastValues[0];
+    inspectUlid();
+  });
+  inspectInput.addEventListener('keydown', event => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      inspectUlid();
     }
   });
 
