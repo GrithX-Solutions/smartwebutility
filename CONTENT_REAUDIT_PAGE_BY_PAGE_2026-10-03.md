@@ -367,3 +367,126 @@ This tests the actual maskable distinction instead of checking only for a succes
 - Same-millisecond monotonic UUID v7 regression: PASS.
 - Sitemap-wide browser initialization: PASS.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 2 — /chmod-calculator/
+
+Status: IMPLEMENTED, CI PENDING
+
+### Primary intent
+
+Convert Unix/Linux file permissions between octal and symbolic forms and generate an applicable chmod command.
+
+Canonical owner:
+- `https://smartwebutility.com/chmod-calculator/`
+
+### Ubersuggest US evidence
+
+Primary:
+- `chmod calculator`: 1,900 searches/month, SD 27, CPC $10.41, informational intent.
+
+Relevant variants:
+- `linux chmod calculator`: 40, SD 32.
+- `chmod calculator linux`: 30, SD 34.
+- `chmod calculator online`: 10, SD 13.
+- `chmod calculator sticky bit`: 10, SD 5.
+- `unix chmod calculator`: 10, SD 13.
+
+Ubersuggest currently reports no US ranking-keyword data for Smart Web Utility's chmod page. Ranking gains remain UNKNOWN.
+
+### SERP / competitor evidence
+
+Ubersuggest's US SERP snapshot includes several low-to-mid-authority utility domains:
+- chmod-calculator.com — DA 31
+- nettools.club — DA 14
+- devina.io — DA 18
+- ScanSuite — DA 2
+- ctrlops.io — DA 17
+- additional lower-authority tools below the top ten
+
+Current live web review on 2026-10-03 found recurring functionality across current results:
+- octal <-> rwx conversion;
+- permission checkboxes;
+- setuid, setgid and sticky bits;
+- umask helpers;
+- common presets;
+- generated chmod commands;
+- on stronger tools, direct parsing of the 10-character permission field copied from `ls -l`, including the leading file-type character.
+
+### Current Smart Web Utility strengths before this change
+
+Already present:
+- octal to symbolic conversion;
+- symbolic to octal conversion;
+- owner/group/others matrix;
+- setuid, setgid and sticky-bit support;
+- correct `s/S/t/T` output;
+- common presets;
+- target path;
+- recursive `-R` command generation;
+- umask result calculator;
+- browser-local processing;
+- useful explanations of 644, 755, 777 and special bits.
+
+The page therefore did not need a broad rewrite.
+
+### Confirmed gap
+
+The parser accepted a normalized nine-character permission value such as:
+- `rwxr-xr-x`
+- `rwsr-xr-x`
+- `rwxrwxrwt`
+
+But users commonly copy the permission field directly from `ls -l`, which includes a leading file-type character:
+- `-rwsr-xr-x`
+- `drwxrwxrwt`
+
+The previous input had `maxlength=9` and rejected those normal 10-character strings.
+
+### Technical reference
+
+GNU Coreutils documents file permissions as permission mode bits plus special mode bits and explains the different semantics of read/write/execute for files versus directories. Current SERP tools also expose `ls -l`-style input because the leading character represents file type rather than a chmod permission bit.
+
+### Implementation
+
+`assets/chmod-calculator.js` now:
+- accepts either 9 permission characters or a 10-character `ls -l` permission field;
+- recognizes standard leading type characters used for regular files, directories, symlinks, block/character devices, pipes and sockets;
+- ignores only that leading type character for chmod calculation;
+- continues to parse `s/S/t/T` special-bit notation;
+- normalizes the displayed symbolic result back to the nine chmod permission characters.
+
+`chmod-calculator/index.html` now:
+- allows 10 characters in the symbolic input;
+- states that `ls -l` values can be pasted directly;
+- explains that the leading file-type character does not change chmod permission bits;
+- gives examples for setuid and sticky-directory modes;
+- keeps the existing canonical intent rather than creating a separate “ls permissions calculator” page.
+
+Search aliases now include:
+- `linux chmod calculator`
+- `chmod calculator online`
+- `unix chmod calculator`
+- `ls -l permissions`
+- `octal permissions calculator`
+
+### Regression tests
+
+Chromium test now verifies:
+- `-rwsr-xr-x` -> `4755`, normalized `rwsr-xr-x`, setuid detected;
+- `drwxrwxrwt` -> `1777`, normalized `rwxrwxrwt`, sticky detected;
+- existing octal, recursive command and umask behavior remains intact.
+
+### Page 2 acceptance status
+
+- Demand / difficulty: VERIFIED.
+- Current SERP intent: VERIFIED.
+- Canonical ownership: VERIFIED.
+- Existing functionality inspected: VERIFIED.
+- Product gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Browser regression coverage: COMPLETED.
+- Static/Build/Chromium CI: PENDING.
+- Production deployment: NOT STARTED.
