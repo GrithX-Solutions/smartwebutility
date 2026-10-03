@@ -172,3 +172,193 @@ Primary technical references:
 - Same-millisecond v7 uniqueness + lexical monotonic-order test: PASS.
 - Full sitemap browser initialization sweep: PASS.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 2 — /favicon-generator/
+
+Status: IMPLEMENTED, CI PENDING
+
+### Primary intent
+
+Create a favicon package for a website from image, SVG, text or emoji artwork.
+
+Canonical owner:
+- `https://smartwebutility.com/favicon-generator/`
+
+Related but separate intent owners:
+- `/meta-tag-generator/` — page metadata generation, not favicon asset generation.
+- `/open-graph-preview/` — social preview metadata, not browser/PWA icon generation.
+
+### Ubersuggest US evidence
+
+Primary:
+- `favicon generator`: 14,800 searches/month, SD 24, CPC $2.92.
+
+Relevant same-intent variants:
+- `favicon maker`: 1,600, SD 47.
+- `favicon generator free`: 880, SD 49.
+- `favicon generator online`: 480, SD 58.
+- `favicon generator from png`: 260, SD 64.
+- `favicon generator from image`: 210, SD 57.
+- `image to favicon generator`: 140, SD 33.
+- `svg favicon generator`: 90, SD 29.
+- `favicon generator for website`: 50, SD 6.
+- `favicon generator with transparent background`: 20, SD 5.
+
+Ubersuggest currently reports no US ranking-keyword data for Smart Web Utility's favicon page. Ranking gains remain UNKNOWN until first-party or provider data appears.
+
+### SERP evidence
+
+Ubersuggest's current US SERP snapshot includes:
+- RealFaviconGenerator
+- favicon.io
+- favicon-generator.org
+- Canva
+- LogoMakerr
+- Shift4Shop
+- favicon.cc
+- IONOS
+- Favicon Studio
+- RedKetchup
+- Iconifier
+- additional lower-authority favicon utilities.
+
+The SERP contains established specialist brands but also utility domains with lower authority. That does not prove rankability; it confirms that the intent is strongly tool-oriented and that working output matters more than generic explanatory text.
+
+### Current Smart Web Utility strengths before this change
+
+The page already had:
+- image input for PNG, JPG, WebP and SVG up to 10 MB;
+- text/emoji generation;
+- local browser processing;
+- contain/cover image fit;
+- background, foreground, padding, radius and transparency controls;
+- 16/32/48 PNG favicons;
+- multi-size `favicon.ico`;
+- 180×180 Apple touch icon;
+- 192×192 and 512×512 web-app icons;
+- generated `site.webmanifest`;
+- generated install HTML;
+- complete ZIP export;
+- favicon-size previews;
+- Google Search favicon requirements and installation guidance.
+
+The page therefore did not need another generic favicon explainer.
+
+### Confirmed gap
+
+Modern installed web apps can apply OS-specific masks to app icons. MDN's current PWA guidance says:
+- a web-app manifest can mark an icon with `purpose: "maskable"`;
+- important artwork should stay inside the maskable safe zone;
+- the guaranteed safe zone is a centered circle whose diameter is 80% of the icon's minimum dimension;
+- maskable artwork should use an opaque background filling the icon area.
+
+Before this page update, Smart Web Utility generated only ordinary 192×192 and 512×512 web-app icons. It did not produce dedicated maskable files and did not add `purpose: "maskable"` entries to the manifest.
+
+Simply marking the ordinary icon as maskable would be incorrect when the user selects transparent output or puts artwork close to the edge.
+
+### Implementation
+
+`assets/favicon-generator.js` now:
+- creates dedicated `android-chrome-192x192-maskable.png`;
+- creates dedicated `android-chrome-512x512-maskable.png`;
+- fills the full maskable canvas with the selected background color even when ordinary favicon transparency is enabled;
+- keeps important source artwork inside a conservative square fully contained by the 80%-diameter safe-zone circle;
+- adds explicit `purpose: "any"` to ordinary 192/512 manifest icons;
+- adds dedicated `purpose: "maskable"` manifest entries for the new maskable files;
+- includes both maskable PNGs in the ZIP.
+
+The ordinary favicon/PWA icons remain separate so transparent and non-maskable use cases do not get silently changed.
+
+### UX/content update
+
+The page now:
+- identifies maskable PWA icons in the hero/trust bar/package list;
+- shows a dedicated 192×192 maskable preview;
+- overlays the 80% safe-zone circle on that preview;
+- explains why ordinary and maskable files are separate;
+- explains the opaque-background requirement;
+- documents the generated maskable filenames and manifest entries;
+- links to current MDN PWA icon guidance.
+
+The existing Google Search favicon guidance remains separate from PWA maskable-icon guidance. Google Search currently requires a square favicon of at least 8×8 px and recommends a favicon larger than 48×48 px; the page already documents that distinction.
+
+### Security decision
+
+The generator accepts SVG as source artwork but does not place the original uploaded SVG markup into the downloaded ZIP.
+
+Reason:
+- the browser renders the SVG source locally to safe raster PNG/ICO outputs;
+- redistributing arbitrary uploaded SVG markup would preserve potentially active SVG content and would require a separate sanitization/security design;
+- maskable support therefore uses generated PNG files rather than copying raw SVG source.
+
+### Semantic coverage
+
+Primary:
+- favicon generator
+- favicon maker
+
+Secondary:
+- favicon generator from image
+- image to favicon generator
+- SVG favicon generator
+- favicon generator for website
+- PNG to favicon workflow
+- transparent favicon
+- favicon sizes
+- favicon.ico
+- Apple touch icon
+- PWA icon
+- maskable PWA icon
+- web app manifest
+- icon safe zone
+
+Entities/concepts:
+- ICO
+- PNG
+- SVG
+- Apple touch icon
+- Web App Manifest
+- `icons`
+- `purpose`
+- `any`
+- `maskable`
+- 192×192
+- 512×512
+- 80% safe zone
+- Googlebot
+- Googlebot-Image
+- favicon cache
+
+### Test added
+
+The Chromium smoke test now:
+- generates a text favicon with transparency enabled for ordinary icons;
+- sets a known background color;
+- verifies the generated manifest contains exactly two `purpose: "maskable"` entries;
+- verifies the maskable filenames and sizes;
+- verifies ordinary 192/512 entries remain `purpose: "any"`;
+- samples the top-left pixel of the maskable preview and confirms it is fully opaque with the selected background color;
+- confirms the ZIP remains downloadable.
+
+This tests the actual maskable distinction instead of checking only for a success message.
+
+### Primary/current references reviewed 2026-10-03
+
+- Google Search Central favicon guidance.
+- MDN Web App Manifest `icons` reference.
+- MDN PWA guide: Define your app icons / maskable safe-zone guidance.
+- Ubersuggest US keyword metrics and SERP analysis.
+
+### Page 2 acceptance status
+
+- Demand / difficulty: VERIFIED.
+- SERP intent: VERIFIED.
+- Canonical ownership: VERIFIED.
+- Product gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Browser regression coverage: COMPLETED.
+- Static/Build/Chromium CI: PENDING.
+- Production deployment: NOT STARTED.
