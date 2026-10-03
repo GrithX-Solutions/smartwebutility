@@ -576,6 +576,35 @@ const cases = [
     await p.locator('#inspectUlid').click();
     assert.equal(await p.locator('#ulidInspectError').isHidden(), false);
     assert.equal(await p.locator('#ulidError').isHidden(), true);
+
+    await p.locator('#clearUlid').click();
+    const rollbackStartMs = 1767225600123;
+    await p.evaluate(start => {
+      window.__ulidOriginalDateNow = Date.now;
+      const sequence = [start, start, start - 123];
+      let index = 0;
+      Date.now = () => sequence[Math.min(index++, sequence.length - 1)];
+    }, rollbackStartMs);
+
+    await p.locator('#ulidCount').fill('3');
+    await p.locator('#generateUlid').click();
+    const rollbackValues = (await p.locator('#ulidOutput').inputValue()).trim().split(/\r?\n/);
+    assert.equal(rollbackValues.length, 3);
+    assert.equal(new Set(rollbackValues).size, 3);
+    assert.deepEqual(rollbackValues, [...rollbackValues].sort());
+    assert.equal(new Set(rollbackValues.map(value => value.slice(0, 10))).size, 1);
+
+    const rollbackRows = p.locator('#ulidTable tbody tr');
+    assert.equal(await rollbackRows.count(), 3);
+    for (let index = 0; index < 3; index += 1) {
+      const text = await rollbackRows.nth(index).locator('td').nth(1).innerText();
+      assert.equal(Number(text.replace(/,/g, '')), rollbackStartMs);
+    }
+
+    await p.evaluate(() => {
+      Date.now = window.__ulidOriginalDateNow;
+      delete window.__ulidOriginalDateNow;
+    });
   }],
   ['random-port-generator', async p => {
     await p.locator('#portRangePreset').selectOption('dynamic');
