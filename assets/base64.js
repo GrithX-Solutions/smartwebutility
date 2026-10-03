@@ -9,7 +9,10 @@
   const error = document.getElementById('base64Error');
   const copyBtn = document.getElementById('copyBase64');
   const downloadBtn = document.getElementById('downloadBase64');
+  const fileInput = document.getElementById('base64File');
   const year = document.getElementById('year');
+  const MAX_FILE_BYTES = 5 * 1024 * 1024;
+  let selectedFile = null;
 
   if (year) year.textContent = new Date().getFullYear();
 
@@ -29,12 +32,16 @@
     error.textContent = '';
   };
 
-  const utf8ToBase64 = (str) => {
-    const bytes = new TextEncoder().encode(str);
+  const bytesToBase64 = (bytes) => {
     let binary = '';
-    for (const b of bytes) binary += String.fromCharCode(b);
+    const chunkSize = 0x8000;
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+      binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+    }
     return btoa(binary);
   };
+
+  const utf8ToBase64 = (str) => bytesToBase64(new TextEncoder().encode(str));
 
   const base64ToUtf8 = (b64) => {
     const binary = atob(b64);
@@ -53,8 +60,40 @@
   const validBase64 = (value) => /^[A-Za-z0-9+/]*={0,2}$/.test(value) && value.length % 4 === 0;
   const validBase64Url = (value) => /^[A-Za-z0-9_-]+={0,2}$/.test(value);
 
-  function run() {
+  async function encodeSelectedFile(file) {
     clearError();
+    if (!file) return;
+    if (file.size > MAX_FILE_BYTES) {
+      selectedFile = null;
+      if (fileInput) fileInput.value = '';
+      output.value = '';
+      showError('Please choose a file smaller than 5 MB.');
+      return;
+    }
+
+    try {
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      let encoded = bytesToBase64(bytes);
+      if (urlSafe.checked) encoded = toUrlSafe(encoded);
+      output.value = encoded;
+      input.value = '';
+      selectedFile = file;
+      setStatus('Encoded file · ' + file.name + ' · ' + bytes.length.toLocaleString() + ' bytes', 'success');
+    } catch (err) {
+      selectedFile = null;
+      output.value = '';
+      showError(err && err.message ? err.message : 'Could not read the selected file.');
+    }
+  }
+
+  async function run() {
+    clearError();
+
+    if (selectedFile && mode.value === 'encode') {
+      await encodeSelectedFile(selectedFile);
+      return;
+    }
+
     const source = input.value;
     if (!source) {
       output.value = '';
@@ -71,13 +110,13 @@
       } else {
         let candidate = source.trim().replace(/\s+/g, '');
         if (urlSafe.checked) {
-          if (!validBase64Url(candidate)) throw new Error('Input is not valid Base64 URL-safe text.');
+          if (!validBase64Url(candidate)) throw new Error('Input is not valid Base64URL text.');
           candidate = fromUrlSafe(candidate);
         } else {
           if (!validBase64(candidate)) throw new Error('Input is not valid Base64 text.');
         }
         output.value = base64ToUtf8(candidate);
-        setStatus(urlSafe.checked ? 'Decoded · URL-safe Base64' : 'Decoded · Base64', 'success');
+        setStatus(urlSafe.checked ? 'Decoded · Base64URL to UTF-8' : 'Decoded · Base64 to UTF-8', 'success');
       }
     } catch (err) {
       output.value = '';
@@ -86,7 +125,10 @@
   }
 
   document.getElementById('runBase64').addEventListener('click', run);
+
   document.getElementById('swapBase64').addEventListener('click', () => {
+    selectedFile = null;
+    if (fileInput) fileInput.value = '';
     const currentOut = output.value;
     if (currentOut) input.value = currentOut;
     mode.value = mode.value === 'encode' ? 'decode' : 'encode';
@@ -94,6 +136,8 @@
   });
 
   document.getElementById('clearBase64').addEventListener('click', () => {
+    selectedFile = null;
+    if (fileInput) fileInput.value = '';
     input.value = '';
     output.value = '';
     clearError();
@@ -102,12 +146,21 @@
   });
 
   document.getElementById('exampleBase64').addEventListener('click', () => {
+    selectedFile = null;
+    if (fileInput) fileInput.value = '';
     if (mode.value === 'encode') {
       input.value = 'Smart Web Utility ✓';
     } else {
-      input.value = urlSafe.checked ? 'U21hcnQgV2ViIFV0aWxpdHkg4pyT' : 'U21hcnQgV2ViIFV0aWxpdHkg4pyT';
+      input.value = 'U21hcnQgV2ViIFV0aWxpdHkg4pyT';
     }
     run();
+  });
+
+  fileInput?.addEventListener('change', async () => {
+    const file = fileInput.files && fileInput.files[0];
+    if (!file) return;
+    mode.value = 'encode';
+    await encodeSelectedFile(file);
   });
 
   copyBtn.addEventListener('click', async () => {
@@ -125,12 +178,11 @@
 
   downloadBtn.addEventListener('click', () => {
     if (!output.value) return;
-    const ext = mode.value === 'encode' ? 'txt' : 'txt';
     const blob = new Blob([output.value], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = mode.value === 'encode' ? 'base64-encoded.' + ext : 'base64-decoded.' + ext;
+    a.download = mode.value === 'encode' ? 'base64-encoded.txt' : 'base64-decoded.txt';
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -138,13 +190,24 @@
   });
 
   mode.addEventListener('change', () => {
+    selectedFile = null;
+    if (fileInput) fileInput.value = '';
     clearError();
     output.value = '';
-    setStatus(mode.value === 'encode' ? 'Encode mode' : 'Decode mode');
+    setStatus(mode.value === 'encode' ? 'Encode mode' : 'Decode UTF-8 text mode');
   });
 
   urlSafe.addEventListener('change', () => {
-    if (input.value) run();
+    if (selectedFile && mode.value === 'encode') {
+      encodeSelectedFile(selectedFile);
+    } else if (input.value) {
+      run();
+    }
+  });
+
+  input.addEventListener('input', () => {
+    selectedFile = null;
+    if (fileInput) fileInput.value = '';
   });
 
   input.addEventListener('keydown', (event) => {
