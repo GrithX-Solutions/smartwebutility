@@ -584,6 +584,42 @@ const cases = [
     const csv = await p.locator('#macOutput').inputValue();
     assert.match(csv, /^mac_address\n/);
     assert.equal(csv.trim().split(/\r?\n/).length, 26);
+
+    await p.locator('#macListFormat').selectOption('lines');
+    await p.locator('#macFormat').selectOption('colon');
+    await p.locator('#macUppercase').check();
+    await p.locator('#macCount').fill('10');
+
+    await p.locator('#macAdministration').selectOption('universal');
+    await p.locator('#macTransmission').selectOption('unicast');
+    await p.locator('#generateMac').click();
+    values = (await p.locator('#macOutput').inputValue()).trim().split(/\r?\n/);
+    values.forEach(value => {
+      const first = parseInt(value.slice(0,2), 16);
+      assert.equal(first & 1, 0);
+      assert.equal(first & 2, 0);
+    });
+
+    await p.locator('#macAdministration').selectOption('local');
+    await p.locator('#macTransmission').selectOption('multicast');
+    await p.locator('#generateMac').click();
+    values = (await p.locator('#macOutput').inputValue()).trim().split(/\r?\n/);
+    values.forEach(value => {
+      const first = parseInt(value.slice(0,2), 16);
+      assert.equal(first & 1, 1);
+      assert.equal(first & 2, 2);
+    });
+
+    await p.locator('#macAdministration').selectOption('universal');
+    await p.locator('#macTransmission').selectOption('multicast');
+    await p.locator('#generateMac').click();
+    values = (await p.locator('#macOutput').inputValue()).trim().split(/\r?\n/);
+    values.forEach(value => {
+      const first = parseInt(value.slice(0,2), 16);
+      assert.equal(first & 1, 1);
+      assert.equal(first & 2, 0);
+    });
+
     assert.equal(await p.locator('#macError').isHidden(), true);
   }],
   ['hash-generator', async p => {
