@@ -62,7 +62,7 @@ Research record:
 
 ### Page 5 — /csv-to-json/
 
-Status: IMPLEMENTED ON BRANCH; CI PENDING.
+Status: VERIFIED ON BRANCH.
 
 Research evidence:
 - `csv to json`: 2,400 US searches/month, SD 39, CPC $10.34.
