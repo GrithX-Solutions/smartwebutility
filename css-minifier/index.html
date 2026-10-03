@@ -43,9 +43,9 @@
 <h2>Minify CSS without uploading the stylesheet</h2>
 <p>This CSS minifier parses and compresses CSS directly in browser JavaScript. It removes redundant formatting, shortens compatible values and produces compact output suitable for build artifacts, static sites, test fixtures and other workflows where smaller stylesheet source is useful.</p>
 <div class="info-grid">
-<article><h3>Whitespace and formatting</h3><p>Indentation, line breaks and unnecessary spaces are removed where the parser can do so without changing the stylesheet grammar.</p></article>
-<article><h3>Shorter equivalent values</h3><p>Compatible values can be rewritten to shorter forms. For example, some colors, zero values and redundant syntax can be represented more compactly.</p></article>
-<article><h3>Structural optimization</h3><p>Optional restructuring can merge compatible rules and declarations for additional savings. It is disabled by default because changing stylesheet structure is more aggressive than basic compression.</p></article>
+<article><h3>Whitespace and formatting</h3><p>The parser removes indentation, line breaks and unnecessary spaces where it can do so without changing the stylesheet grammar.</p></article>
+<article><h3>Shorter equivalent values</h3><p>The minifier can rewrite compatible values to shorter forms. For example, it can represent some colors, zero values and redundant syntax more compactly.</p></article>
+<article><h3>Structural optimization</h3><p>Optional restructuring can merge compatible rules and declarations for additional savings. The tool disables it by default because changing stylesheet structure is more aggressive than basic compression.</p></article>
 <article><h3>Measure the result</h3><p>The tool reports input bytes, output bytes and percentage saved so you can evaluate real compression rather than assuming every stylesheet benefits equally.</p></article>
 </div>
 
@@ -56,13 +56,13 @@
 <p>This page compresses CSS that you provide. It does not inspect an entire website to determine which selectors are unused. Removing unused CSS requires analyzing the HTML, templates, runtime states, responsive breakpoints and JavaScript-driven classes that may appear only under specific conditions.</p>
 
 <h2>CSS compression and HTTP compression are different</h2>
-<p>Minification reduces source characters before transfer. Brotli or gzip compression reduces bytes during network delivery. They can be used together, but they solve different parts of the delivery process. A stylesheet may already compress well over HTTP, so actual transfer savings can be smaller than the raw source-size reduction shown here.</p>
+<p>Minification reduces source characters before transfer. Brotli or gzip compression reduces bytes during network delivery. You can use both together, but they solve different parts of the delivery process. A stylesheet may already compress well over HTTP, so actual transfer savings can be smaller than the raw source-size reduction shown here.</p>
 
 <h2>Custom properties, modern syntax and generated CSS</h2>
 <p>Modern CSS can include custom properties, container queries, nested syntax, advanced color functions and framework-generated selectors. Keep the original stylesheet in version control and test the minified output in the browsers you support, especially when your source uses newer or tool-specific syntax.</p>
 
 <h2>When CSS minification helps most</h2>
-<p>Minification is most useful as part of a repeatable production build where source CSS remains readable for development and a compact derivative is deployed. It is less useful to permanently replace human-readable source with minified code, because debugging and review become harder.</p>
+<p>Minification works best as part of a repeatable production build where developers keep readable source CSS and deploy a compact derivative. Permanently replacing human-readable source with minified code makes debugging and review harder.</p>
 
 <h2>Related developer tools</h2>
 <div class="related-tools"><a href="/html-minifier/">HTML Minifier<span>Compress HTML source with conservative defaults.</span></a><a href="/website-speed-test/">Website Speed Test<span>Measure page-performance signals separately from source size.</span></a><a href="/developer-tools/">Developer Tools<span>Browse data, encoding and debugging utilities.</span></a></div>
@@ -70,9 +70,9 @@
 
 <section class="section alt" data-quality-content="v1"><div class="wrap prose">
 <h2>Frequently asked questions</h2>
-<h3>Does CSS minification change styling?</h3><p>Basic compression is intended to preserve CSS behavior, but all production output should be tested, especially when structural optimization is enabled.</p>
+<h3>Does CSS minification change styling?</h3><p>Basic compression aims to preserve CSS behavior, but you should test all production output, especially when you enable structural optimization.</p>
 <h3>Does this remove unused selectors?</h3><p>No. It compresses the CSS provided; it does not crawl a site or determine whether selectors are unused.</p>
-<h3>Can I upload a CSS file?</h3><p>You can open a local <code>.css</code> file up to 5 MB. The file is processed in your browser.</p>
+<h3>Can I upload a CSS file?</h3><p>You can open a local <code>.css</code> file up to 5 MB. Browser JavaScript processes the file locally.</p>
 <h3>What does structural optimization do?</h3><p>It allows the minifier to restructure compatible rules and declarations to reduce source size further.</p>
 <h3>Is my CSS sent to the server?</h3><p>No. Minification runs locally in browser JavaScript.</p>
 </div></section>
