@@ -373,7 +373,7 @@ This tests the actual maskable distinction instead of checking only for a succes
 
 ## Page 2 — /chmod-calculator/
 
-Status: IMPLEMENTED, CI PENDING
+Status: VERIFIED ON BRANCH
 
 ### Primary intent
 
@@ -625,5 +625,10 @@ The Chromium test now verifies:
 - Product gap: VERIFIED.
 - Implementation: COMPLETED on working branch.
 - Browser regression coverage: COMPLETED.
-- Static/Build/Chromium CI: PENDING.
+- Build run 594: SUCCESS.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings on Password Generator and Text Tools.
+- Chromium run 278: SUCCESS.
+- ls -l parsing regression: PASS.
+- Sitemap-wide browser initialization: PASS.
 - Production deployment: NOT STARTED.
