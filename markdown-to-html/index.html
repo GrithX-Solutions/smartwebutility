@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Markdown to HTML Converter Online — Convert Markdown</title>
-<meta name="description" content="Convert Markdown to HTML online in your browser. Supports GFM tables, task lists and code blocks, with sandboxed preview, copy and download.">
+<meta name="description" content="Convert Markdown to HTML locally with GFM support, sanitized output by default, optional raw HTML, sandboxed preview, copy and download.">
 <link rel="canonical" href="https://smartwebutility.com/markdown-to-html/">
 <meta property="og:title" content="Markdown to HTML Converter Online — Convert Markdown">
-<meta property="og:description" content="Convert Markdown into HTML locally with GFM support and a sandboxed preview.">
+<meta property="og:description" content="Convert Markdown into HTML locally with GFM support, sanitized output by default and a sandboxed preview.">
 <meta property="og:url" content="https://smartwebutility.com/markdown-to-html/"><meta property="og:type" content="website">
 <meta name="twitter:card" content="summary"><meta name="theme-color" content="#071426">
 <link rel="icon" href="/favicon-sw-v5.svg?v=20261001e" type="image/svg+xml">
 <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Markdown to HTML Converter Online","url":"https://smartwebutility.com/markdown-to-html/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert Markdown to HTML locally in the browser with GitHub Flavored Markdown support.","featureList":["Markdown to HTML conversion","GitHub Flavored Markdown","Tables and task lists","Sandboxed HTML preview","Local Markdown file input","Copy and download HTML"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Markdown to HTML Converter Online","url":"https://smartwebutility.com/markdown-to-html/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert Markdown to HTML locally in the browser with GitHub Flavored Markdown support.","featureList":["Markdown to HTML conversion","GitHub Flavored Markdown","Tables and task lists","DOMPurify sanitization enabled by default","Optional raw HTML output","Sandboxed HTML preview","Local Markdown file input","Copy and download HTML"]}</script>
 </head>
 <body data-markdown-html-tool="markdown-to-html">
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
@@ -20,25 +20,26 @@
 <div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>Markdown to HTML</span></div>
 <span class="kicker">Developer tool · Markdown converter</span>
 <h1>Markdown to HTML Converter Online</h1>
-<p class="lead compact">Convert Markdown into clean HTML source in your browser. The parser supports common Markdown plus GitHub Flavored Markdown features such as tables, task lists, strikethrough and fenced code blocks.</p>
+<p class="lead compact">Convert Markdown into HTML source in your browser with GitHub Flavored Markdown support. Sanitization is enabled by default for copied/downloaded output, while an explicit raw mode preserves embedded HTML when your workflow needs it.</p>
 <div class="json-toolbar">
 <button class="btn primary" id="convertMarkdownHtml" type="button">Convert to HTML</button>
 <label class="file-btn">Open .md<input id="markdownFile" type="file" accept=".md,.markdown,text/markdown,text/plain" hidden></label>
 <label class="check-control"><input id="markdownBreaks" type="checkbox"> Treat single line breaks as <code>&lt;br&gt;</code></label>
+<label class="check-control"><input id="markdownSanitize" type="checkbox" checked> Sanitize generated HTML</label>
 <button class="text-btn" id="exampleMarkdownHtml" type="button">Example</button>
 <button class="text-btn" id="clearMarkdownHtml" type="button">Clear</button>
 </div>
 <div class="json-workspace">
 <section class="editor-panel"><div class="editor-head"><div><strong>Markdown input</strong><span>Paste Markdown or open a local file</span></div></div><textarea id="markdownInput" class="code-editor" spellcheck="false" aria-label="Markdown input"></textarea></section>
-<section class="editor-panel"><div class="editor-head"><div><strong>HTML output</strong><span id="markdownHtmlStatus" data-kind="neutral">Loading parser…</span></div><div class="editor-actions"><button id="copyMarkdownHtml" class="text-btn" type="button">Copy</button><button id="downloadMarkdownHtml" class="text-btn" type="button">Download</button></div></div><textarea id="markdownHtmlOutput" class="code-editor" readonly spellcheck="false" aria-label="HTML output"></textarea></section>
+<section class="editor-panel"><div class="editor-head"><div><strong>HTML output</strong><span id="markdownHtmlStatus" data-kind="neutral">Loading converter…</span></div><div class="editor-actions"><button id="copyMarkdownHtml" class="text-btn" type="button">Copy</button><button id="downloadMarkdownHtml" class="text-btn" type="button">Download</button></div></div><textarea id="markdownHtmlOutput" class="code-editor" readonly spellcheck="false" aria-label="HTML output"></textarea></section>
 </div>
 <div id="markdownHtmlError" class="error" hidden role="alert"></div>
 <div id="markdownHtmlStats" class="json-stats" hidden></div>
 <div class="editor-panel" style="margin-top:16px"><div class="editor-head"><div><strong>Sandboxed preview</strong><span>Scripts, forms and remote resources are blocked</span></div></div><iframe id="markdownHtmlPreview" title="Markdown HTML preview" sandbox="" style="width:100%;min-height:320px;border:0;background:white"></iframe></div>
-<div class="trustbar"><span>Browser-side conversion</span><span>No upload</span><span>Sandboxed preview</span><span>Local files up to 5 MB</span><span>Ctrl/⌘ + Enter to convert</span></div>
+<div class="trustbar"><span>Browser-side conversion</span><span>Sanitized output by default</span><span>Raw mode is explicit</span><span>Sandboxed preview</span><span>Local files up to 5 MB</span></div>
 </section>
 
-<section class="section wrap prose">
+<section class="section wrap prose" data-quality-content="v2">
 <h2>Convert Markdown to HTML in the browser</h2>
 <p>This converter turns Markdown source into HTML without sending the document to a Smart Web Utility API. It is useful for README content, documentation, static-site workflows, CMS migration, email templates, developer notes and any workflow where Markdown needs to become portable HTML markup.</p>
 <div class="info-grid">
@@ -48,8 +49,12 @@
 <article><h3>Local file workflow</h3><p>Open a local Markdown file up to 5 MB, copy the generated HTML source, or download the result as an HTML file.</p></article>
 </div>
 
-<h2>Preview security and raw HTML</h2>
-<p>Markdown can contain raw HTML. Generated HTML therefore must not be assumed safe merely because it came from Markdown. The on-page preview is isolated in a sandboxed iframe and uses a restrictive Content Security Policy that blocks scripts, forms and remote resources. If you plan to inject generated HTML into a trusted application, sanitize it according to that application's threat model before rendering user-controlled content.</p>
+<h2>Sanitized output is the default</h2>
+<p>Marked intentionally does not sanitize generated HTML. This page therefore passes the parsed result through DOMPurify by default before it reaches the output box, copy action, download action or preview. That removes dangerous markup and attributes according to DOMPurify's HTML profile while preserving ordinary Markdown-generated structure.</p>
+<p>Turn off “Sanitize generated HTML” only when you deliberately need Marked's raw output, including embedded HTML from the Markdown source. Raw mode is useful for trusted authoring workflows, but the copied/downloaded result can contain active markup and must not be treated as safe user-generated HTML.</p>
+
+<h2>The preview stays sandboxed in both output modes</h2>
+<p>The on-page preview uses an iframe with an empty <code>sandbox</code> attribute plus a restrictive Content Security Policy. Scripts, forms, network connections, frames, objects, fonts and remote media are blocked; preview links also have pointer interaction disabled. This preview isolation is defense in depth and does not turn raw downloaded HTML into safe production content.</p>
 
 <h2>Single line breaks versus paragraphs</h2>
 <p>Standard Markdown normally treats a single newline inside a paragraph as whitespace rather than an HTML line break. Enable the line-break option when you need single newlines converted to <code>&lt;br&gt;</code>. Leave it disabled for the more common paragraph-based Markdown behavior.</p>
@@ -57,22 +62,23 @@
 <h2>What conversion preserves — and what it does not</h2>
 <p>The output preserves document structure represented by Markdown syntax, but it does not recreate a complete webpage design. CSS, fonts, page layout, external assets and JavaScript behavior are separate concerns. A Markdown table becomes an HTML table structure, for example, but it will not automatically inherit the styling of GitHub or another publishing platform.</p>
 
-<h2>Markdown conversion is not sanitization</h2>
-<p>Parsing answers “what HTML represents this Markdown?” It does not answer “is this HTML safe to trust?” Those are different problems. Sanitization depends on where the output will be embedded, which HTML elements and attributes the application allows, and whether links or external resources are acceptable.</p>
+<h2>Sanitization still does not define your application's trust policy</h2>
+<p>Default sanitization is safer than returning raw parser output, but a production application can have stricter requirements for links, images, allowed attributes, URL schemes or embedded content. Treat the generated HTML as a conversion result, then apply the destination application's own validation and content policy before storing or rendering untrusted submissions.</p>
 
 <h2>Related developer tools</h2>
 <div class="related-tools"><a href="/html-to-markdown/">HTML to Markdown<span>Convert HTML content back into Markdown.</span></a><a href="/html-entity-encoder-decoder/">HTML Entity Encoder / Decoder<span>Encode markup characters as HTML entities.</span></a><a href="/json-escape-unescape/">JSON Escape / Unescape<span>Escape text for JSON string values.</span></a></div>
 </section>
 
-<section class="section alt" data-quality-content="v1"><div class="wrap prose">
+<section class="section alt" data-quality-content="v2"><div class="wrap prose">
 <h2>Frequently asked questions</h2>
 <h3>Does it support Markdown tables?</h3><p>Yes. The selected parser supports GitHub Flavored Markdown tables.</p>
 <h3>Can it convert a Markdown file?</h3><p>Yes. Open a local <code>.md</code> or <code>.markdown</code> file up to 5 MB.</p>
-<h3>Is the generated HTML sanitized?</h3><p>No. The preview is isolated for safety, but generated source should be sanitized before rendering untrusted content in a production application.</p>
+<h3>Is the generated HTML sanitized?</h3><p>Yes, by default. The converter sanitizes Marked's HTML with DOMPurify before copy, download and preview. You can explicitly disable sanitization to obtain raw parser output for a trusted workflow.</p>
+<h3>Can raw Markdown HTML execute inside the preview?</h3><p>The preview remains inside a sandboxed iframe with a restrictive Content Security Policy even when raw-output mode is selected. Raw copied or downloaded HTML is separate and can still contain active markup.</p>
 <h3>Does it add CSS?</h3><p>No. The converter generates HTML structure, not a site-specific design system.</p>
 <h3>Is my Markdown uploaded?</h3><p>No. Conversion runs in browser JavaScript on this page.</p>
 </div></section>
 </main>
 <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
-<script type="module" src="/assets/markdown-html-tools.mjs?v=20261002-1"></script>
+<script type="module" src="/assets/markdown-html-tools.mjs?v=20261003-2"></script>
 </body></html>
