@@ -62,7 +62,7 @@ Research record:
 
 ### Page 5 — /html-to-markdown/
 
-Status: IMPLEMENTED ON BRANCH; CI PENDING.
+Status: VERIFIED ON BRANCH.
 
 Research evidence:
 - `html to markdown`: 1,600 US searches/month, SD 32, CPC $21.11.
