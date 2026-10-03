@@ -60,31 +60,28 @@ Research record:
 
 ## Current page
 
-### Page 5 — /csv-to-json/
+### Page 6 — /ulid-generator/
 
-Status: VERIFIED ON BRANCH.
+Status: IMPLEMENTED ON BRANCH; CI PENDING.
 
 Research evidence:
-- `csv to json`: 2,400 US searches/month, SD 39, CPC $10.34.
-- `csv to json format`: 3,600, SD 34, CPC $11.33.
-- `csv to json conversion`: 1,900, SD 31.
-- `online csv to json converter`: 480, SD 26.
-- Current SERP contains multiple mid/low-authority utilities, including Tooloogle DA 14 and AgentsForData DA 11.
+- `ulid generator`: 210 US searches/month, SD 17, transactional.
+- Current US SERP contains several DA 1–6 utility domains.
 - Smart Web Utility currently has no Ubersuggest US ranking-keyword data for this page.
 
 Confirmed gap:
-- parser/header/delimiter/type handling was already strong;
-- output was fixed to a 2-space JSON array;
-- current competitor workflows frequently offer compact JSON and JSON Lines/NDJSON.
+- existing generator already covered monotonic bulk generation, custom timestamps and generated-value timestamp decoding;
+- it could not validate/decode an arbitrary existing ULID.
 
 Implemented:
-- 2-space pretty JSON;
-- 4-space pretty JSON;
-- compact JSON;
-- JSON Lines/NDJSON with .jsonl download;
-- visible output-format guidance;
-- updated schema/search aliases/sitemap lastmod;
-- Chromium coverage for all new output modes plus existing parser behavior.
+- arbitrary 26-character ULID validation;
+- case-insensitive input with uppercase normalization;
+- 48-bit timestamp decode to milliseconds and UTC;
+- 80-bit randomness display in Base32 and hex;
+- overflow/alphabet rejection;
+- inspector UI and “Use first generated” workflow;
+- updated semantic/schema/search metadata and sitemap lastmod;
+- Chromium coverage for valid/lowercase/invalid inspection cases.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
