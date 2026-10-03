@@ -4,26 +4,26 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Base64 Encoder & Decoder — Encode & Decode Online</title>
-  <meta name="description" content="Encode text to Base64 or decode Base64 back to readable text in your browser. Fast, private and free with no signup.">
+  <meta name="description" content="Encode UTF-8 text or local files to Base64 and decode Base64 to UTF-8 text. Supports Base64URL, Unicode, copy/download and browser-side processing.">
   <link rel="canonical" href="https://smartwebutility.com/base64-encoder-decoder/">
   <meta property="og:title" content="Base64 Encoder & Decoder — Encode & Decode Online">
-  <meta property="og:description" content="Encode text to Base64 or decode Base64 back to readable text in your browser. Fast, private and free with no signup.">
+  <meta property="og:description" content="Encode UTF-8 text or local files to Base64 and decode Base64 or Base64URL to UTF-8 text in your browser.">
   <meta property="og:url" content="https://smartwebutility.com/base64-encoder-decoder/">
-  <meta property="og:type" content="website"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Base64 Encoder & Decoder — Encode & Decode Online"><meta name="twitter:description" content="Encode text to Base64 or decode Base64 back to readable text in your browser. Fast, private and free with no signup.">
+  <meta property="og:type" content="website"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Base64 Encoder & Decoder — Encode & Decode Online"><meta name="twitter:description" content="Encode UTF-8 text or local files to Base64 and decode Base64 or Base64URL to UTF-8 text in your browser.">
   <meta name="theme-color" content="#07101b">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Base64 Encoder & Decoder","url":"https://smartwebutility.com/base64-encoder-decoder/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Encode Base64","Decode Base64","UTF-8 support","URL-safe Base64"]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Base64 Encoder & Decoder","url":"https://smartwebutility.com/base64-encoder-decoder/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Encode UTF-8 text or local files to Base64 and decode Base64 or Base64URL to UTF-8 text in your browser.","featureList":["Base64 text encoding","Base64 text decoding","Local file to Base64 encoding","UTF-8 Unicode support","Base64URL support","Copy and download"]}</script>
 </head>
 <body>
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
 
 <main>
   <section class="tool-hero wrap json-tool-hero">
-    <div class="crumb"><a href="/">Home</a><span>/</span><span>Base64 Encoder & Decoder</span></div>
-    <span class="kicker">Developer tool · runs locally</span>
+    <div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>Base64 Encoder & Decoder</span></div>
+    <span class="kicker">Developer tool · browser-side Base64</span>
     <h1>Base64 Encoder & Decoder</h1>
-    <p class="lead compact">Encode text to Base64 or decode Base64 back to UTF-8 text. Everything runs locally in your browser.</p>
+    <p class="lead compact">Encode UTF-8 text or a local file to Base64, or decode Base64/Base64URL back to UTF-8 text. The conversion runs in your browser.</p>
 
     <div class="json-toolbar" aria-label="Base64 options">
       <label class="file-btn">Mode
@@ -32,7 +32,8 @@
           <option value="decode">Decode</option>
         </select>
       </label>
-      <label class="file-btn"><input id="urlSafe" type="checkbox"> URL-safe Base64</label>
+      <label class="file-btn"><input id="urlSafe" type="checkbox"> Base64URL</label>
+      <label class="file-btn">Encode file<input id="base64File" type="file" hidden></label>
       <button class="btn primary" id="runBase64" type="button">Process</button>
       <button class="btn ghost" id="swapBase64" type="button">Swap & Reverse</button>
       <button class="text-btn" id="exampleBase64" type="button">Example</button>
@@ -41,8 +42,8 @@
 
     <div class="json-workspace">
       <section class="editor-panel">
-        <div class="editor-head"><div><strong>Input</strong><span>Text or Base64</span></div></div>
-        <textarea id="base64Input" class="code-editor" spellcheck="false" autocapitalize="none" autocomplete="off" placeholder="Enter text or Base64 here" aria-label="Base64 input"></textarea>
+        <div class="editor-head"><div><strong>Input</strong><span>UTF-8 text or Base64</span></div></div>
+        <textarea id="base64Input" class="code-editor" spellcheck="false" autocapitalize="none" autocomplete="off" placeholder="Enter UTF-8 text or Base64 here" aria-label="Base64 input"></textarea>
       </section>
 
       <section class="editor-panel">
@@ -52,46 +53,63 @@
     </div>
 
     <div id="base64Error" class="error" hidden role="alert"></div>
-    <div class="trustbar"><span>Browser-side processing</span><span>UTF-8 support</span><span>URL-safe mode</span></div>
+    <div class="trustbar"><span>Browser-side processing</span><span>UTF-8 support</span><span>Base64URL mode</span><span>Local file encoding up to 5 MB</span></div>
   </section>
 
-  <section class="section wrap prose">
-    <h2>Encode Base64 online</h2>
-    <p>Use Encode mode to convert regular UTF-8 text into Base64. This is useful when working with APIs, authorization headers, data payloads, configuration values and other systems that represent binary or text data using Base64.</p>
-
-    <h2>Decode Base64 online</h2>
-    <p>Use Decode mode to convert valid Base64 back to readable UTF-8 text. Invalid Base64 input is rejected instead of silently producing corrupted output.</p>
+  <section class="section wrap prose" data-quality-content="v2">
+    <h2>Encode and decode Base64 online</h2>
+    <p>Use Encode mode for text that needs a Base64 representation and Decode mode for Base64 that should become readable UTF-8 text. The tool supports standard Base64 and the URL- and filename-safe alphabet commonly called Base64URL. It also accepts a local file in Encode mode and converts the file bytes to Base64 without uploading the file to Smart Web Utility.</p>
 
     <div class="info-grid">
-      <article><h3>UTF-8 aware</h3><p>Handles Unicode characters correctly, including non-Latin text and emoji.</p></article>
-      <article><h3>URL-safe Base64</h3><p>Supports the URL-safe alphabet that uses <code>-</code> and <code>_</code> and commonly omits padding.</p></article>
-      <article><h3>Private by design</h3><p>Your input is processed in JavaScript and is not submitted to a Smart Web Utility API.</p></article>
-      <article><h3>Fast workflow</h3><p>Copy, download, swap direction and process with Ctrl/⌘ + Enter.</p></article>
+      <article><h3>UTF-8 text</h3><p>The text encoder converts Unicode characters to UTF-8 bytes before Base64 encoding, so accented text, emoji and non-Latin scripts can round-trip correctly.</p></article>
+      <article><h3>Local file encoding</h3><p>Choose a file up to 5 MB to encode its raw bytes. The browser reads the file locally and writes the Base64 result to the output panel.</p></article>
+      <article><h3>Base64URL</h3><p>Base64URL uses <code>-</code> and <code>_</code> instead of <code>+</code> and <code>/</code>. This tool removes trailing padding when it produces Base64URL output.</p></article>
+      <article><h3>Copy and download</h3><p>Copy the result, swap text output back into the input, or download the displayed output as a text file.</p></article>
     </div>
 
-    <h2>Base64 vs Base64URL</h2>
-    <p>Standard Base64 uses the characters <code>+</code> and <code>/</code> in its alphabet and commonly uses <code>=</code> padding. Base64URL uses URL-friendly substitutions such as <code>-</code> and <code>_</code>, and padding is often omitted. This tool supports both normal Base64 and the URL-safe form so you can work with API payloads, tokens and web-safe encoded values.</p>
+    <h2>Base64 and Base64URL are not the same encoding alphabet</h2>
+    <p><a href="https://www.rfc-editor.org/rfc/rfc4648.html">RFC 4648</a> defines standard Base64 and a URL- and filename-safe variant. Standard Base64 uses <code>+</code> and <code>/</code> for two alphabet positions and normally uses <code>=</code> padding. Base64URL replaces those two characters with <code>-</code> and <code>_</code>; protocols that know the data length can omit padding. Choose the variant required by the system you are integrating with instead of treating them as interchangeable.</p>
 
-    <h2>UTF-8 text, Unicode and Base64</h2>
-    <p>Base64 represents bytes, not human-readable characters. When you encode text, the text must first be represented as bytes. This tool uses UTF-8-aware handling so non-Latin scripts and emoji can be converted without relying on ASCII-only browser behavior.</p>
+    <h2>Encode a file to Base64 without reading it as text</h2>
+    <p>The file encoder reads raw bytes rather than interpreting the file as UTF-8. That makes it suitable for binary input such as a small image, certificate, archive fragment or test fixture when you need its Base64 representation. The current file workflow caps input at 5 MB to avoid tying up browser memory. The output is Base64 text; this tool does not create a data URI or guess a MIME type.</p>
 
-    <h2>Base64 padding and invalid input</h2>
-    <p>The trailing <code>=</code> characters sometimes seen in Base64 are padding used to complete the encoded block shape. Some URL-safe formats omit that padding. During decoding, malformed input should be treated as an error rather than silently accepted as trustworthy data.</p>
+    <h2>The decoder returns UTF-8 text, not arbitrary binary files</h2>
+    <p>Decode mode validates the Base64 alphabet, restores Base64URL padding when needed, decodes the bytes and then requires those bytes to form valid UTF-8. If the decoded bytes represent an image, archive, executable or another binary format, this text decoder reports an error instead of displaying corrupted characters. That boundary is intentional: use a binary-aware workflow when you need to reconstruct an arbitrary file.</p>
+
+    <h2>Whitespace, padding and invalid Base64 input</h2>
+    <p>The decoder ignores whitespace in pasted Base64 text before validation. Standard Base64 input must then use the standard alphabet with valid trailing padding and a length compatible with four-character encoding groups. Base64URL mode accepts the URL-safe alphabet and restores omitted padding before decoding. A successful decode proves that the text can be decoded as UTF-8; it does not prove that the decoded value is trustworthy or safe.</p>
+
+    <h2>Common Base64 workflows</h2>
+    <div class="info-grid">
+      <article><h3>API debugging</h3><p>Inspect Base64 values from JSON payloads, logs or test fixtures and verify that text round-trips as expected.</p></article>
+      <article><h3>JWT-related data</h3><p>Work with Base64URL text used by token formats. For JWT claims, the <a href="/jwt-decoder/">JWT Decoder</a> also parses header and payload JSON.</p></article>
+      <article><h3>Small file encoding</h3><p>Create a Base64 representation of local binary test data without sending the file to a server.</p></article>
+      <article><h3>Interoperability checks</h3><p>Compare standard Base64 with Base64URL output when an API, filename or URL context requires a specific alphabet.</p></article>
+    </div>
 
     <h2>Base64 is encoding, not encryption</h2>
-    <p>Anyone who has the encoded value can decode it. Do not use Base64 to protect passwords, API keys or confidential data. Its purpose is representation and transport compatibility, not secrecy or authentication.</p>
+    <p>Anyone who receives a Base64 value can normally decode it. Do not use Base64 to protect passwords, API keys or confidential data. Encoding changes representation; it does not provide secrecy, authentication or integrity protection.</p>
 
-    <h2>Related tools</h2>
+    <h2>Related developer tools</h2>
     <div class="related-tools">
-      <a href="/json-formatter/">JSON Formatter<span>Format, validate and minify JSON.</span></a>
-      <a href="/jwt-decoder/">JWT Decoder<span>Inspect JWT header and payload values that commonly use Base64URL encoding.</span></a>
-      <a href="/url-encoder-decoder/">URL Encoder / Decoder<span>Work with percent-encoded URL components.</span></a>
-      <a href="/dns-checker/">DNS Checker<span>Lookup common DNS records.</span></a>
+      <a href="/jwt-decoder/">JWT Decoder<span>Decode JWT header and payload values that use Base64URL.</span></a>
+      <a href="/url-encoder-decoder/">URL Encoder / Decoder<span>Percent-encode URL components instead of using Base64.</span></a>
+      <a href="/hash-generator/">Hash Generator<span>Calculate SHA digests for text or local files.</span></a>
+      <a href="/json-formatter/">JSON Formatter<span>Format and validate decoded JSON text.</span></a>
     </div>
   </section>
+
+  <section class="section alt" data-quality-content="v2"><div class="wrap prose">
+    <h2>Frequently asked questions</h2>
+    <h3>Can this Base64 encoder handle files?</h3><p>Yes. Encode mode accepts a local file up to 5 MB and converts its raw bytes to Base64 in your browser.</p>
+    <h3>Can it decode Base64 into an image or other binary file?</h3><p>No. Decode mode intentionally returns valid UTF-8 text only. It rejects decoded bytes that are not valid UTF-8.</p>
+    <h3>Does Base64URL always remove padding?</h3><p>This tool removes padding when it creates Base64URL output. Other protocols may require different padding rules, so follow the specification for the system you are using.</p>
+    <h3>Is Base64 encryption?</h3><p>No. Base64 is a reversible binary-to-text encoding and does not provide confidentiality.</p>
+    <h3>Does Smart Web Utility upload my text or file?</h3><p>No. Base64 processing runs in browser JavaScript.</p>
+  </div></section>
 </main>
 
-<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/">All tools</a><a href="/sitemap.xml">Sitemap</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></div></footer>
-<script src="/assets/base64.js" defer></script>
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script src="/assets/base64.js?v=20261003-2" defer></script>
 </body>
 </html>
