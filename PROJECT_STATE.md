@@ -62,7 +62,7 @@ Research record:
 
 ### Page 3 — /mac-address-generator/
 
-Status: IMPLEMENTED ON BRANCH; CI PENDING.
+Status: VERIFIED ON BRANCH.
 
 Research evidence:
 - `mac address generator`: 1,900 US searches/month, SD 29.
