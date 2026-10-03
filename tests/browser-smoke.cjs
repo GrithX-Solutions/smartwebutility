@@ -497,7 +497,12 @@ const cases = [
 
     await p.locator('#chmodTarget').fill('/srv/app');
     await p.locator('#chmodRecursive').check();
-    assert.match(await p.locator('#chmodCommand').innerText(), /chmod -R 1777 \/srv\/app/);
+    assert.equal((await p.locator('#chmodCommand').innerText()).trim(), 'chmod -R 1777 /srv/app');
+    assert.equal((await p.locator('#chmodSymbolicCommand').innerText()).trim(), 'chmod -R u=rwx,g=rwx,o=rwxt /srv/app');
+
+    await p.locator('#chmodSymbolic').fill('-rwSr-xr-x');
+    assert.equal(await p.locator('#chmodOctal').inputValue(), '4655');
+    assert.equal((await p.locator('#chmodSymbolicCommand').innerText()).trim(), 'chmod -R u=rws,g=rx,o=rx /srv/app');
 
     await p.locator('#umaskValue').fill('027');
     assert.equal(await p.locator('#umaskFileResult').innerText(), '640');
