@@ -1,6 +1,6 @@
 # Smart Web Utility — Project State
 
-Last verified: 2026-10-03 09:56 UTC (14:56 PKT)
+Last verified: 2026-10-03 10:08 UTC (15:08 PKT)
 
 ## Objective
 
@@ -8,11 +8,14 @@ Complete the full-site content-quality re-audit and make the seven editorial req
 
 ## Source / deployment state
 
-- Release-candidate source SHA: `a6212dfbc5a0f1ec15e11ba85e169fd6494698a5`
-- PR #43: MERGED into `main` on 2026-10-03.
-- Verified PR head: `7810e3b9936ec71726272d059f698184daf0ec91`
-- Production SHA: UNKNOWN; the active production tree was verified not to contain `CONTENT_QUALITY_STANDARD.md`, so this release is not live yet.
-- Production host: VERIFIED healthy before deployment; Smart Web Utility Docker project has four running services.
+- Current GitHub `main` before this state-only update: `5d780ecf6e891c18d0a39ab4a19a4e70f84b3a27`
+- Production source/artifact SHA: `5d780ecf6e891c18d0a39ab4a19a4e70f84b3a27`
+- Production artifact ID: `11270468152`
+- Production artifact SHA-256: `8ba3dac532453e985c72afe0f632d1d863cbdd2ac01107f21cb67ae09320b0b7`
+- Production release directory: `/srv/smartwebutility/releases/5d780ec-content-quality`
+- Active site: VERIFIED deployed from the artifact above.
+- Rollback tree: `/srv/smartwebutility/site.prev`
+- Production host/runtime: VERIFIED healthy after deployment.
 
 ## Last completed work
 
@@ -26,50 +29,60 @@ VERIFIED:
 - Strengthened the compact priority pages listed in the audit.
 - Corrected the content-QA parser so inline `<code>` literals are excluded from prose punctuation checks.
 - Added `AGENTS.md`, `DECISIONS.md`, and this state file for durable continuity.
-- Merged PR #43 using the exact green PR head as the merge guard.
+- Merged PR #43 and deployed the fully verified current-main artifact through the guarded production release path.
+- Submitted exactly nine materially changed canonical URLs to IndexNow after successful live verification.
 
 ## Tests / evidence
 
 VERIFIED:
 - PR-head Build run 559: SUCCESS.
 - PR-head Chromium run 243: SUCCESS.
-- Post-merge Build run 560 on `a6212dfbc5a0f1ec15e11ba85e169fd6494698a5`: SUCCESS.
-- Post-merge Chromium run 244 on the same SHA: SUCCESS.
+- Post-merge Build run 560: SUCCESS.
+- Post-merge Chromium run 244: SUCCESS.
+- Current-main Build run 561 on `5d780ecf6e891c18d0a39ab4a19a4e70f84b3a27`: SUCCESS.
+- Current-main Chromium run 245 on the same SHA: SUCCESS.
 - Static SEO QA: 89 HTML pages, 0 errors, 0 warnings.
 - Content QA: 89 HTML pages, 0 errors, 20 advisory warnings.
-- Post-merge deployment artifact ID: `11270472621`.
-- Verified artifact SHA-256: `b4b6ea57e0f1e79bc612fdd67f98c5a903054867cf30d1165e78def155f15846`.
-- Artifact digest was independently recomputed after download and matched GitHub.
-- Production host preflight: server health reports no issues; Smart Web Utility containers are running.
-- Current Google Search Central people-first guidance and Google Publisher Policies were rechecked on 2026-10-03; the hard rule remains aligned with original/useful publisher content and user-first quality principles.
+- Artifact SHA-256 independently recomputed before upload and again on the production host; both matched GitHub.
+- ZIP integrity check: no compressed-data errors.
+- Guarded deploy script completed with exit code 0.
+- Production API routing and JSON smoke checks passed during deployment.
+- Public canonical HTTPS verification from the host: homepage, XML to CSV, YAML Formatter, Unix Timestamp Converter and Robots.txt Generator all returned HTTP 200 with HTML content.
+- Release-specific XML-to-CSV and YAML content markers were present through the canonical public domain.
+- Versioned global theme asset references were present on all sampled public pages.
+- Post-deploy Docker runtime health: 22/22 containers running, 0 stopped, 0 unhealthy, 0 unstable.
+- IndexNow accepted 9 materially changed canonical URLs: HTTP 200.
 
 PARTIALLY VERIFIED:
+- The independent web-fetch service used in chat could not access `smartwebutility.com` from its network, so that specific external verification path is BLOCKED. Canonical-domain HTTPS checks from the production host succeeded.
 - Passive-voice warnings were manually sampled and are frequently technically justified constructions; they remain review signals rather than hard failures.
 - Compact-page warnings remain review signals. Some current competitors expose broader functionality, so full sitewide competitive superiority must not be claimed from automation alone.
 
 ## Deployment / indexing
 
 - PR #43 merge: VERIFIED.
-- Post-merge CI: VERIFIED green.
-- Artifact integrity: VERIFIED.
-- Production activation: BLOCKED at the host's explicit approval gate before staging the artifact.
-- No production files from this release have been activated.
-- Indexing submission for these content changes remains blocked until successful production deployment and live verification.
+- Production deployment: VERIFIED.
+- Rollback preservation: VERIFIED at `/srv/smartwebutility/site.prev`.
+- Live API smoke checks: VERIFIED.
+- Live sampled page checks: VERIFIED.
+- IndexNow submission: VERIFIED for 9 changed canonical URLs.
+- Google Search Console indexing status after this release: UNKNOWN; no claim of indexing or ranking gain is made.
 
 ## Blockers
 
-- Explicit approval is required by the host control plane before the verified artifact can be written to the release staging directory and deployed.
+- No deployment blocker remains.
+- Independent chat web-fetch access to the domain remains BLOCKED by that fetch environment; this does not match the successful canonical-domain HTTPS checks from the production host.
 
 ## Risks
 
 - Regex-based prose heuristics can produce false positives around technical tokens; code literals remain excluded from ordinary prose punctuation checks.
 - “Better than competitors” cannot be proven by automation; material rewrites require recorded live-SERP/editorial evidence.
-- Some compact pages have competitors with broader functionality. Do not claim full competitive superiority until page-specific review confirms a real value advantage.
-- Production release retention currently contains many historical release directories; do not delete them during this deployment without a separate verified retention cleanup plan.
+- 20 content-QA warnings remain as manual review signals, including passive-voice heuristics and compact search-facing pages.
+- Production release storage contains many historical releases; do not delete them without a separate verified retention-cleanup task.
 
 ## Work in progress
 
-GitHub implementation and merge are complete. Production activation is waiting at the explicit host approval boundary.
+The content-quality governance/release work is complete and live. The remaining content audit should now focus on the advisory warning queue and page-specific live-SERP/competitor evidence rather than arbitrary expansion.
 
 ## Affected files
 
@@ -85,6 +98,17 @@ See merged PR #43. Core governance/release files:
 - `scripts/content-quality-qa.py`
 - `deploy/deploy-site.sh`
 
+Materially rewritten/index-submitted pages:
+- `/case-converter/`
+- `/character-counter/`
+- `/lorem-ipsum-generator/`
+- `/open-graph-preview/`
+- `/robots-txt-generator/`
+- `/slug-generator/`
+- `/unix-timestamp-converter/`
+- `/xml-to-csv/`
+- `/yaml-formatter/`
+
 ## NEXT ACTION
 
-After explicit production approval, stage artifact `11270472621`, verify SHA-256 `b4b6ea57e0f1e79bc612fdd67f98c5a903054867cf30d1165e78def155f15846` on the host, unpack it into a versioned release, execute the guarded deployment script, then perform API/browser/live verification before any indexing action.
+Continue the manual full-site content re-audit from the 20 advisory content-QA warnings, prioritizing compact search-facing pages and confirmed avoidable passive-voice sections; for each material rewrite, validate current US SERP intent, Ubersuggest demand/competition where available, semantic coverage, competitor gaps, functionality, and cannibalization before changing content.
