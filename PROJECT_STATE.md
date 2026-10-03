@@ -60,59 +60,32 @@ Research record:
 
 ## Current page
 
-### Page 2 — /chmod-calculator/
+### Page 3 — /mac-address-generator/
 
-Status: VERIFIED ON BRANCH.
+Status: IMPLEMENTED ON BRANCH; CI PENDING.
 
 Research evidence:
-- `chmod calculator`: 1,900 US searches/month, SD 27, CPC $10.41.
-- Current Ubersuggest SERP includes multiple low-to-mid-authority utility domains.
+- `mac address generator`: 1,900 US searches/month, SD 29.
+- `random mac address generator`: 390, SD 22.
+- `mac address generator unicast`: 210, SD 22.
+- Current Ubersuggest SERP includes multiple low-authority utility domains, including IT-Tools at DA 1.
 - Smart Web Utility currently has no Ubersuggest US ranking-keyword data for this page.
 
 Confirmed gap:
-- existing parser supported 9-character symbolic permissions and special `s/S/t/T` notation;
-- it rejected the normal 10-character permission field copied from `ls -l`.
+- existing generator hard-coded locally administered + unicast;
+- current SERPs repeatedly expose explicit U/L and I/G controls;
+- test workflows may need multicast or the universal bit cleared.
 
 Implemented:
-- accept standard leading `ls -l` file-type characters;
-- parse `-rwsr-xr-x` and `drwxrwxrwt` correctly;
-- normalize output to the 9 chmod permission characters;
-- update visible semantic guidance, WebApplication features, tool-search aliases and sitemap lastmod;
-- add Chromium regression coverage.
+- local vs universal-style U/L control;
+- unicast vs multicast I/G control;
+- local + unicast remains the default;
+- explicit warning that a random universal-style prefix is not an IEEE-assigned vendor OUI;
+- updated visible semantic guidance, WebApplication/FAQ metadata, tool-search aliases and sitemap lastmod;
+- Chromium coverage for all four U/L + I/G combinations.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
-
-## Current page
-
-### Page 3 — /chmod-calculator/
-
-Status: VERIFIED GREEN ON BRANCH.
-
-Research evidence:
-- `chmod calculator`: 1,900 US searches/month, SD 27, CPC $10.41.
-- `linux permissions calculator`: 390, SD 15, CPC $10.02.
-- current SERP includes multiple low/mid-authority utility domains.
-
-Existing strengths:
-- octal/rwx/ls -l conversion;
-- special bits;
-- presets;
-- umask;
-- numeric command generation.
-
-Confirmed gap:
-- ranking competitor coverage includes symbolic chmod command generation;
-- the page calculated symbolic bits but did not generate an actual symbolic chmod assignment.
-
-Implemented:
-- exact `u=...,g=...,o=...` symbolic assignment command;
-- special `s`/`t` bits carried into the correct class;
-- separate Copy Octal / Copy Symbolic controls;
-- clearer distinction between ls-style display strings and chmod symbolic syntax;
-- stronger recursive-mode warning;
-- exact `linux permissions calculator` search alias;
-- regression checks for 1777/sticky and 4655/setuid-without-execute.
 
 ## Tests / evidence
 
