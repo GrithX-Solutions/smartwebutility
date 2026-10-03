@@ -632,3 +632,134 @@ The Chromium test now verifies:
 - ls -l parsing regression: PASS.
 - Sitemap-wide browser initialization: PASS.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 3 — /mac-address-generator/
+
+Status: IMPLEMENTED, CI PENDING
+
+### Primary intent
+
+Generate random MAC-48 addresses for testing, labs, virtualization and fixture workflows.
+
+Canonical owner:
+- `https://smartwebutility.com/mac-address-generator/`
+
+### Ubersuggest US evidence
+
+Primary:
+- `mac address generator`: 1,900 searches/month, SD 29.
+
+Relevant variants:
+- `random mac address generator`: 390, SD 22.
+- `mac address generator unicast`: 210, SD 22.
+- `alternate mac address generator`: 170, SD 29.
+- `mac address generator online`: 40, SD 25.
+- `unicast mac address generator`: 30, SD 26.
+
+Ubersuggest currently reports no US ranking-keyword data for Smart Web Utility's MAC generator. Ranking gains remain UNKNOWN.
+
+### SERP / competitor evidence
+
+Ubersuggest's US SERP snapshot includes:
+- DNSChecker — DA 50
+- MiniWebtool — DA 56
+- hellion.org.uk — DA 32
+- IT-Tools — DA 1
+- macaddress.io — DA 28
+- MAC Address Lookup — DA 24
+- UpVPN — DA 19
+- UtilityCove — DA 6
+- additional low-authority utility sites below the top ten.
+
+Current web review on 2026-10-03 repeatedly showed:
+- explicit unicast/multicast controls;
+- explicit locally/universally administered controls;
+- cryptographic browser-local generation;
+- bulk output and multiple display formats;
+- some competitors also offer vendor/OUI prefixes.
+
+The Smart Web Utility page already had strong bulk/format/export behavior, so the batch does not add vendor lookup or pretend that random prefixes belong to IEEE assignees.
+
+### Current Smart Web Utility strengths before this change
+
+Already present:
+- browser-local Web Crypto generation;
+- locally administered bit set;
+- unicast bit cleared;
+- bulk generation up to 1,000 unique values per batch;
+- colon, hyphen, Cisco dotted and compact formats;
+- uppercase/lowercase;
+- line, comma, JSON and CSV output;
+- sorting;
+- copy/download;
+- clear collision/privacy/vendor caveats.
+
+### Confirmed gap
+
+The generator hard-coded one valid mode: locally administered + unicast.
+
+Current search demand and SERP behavior show a real testing sub-intent for explicit address-bit control, especially unicast/multicast and local/universal administration. A parser, protocol test, multicast fixture or network lab may need one of the other flag combinations.
+
+IEEE documentation identifies:
+- the least-significant bit of the first octet as the Individual/Group (I/G) bit;
+- the next bit as the Universally/Locally administered (U/L) bit.
+
+Clearing U/L on a random prefix does not assign an IEEE OUI. The page therefore labels that mode “Universal-style test value” instead of claiming a real globally assigned vendor address.
+
+### Implementation
+
+`assets/mac-address-generator.js` now:
+- exposes U/L bit selection:
+  - Local -> bit 1 set;
+  - Universal-style -> bit 1 cleared.
+- exposes I/G bit selection:
+  - Unicast -> bit 0 cleared;
+  - Multicast -> bit 0 set.
+- preserves Web Crypto randomness for the remaining 46 bits;
+- keeps local + unicast as the default;
+- reports selected administration/transmission state in output stats;
+- requires regeneration after changing bit controls so existing batch bytes are not silently mutated.
+
+`mac-address-generator/index.html` now:
+- adds Administration and Transmission controls;
+- explains the U/L and I/G bits directly;
+- states that Universal-style output is not an IEEE OUI assignment;
+- keeps the existing privacy/collision guidance;
+- updates WebApplication and FAQ metadata to match working functionality.
+
+Tool-search aliases now include:
+- `random mac address generator`
+- `mac address generator unicast`
+- `unicast mac address generator`
+- `mac address generator online`
+
+No new URL was created.
+
+### Regression tests
+
+Chromium coverage now verifies:
+- default local + unicast -> U/L=1, I/G=0;
+- universal-style + unicast -> U/L=0, I/G=0;
+- local + multicast -> U/L=1, I/G=1;
+- universal-style + multicast -> U/L=0, I/G=1;
+- existing uniqueness, format re-rendering, JSON/CSV and sorting behaviors remain covered.
+
+### Primary technical references
+
+- IEEE Standards Association, “Standard Group MAC Addresses”: identifies I/G as the least-significant bit and U/L as the next bit in the first octet.
+- IEEE Registration Authority guidelines for EUI/OUI/CID: explains local MAC addressing and responsibility for uniqueness within the scope of use.
+
+### Page 3 acceptance status
+
+- Demand / difficulty: VERIFIED.
+- Current SERP intent: VERIFIED.
+- Canonical ownership: VERIFIED.
+- Existing functionality inspected: VERIFIED.
+- Product gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Browser regression coverage: COMPLETED.
+- Static/Build/Chromium CI: PENDING.
+- Production deployment: NOT STARTED.
