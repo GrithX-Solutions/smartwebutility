@@ -490,3 +490,133 @@ Chromium test now verifies:
 - Browser regression coverage: COMPLETED.
 - Static/Build/Chromium CI: PENDING.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 3 — /chmod-calculator/
+
+Status: IMPLEMENTED, CI PENDING
+
+### Primary intent
+
+Calculate Linux/Unix file permissions and convert between octal, permission-string and chmod command representations.
+
+Canonical owner:
+- `https://smartwebutility.com/chmod-calculator/`
+
+### Ubersuggest US evidence
+
+Primary:
+- `chmod calculator`: 1,900 searches/month, SD 27, CPC $10.41, informational intent.
+- `linux permissions calculator`: 390, SD 15, CPC $10.02.
+- `linux chmod calculator`: 40, SD 32.
+- `chmod calculator online`: 10, SD 13.
+- `chmod calculator sticky bit`: 10, SD 5.
+- `unix chmod calculator`: 10, SD 13.
+
+Ubersuggest currently reports no US ranking-keyword data for Smart Web Utility's chmod page.
+
+### SERP evidence
+
+Current Ubersuggest US SERP includes:
+- chmod-calculator.com — DA 31
+- chmodcommand.com — DA 35
+- nettools.club — DA 14
+- devina.io — DA 18
+- Linuxize — DA 51
+- ScanSuite — DA 2
+- ctrlops.io — DA 17
+- additional low/mid-authority chmod tools.
+
+This is a tool-first result set with several low/mid-authority domains; it does not guarantee ranking.
+
+### Existing Smart Web Utility strengths before this change
+
+The page already supported:
+- 3- and 4-digit octal modes;
+- `rwxr-xr-x` permission strings;
+- direct 10-character `ls -l` permission fields;
+- owner/group/others checkboxes;
+- setuid, setgid and sticky bits;
+- lowercase/uppercase `s/S/t/T` display semantics;
+- common presets including 1777;
+- numeric chmod command generation;
+- recursive `-R` option;
+- umask result calculation;
+- local browser processing;
+- concise security guidance about 777 and recursive changes.
+
+This is already broader than several ranking calculators, so no generic content expansion was justified.
+
+### Confirmed gap
+
+A strong current competitor exposes both an octal chmod command and a symbolic chmod command. Smart Web Utility calculated symbolic display permissions but only generated the numeric terminal command.
+
+GNU and BSD chmod support symbolic mode clauses using:
+- classes `u`, `g`, `o`, `a`;
+- assignment/add/remove operators;
+- permissions including `r`, `w`, `x`, `s`, and `t`.
+
+That makes an exact symbolic assignment a real task-completion feature, not keyword padding.
+
+### Implementation
+
+The result panel now generates two commands:
+
+Octal:
+- `chmod 755 file`
+- `chmod 4755 file`
+- recursive form when selected.
+
+Symbolic assignment:
+- `chmod u=rwx,g=rx,o=rx file`
+- `chmod u=rwxs,g=rx,o=rx file` for setuid + execute;
+- `chmod u=rws,g=rx,o=rx file` for setuid without owner execute;
+- sticky/setgid bits are emitted in the appropriate class clause.
+
+The assignment is generated directly from the same checkbox state as the numeric mode, so the two outputs describe the same final permission bits.
+
+The UI now has separate Copy Octal and Copy Symbolic controls.
+
+### Content / semantic update
+
+Visible copy now distinguishes:
+- an `ls -l` display string such as `rwsr-xr-x`;
+- chmod symbolic assignment syntax such as `u=rwxs,g=rx,o=rx`;
+- octal command syntax.
+
+The recursive warning was also sharpened: applying one mode recursively can unintentionally make regular files executable when the operator only intended directory search permission.
+
+Tool-search metadata now includes the exact `linux permissions calculator` variant.
+
+The sitemap already carried a 2026-10-03 lastmod for this page, so no artificial freshness change was made.
+
+### Test added
+
+The Chromium test now verifies:
+- `1777` generates `chmod -R 1777 /srv/app`;
+- the equivalent symbolic command is `chmod -R u=rwx,g=rwx,o=rwxt /srv/app`;
+- pasted `-rwSr-xr-x` becomes octal `4655`;
+- the matching symbolic assignment is `chmod -R u=rws,g=rx,o=rx /srv/app`;
+- existing umask checks remain intact.
+
+### Current references reviewed 2026-10-03
+
+- Ubersuggest US keyword and SERP data.
+- Current Linuxize chmod calculator and special-bits guidance.
+- Current chmodcommand.com calculator.
+- Current ScanSuite/ctrlops chmod calculator coverage.
+- GNU Coreutils chmod/file-mode documentation.
+- FreeBSD chmod manual for symbolic mode syntax.
+
+### Page 3 acceptance status
+
+- Demand / difficulty: VERIFIED.
+- SERP intent: VERIFIED.
+- Canonical ownership: VERIFIED.
+- Product gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Browser regression coverage: COMPLETED.
+- Static/Build/Chromium CI: PENDING.
+- Production deployment: NOT STARTED.
