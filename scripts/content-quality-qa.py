@@ -71,7 +71,7 @@ class ContentParser(HTMLParser):
                 self.inline_code_depth = 0
             elif tag == "code" and self.skip_depth == 0 and self.current_p is not None:
                 self.inline_code_depth += 1
-                self.current_p.append(" CODETOKEN ")
+                self.current_p.append("CODETOKEN")
 
     def handle_endtag(self, tag):
         tag = tag.lower()
