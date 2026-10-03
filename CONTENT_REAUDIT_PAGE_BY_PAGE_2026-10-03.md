@@ -1975,3 +1975,108 @@ Content-only update:
 - Generator behavior change: NONE.
 - Static/Build/Chromium CI: PENDING.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 9 — /markdown-to-html/
+
+Status: IMPLEMENTED, CI PENDING
+
+### Primary intent
+Convert Markdown/GitHub Flavored Markdown into HTML source with preview and export.
+
+Canonical owner:
+- `https://smartwebutility.com/markdown-to-html/`
+
+### Ubersuggest US evidence
+- `markdown to html`: 2,400 searches/month, SD 27, CPC $10.12.
+- `markdown to html conversion`: 480, SD 46, CPC $9.45.
+- `markdown to html converter`: 320, SD 31.
+- `online markdown to html converter`: 210, SD 33.
+- `free markdown to html converter`: 110, SD 32.
+- `markdown to html converter online`: 50, SD 12.
+
+Current U.S. SERP contains attainable utility domains:
+- markdownlivepreview.dev — DA 11
+- mdkit.io — DA 3
+- webeasier.com — DA 6
+- hostmora.com — DA 15
+- codeshack.io — DA 25
+
+### Existing Smart Web Utility strengths
+Already present:
+- Marked-based Markdown/GFM conversion;
+- tables, task lists, strikethrough and fenced code blocks;
+- optional single-line-break behavior;
+- local Markdown file input up to 5 MB;
+- copy/download;
+- sandboxed iframe preview;
+- restrictive preview Content Security Policy;
+- local conversion with no Smart Web Utility conversion API upload.
+
+### Confirmed security/product gap
+Marked's current documentation explicitly warns that Marked does not sanitize generated HTML and recommends filtering untrusted output, including with DOMPurify.
+
+Before this change:
+- the on-page preview was meaningfully isolated by sandbox + CSP;
+- copied/downloaded HTML was still raw Marked output;
+- Markdown containing raw HTML could therefore preserve active tags/attributes in the exported source.
+
+That was a product-quality/security gap because users can reasonably treat a converter's copy/download result as reusable HTML.
+
+### Implementation
+`assets/markdown-html-tools.mjs` now:
+- keeps Marked 18.0.14 for parsing;
+- loads pinned DOMPurify 3.4.16 from jsDelivr as a second browser-side ESM dependency;
+- sanitizes Marked output by default using DOMPurify's HTML profile;
+- applies sanitized output consistently to:
+  - output textarea;
+  - copy;
+  - download;
+  - preview;
+- exposes an explicit “Sanitize generated HTML” checkbox;
+- allows trusted workflows to opt into raw Marked HTML;
+- labels output status as sanitized or raw;
+- retains the sandboxed/CSP-restricted preview in both modes.
+
+`markdown-to-html/index.html` now:
+- explains that sanitization is enabled by default;
+- explains raw-output risk;
+- distinguishes preview isolation from the safety of copied/downloaded raw HTML;
+- clarifies that destination applications can still require stricter content policy;
+- updates WebApplication feature metadata and search-facing copy.
+
+### Dependency analysis
+DOMPurify is justified here by a concrete XSS/output-safety gap. A hand-written sanitizer is rejected because HTML sanitization is security-sensitive and difficult to implement correctly.
+
+Tradeoffs:
+- adds one pinned browser-side module request on a page that already depends on a pinned Marked module from jsDelivr;
+- no server dependency, framework, database or persistent backend is added;
+- Markdown content is still processed in the browser and is not submitted to a Smart Web Utility conversion API;
+- CDN availability remains a runtime dependency for this converter;
+- pinned version reduces uncontrolled upgrade risk, while future security releases still require maintenance review.
+
+Current official evidence checked on 2026-10-03:
+- Marked documentation warns that output is not sanitized and recommends DOMPurify among filtering options.
+- DOMPurify current release is 3.4.16 (released 2026-09-23).
+
+### Regression tests
+Chromium coverage now verifies:
+- GFM heading/table conversion still works;
+- default sanitized mode removes `<script>`;
+- default sanitized mode removes an `onerror` event attribute;
+- raw mode preserves the raw Marked source;
+- raw-mode script does not execute inside the empty-sandbox preview iframe;
+- re-enabling sanitization removes active markup again.
+
+### Page 9 acceptance status
+- Demand / difficulty: VERIFIED.
+- Current SERP intent: VERIFIED.
+- Canonical ownership: VERIFIED.
+- Existing implementation/security boundary inspected: VERIFIED.
+- Product/security gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Browser regression coverage: COMPLETED.
+- Static/Build/Chromium CI: PENDING.
+- Production deployment: NOT STARTED.
