@@ -404,3 +404,35 @@ Product differentiation:
 - Use Gmail sender requirements only as a concrete mail-server use case; PTR/FCrDNS alone never guarantees inbox placement.
 
 Fresh deep keyword expansion could not be rerun on 2026-10-03 because the Ubersuggest daily report quota was already exhausted. No substitute SEO-volume numbers were invented.
+
+
+## UUID / GUID cluster strengthening — 2026-10-03
+
+Decision: KEEP one canonical page at `/uuid-generator/`; do not create a separate GUID generator page.
+
+Previously validated Ubersuggest US-English baseline:
+- `uuid generator` — 22,200 searches/month, SD 28.
+- `guid generator` — 9,900 searches/month, SD 23.
+- `uuid generator online` — 1,300 searches/month, SD 23.
+- `guid generator online` — 1,600 searches/month, SD 21.
+
+Fresh SERP review on 2026-10-03 still shows one-page UUID/GUID generators winning with:
+- UUID v4 + UUID v7 generation;
+- bulk output;
+- Microsoft-friendly GUID formats;
+- browser-side privacy;
+- special Nil/Max UUID values;
+- concise UUID vs GUID and v4 vs v7 explanations.
+
+Canonical semantic ownership:
+- Primary: UUID generator / GUID generator.
+- Same-page variants: UUID generator online, GUID generator online, random GUID generator, .NET GUID generator, UUID v4, UUID v7, Nil UUID, Max UUID.
+- Validator/decoder intent remains owned by `/uuid-validator/`.
+- Do not split GUID into a duplicate doorway page.
+
+Product additions in this pass:
+- one-click Nil UUID and Max UUID;
+- BreadcrumbList + matching FAQPage schema;
+- explicit RFC 9562 reference;
+- Microsoft Guid.NewGuid reference;
+- expanded search aliases.
