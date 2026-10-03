@@ -1463,7 +1463,12 @@ The maintained html-minifier-terser option reference documents these options as 
 - Product/configuration gap: VERIFIED.
 - Implementation: COMPLETED on working branch.
 - Browser regression coverage: COMPLETED.
-- Static/Build/Chromium CI: PENDING.
+- Build run 657: SUCCESS.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings on Password Generator and Text Tools.
+- Chromium run 341: SUCCESS.
+- Bearer/signature/exp/nbf regressions: PASS.
+- Sitemap-wide browser initialization: PASS.
 - Production deployment: NOT STARTED.
 
 
@@ -1481,7 +1486,7 @@ The maintained html-minifier-terser option reference documents these options as 
 
 ## Page 5 — /jwt-decoder/
 
-Status: IMPLEMENTED, CI PENDING
+Status: VERIFIED ON BRANCH
 
 ### Primary intent
 Decode and inspect JSON Web Tokens locally, with registered-claim and token-timing visibility.
