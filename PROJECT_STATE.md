@@ -62,7 +62,7 @@ Research record:
 
 ### Page 5 — /jwt-decoder/
 
-Status: IMPLEMENTED ON BRANCH; CI PENDING.
+Status: VERIFIED ON BRANCH.
 
 Research evidence:
 - `jwt decoder`: 18,100 US searches/month, SD 42.
@@ -125,6 +125,16 @@ Page 3 branch validation:
 - Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
 - Chromium run 284: SUCCESS.
 - Symbolic chmod command and special-bit regression checks: PASS.
+- Full sitemap browser sweep: PASS.
+
+Page 5 JWT Decoder validation:
+- Implementation commits: VERIFIED in GitHub.
+- Build run 657: SUCCESS.
+- JavaScript syntax validation: PASS.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- Chromium run 341: SUCCESS.
+- Bearer/signature/exp/nbf regressions: PASS.
 - Full sitemap browser sweep: PASS.
 
 ## Deployment / indexing
