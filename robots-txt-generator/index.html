@@ -3,13 +3,51 @@
 <main><section class="tool-hero wrap json-tool-hero"><div class="crumb"><a href="/">Home</a><span>/</span><span>Robots.txt Generator</span></div><span class="kicker">SEO tool · runs locally</span><h1>Robots.txt Generator</h1><p class="lead compact">Build a robots.txt file for common crawler directives and sitemap discovery.</p>
 <div class="json-workspace"><section class="editor-panel"><div class="editor-head"><strong>Rules</strong></div><div style="padding:16px;display:grid;gap:12px"><input id="robotsUserAgent" class="code-editor" style="height:auto;min-height:52px;resize:none" value="*" placeholder="User-agent"><textarea id="robotsDisallow" class="code-editor" style="height:100px" placeholder="/admin/&#10;/private/"></textarea><textarea id="robotsAllow" class="code-editor" style="height:90px" placeholder="/public/"></textarea><input id="robotsCrawlDelay" class="code-editor" style="height:auto;min-height:52px;resize:none" placeholder="Crawl-delay (optional)"><input id="robotsSitemap" class="code-editor" style="height:auto;min-height:52px;resize:none" placeholder="https://example.com/sitemap.xml"></div></section><section class="editor-panel"><div class="editor-head"><strong>robots.txt</strong><button id="copyRobots" class="text-btn" type="button">Copy</button></div><textarea id="robotsOutput" class="code-editor" readonly></textarea></section></div>
 <div class="json-toolbar"><button id="exampleRobots" class="btn ghost" type="button">Example</button><button id="clearRobots" class="text-btn" type="button">Clear</button></div><div class="trustbar"><span>Allow / Disallow</span><span>Sitemap directive</span><span>No server request</span></div></section>
-<section class="section wrap prose"><h2>Create a robots.txt file</h2><p>Robots.txt provides crawl directives to compliant bots. It is not an access-control mechanism and should not be used to protect sensitive content.</p></section><section class="section alt" data-quality-content="v3"><div class="wrap prose">
-<h2>Build a robots.txt file for crawl control</h2>
-<p>A <code>robots.txt</code> file tells compliant crawlers which URL paths they may request on a specific host, protocol and port. It belongs at the site root, for example <code>https://example.com/robots.txt</code>. Use this generator to create a small starter file and then review every rule before deploying it.</p>
-<h2>Crawling and indexing are different</h2>
-<p>A robots.txt <code>Disallow</code> rule controls crawling; it is not a reliable way to remove a URL from search results. A blocked URL can still be known from links or other signals. When a page must not be indexed, use an appropriate indexing directive on a crawlable response and verify the result with the search engine's own inspection tools.</p>
-<div class="info-grid"><article><h3>User-agent groups</h3><p>Group rules under the crawler name they apply to. <code>User-agent: *</code> is the general group for compliant crawlers that do not have a more specific rule.</p></article><article><h3>Allow and Disallow</h3><p>Keep path rules as narrow as possible. Blocking CSS, JavaScript or other resources required to understand a page can make rendering and diagnosis harder.</p></article><article><h3>Sitemap directive</h3><p>Add an absolute sitemap URL when you want crawlers to discover the site's sitemap location directly from robots.txt.</p></article><article><h3>Validate after upload</h3><p>Fetch the production robots.txt file after deployment and confirm that it returns HTTP 200 with the exact rules you intended.</p></article></div>
-<h2>Test the rules before deployment</h2><p>After generating a file, use the <a href="/robots-txt-tester/">Robots.txt Tester</a> to check specific URLs against Googlebot, Bingbot, GPTBot, ClaudeBot, PerplexityBot or a custom crawler and see the exact winning rule.</p><h2>Avoid unsupported assumptions</h2>
-<p>Not every crawler implements every non-standard directive. Google documents support for <code>user-agent</code>, <code>allow</code>, <code>disallow</code> and <code>sitemap</code>, while directives such as <code>crawl-delay</code> are not part of Google's supported robots fields. Keep the file standards-based and use server controls when you need real access control.</p>
+<section class="section wrap prose" data-quality-content="v5">
+<h2>Build a robots.txt draft for crawler access rules</h2>
+<p>This generator creates one robots.txt user-agent group from the values you enter. Add a crawler name, one Allow or Disallow path per line, an optional crawl-delay value and an optional sitemap URL, then copy the generated text. Review the file before publishing it at your site's <code>/robots.txt</code> location.</p>
+
+<h2>What the generator writes</h2>
+<div class="info-grid">
+  <article><h3>User-agent</h3><p>Choose which crawler group receives the rules. If you leave the field empty, the generator uses <code>*</code> for all crawlers.</p></article>
+  <article><h3>Disallow</h3><p>Add paths that compliant crawlers should not fetch for that user-agent group. The generator writes one <code>Disallow</code> line for each non-empty entry.</p></article>
+  <article><h3>Allow</h3><p>Add more specific paths that should remain crawlable when they sit inside a broader blocked path. Support and matching behavior depend on the crawler.</p></article>
+  <article><h3>Sitemap</h3><p>Add a fully qualified sitemap URL so supporting crawlers can discover the sitemap location from robots.txt.</p></article>
+</div>
+
+<h2>robots.txt controls crawling, not access or guaranteed indexing</h2>
+<p>A robots.txt rule asks compliant crawlers whether they may fetch a URL. It is not authentication, and the file itself is public. Do not use it to protect private files. A blocked URL can also remain discoverable or appear in search results without its content being crawled, so use the appropriate indexing or access-control mechanism for your actual goal.</p>
+
+<h2>Be careful with Crawl-delay</h2>
+<p>The generator can write a <code>Crawl-delay</code> line because some crawlers support it, but support is not universal. Google documents that its crawlers do not process <code>crawl-delay</code>. Check the documentation for each crawler you target instead of assuming one delay directive works everywhere.</p>
+
+<h2>The generator does not validate rule precedence</h2>
+<p>This page assembles the text you provide; it does not simulate crawler matching, validate every path pattern or test the live file. Use the <a href="/robots-txt-tester/">Robots.txt Tester</a> to evaluate rules for a specific crawler and URL, then verify the deployed file from the public site root.</p>
+
+<h2>Use a complete URL for the Sitemap directive</h2>
+<p>For Google, the <code>Sitemap</code> value must be a fully qualified URL that includes the protocol and host. A robots.txt file can contain multiple sitemap lines, but the current generator provides one sitemap field. Add additional lines manually when your site publishes more than one sitemap or sitemap index.</p>
+
+<h2>Safer robots.txt workflow</h2>
+<div class="info-grid">
+  <article><h3>Draft narrowly</h3><p>Block only the paths you intend to restrict from crawling. A broad slash rule can affect an entire site.</p></article>
+  <article><h3>Test important URLs</h3><p>Check representative allowed and disallowed paths before replacing a production robots.txt file.</p></article>
+  <article><h3>Deploy at the site root</h3><p>Publish the reviewed file as <code>/robots.txt</code> on the correct host and protocol.</p></article>
+  <article><h3>Verify after release</h3><p>Fetch the public file and confirm that a CMS, CDN or deployment step did not rewrite the intended rules.</p></article>
+</div>
+
+<h2>Related crawling tools</h2>
+<div class="related-tools">
+  <a href="/robots-txt-tester/">Robots.txt Tester<span>Test a crawler and URL against robots rules.</span></a>
+  <a href="/sitemap-checker/">Sitemap Checker<span>Validate a sitemap before referencing it.</span></a>
+  <a href="/seo-tools/">SEO Audit<span>Review crawlability, indexability and related technical signals.</span></a>
+</div>
+<p>Reference: <a href="https://developers.google.com/crawling/docs/robots-txt/robots-txt-spec" rel="noopener">Google's robots.txt interpretation documentation</a>.</p>
+</section>
+
+<section class="section alt" data-quality-content="v5"><div class="wrap prose">
+<h2>Frequently asked questions</h2>
+<h3>Can robots.txt keep a private page secret?</h3><p>No. Use authentication or another access-control mechanism for private content. robots.txt is a public crawler-control file.</p>
+<h3>Does Google support Crawl-delay in robots.txt?</h3><p>No. Google's current robots.txt documentation lists <code>crawl-delay</code> as unsupported. Other crawler operators can implement different rules.</p>
+<h3>Does this generator test the rules?</h3><p>No. It builds the text. Use the Robots.txt Tester and verify the deployed file before relying on the rules.</p>
 </div></section></main>
 <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/">All tools</a><a href="/sitemap.xml">Sitemap</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></div></footer><script src="/assets/robots-generator.js" defer></script></body></html>

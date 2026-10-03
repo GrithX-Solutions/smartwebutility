@@ -10,7 +10,7 @@ PREVIOUS="$BASE/site.prev"
 
 RELEASE="$(realpath "$RELEASE")"
 case "$RELEASE" in "$BASE"/releases/*) ;; *) echo "Release must be inside $BASE/releases" >&2; exit 2;; esac
-[[ -f "$RELEASE/scripts/seo-static-qa.py" && -f "$RELEASE/api/seo-audit.php" ]] || {
+[[ -f "$RELEASE/scripts/seo-static-qa.py" && -f "$RELEASE/scripts/content-quality-qa.py" && -f "$RELEASE/api/seo-audit.php" ]] || {
   echo "Missing required release files" >&2; exit 2;
 }
 
@@ -22,6 +22,7 @@ python3 "$RELEASE/scripts/version-shared-assets.py" "$RELEASE"
 # executes as an unprivileged user and requires +x access to every directory.
 find "$RELEASE" -type d -exec chmod 755 {} +
 python3 "$RELEASE/scripts/seo-static-qa.py"
+python3 "$RELEASE/scripts/content-quality-qa.py"
 
 [[ -d "$CURRENT" ]] || { echo "Missing production root" >&2; exit 2; }
 mkdir -p "$PREVIOUS"

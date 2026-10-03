@@ -74,25 +74,57 @@
     <div class="trustbar"><span>Seconds & milliseconds</span><span>UTC & local time</span><span>No server upload</span></div>
   </section>
 
-  <section class="section wrap prose">
-    <h2>What is a Unix timestamp?</h2>
-    <p>A Unix timestamp represents a point in time as the number of seconds since 00:00:00 UTC on January 1, 1970. Many systems also use milliseconds, especially JavaScript APIs and event logs.</p>
+  <section class="section wrap prose" data-quality-content="v5">
+    <h2>Convert Unix timestamps in seconds or milliseconds</h2>
+    <p>A Unix timestamp identifies one instant as elapsed time from 00:00:00 UTC on January 1, 1970. Traditional Unix time uses seconds, while JavaScript and many APIs commonly use milliseconds. This converter accepts either unit and shows ISO 8601, UTC, browser-local time, Unix seconds and Unix milliseconds for the same instant.</p>
 
     <div class="info-grid">
-      <article><h3>Seconds</h3><p>Traditional Unix time is stored as whole seconds since the Unix epoch.</p></article>
-      <article><h3>Milliseconds</h3><p>JavaScript's Date object and many APIs use milliseconds since the epoch.</p></article>
-      <article><h3>UTC output</h3><p>See the same instant rendered in Coordinated Universal Time.</p></article>
-      <article><h3>Local output</h3><p>See the converted date in the timezone configured in your browser.</p></article>
+      <article><h3>Seconds</h3><p>Select Seconds when your source stores classic epoch seconds, such as <code>1769438400</code>.</p></article>
+      <article><h3>Milliseconds</h3><p>Select Milliseconds for JavaScript-style epoch values, which are typically much larger than second-based timestamps.</p></article>
+      <article><h3>UTC and ISO 8601</h3><p>Use the UTC and ISO outputs when you need a timezone-independent representation for logs, APIs or debugging.</p></article>
+      <article><h3>Browser-local time</h3><p>The local output uses the timezone configured in your browser, so the displayed clock time can differ between users.</p></article>
+    </div>
+
+    <h2>How automatic seconds vs milliseconds detection works</h2>
+    <p>Auto detect uses a simple numeric rule: an absolute value of <code>1,000,000,000,000</code> or more is treated as milliseconds; smaller values are treated as seconds. That rule handles most modern timestamps, but no bare number carries its unit. A millisecond value for an early date can therefore look like seconds. Choose Seconds or Milliseconds explicitly whenever the source API, database or log format documents the unit.</p>
+
+    <h2>Date to Unix conversion uses your local timezone</h2>
+    <p>The Date → Unix field uses your browser's local timezone because the input does not include a timezone offset. For example, entering 09:00 means 09:00 in the timezone configured on your device. The resulting Unix value still represents an absolute instant. If you need to convert a time stated in another timezone, convert that source time to your local equivalent first or use a timezone-aware workflow.</p>
+
+    <h2>UTC, local time and Unix time describe the same instant differently</h2>
+    <p>A Unix timestamp itself has no display timezone. The timestamp <code>0</code> represents the Unix epoch at 1970-01-01 00:00:00 UTC. Local rendering applies your browser's timezone offset to that instant, while ISO 8601 output uses a UTC <code>Z</code> suffix. Different local clock readings can therefore correspond to exactly the same Unix timestamp.</p>
+
+    <h2>Can Unix timestamps represent dates before 1970?</h2>
+    <p>Yes. Negative Unix timestamps represent instants before the Unix epoch when the underlying runtime supports the date. This converter passes the value through the browser's JavaScript Date implementation and reports an error if the resulting date falls outside its supported range.</p>
+
+    <h2>What is the Unix 2038 problem?</h2>
+    <p>The 2038 problem affects legacy systems that store epoch seconds in a signed 32-bit integer. That representation reaches its maximum value at 2,147,483,647 seconds and then overflows. It is a storage limitation in those systems, not a rule that Unix time itself stops working in 2038. Modern systems commonly use wider integer or date representations.</p>
+
+    <h2>Common timestamp debugging workflows</h2>
+    <div class="info-grid">
+      <article><h3>Application and server logs</h3><p>Translate numeric event times into ISO, UTC and local values so you can line up events across services.</p></article>
+      <article><h3>JWT claims</h3><p>Inspect numeric claims such as issue or expiry times after decoding a token with the <a href="/jwt-decoder/">JWT Decoder</a>.</p></article>
+      <article><h3>API payloads</h3><p>Compare second- and millisecond-based fields while reviewing structured responses with the <a href="/json-formatter/">JSON Formatter</a>.</p></article>
+      <article><h3>Scheduled events</h3><p>Convert a local date and time into seconds and milliseconds before storing or testing a schedule value.</p></article>
     </div>
 
     <h2>Related tools</h2>
     <div class="related-tools">
+      <a href="/jwt-decoder/">JWT Decoder<span>Inspect timestamp-based JWT claims locally.</span></a>
+      <a href="/json-formatter/">JSON Formatter<span>Format API payloads that contain epoch values.</span></a>
       <a href="/base64-encoder-decoder/">Base64 Encoder / Decoder<span>Encode and decode UTF-8 Base64.</span></a>
-      <a href="/json-formatter/">JSON Formatter<span>Format and validate JSON.</span></a>
-      <a href="/http-status-checker/">HTTP Status Checker<span>Inspect web responses.</span></a>
+      <a href="/http-status-checker/">HTTP Status Checker<span>Inspect web responses and timing.</span></a>
     </div>
   </section>
-<section class="section alt" data-adsense-depth="20261001"><div class="wrap prose"><h2>Unix timestamp examples and timezone behavior</h2><p>A Unix timestamp identifies an instant, not a timezone. The value <code>0</code> represents 1970-01-01 00:00:00 UTC. A browser can display that same instant in local time, so two users in different timezones may see different clock times while the underlying moment is identical.</p><h2>Seconds versus milliseconds</h2><p>Ten-digit values are commonly epoch seconds, while modern JavaScript timestamps are often milliseconds and therefore much larger. Auto-detection is convenient, but when data comes from an API, log file or database, confirm the documented unit instead of relying only on digit length. Mixing seconds and milliseconds can shift a date by decades.</p><h2>Good uses for timestamp conversion</h2><p>Use the converter when reading application logs, webhook payloads, JWT claims, database records or scheduled-event data. For signed tokens, pair it with the <a href="/jwt-decoder/">JWT Decoder</a>; for JSON API responses, the <a href="/json-formatter/">JSON Formatter</a> can make surrounding fields easier to inspect.</p></div></section></main>
+
+  <section class="section alt" data-quality-content="v5"><div class="wrap prose">
+    <h2>Frequently asked questions</h2>
+    <h3>Does the converter send timestamps to a server?</h3><p>No. Timestamp parsing and formatting run in browser JavaScript on this page.</p>
+    <h3>Should I use seconds or milliseconds?</h3><p>Use the unit documented by the system that produced the value. Auto detection is convenient for common modern timestamps, but an explicit unit is more reliable when you know it.</p>
+    <h3>Why does local time differ from UTC?</h3><p>They display the same instant using different timezone rules. UTC has no local offset; the local result uses your browser's configured timezone.</p>
+    <h3>Why did a timestamp produce the wrong year?</h3><p>The most common cause is interpreting seconds as milliseconds or milliseconds as seconds. Select the correct unit manually and run the conversion again.</p>
+  </div></section>
+</main>
 
 <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
 <script src="/assets/timestamp.js" defer></script>

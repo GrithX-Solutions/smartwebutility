@@ -1,9 +1,47 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Character Counter — With & Without Spaces Online</title><meta name="description" content="Count characters with and without spaces, plus words, sentences, paragraphs and lines instantly in your browser. No upload or signup required."><link rel="canonical" href="https://smartwebutility.com/character-counter/"><meta property="og:title" content="Character Counter — With & Without Spaces Online"><meta property="og:description" content="Count characters with and without spaces, plus words, sentences, paragraphs and lines instantly in your browser. No upload or signup required."><meta property="og:url" content="https://smartwebutility.com/character-counter/"><meta property="og:type" content="website"><meta name="twitter:card" content="summary"><meta name="theme-color" content="#07101b"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css"><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Character Counter","url":"https://smartwebutility.com/character-counter/","description":"Count characters with and without spaces, plus words, lines, sentences and paragraphs.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script></head><body data-tool="character-counter">
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
 <main><section class="tool-hero wrap json-tool-hero"><div class="crumb"><a href="/">Home</a><span>/</span><span>Character Counter</span></div><span class="kicker">Text tool · runs locally</span><h1>Character Counter</h1><p class="lead compact">Count characters with and without spaces, plus words, lines, sentences and paragraphs.</p><section class="editor-panel" style="margin-top:24px"><div class="editor-head"><div><strong>Text input</strong><span>Live character statistics</span></div></div><textarea id="textInput" class="code-editor" placeholder="Paste or type text here"></textarea></section><div id="textStats" class="json-stats" style="grid-template-columns:repeat(6,1fr)"></div><div class="trustbar"><span>Character count</span><span>No upload</span><span>Instant</span></div></section>
-<section class="section wrap prose"><h2>About this tool</h2><p>Useful for social posts, meta descriptions, ads, form limits and any workflow where exact character counts matter.</p></section><section class="section alt" data-quality-content="v3"><div class="wrap prose">
-<h2>Count characters with and without spaces</h2><p>The Character Counter measures total characters, characters excluding whitespace, words, sentences, paragraphs and lines while you type. It is useful when a form or publishing platform enforces an exact text limit.</p>
-<div class="info-grid"><article><h3>Metadata drafting</h3><p>Use character counts as an editorial aid for titles and descriptions, but do not treat a fixed character number as a Google ranking rule. Search result display can vary by device and query.</p></article><article><h3>Social and ad copy</h3><p>Check text before pasting it into platforms that impose explicit character limits on fields, captions or ads.</p></article><article><h3>Forms and databases</h3><p>Measure user-facing copy against application field constraints before content is submitted or stored.</p></article><article><h3>Local processing</h3><p>Counts update in the browser, so ordinary text does not need to be sent to the server.</p></article></div>
-<h2>Characters are not the same as visual width</h2><p>Two strings with the same character count can occupy different visual space because fonts and glyphs have different widths. Use the count for explicit limits; use a real preview when layout width matters.</p>
-</div></section><section class="section alt" data-adsense-depth="20261001"><div class="wrap prose"><h2>Characters with spaces versus without spaces</h2><p>Different platforms define “character limit” differently. Some count every visible space and punctuation mark; others apply their own validation after normalization. This counter shows both the total character count and a version without spaces so you can compare the two instead of assuming one interpretation.</p><h2>Useful checks before publishing</h2><p>Character counts help with form fields, metadata drafts, interface labels, ad copy, social posts and database fields that enforce a maximum length. A count alone does not tell you whether text will be truncated visually, because fonts, viewport width and rendering rules also matter.</p><h2>Words and sentence statistics are supporting signals</h2><p>The extra statistics are simple text measurements, not writing-quality scores. Use them to inspect structure, then edit for clarity and meaning. For longer drafts, the <a href="/word-counter/">Word Counter</a> provides additional reading and speaking-time context.</p></div></section></main>
+<section class="section wrap prose" data-quality-content="v5">
+<h2>Count characters with spaces, without whitespace and by text structure</h2>
+<p>The Character Counter updates while you type and reports six values: words, characters, characters without whitespace, sentences, paragraphs and lines. Processing runs in your browser, so ordinary pasted text does not need to be sent to a Smart Web Utility API.</p>
+
+<h2>What each count means in this tool</h2>
+<div class="info-grid">
+  <article><h3>Characters</h3><p>The total uses JavaScript string length. It counts UTF-16 code units, so some emoji and other supplementary Unicode characters can count as more than one unit.</p></article>
+  <article><h3>Without spaces</h3><p>This value removes all whitespace matched by JavaScript, including ordinary spaces, tabs and line breaks, before counting the remaining string units.</p></article>
+  <article><h3>Words</h3><p>A word is any run of non-whitespace characters. Punctuation attached to a token does not create a separate word.</p></article>
+  <article><h3>Sentences, paragraphs and lines</h3><p>Sentence counting uses sentence-ending punctuation, paragraphs split on blank lines, and line counting follows newline characters in the input.</p></article>
+</div>
+
+<h2>Character count is not the same as visible width</h2>
+<p>Two strings with the same count can occupy very different space because fonts, glyphs and writing systems have different widths. Use character counts when a system defines a numeric text limit. Use a real UI preview when you need to know whether a title, button or label fits visually.</p>
+
+<h2>Unicode and emoji can affect platform counts</h2>
+<p>Some platforms count Unicode grapheme clusters, code points, bytes or UTF-16 units differently. This tool reports JavaScript string units for its main character total. A visible emoji can therefore contribute more than one character to this counter. When a destination platform enforces a strict limit, treat that platform's own counter as the final authority.</p>
+
+<h2>Useful checks before publishing</h2>
+<div class="info-grid">
+  <article><h3>Form fields</h3><p>Compare copy with an explicit database, CMS or form limit before submitting it.</p></article>
+  <article><h3>Metadata drafting</h3><p>Use the count as an editorial aid, not as a fixed Google ranking rule. Search-result display length varies by query and device.</p></article>
+  <article><h3>Ads and social copy</h3><p>Draft against the documented limits of the destination platform, then verify the final text inside that platform.</p></article>
+  <article><h3>QA and localization</h3><p>Compare translated strings and test data when a UI component has an explicit storage or validation limit.</p></article>
+</div>
+
+<h2>Words and sentence statistics are supporting signals</h2>
+<p>The word and sentence totals help describe text structure, but they do not measure clarity, reading level or writing quality. The counter does not perform grammar checking, keyword-density scoring or semantic analysis. Review the actual wording separately when quality matters.</p>
+
+<h2>Related text tools</h2>
+<div class="related-tools">
+  <a href="/word-counter/">Word Counter<span>Review word-focused text statistics.</span></a>
+  <a href="/case-converter/">Case Converter<span>Change capitalization without retyping text.</span></a>
+  <a href="/slug-generator/">Slug Generator<span>Turn a title into a clean URL path segment.</span></a>
+</div>
+</section>
+
+<section class="section alt" data-quality-content="v5"><div class="wrap prose">
+<h2>Frequently asked questions</h2>
+<h3>What does “without spaces” remove?</h3><p>It removes JavaScript whitespace characters, including spaces, tabs and line breaks, before counting the remaining string units.</p>
+<h3>Why can an emoji count as more than one character?</h3><p>JavaScript string length uses UTF-16 code units. Some visible Unicode symbols require multiple code units even though a reader sees one grapheme.</p>
+<h3>Does the tool upload my text?</h3><p>No. The counts are calculated in browser JavaScript.</p>
+</div></section></main>
 <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer><script src="/assets/text-tools.js" defer></script></body></html>

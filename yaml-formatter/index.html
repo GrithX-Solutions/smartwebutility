@@ -49,29 +49,53 @@
   <div class="trustbar"><span>Browser-side formatting</span><span>No account</span><span>Ctrl/⌘ + Enter to format</span></div>
 </section>
 
-<section class="section wrap prose">
-  <h2>Format and validate YAML in one step</h2>
-  <p>The formatter parses YAML into a data structure and writes it back using consistent indentation. If the source cannot be parsed, the page reports the parser error instead of returning misleading formatted output.</p>
-  <div class="info-grid">
-    <article><h3>2 or 4 space indentation</h3><p>Choose the indentation width that matches the conventions of your repository, deployment files or configuration project.</p></article>
-    <article><h3>Syntax validation</h3><p>Malformed mappings, sequences, quoting and indentation errors are surfaced by the YAML parser before output is produced.</p></article>
-    <article><h3>Local file handling</h3><p>Open .yaml or .yml files up to 5 MB. File text is read locally by the browser for this formatting workflow.</p></article>
-    <article><h3>Copy or download</h3><p>Copy the normalized YAML directly or download it as <code>formatted.yaml</code>.</p></article>
-  </div>
-  <h2>What a YAML formatter can change</h2>
-  <p>Formatting can normalize indentation, quoting choices and some scalar representations because the source is parsed and regenerated. YAML comments are not part of the parsed data model used here and are not preserved. If comments or exact stylistic choices are important, use a source-aware formatter designed to preserve concrete syntax.</p>
-  <h2>YAML anchors and advanced tags</h2>
-  <p>YAML supports anchors, aliases, tags and other features that can behave differently across parsers. Validate formatted output against the application that will consume it, especially for deployment configuration and automation pipelines.</p>
-  <h2>Related YAML and JSON tools</h2>
-  <div class="related-tools"><a href="/yaml-to-json/">YAML to JSON<span>Convert parsed YAML into formatted JSON.</span></a><a href="/json-to-yaml/">JSON to YAML<span>Create YAML from valid JSON.</span></a><a href="/csv-viewer/">CSV Viewer Online<span>Inspect tabular CSV files locally in the browser.</span></a></div>
+<section class="section wrap prose" data-quality-content="v5">
+<h2>Format and validate one YAML document in your browser</h2>
+<p>This YAML Formatter parses the input with <code>js-yaml</code> 4.1.0 and serializes the parsed value back to clean YAML using either 2-space or 4-space indentation. Parsing and formatting happen in browser JavaScript, while the parser library itself is loaded from jsDelivr.</p>
+
+<h2>What happens when you format YAML</h2>
+<div class="info-grid">
+  <article><h3>Syntax validation</h3><p>The tool parses YAML before producing output. A parser error is shown instead of returning formatted text when the document is invalid.</p></article>
+  <article><h3>2 or 4 spaces</h3><p>Choose the indentation width for the serialized output. The formatter uses spaces rather than tabs for YAML indentation.</p></article>
+  <article><h3>Local file input</h3><p>Open a local YAML file up to 5 MB or paste text directly into the editor. File contents are read by the browser.</p></article>
+  <article><h3>Copy or download</h3><p>Copy the formatted result or download it as <code>formatted.yaml</code> after validation succeeds.</p></article>
+</div>
+
+<h2>Formatting can change YAML presentation</h2>
+<p>This tool performs a parse-and-dump cycle rather than adjusting whitespace in the original source text. The output can therefore normalize quoting, flow style and other presentation details while preserving the parsed data value. Review configuration files before committing them when formatting style itself carries team or tooling expectations.</p>
+
+<h2>Comments are not preserved</h2>
+<p>The current parser loads YAML into a JavaScript value and then serializes that value again. Comments are not part of the parsed data value, so the formatter can remove them. Do not run a comment-heavy configuration through this tool unless you have the original file available and are comfortable restoring important documentation comments.</p>
+
+<h2>Anchors, aliases and references may be rewritten</h2>
+<p>YAML anchors and aliases describe relationships in the source document, but the formatter emits output with reference generation disabled. A parse-and-dump cycle can expand or rewrite those source-level constructs. If anchors and aliases are important to maintain as authored, use an editor or formatter designed to preserve YAML source structure.</p>
+
+<h2>Use one YAML document at a time</h2>
+<p>The formatter uses the parser's single-document load operation. A stream containing multiple YAML documents separated by document markers can fail validation. Format each document separately when you are working with a multi-document YAML stream.</p>
+
+<h2>Where YAML formatting helps</h2>
+<div class="info-grid">
+  <article><h3>Configuration review</h3><p>Normalize indentation before reviewing Docker, application or infrastructure configuration.</p></article>
+  <article><h3>CI troubleshooting</h3><p>Use parser errors to catch malformed YAML before investigating a downstream tool that cannot read the file.</p></article>
+  <article><h3>Data conversion prep</h3><p>Validate YAML before converting it with the <a href="/yaml-to-json/">YAML to JSON</a> tool.</p></article>
+  <article><h3>Diff cleanup</h3><p>Create consistent serialized output when source comments and exact formatting do not need to be preserved.</p></article>
+</div>
+
+<h2>Related YAML and data tools</h2>
+<div class="related-tools">
+  <a href="/yaml-to-json/">YAML to JSON<span>Convert validated YAML into JSON.</span></a>
+  <a href="/json-formatter/">JSON Formatter<span>Validate and format JSON data.</span></a>
+  <a href="/toml-formatter-validator/">TOML Formatter &amp; Validator<span>Format another common configuration syntax.</span></a>
+</div>
 </section>
-<section class="section alt" data-quality-content="v1"><div class="wrap prose">
-  <h2>Frequently asked questions</h2>
-  <h3>Does the formatter preserve YAML comments?</h3><p>No. This implementation parses YAML data and regenerates it, so comments are not retained.</p>
-  <h3>Does it upload YAML to your server?</h3><p>No. The YAML parser and formatter run in browser JavaScript on this page.</p>
-  <h3>Can I use four-space indentation?</h3><p>Yes. Choose 4 spaces from the Indent control before formatting.</p>
-</div></section>
-</main>
+
+<section class="section alt" data-quality-content="v5"><div class="wrap prose">
+<h2>Frequently asked questions</h2>
+<h3>Does the formatter preserve YAML comments?</h3><p>No. It parses YAML into data and serializes the value again, so source comments can be removed.</p>
+<h3>Does Smart Web Utility upload my YAML for formatting?</h3><p>No. The YAML value is parsed in browser JavaScript. The page separately loads the <code>js-yaml</code> library from a CDN.</p>
+<h3>Can I use four-space indentation?</h3><p>Yes. Choose 2 or 4 spaces before formatting.</p>
+<h3>Can I format multiple YAML documents in one stream?</h3><p>The current formatter uses a single-document parser operation. Format separate documents individually.</p>
+</div></section></main>
 <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
 <script src="/assets/data-view-tools.js?v=20261002-1" defer></script>
 </body>

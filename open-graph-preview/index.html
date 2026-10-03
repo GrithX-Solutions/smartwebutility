@@ -3,20 +3,42 @@
 <main><section class="tool-hero wrap json-tool-hero"><div class="crumb"><a href="/">Home</a><span>/</span><span>Open Graph Preview</span></div><span class="kicker">SEO & social tool · runs locally</span><h1>Open Graph Preview</h1><p class="lead compact">Generate Open Graph meta tags and preview a simple social card before publishing.</p>
 <div class="json-workspace"><section class="editor-panel"><div class="editor-head"><strong>Open Graph details</strong></div><div style="padding:16px;display:grid;gap:12px"><input id="ogTitle" class="code-editor" style="height:auto;min-height:52px;resize:none" placeholder="OG title"><textarea id="ogDescription" class="code-editor" style="height:100px" placeholder="OG description"></textarea><input id="ogUrl" class="code-editor" style="height:auto;min-height:52px;resize:none" placeholder="https://example.com/page"><input id="ogImage" class="code-editor" style="height:auto;min-height:52px;resize:none" placeholder="https://example.com/image.jpg"><input id="ogSite" class="code-editor" style="height:auto;min-height:52px;resize:none" placeholder="Site name"></div></section><section class="editor-panel"><div class="editor-head"><strong>Generated tags</strong><button id="copyOg" class="text-btn" type="button">Copy</button></div><textarea id="ogOutput" class="code-editor" readonly></textarea><div class="result-card" style="margin:0;border-left:0;border-right:0;border-bottom:0;border-radius:0"><div class="result-head"><strong>Social card preview</strong></div><div id="ogCard"></div></div></section></div>
 <div class="json-toolbar"><button id="exampleOg" class="btn ghost" type="button">Example</button><button id="clearOg" class="text-btn" type="button">Clear</button></div><div class="trustbar"><span>Open Graph tags</span><span>Social preview</span><span>No server request</span></div></section>
-<section class="section wrap prose"><h2>Preview Open Graph metadata</h2><p>Open Graph tags help social platforms understand the title, description, canonical page URL and preview image you want associated with a shared link. Actual rendering varies by platform.</p></section><section class="section alt" data-quality-content="v3"><div class="wrap prose">
-<h2>Preview Open Graph metadata before publishing</h2>
-<p>Open Graph metadata gives social and messaging platforms a preferred title, description and image when a URL is shared. This preview helps you compose the core values and see an approximate card layout before adding the tags to a page.</p>
-<h2>What to review in a social preview</h2>
-<div class="info-grid"><article><h3>Open Graph title</h3><p>Use a concise title that still makes sense when someone sees the card without the surrounding page context.</p></article><article><h3>Description</h3><p>Summarize the useful reason to open the page. Avoid repeating the title word-for-word or filling the field with keywords.</p></article><article><h3>Canonical share URL</h3><p>Use the stable public URL you want people to visit rather than a temporary preview, tracking or staging address.</p></article><article><h3>Image choice</h3><p>Choose an image that remains understandable after cropping. Platforms can use different card ratios and may cache an older image.</p></article></div>
-<h2>The preview is an approximation</h2>
-<p>Facebook, LinkedIn, Slack, Discord and other platforms can apply their own layouts, truncation rules, image crops and caching. A visually correct preview here does not guarantee an identical card everywhere. After publishing, use the platform's own debugging or refresh tool when you need to confirm what its crawler actually fetched.</p>
-<h2>Open Graph is not a direct ranking signal</h2>
-<p>These tags primarily control sharing presentation. They can improve consistency when links are shared, but they should not replace accurate visible page content, a descriptive HTML title, canonicalization or normal search metadata.</p>
-<h2>Related website metadata tools</h2>
-<div class="related-tools">
-  <a href="/favicon-generator/">Favicon Generator<span>Create favicon.ico, PNG, Apple and PWA icons plus installation tags.</span></a>
-  <a href="/meta-tag-generator/">Meta Tag Generator<span>Create title, description, canonical and robots metadata.</span></a>
-  <a href="/meta-tag-checker/">Meta Tag Checker<span>Inspect the metadata published by a live page.</span></a>
+<section class="section wrap prose" data-quality-content="v5">
+<h2>Preview and generate core Open Graph metadata</h2>
+<p>This tool builds a simple share-card preview from the values you enter and generates <code>og:title</code>, <code>og:description</code>, <code>og:url</code>, <code>og:image</code>, <code>og:site_name</code> and <code>og:type</code> metadata. It does not fetch a live page or read its existing tags, so you can draft metadata before deployment.</p>
+
+<h2>What each Open Graph field controls</h2>
+<div class="info-grid">
+  <article><h3>og:title</h3><p>Use a clear page-specific title that still makes sense when someone sees the link outside your website.</p></article>
+  <article><h3>og:description</h3><p>Summarize the shared page in plain language. Social platforms can shorten or omit descriptions depending on their current card layout.</p></article>
+  <article><h3>og:url</h3><p>Enter the canonical public URL you want associated with the shared object rather than a tracking or temporary preview URL.</p></article>
+  <article><h3>og:image</h3><p>Use a publicly reachable image URL. The preview displays that URL as a background image so your browser may request the image directly from its host.</p></article>
 </div>
+
+<h2>The preview is an approximation, not a platform emulator</h2>
+<p>Facebook, LinkedIn, X and messaging apps can use different layouts, cropping rules, caches and fallback metadata. This page shows a generic card so you can catch obvious title, description and image problems, but it cannot guarantee the final rendering on another service. Always test an important production URL with the destination platform's current sharing or debugging tools when available.</p>
+
+<h2>This tool generates Open Graph tags only</h2>
+<p>The output always adds <code>og:type</code> with the value <code>website</code> and includes the other Open Graph fields when you provide them. It does not generate X/Twitter Card tags, article-specific properties, image dimensions, image alt text or locale metadata. Use the <a href="/meta-tag-generator/">Meta Tag Generator</a> when you need a broader metadata draft.</p>
+
+<h2>Character counts are editorial guides, not universal limits</h2>
+<p>Social platforms change card designs and can truncate text differently by device, surface and language. Do not treat a single title or description character count as a protocol requirement. Put the most important meaning early, remove filler and preview the real published URL before a campaign or launch.</p>
+
+<h2>Check live metadata separately</h2>
+<p>Because this page does not fetch your URL, it cannot confirm what your server currently returns. After publishing, use the <a href="/open-graph-checker/">Open Graph Checker</a> to inspect the live tags and the <a href="/meta-tag-checker/">Meta Tag Checker</a> to review title, description, canonical and robots metadata together.</p>
+
+<h2>Related metadata tools</h2>
+<div class="related-tools">
+  <a href="/open-graph-checker/">Open Graph Checker<span>Inspect Open Graph tags on a live public page.</span></a>
+  <a href="/meta-tag-generator/">Meta Tag Generator<span>Draft broader page metadata.</span></a>
+  <a href="/meta-tag-checker/">Meta Tag Checker<span>Inspect core live SEO metadata.</span></a>
+</div>
+</section>
+
+<section class="section alt" data-quality-content="v5"><div class="wrap prose">
+<h2>Frequently asked questions</h2>
+<h3>Does this tool fetch the URL I enter?</h3><p>No. The URL field becomes an <code>og:url</code> value in the generated markup. Use the Open Graph Checker when you want to inspect a live page.</p>
+<h3>Is the preview exactly what Facebook, LinkedIn or X will show?</h3><p>No. It is a generic approximation. Each platform controls its own rendering, caching, cropping and fallback behavior.</p>
+<h3>Does an image URL stay completely local?</h3><p>The text fields are handled in browser JavaScript, but your browser may request the external image URL you provide so it can display that image in the preview.</p>
 </div></section></main>
 <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/">All tools</a><a href="/sitemap.xml">Sitemap</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></div></footer><script src="/assets/og-preview.js" defer></script></body></html>
