@@ -60,31 +60,25 @@ Research record:
 
 ## Current page
 
-### Page 6 — /csv-to-json/
+### Page 7 — /ulid-generator/
 
-Status: REVIEWED — NO CHANGE.
+Status: IMPLEMENTED ON BRANCH; CI PENDING.
 
 Research evidence:
-- `csv to json format`: 3,600 US searches/month, SD 34.
-- `csv to json`: 2,400, SD 39.
-- `csv to json conversion`: 1,900, SD 31.
-- Current SERP includes DA 9–20 utility domains.
+- `ulid generator`: 210 US searches/month, SD 17, transactional.
+- Current U.S. SERP includes several DA 1–6 utility domains.
 
-Existing page already covers:
-- quoted CSV edge cases;
-- delimiter detection/selection;
-- header object mode and no-header array mode;
-- type inference;
-- pretty/compact/NDJSON;
-- duplicate header handling;
-- files/copy/download/local processing.
+Confirmed gap:
+- same-millisecond monotonicity worked;
+- automatic clock rollback could still produce a lexically older ULID.
 
-Competitor extras such as arbitrary delimiters, transpose or first-column hashing were reviewed. No verified demand or material intent gap justified adding UI complexity in this pass.
-
-Decision:
-- NO CHANGE.
-- Keep the existing canonical URL and implementation.
-- Revisit only with new first-party or SERP evidence.
+Implemented:
+- preserve previous logical timestamp when automatic time is equal/lower;
+- increment prior 80-bit randomness under rollback;
+- seed fresh randomness only when time advances;
+- keep custom timestamp changes as explicit state resets;
+- update visible monotonic/rollback guidance;
+- add frozen/rollback clock Chromium regression.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
