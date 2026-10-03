@@ -12,6 +12,8 @@
 <link rel="icon" href="/favicon-sw-v5.svg?v=20261001e" type="image/svg+xml">
 <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"UUID & GUID Generator Online","url":"https://smartwebutility.com/uuid-generator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Generate UUID v4, UUID v7 and GUID-style identifiers locally in the browser.","featureList":["UUID v4 generation","UUID v7 generation","GUID-compatible canonical text","Bulk generation up to 1,000","Microsoft GUID D/B/P/N text formats","UUID URN format","Line, comma or JSON list output","Uppercase hexadecimal option","Copy and download"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smartwebutility.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://smartwebutility.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"UUID & GUID Generator","item":"https://smartwebutility.com/uuid-generator/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is a GUID the same as a UUID?","acceptedAnswer":{"@type":"Answer","text":"GUID is the term commonly used in Microsoft ecosystems, while UUID is the standards terminology. They use the same 128-bit identifier format in common developer workflows."}},{"@type":"Question","name":"Can I generate UUID v7?","acceptedAnswer":{"@type":"Answer","text":"Yes. UUID v7 uses a Unix-millisecond timestamp in its leading bits plus random data, so values sort approximately by creation time."}},{"@type":"Question","name":"Can I generate GUIDs in Microsoft .NET formats?","acceptedAnswer":{"@type":"Answer","text":"Yes. The generator supports canonical D, braced B, parenthesized P and compact N text formats."}},{"@type":"Question","name":"What are the Nil UUID and Max UUID?","acceptedAnswer":{"@type":"Answer","text":"RFC 9562 defines the Nil UUID as all zero bits and the Max UUID as all one bits. They are reserved special values used as sentinels in some systems."}},{"@type":"Question","name":"Are generated UUIDs sent to the server?","acceptedAnswer":{"@type":"Answer","text":"No. UUID and GUID generation happens locally in your browser using the Web Crypto API."}}]}</script>
 </head>
 <body data-uuid-generator>
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
@@ -43,6 +45,8 @@
 <select id="uuidListFormat"><option value="lines" selected>One per line</option><option value="comma">Comma separated</option><option value="json">JSON array</option></select></label>
 <label class="check-control"><input id="uuidUppercase" type="checkbox"> Uppercase hex</label>
 <button class="btn primary" id="generateUuid" type="button">Generate UUIDs</button>
+<button class="text-btn" id="uuidNil" type="button">Nil UUID</button>
+<button class="text-btn" id="uuidMax" type="button">Max UUID</button>
 <button class="text-btn" id="clearUuid" type="button">Clear</button>
 <span id="uuidStatus" data-kind="neutral">Ready</span>
 </div>
@@ -75,6 +79,9 @@
 <h2>UUID v4 versus UUID v7</h2>
 <p>Choose v4 when you primarily want random identifiers with no timestamp ordering requirement. Choose v7 when chronological database locality or approximate creation-time ordering is useful. The generator sets the standardized version and RFC variant bits for both versions. UUID v7 values generated within the same millisecond use random suffixes and are not promised to be strictly monotonic relative to one another.</p>
 
+<h2>Nil UUID and Max UUID special values</h2>
+<p>RFC 9562 defines two reserved sentinel values in addition to generated UUID versions. The <strong>Nil UUID</strong> is <code>00000000-0000-0000-0000-000000000000</code> with all 128 bits set to zero. The <strong>Max UUID</strong> is <code>ffffffff-ffff-ffff-ffff-ffffffffffff</code> with all bits set to one. Use the buttons above when a system explicitly expects one of these special values; they are not random identifiers.</p>
+
 <h2>GUID and UUID are identifiers, not secrets</h2>
 <p>Do not use a UUID or GUID as an authentication secret merely because it appears random. UUID v4 reserves fixed version and variant bits, and UUID v7 intentionally exposes a timestamp prefix. Use purpose-built cryptographic tokens when secrecy or authorization is required.</p>
 
@@ -94,7 +101,10 @@
 <h3>Can I generate UUID v7?</h3><p>Yes. Choose UUID v7 in the version menu. The leading 48 bits encode the current Unix time in milliseconds and the remaining applicable fields use random data.</p>
 <h3>Can I generate GUIDs in Microsoft .NET formats?</h3><p>Yes. Choose canonical D, braced B, parenthesized P or compact N formatting. For example, B produces <code>{550e8400-e29b-41d4-a716-446655440000}</code>.</p>
 <h3>Can I generate multiple UUIDs or GUIDs at once?</h3><p>Yes. The bulk generator supports 1 to 1,000 identifiers per run and can return line-separated, comma-separated or JSON-array output.</p>
+<h3>What are the Nil UUID and Max UUID?</h3><p>RFC 9562 reserves the Nil UUID with all bits set to zero and the Max UUID with all bits set to one. They are special sentinel values rather than randomly generated identifiers.</p>
 <h3>Are generated values sent to the server?</h3><p>No. Generation happens locally in browser JavaScript.</p>
+<h2>Primary references</h2>
+<p><a href="https://www.rfc-editor.org/rfc/rfc9562.html" rel="noopener">RFC 9562 — Universally Unique IDentifiers</a> · <a href="https://learn.microsoft.com/en-us/dotnet/api/system.guid.newguid" rel="noopener">Microsoft .NET Guid.NewGuid documentation</a></p>
 </div></section>
 </main>
 <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
