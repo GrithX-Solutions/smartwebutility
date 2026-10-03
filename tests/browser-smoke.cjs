@@ -427,19 +427,31 @@ const cases = [
     let braced = (await p.locator('#uuidOutput').inputValue()).trim().split(/\r?\n/)[0];
     assert.match(braced, /^\{[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\}$/);
 
-    const before = Date.now();
+    const fixedV7Ms = 1767225600123;
+    await p.evaluate(ms => {
+      window.__uuidOriginalDateNow = Date.now;
+      Date.now = () => ms;
+    }, fixedV7Ms);
+    await p.locator('#uuidCount').fill('100');
     await p.locator('#uuidVersion').selectOption('7');
     await p.locator('#uuidFormat').selectOption('canonical');
     await p.locator('#generateUuid').click();
     values = (await p.locator('#uuidOutput').inputValue()).trim().split(/\r?\n/);
+    assert.equal(values.length, 100);
     values.forEach(value => assert.match(value, /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/));
-    const timestamp = parseInt(values[0].replace(/-/g, '').slice(0, 12), 16);
-    assert.ok(timestamp >= before - 1000 && timestamp <= Date.now() + 1000);
+    assert.equal(new Set(values).size, values.length);
+    assert.deepEqual(values, [...values].sort());
+    const timestamps = new Set(values.map(value => parseInt(value.replace(/-/g, '').slice(0, 12), 16)));
+    assert.deepEqual([...timestamps], [fixedV7Ms]);
 
     await p.locator('#uuidFormat').selectOption('urn');
     await p.locator('#uuidUppercase').check();
     const urn = (await p.locator('#uuidOutput').inputValue()).trim().split(/\r?\n/)[0];
     assert.match(urn, /^urn:uuid:[0-9A-F]{8}-[0-9A-F]{4}-7[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/);
+    await p.evaluate(() => {
+      Date.now = window.__uuidOriginalDateNow;
+      delete window.__uuidOriginalDateNow;
+    });
 
     await p.locator('#uuidVersion').selectOption('4');
     await p.locator('#uuidUppercase').uncheck();
