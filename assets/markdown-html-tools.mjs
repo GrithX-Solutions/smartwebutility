@@ -201,19 +201,22 @@ if (mode === 'html-to-markdown') {
     if (useGfm.checked && gfmPlugin) service.use(gfmPlugin);
 
     const codeLanguage = (codeNode, preNode) => {
-      const candidates = [
+      for (const candidate of [
         codeNode?.getAttribute('data-language'),
-        preNode?.getAttribute('data-language'),
+        preNode?.getAttribute('data-language')
+      ].filter(Boolean)) {
+        const direct = String(candidate).trim();
+        if (/^[A-Za-z0-9_+#.-]+$/.test(direct)) return direct;
+      }
+
+      for (const candidate of [
         codeNode?.getAttribute('class'),
         preNode?.getAttribute('class')
-      ].filter(Boolean);
-
-      for (const candidate of candidates) {
-        const direct = String(candidate).trim();
-        if (/^[A-Za-z0-9_+#.-]+$/.test(direct) && !/\s/.test(direct)) return direct;
-        const match = direct.match(/(?:^|\s)(?:language-|lang-)([A-Za-z0-9_+#.-]+)/i);
+      ].filter(Boolean)) {
+        const match = String(candidate).match(/(?:^|\s)(?:language-|lang-)([A-Za-z0-9_+#.-]+)/i);
         if (match) return match[1];
       }
+
       return '';
     };
 
