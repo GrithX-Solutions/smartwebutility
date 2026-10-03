@@ -62,7 +62,7 @@ Research record:
 
 ### Page 8 — /random-port-generator/
 
-Status: IMPLEMENTED ON BRANCH; CI PENDING.
+Status: VERIFIED ON BRANCH.
 
 Research evidence:
 - `random port generator`: 170 US searches/month, SD 11.
@@ -150,6 +150,16 @@ Page 7 ULID Generator validation:
 - Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
 - Chromium run 359: SUCCESS.
 - Automatic clock-rollback monotonic regression: PASS.
+- Full sitemap browser sweep: PASS.
+
+Page 8 Random Port Generator validation:
+- Implementation/content commits: VERIFIED in GitHub.
+- Build run 679: SUCCESS.
+- JavaScript syntax validation: PASS.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- Chromium run 363: SUCCESS.
+- Existing random-port functional regressions: PASS.
 - Full sitemap browser sweep: PASS.
 
 ## Deployment / indexing
