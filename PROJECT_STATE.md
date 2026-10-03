@@ -62,7 +62,7 @@ Research record:
 
 ### Page 4 — /cron-expression-helper/
 
-Status: IMPLEMENTED ON BRANCH; CI PENDING.
+Status: VERIFIED ON BRANCH.
 
 Research evidence:
 - `cron expression generator`: 1,300 US searches/month, SD 31, CPC $6.54.
