@@ -1973,7 +1973,13 @@ Content-only update:
 - Information gap: VERIFIED.
 - Implementation: COMPLETED on working branch.
 - Generator behavior change: NONE.
-- Static/Build/Chromium CI: PENDING.
+- Build run 686: SUCCESS.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings on Password Generator and Text Tools.
+- Chromium run 370: SUCCESS.
+- Sanitized/raw-output XSS regression: PASS.
+- Sandboxed raw-preview non-execution regression: PASS.
+- Sitemap-wide browser initialization: PASS.
 - Production deployment: NOT STARTED.
 
 
@@ -1981,7 +1987,7 @@ Content-only update:
 
 ## Page 9 — /markdown-to-html/
 
-Status: IMPLEMENTED, CI PENDING
+Status: VERIFIED ON BRANCH
 
 ### Primary intent
 Convert Markdown/GitHub Flavored Markdown into HTML source with preview and export.
