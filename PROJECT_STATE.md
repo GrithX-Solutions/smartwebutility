@@ -60,27 +60,31 @@ Research record:
 
 ## Current page
 
-### Page 7 — /meta-tag-generator/
+### Page 6 — /csv-to-json/
 
-Status: VERIFIED ON BRANCH.
+Status: REVIEWED — NO CHANGE.
 
 Research evidence:
-- `meta tag generator`: 260 US searches/month, SD 11, CPC $6.65.
-- `meta tag generator seo`: 90, SD 28.
-- Current SERP includes multiple DA 4–10 tools.
+- `csv to json format`: 3,600 US searches/month, SD 34.
+- `csv to json`: 2,400, SD 39.
+- `csv to json conversion`: 1,900, SD 31.
+- Current SERP includes DA 9–20 utility domains.
 
-Confirmed gap:
-- existing page lacked Open Graph, Twitter/X and social-preview functionality expected by the current SERP.
+Existing page already covers:
+- quoted CSV edge cases;
+- delimiter detection/selection;
+- header object mode and no-header array mode;
+- type inference;
+- pretty/compact/NDJSON;
+- duplicate header handling;
+- files/copy/download/local processing.
 
-Implemented:
-- primary + Open Graph + Twitter/X markup;
-- character counts without ranking-score claims;
-- escaped copy-ready HTML;
-- search/social preview;
-- no remote image fetch;
-- no obsolete meta-keywords field;
-- updated search aliases and sitemap lastmod;
-- Chromium coverage for escaping/social output/privacy behavior.
+Competitor extras such as arbitrary delimiters, transpose or first-column hashing were reviewed. No verified demand or material intent gap justified adding UI complexity in this pass.
+
+Decision:
+- NO CHANGE.
+- Keep the existing canonical URL and implementation.
+- Revisit only with new first-party or SERP evidence.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
