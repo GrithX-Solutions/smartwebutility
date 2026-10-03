@@ -62,7 +62,7 @@ Research record:
 
 ### Page 7 — /ulid-generator/
 
-Status: IMPLEMENTED ON BRANCH; CI PENDING.
+Status: VERIFIED ON BRANCH.
 
 Research evidence:
 - `ulid generator`: 210 US searches/month, SD 17, transactional.
@@ -140,6 +140,16 @@ Page 7 Meta Tag Generator validation:
 - Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
 - Chromium run 350: SUCCESS.
 - Escaping/Open Graph/Twitter-X/privacy regressions: PASS.
+- Full sitemap browser sweep: PASS.
+
+Page 7 ULID Generator validation:
+- Implementation commits: VERIFIED in GitHub.
+- Build run 675: SUCCESS.
+- JavaScript syntax validation: PASS.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- Chromium run 359: SUCCESS.
+- Automatic clock-rollback monotonic regression: PASS.
 - Full sitemap browser sweep: PASS.
 
 ## Deployment / indexing
