@@ -3,17 +3,17 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>UUID & GUID Generator Online — UUID v4 & v7</title>
-<meta name="description" content="Generate UUID v4, UUID v7 and GUID values online in your browser. Create up to 1,000 UUID/GUID values with RFC UUID and Microsoft-friendly output formats.">
+<meta name="description" content="Generate UUID v4, UUID v7 and GUID values online in your browser. Create up to 1,000 IDs with GUID formats and monotonic UUID v7 ordering per page session.">
 <link rel="canonical" href="https://smartwebutility.com/uuid-generator/">
 <meta property="og:title" content="UUID & GUID Generator Online — UUID v4 & v7">
-<meta property="og:description" content="Generate UUID v4/v7 or GUID-style identifiers locally with bulk and format options.">
+<meta property="og:description" content="Generate UUID v4/v7 or GUID-style identifiers locally with bulk formats and monotonic UUID v7 sequencing per page session.">
 <meta property="og:url" content="https://smartwebutility.com/uuid-generator/"><meta property="og:type" content="website">
 <meta name="twitter:card" content="summary"><meta name="theme-color" content="#071426">
 <link rel="icon" href="/favicon-sw-v5.svg?v=20261001e" type="image/svg+xml">
 <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"UUID & GUID Generator Online","url":"https://smartwebutility.com/uuid-generator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Generate UUID v4, UUID v7 and GUID-style identifiers locally in the browser.","featureList":["UUID v4 generation","UUID v7 generation","GUID-compatible canonical text","Bulk generation up to 1,000","Microsoft GUID D/B/P/N text formats","UUID URN format","Line, comma or JSON list output","Uppercase hexadecimal option","Copy and download"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"UUID & GUID Generator Online","url":"https://smartwebutility.com/uuid-generator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Generate UUID v4, UUID v7 and GUID-style identifiers locally in the browser.","featureList":["UUID v4 generation","UUID v7 generation","Monotonic UUID v7 sequencing within a browser page session","GUID-compatible canonical text","Bulk generation up to 1,000","Microsoft GUID D/B/P/N text formats","UUID URN format","Line, comma or JSON list output","Uppercase hexadecimal option","Copy and download"]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smartwebutility.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://smartwebutility.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"UUID & GUID Generator","item":"https://smartwebutility.com/uuid-generator/"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is a GUID the same as a UUID?","acceptedAnswer":{"@type":"Answer","text":"GUID is the term commonly used in Microsoft ecosystems, while UUID is the standards terminology. They use the same 128-bit identifier format in common developer workflows."}},{"@type":"Question","name":"Can I generate UUID v7?","acceptedAnswer":{"@type":"Answer","text":"Yes. UUID v7 uses a Unix-millisecond timestamp in its leading bits plus random data, so values sort approximately by creation time."}},{"@type":"Question","name":"Can I generate GUIDs in Microsoft .NET formats?","acceptedAnswer":{"@type":"Answer","text":"Yes. The generator supports canonical D, braced B, parenthesized P and compact N text formats."}},{"@type":"Question","name":"What are the Nil UUID and Max UUID?","acceptedAnswer":{"@type":"Answer","text":"RFC 9562 defines the Nil UUID as all zero bits and the Max UUID as all one bits. They are reserved special values used as sentinels in some systems."}},{"@type":"Question","name":"Are generated UUIDs sent to the server?","acceptedAnswer":{"@type":"Answer","text":"No. UUID and GUID generation happens locally in your browser using the Web Crypto API."}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is a GUID the same as a UUID?","acceptedAnswer":{"@type":"Answer","text":"GUID is the term commonly used in Microsoft ecosystems, while UUID is the standards terminology. They use the same 128-bit identifier format in common developer workflows."}},{"@type":"Question","name":"Can I generate UUID v7?","acceptedAnswer":{"@type":"Answer","text":"Yes. UUID v7 uses a Unix-millisecond timestamp plus random data. This generator also keeps UUID v7 values monotonic within the current browser page session, including values created in the same millisecond."}},{"@type":"Question","name":"Can I generate GUIDs in Microsoft .NET formats?","acceptedAnswer":{"@type":"Answer","text":"Yes. The generator supports canonical D, braced B, parenthesized P and compact N text formats."}},{"@type":"Question","name":"What are the Nil UUID and Max UUID?","acceptedAnswer":{"@type":"Answer","text":"RFC 9562 defines the Nil UUID as all zero bits and the Max UUID as all one bits. They are reserved special values used as sentinels in some systems."}},{"@type":"Question","name":"Are generated UUIDs sent to the server?","acceptedAnswer":{"@type":"Answer","text":"No. UUID and GUID generation happens locally in your browser using the Web Crypto API."}}]}</script>
 </head>
 <body data-uuid-generator>
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
@@ -22,7 +22,7 @@
 <div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>UUID & GUID Generator</span></div>
 <span class="kicker">Developer tool · UUID v4, UUID v7 and GUID generation</span>
 <h1>UUID & GUID Generator Online</h1>
-<p class="lead compact">Generate one or hundreds of UUID/GUID identifiers locally in your browser. Choose random UUID v4 or time-ordered UUID v7, then format the result as canonical UUID text, a braced GUID, compact hexadecimal or a UUID URN.</p>
+<p class="lead compact">Generate one or up to 1,000 UUID/GUID identifiers locally in your browser. Choose random UUID v4 or time-ordered UUID v7, then format the result as canonical UUID text, a braced GUID, compact hexadecimal or a UUID URN. UUID v7 output stays monotonic within the current page session.</p>
 
 <div class="json-toolbar data-view-toolbar">
 <label class="compact-control">Version
@@ -57,16 +57,16 @@
 </section>
 <div id="uuidError" class="error" hidden role="alert"></div>
 <div id="uuidStats" class="json-stats" hidden></div>
-<div class="trustbar"><span>Browser-side generation</span><span>Web Crypto randomness</span><span>UUID v4 + v7</span><span>Bulk up to 1,000</span><span>No server request</span></div>
+<div class="trustbar"><span>Browser-side generation</span><span>Web Crypto randomness</span><span>UUID v4 + v7</span><span>Monotonic v7 per page session</span><span>Bulk up to 1,000</span><span>No server request</span></div>
 </section>
 
-<section class="section wrap prose">
+<section class="section wrap prose" data-quality-content="v2">
 <h2>Generate UUIDs and GUIDs in one tool</h2>
 <p>UUID and GUID terminology often overlaps in developer workflows. UUID is the standards term for a 128-bit universally unique identifier, while GUID is the name widely used in Microsoft APIs and tooling. This page keeps one canonical generator instead of splitting those search terms into duplicate utilities.</p>
 <div class="info-grid">
 <article><h3>UUID v4</h3><p>Version 4 uses random or pseudorandom bits with the required UUID version and variant fields. It is a common choice for independent identifiers, database keys, test data and Microsoft-style random GUID workflows.</p></article>
 <article><h3>UUID v7</h3><p>Version 7 places a Unix-epoch millisecond timestamp in the leading 48 bits and uses random bits for the remainder. That makes values sortable by creation time at millisecond granularity without exposing a machine identifier.</p></article>
-<article><h3>Bulk generation</h3><p>Create up to 1,000 identifiers in one run. Export one value per line, a comma-separated list or a JSON array for fixtures, scripts and database workflows.</p></article>
+<article><h3>Bulk generation</h3><p>Create up to 1,000 identifiers in one run. UUID v7 batches stay in generation order within this page session, even when several values share the same millisecond timestamp.</p></article>
 <article><h3>Private by design</h3><p>Generation happens in browser JavaScript using Web Crypto. The page does not send a UUID or GUID generation request to Smart Web Utility's server.</p></article>
 </div>
 
@@ -77,7 +77,11 @@
 <p><strong>Canonical</strong> output looks like <code>550e8400-e29b-41d4-a716-446655440000</code>. <strong>Braced GUID</strong> wraps that text in <code>{ }</code>. <strong>Compact</strong> removes hyphens for a 32-character hexadecimal representation. <strong>URN</strong> prefixes the canonical value with <code>urn:uuid:</code>. Uppercase changes hexadecimal letter case without changing identifier bits.</p>
 
 <h2>UUID v4 versus UUID v7</h2>
-<p>Choose v4 when you primarily want random identifiers with no timestamp ordering requirement. Choose v7 when chronological database locality or approximate creation-time ordering is useful. The generator sets the standardized version and RFC variant bits for both versions. UUID v7 values generated within the same millisecond use random suffixes and are not promised to be strictly monotonic relative to one another.</p>
+<p>Choose v4 when you primarily want random identifiers with no timestamp ordering requirement. Choose v7 when chronological database locality or creation-time ordering is useful. The generator sets the standardized version and RFC variant bits for both versions. UUID v7 exposes a Unix-millisecond timestamp in its leading 48 bits, so it is not appropriate when creation time must remain hidden.</p>
+
+<h2>How this generator keeps UUID v7 batches monotonic</h2>
+<p>RFC 9562 recommends additional monotonic handling when one process generates several UUID v7 values during the same timestamp tick. This page keeps the last v7 timestamp and 74-bit random payload in memory for the current browser page session. When another UUID v7 is created at the same millisecond—or the local clock moves backward—the generator advances that payload by a cryptographically random positive increment instead of replacing it with unrelated random bits. That keeps later values lexicographically greater within this page session while retaining randomized payload spacing.</p>
+<p>The guarantee is intentionally local. Separate tabs, browsers, devices and application processes do not share this in-memory state, so this tool does not claim global monotonicity across independent generators. Applications that require ordering across distributed writers should enforce that behavior in their own UUID library, database or coordination layer.</p>
 
 <h2>Nil UUID and Max UUID special values</h2>
 <p>RFC 9562 defines two reserved sentinel values in addition to generated UUID versions. The <strong>Nil UUID</strong> is <code>00000000-0000-0000-0000-000000000000</code> with all 128 bits set to zero. The <strong>Max UUID</strong> is <code>ffffffff-ffff-ffff-ffff-ffffffffffff</code> with all bits set to one. Use the buttons above when a system explicitly expects one of these special values; they are not random identifiers.</p>
@@ -95,10 +99,10 @@
 <div class="related-tools"><a href="/uuid-validator/">UUID Validator<span>Check UUID/GUID format, version and variant.</span></a><a href="/unix-timestamp-converter/">Unix Timestamp Converter<span>Inspect Unix timestamps and date conversions.</span></a><a href="/random-string-generator/">Random String Generator<span>Create random text for testing or non-UUID workflows.</span></a></div>
 </section>
 
-<section class="section alt" data-quality-content="v1"><div class="wrap prose">
+<section class="section alt" data-quality-content="v2"><div class="wrap prose">
 <h2>Frequently asked questions</h2>
 <h3>Is a GUID the same as a UUID?</h3><p>The terms overlap heavily in practical software development. GUID is common in Microsoft ecosystems, while UUID is the standards terminology. Microsoft <code>Guid.NewGuid()</code> creates a version 4 UUID.</p>
-<h3>Can I generate UUID v7?</h3><p>Yes. Choose UUID v7 in the version menu. The leading 48 bits encode the current Unix time in milliseconds and the remaining applicable fields use random data.</p>
+<h3>Can I generate UUID v7?</h3><p>Yes. Choose UUID v7 in the version menu. The leading 48 bits encode Unix time in milliseconds. This generator keeps later v7 values monotonic within the current page session, including same-millisecond batches.</p>
 <h3>Can I generate GUIDs in Microsoft .NET formats?</h3><p>Yes. Choose canonical D, braced B, parenthesized P or compact N formatting. For example, B produces <code>{550e8400-e29b-41d4-a716-446655440000}</code>.</p>
 <h3>Can I generate multiple UUIDs or GUIDs at once?</h3><p>Yes. The bulk generator supports 1 to 1,000 identifiers per run and can return line-separated, comma-separated or JSON-array output.</p>
 <h3>What are the Nil UUID and Max UUID?</h3><p>RFC 9562 reserves the Nil UUID with all bits set to zero and the Max UUID with all bits set to one. They are special sentinel values rather than randomly generated identifiers.</p>
