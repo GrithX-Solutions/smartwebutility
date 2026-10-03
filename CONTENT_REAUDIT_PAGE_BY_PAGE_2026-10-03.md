@@ -908,3 +908,148 @@ Chromium coverage now verifies:
 - Cron builder/parser/next-run regressions: PASS.
 - Sitemap-wide browser initialization: PASS.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 5 — /csv-to-json/
+
+Status: IMPLEMENTED, CI PENDING
+
+### Primary intent
+
+Convert CSV or other common delimited tabular text into JSON for APIs, fixtures, scripts and data workflows.
+
+Canonical owner:
+- `https://smartwebutility.com/csv-to-json/`
+
+Related intent owner:
+- `/json-to-csv/` owns the reverse JSON-to-CSV direction.
+
+### Ubersuggest US evidence
+
+Primary:
+- `csv to json`: 2,400 searches/month, SD 39, CPC $10.34.
+
+High-value same-intent variants:
+- `csv to json format`: 3,600, SD 34, CPC $11.33.
+- `csv to json conversion`: 1,900, SD 31.
+- `convert from csv to json`: 1,000, SD 43.
+- `convert a csv to json`: 880, SD 39.
+- `convert csv to json`: 720, SD 32.
+- `csv to json converter`: 720, SD 31.
+- `online csv to json converter`: 480, SD 26.
+- `csv to json array`: 20, SD 11.
+
+Ubersuggest currently reports no US ranking-keyword data for Smart Web Utility's CSV-to-JSON page. Ranking gains remain UNKNOWN.
+
+### SERP / competitor evidence
+
+The Ubersuggest US result set includes:
+- CSVJSON — DA 39
+- ConvertCSV — DA 43
+- Jam — DA 33
+- Tooloogle — DA 14
+- TableConvert — DA 31
+- AgentsForData — DA 11
+- Qodex — DA 20
+- JSON Copilot — DA 9
+
+This is a competitive SERP, but several utility pages with modest authority rank inside the result set.
+
+Current live review on 2026-10-03 shows common feature expectations:
+- quoted-field/RFC-style parsing;
+- delimiter selection or detection;
+- header toggle;
+- optional type inference;
+- local file handling;
+- copy/download;
+- increasingly, output shape controls such as compact JSON or JSON Lines/NDJSON.
+
+### Current Smart Web Utility strengths before this change
+
+Already present:
+- comma/tab/semicolon/pipe detection;
+- quoted fields;
+- doubled-quote escaping;
+- embedded line breaks;
+- header/object mode;
+- headerless array mode;
+- duplicate-header renaming;
+- uneven-row preservation;
+- optional booleans/null/safe-number inference;
+- leading-zero protection because unsupported numeric text remains a string;
+- local file input up to 5 MB;
+- copy/download;
+- browser-local conversion.
+
+The parser did not need replacement.
+
+### Confirmed gap
+
+Output was hard-coded to one pretty-printed JSON array with two-space indentation.
+
+Current competitor workflows increasingly expose:
+- compact JSON for transfer/storage;
+- alternate indentation;
+- JSON Lines/NDJSON for line-oriented ingestion and streaming pipelines.
+
+This is a real workflow gap rather than a word-count/content gap.
+
+### Implementation
+
+`assets/csv-to-json.js` now supports:
+- Pretty JSON — 2 spaces;
+- Pretty JSON — 4 spaces;
+- Compact JSON;
+- JSON Lines / NDJSON.
+
+JSON Lines behavior:
+- each converted row becomes one JSON value per line;
+- object rows remain objects when header mode is enabled;
+- headerless rows remain arrays;
+- no outer JSON array is added;
+- download uses `.jsonl` for JSON Lines mode.
+
+Existing parser/type/header behavior remains unchanged.
+
+`csv-to-json/index.html` now:
+- exposes the Output selector;
+- explains JSON array vs JSON Lines semantics;
+- explains pretty vs compact output;
+- updates metadata/schema to match actual output modes;
+- retains privacy, parser and data-type limitations.
+
+Search aliases now include:
+- `csv to json`
+- `csv to json format`
+- `csv to json conversion`
+- `convert csv to json`
+- `csv to json converter`
+- `online csv to json converter`
+- `csv to json lines`
+- `csv to ndjson`
+
+No new URL was created.
+
+### Regression tests
+
+Chromium coverage now verifies:
+- existing quoted CSV and type inference behavior;
+- JSON Lines emits one parseable JSON object per row;
+- Compact JSON contains no pretty-print line breaks;
+- 4-space JSON uses four-space object indentation;
+- headerless array mode still works;
+- malformed quoted CSV still reports an error.
+
+### Page 5 acceptance status
+
+- Demand / difficulty: VERIFIED.
+- Current SERP intent: VERIFIED.
+- Canonical ownership: VERIFIED.
+- Existing functionality inspected: VERIFIED.
+- Product/workflow gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Browser regression coverage: COMPLETED.
+- Static/Build/Chromium CI: PENDING.
+- Production deployment: NOT STARTED.
