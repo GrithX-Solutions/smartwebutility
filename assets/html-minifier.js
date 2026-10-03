@@ -17,7 +17,8 @@
     removeOptionalTags: document.getElementById('minOptionalTags'),
     minifyCSS: document.getElementById('minInlineCss'),
     minifyJS: document.getElementById('minInlineJs'),
-    sortAttributes: document.getElementById('minSortAttrs')
+    sortAttributes: document.getElementById('minSortAttrs'),
+    html5Cleanup: document.getElementById('minHtml5Cleanup')
   };
 
   const setStatus = (text, kind = 'neutral') => {
@@ -40,6 +41,10 @@
     minifyJS: controls.minifyJS.checked,
     sortAttributes: controls.sortAttributes.checked,
     sortClassName: controls.sortAttributes.checked,
+    collapseBooleanAttributes: controls.html5Cleanup.checked,
+    removeScriptTypeAttributes: controls.html5Cleanup.checked,
+    removeStyleLinkTypeAttributes: controls.html5Cleanup.checked,
+    useShortDoctype: controls.html5Cleanup.checked,
     keepClosingSlash: true,
     removeEmptyAttributes: false
   });
