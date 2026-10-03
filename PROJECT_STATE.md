@@ -60,31 +60,29 @@ Research record:
 
 ## Current page
 
-### Page 4 — /cron-expression-helper/
+### Page 5 — /html-to-markdown/
 
-Status: VERIFIED ON BRANCH.
+Status: IMPLEMENTED ON BRANCH; CI PENDING.
 
 Research evidence:
-- `cron expression generator`: 1,300 US searches/month, SD 31, CPC $6.54.
-- `cron generator`: 1,600, SD 41, CPC $17.20.
-- Current U.S. SERP contains several low-authority generator sites, including DA 1–10 utilities.
+- `html to markdown`: 1,600 US searches/month, SD 32, CPC $21.11.
+- `html to markdown converter`: 390, SD 33.
+- `html to markdown converter online`: 90, SD 21.
+- `online html to markdown converter`: 50, SD 14.
+- Current SERP includes several low-to-mid-authority converter domains.
 - Smart Web Utility currently has no Ubersuggest US ranking-keyword data for this page.
 
 Confirmed gap:
-- existing page was parser/explainer only;
-- current search intent expects a builder/generator plus run verification;
-- no next-run preview or robust list/range/step validation existed.
+- existing converter dropped explicit code-language metadata from HTML fenced-code blocks;
+- current competitors preserve language hints for Markdown syntax highlighting.
 
 Implemented:
-- standard five-field cron builder;
-- parser/validator for ranges, lists and steps;
-- three-letter month/weekday names;
-- five-run local-time preview;
-- Vixie-style DOM/DOW OR semantics;
-- strict rejection of six/seven-field expressions;
-- platform/timezone/DST compatibility guidance;
-- updated title/metadata/search aliases and sitemap lastmod;
-- Chromium regression coverage for builder, named weekdays, next-run rendering and six-field rejection.
+- preserve `data-language`, `language-*` and `lang-*` hints;
+- emit the explicit language after the opening fence;
+- expand the fence length when code contains embedded backtick runs;
+- no language guessing;
+- updated page guidance, WebApplication feature metadata, tool-search aliases and sitemap lastmod;
+- Chromium regression coverage using code that contains triple backticks.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
