@@ -60,29 +60,28 @@ Research record:
 
 ## Current page
 
-### Page 5 — /html-to-markdown/
+### Page 6 — /html-minifier/
 
-Status: VERIFIED ON BRANCH.
+Status: IMPLEMENTED ON BRANCH; CI PENDING.
 
 Research evidence:
-- `html to markdown`: 1,600 US searches/month, SD 32, CPC $21.11.
-- `html to markdown converter`: 390, SD 33.
-- `html to markdown converter online`: 90, SD 21.
-- `online html to markdown converter`: 50, SD 14.
-- Current SERP includes several low-to-mid-authority converter domains.
+- `html minifier`: 1,600 US searches/month, SD 32, CPC $11.24.
+- `online html minifier`: 110, SD 32.
+- Current U.S. SERP contains multiple low-to-mid-authority tool domains.
 - Smart Web Utility currently has no Ubersuggest US ranking-keyword data for this page.
 
 Confirmed gap:
-- existing converter dropped explicit code-language metadata from HTML fenced-code blocks;
-- current competitors preserve language hints for Markdown syntax highlighting.
+- html-minifier-terser already supports useful HTML5 cleanup options;
+- existing UI did not expose short doctype, boolean-attribute collapse or legacy CSS/JS type-attribute cleanup.
 
 Implemented:
-- preserve `data-language`, `language-*` and `lang-*` hints;
-- emit the explicit language after the opening fence;
-- expand the fence length when code contains embedded backtick runs;
-- no language guessing;
-- updated page guidance, WebApplication feature metadata, tool-search aliases and sitemap lastmod;
-- Chromium regression coverage using code that contains triple backticks.
+- one opt-in HTML5 cleanup control;
+- short HTML5 doctype;
+- boolean-attribute collapse;
+- remove legacy script/style/link type attributes;
+- conservative defaults remain unchanged;
+- updated visible guidance, WebApplication metadata, search aliases and sitemap lastmod;
+- Chromium regression coverage for legacy HTML -> HTML5 cleanup.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
