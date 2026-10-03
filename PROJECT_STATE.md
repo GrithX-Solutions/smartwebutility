@@ -62,7 +62,7 @@ Research record:
 
 ### Page 9 — /markdown-to-html/
 
-Status: IMPLEMENTED ON BRANCH; CI PENDING.
+Status: VERIFIED ON BRANCH.
 
 Research evidence:
 - `markdown to html`: 2,400 US searches/month, SD 27, CPC $10.12.
@@ -169,6 +169,17 @@ Page 8 Random Port Generator validation:
 - Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
 - Chromium run 363: SUCCESS.
 - Existing random-port functional regressions: PASS.
+- Full sitemap browser sweep: PASS.
+
+Page 9 Markdown to HTML validation:
+- Implementation commits: VERIFIED in GitHub.
+- Build run 686: SUCCESS.
+- JavaScript syntax validation: PASS.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- Chromium run 370: SUCCESS.
+- Sanitized/raw-output XSS regression: PASS.
+- Sandboxed raw-preview non-execution regression: PASS.
 - Full sitemap browser sweep: PASS.
 
 ## Deployment / indexing
