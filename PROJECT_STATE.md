@@ -60,29 +60,31 @@ Research record:
 
 ## Current page
 
-### Page 4 — /cron-expression-helper/
+### Page 5 — /csv-to-json/
 
-Status: VERIFIED ON BRANCH.
+Status: IMPLEMENTED ON BRANCH; CI PENDING.
 
 Research evidence:
-- `cron expression generator`: 1,300 US searches/month, SD 31, CPC $6.54.
-- `cron generator`: 1,600, SD 41, CPC about $17.20.
-- Current Ubersuggest/live SERPs consistently expect a builder + parser + next-run preview.
+- `csv to json`: 2,400 US searches/month, SD 39, CPC $10.34.
+- `csv to json format`: 3,600, SD 34, CPC $11.33.
+- `csv to json conversion`: 1,900, SD 31.
+- `online csv to json converter`: 480, SD 26.
+- Current SERP contains multiple mid/low-authority utilities, including Tooloogle DA 14 and AgentsForData DA 11.
 - Smart Web Utility currently has no Ubersuggest US ranking-keyword data for this page.
 
 Confirmed gap:
-- previous page was a parser/preset helper only;
-- it did not satisfy generator intent with field controls or next-run verification.
+- parser/header/delimiter/type handling was already strong;
+- output was fixed to a 2-space JSON array;
+- current competitor workflows frequently offer compact JSON and JSON Lines/NDJSON.
 
 Implemented:
-- dependency-free 5-field cron builder/parser;
-- lists, ranges, wildcard/range steps, month/weekday names;
-- browser-local next-run preview and timezone display;
-- traditional day-of-month/day-of-week OR semantics;
-- explicit rejection of 6/7-field cron variants;
-- stronger semantic/compatibility guidance;
-- updated tool-search aliases and sitemap lastmod;
-- Chromium coverage for builder sync, named weekdays, next runs and 6-field rejection.
+- 2-space pretty JSON;
+- 4-space pretty JSON;
+- compact JSON;
+- JSON Lines/NDJSON with .jsonl download;
+- visible output-format guidance;
+- updated schema/search aliases/sitemap lastmod;
+- Chromium coverage for all new output modes plus existing parser behavior.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
