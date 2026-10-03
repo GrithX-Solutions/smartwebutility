@@ -177,12 +177,14 @@ const cases = [
   }],
   ['html-to-markdown', async p => {
     await p.waitForFunction(() => document.getElementById('htmlMarkdownStatus').textContent === 'Ready');
-    await p.locator('#htmlMarkdownInput').fill('<h1>Hello</h1><p>A <strong>bold</strong> paragraph.</p><table><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td>one</td><td>two</td></tr></tbody></table>');
+    await p.locator('#htmlMarkdownInput').fill('<h1>Hello</h1><p>A <strong>bold</strong> paragraph.</p><table><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td>one</td><td>two</td></tr></tbody></table><pre><code class="language-js">const fence = "\x60\x60\x60";\nconsole.log(fence);</code></pre>');
     await p.locator('#convertHtmlMarkdown').click();
     const markdown = await p.locator('#htmlMarkdownOutput').inputValue();
     assert.ok(markdown.includes('# Hello'));
     assert.ok(markdown.includes('**bold**'));
     assert.ok(markdown.includes('| A'));
+    assert.ok(markdown.includes('\x60\x60\x60\x60js'));
+    assert.ok(markdown.includes('const fence = "\x60\x60\x60";'));
     assert.equal(await p.locator('#htmlMarkdownError').isHidden(), true);
   }],
   ['html-minifier', async p => {
