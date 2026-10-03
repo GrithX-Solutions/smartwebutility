@@ -768,3 +768,138 @@ Chromium coverage now verifies:
 - U/L and I/G bit-control regressions: PASS.
 - Sitemap-wide browser initialization: PASS.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 4 — /cron-expression-helper/
+
+Status: IMPLEMENTED, CI PENDING
+
+### Primary intent
+
+Build, validate, explain and preview standard five-field cron expressions.
+
+Canonical owner:
+- `https://smartwebutility.com/cron-expression-helper/`
+
+Cannibalization decision:
+- keep the existing URL as the one owner for cron generator/parser intent;
+- do not create a separate `/cron-generator/` or `/cron-expression-generator/` URL.
+
+### Ubersuggest US evidence
+
+Primary:
+- `cron expression generator`: 1,300 searches/month, SD 31, CPC $6.54.
+- `cron generator`: 1,600 searches/month, SD 41, CPC $17.20.
+
+Relevant variants:
+- `quartz cron expression generator`: 140, SD 32.
+- `cron generator online`: 30, SD 30.
+- `cron expression generator online`: 10, SD 29.
+- multiple platform-specific variants exist for Spring, AWS, Azure and other non-standard cron dialects.
+
+Ubersuggest currently reports no US ranking-keyword data for Smart Web Utility's cron page. Ranking gains remain UNKNOWN.
+
+### SERP / competitor evidence
+
+Ubersuggest's current US result set includes:
+- Cronhub
+- crontab.guru
+- ServerAvatar
+- CronMaker
+- Appsmith
+- elmah.io
+- UptimeRobot
+- several low-authority generators such as apyrn.com, cronmagic.com, crongenerator.dev, uptimes.ai and BuilderTools.dev.
+
+Current live SERP review on 2026-10-03 shows a consistent main-intent pattern:
+- visual or per-field expression builder;
+- parsing/validation of an existing expression;
+- human-readable explanation;
+- common presets;
+- next-run preview;
+- local/browser processing on several tools;
+- explicit distinction between standard five-field cron and Quartz/Spring/cloud variants on stronger pages.
+
+### Current Smart Web Utility behavior before this change
+
+The page only:
+- accepted a text expression;
+- recognized a few presets;
+- produced a basic description;
+- enforced five fields by count.
+
+It did not:
+- provide field-by-field generator controls;
+- validate ranges/lists/steps deeply;
+- accept month/weekday names;
+- calculate upcoming run times;
+- expose timezone context.
+
+That was a direct mismatch with the “generator” SERP intent.
+
+### Technical reference
+
+The Linux `crontab(5)` manual documents:
+- minute 0–59;
+- hour 0–23;
+- day-of-month 1–31;
+- month 1–12 or names;
+- day-of-week 0–7 where 0/7 are Sunday, or names;
+- `*`, ranges, lists and step values;
+- traditional day-of-month/day-of-week OR behavior when both fields are restricted;
+- daylight-saving behavior that can skip or repeat local wall-clock times.
+
+### Implementation
+
+`assets/cron.js` now provides a dependency-free standard five-field cron engine:
+- field parser for minute/hour/day/month/weekday;
+- numeric range validation;
+- lists;
+- inclusive ranges;
+- step syntax on wildcard/range bases;
+- three-letter month names;
+- three-letter weekday names;
+- Sunday normalization for 0/7;
+- Vixie-style day-of-month/day-of-week matching semantics;
+- browser-local next-run calculation;
+- up to five matches inside a 400-day preview window;
+- browser timezone display;
+- builder-to-expression and expression-to-builder synchronization;
+- copy action;
+- explicit rejection of six/seven-field expressions.
+
+`cron-expression-helper/index.html` now:
+- targets “Cron Expression Generator & Parser” while preserving the canonical URL;
+- adds five editable builder fields;
+- retains common presets;
+- shows the synchronized expression;
+- shows a readable explanation;
+- previews next runs;
+- documents timezone/DST limitations;
+- explicitly excludes Quartz/Spring/AWS/Azure compatibility guarantees;
+- documents the day-of-month/day-of-week OR rule.
+
+No external JS cron package was added.
+
+### Regression tests
+
+Chromium coverage now verifies:
+- builder input `*/15 * * * *` synchronizes into the expression;
+- description reports every 15 minutes;
+- five next-run rows are produced;
+- named weekday range `MON-FRI` parses and synchronizes;
+- a six-field expression is rejected with a visible five-field error.
+
+### Page 4 acceptance status
+
+- Demand / difficulty: VERIFIED.
+- Current SERP intent: VERIFIED.
+- Canonical/cannibalization decision: VERIFIED.
+- Existing functionality inspected: VERIFIED.
+- Product/intent gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Browser regression coverage: COMPLETED.
+- Static/Build/Chromium CI: PENDING.
+- Production deployment: NOT STARTED.
