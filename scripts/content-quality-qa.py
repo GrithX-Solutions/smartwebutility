@@ -45,6 +45,7 @@ class ContentParser(HTMLParser):
         self.main_depth = 0
         self.skip_depth = 0
         self.current_p: list[str] | None = None
+        self.inline_code_depth = 0
         self.main_text: list[str] = []
         self.paragraphs: list[str] = []
         self.section_headings = 0
@@ -67,17 +68,24 @@ class ContentParser(HTMLParser):
                 self.section_headings += 1
             elif tag == "p" and self.skip_depth == 0:
                 self.current_p = []
+                self.inline_code_depth = 0
+            elif tag == "code" and self.skip_depth == 0 and self.current_p is not None:
+                self.inline_code_depth += 1
+                self.current_p.append(" CODETOKEN ")
 
     def handle_endtag(self, tag):
         tag = tag.lower()
         if self.in_main:
             if tag in ("script", "style", "noscript", "svg") and self.skip_depth:
                 self.skip_depth -= 1
+            elif tag == "code" and self.inline_code_depth:
+                self.inline_code_depth -= 1
             elif tag == "p" and self.current_p is not None:
                 text = re.sub(r"\s+", " ", "".join(self.current_p)).strip()
                 if text:
                     self.paragraphs.append(text)
                 self.current_p = None
+                self.inline_code_depth = 0
             elif tag == "main":
                 self.main_depth -= 1
                 if self.main_depth <= 0:
@@ -86,7 +94,7 @@ class ContentParser(HTMLParser):
     def handle_data(self, data):
         if not self.in_main or self.skip_depth:
             return
-        if self.current_p is not None:
+        if self.current_p is not None and not self.inline_code_depth:
             self.current_p.append(data)
         self.main_text.append(data)
 
