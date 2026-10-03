@@ -28,8 +28,8 @@ PASSIVE_RE = re.compile(
     r"(?:\w+ly\s+)?\w+(?:ed|en)\b",
     re.IGNORECASE,
 )
-REPEATED_WORD_RE = re.compile(r"\b([A-Za-z]{3,})\s+\1\b", re.IGNORECASE)
-SPACE_BEFORE_PUNCT_RE = re.compile(r"\s+[,.!?;:]")
+REPEATED_WORD_RE = re.compile(r"(?<![-’'])\\b([A-Za-z]{3,})\\s+\\1\\b", re.IGNORECASE)
+SPACE_BEFORE_PUNCT_RE = re.compile(r"\\s+[,.!?;:](?=\\s|$)")
 DUPLICATE_PUNCT_RE = re.compile(r"(?:!!+|\?\?+|,,+|;;+)")
 PLACEHOLDER_RE = re.compile(
     r"\b(?:TODO|TKTK|FIXME|coming soon|under construction)\b",
