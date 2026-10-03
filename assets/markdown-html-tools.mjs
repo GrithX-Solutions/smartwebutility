@@ -39,11 +39,13 @@ if (mode === 'markdown-to-html') {
   const preview = document.getElementById('markdownHtmlPreview');
   const file = document.getElementById('markdownFile');
   const breaks = document.getElementById('markdownBreaks');
+  const sanitize = document.getElementById('markdownSanitize');
   const statusEl = document.getElementById('markdownHtmlStatus');
   const error = document.getElementById('markdownHtmlError');
   const stats = document.getElementById('markdownHtmlStats');
 
   let marked = null;
+  let DOMPurify = null;
 
   const setStatus = (text, kind = 'neutral') => {
     statusEl.textContent = text;
@@ -79,23 +81,38 @@ if (mode === 'markdown-to-html') {
       setStatus('Add Markdown');
       return;
     }
-    const html = marked.parse(source, { gfm: true, breaks: breaks.checked, async: false });
-    output.value = String(html);
-    preview.srcdoc = previewDocument(String(html));
+    const rawHtml = String(marked.parse(source, { gfm: true, breaks: breaks.checked, async: false }));
+    if (sanitize.checked && (!DOMPurify || typeof DOMPurify.sanitize !== 'function')) {
+      throw new Error('HTML sanitizer is still loading. Please try again.');
+    }
+    const html = sanitize.checked
+      ? DOMPurify.sanitize(rawHtml, { USE_PROFILES: { html: true } })
+      : rawHtml;
+
+    output.value = html;
+    preview.srcdoc = previewDocument(html);
     stats.hidden = false;
     stats.innerHTML =
       '<span><b>' + source.length.toLocaleString() + '</b> input chars</span>' +
-      '<span><b>' + String(html).length.toLocaleString() + '</b> HTML chars</span>' +
-      '<span><b>' + source.split(/\r?\n/).length.toLocaleString() + '</b> input lines</span>';
-    setStatus('Converted', 'success');
+      '<span><b>' + html.length.toLocaleString() + '</b> HTML chars</span>' +
+      '<span><b>' + source.split(/\r?\n/).length.toLocaleString() + '</b> input lines</span>' +
+      '<span><b>' + (sanitize.checked ? 'Sanitized' : 'Raw') + '</b> output mode</span>';
+    setStatus(sanitize.checked ? 'Converted · sanitized' : 'Converted · raw HTML', sanitize.checked ? 'success' : 'warning');
   };
 
   try {
-    const mod = await import('https://cdn.jsdelivr.net/npm/marked@18.0.14/+esm');
-    marked = mod.marked;
+    const [markedMod, purifyMod] = await Promise.all([
+      import('https://cdn.jsdelivr.net/npm/marked@18.0.14/+esm'),
+      import('https://cdn.jsdelivr.net/npm/dompurify@3.4.16/dist/purify.es.mjs')
+    ]);
+    marked = markedMod.marked;
+    DOMPurify = purifyMod.default || purifyMod;
+    if (!marked || !DOMPurify || typeof DOMPurify.sanitize !== 'function') {
+      throw new Error('Converter dependency missing.');
+    }
     setStatus('Ready');
   } catch {
-    fail(new Error('Markdown parser failed to load. Refresh the page and try again.'));
+    fail(new Error('Markdown converter or HTML sanitizer failed to load. Refresh the page and try again.'));
   }
 
   document.getElementById('convertMarkdownHtml').addEventListener('click', () => {
@@ -118,10 +135,12 @@ if (mode === 'markdown-to-html') {
     input.focus();
   });
 
-  breaks.addEventListener('change', () => {
-    if (!input.value.trim()) return;
-    try { convert(); } catch (caught) { fail(caught); }
-  });
+  for (const control of [breaks, sanitize]) {
+    control.addEventListener('change', () => {
+      if (!input.value.trim()) return;
+      try { convert(); } catch (caught) { fail(caught); }
+    });
+  }
 
   file.addEventListener('change', async () => {
     try {
