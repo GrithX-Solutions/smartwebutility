@@ -14,6 +14,10 @@
   const stats = document.getElementById('uuidStats');
   const copyBtn = document.getElementById('copyUuid');
   const downloadBtn = document.getElementById('downloadUuid');
+  const nilBtn = document.getElementById('uuidNil');
+  const maxBtn = document.getElementById('uuidMax');
+  const NIL_UUID = '00000000-0000-0000-0000-000000000000';
+  const MAX_UUID = 'ffffffff-ffff-ffff-ffff-ffffffffffff';
 
   const setStatus = (message, kind = 'neutral') => {
     status.textContent = message;
@@ -110,7 +114,25 @@
     setStatus(count + ' ' + (version === '4' ? 'UUID/GUID' : 'UUID v7') + (count === 1 ? '' : ' values') + ' generated', 'success');
   }
 
+  function showSpecial(canonical, label) {
+    clearError();
+    countEl.value = '1';
+    const value = applyFormat(canonical);
+    if (listFormatEl.value === 'json') output.value = JSON.stringify([value], null, 2);
+    else output.value = value;
+    outputTitle.textContent = label + ' output';
+    stats.hidden = false;
+    stats.innerHTML =
+      '<span><b>1</b> special UUID</span>' +
+      '<span><b>' + label + '</b> RFC 9562 sentinel</span>' +
+      '<span><b>' + formatEl.options[formatEl.selectedIndex].text + '</b> format</span>' +
+      '<span><b>' + (uppercaseEl.checked ? 'Uppercase' : 'Lowercase') + '</b> hex</span>';
+    setStatus(label + ' ready', 'success');
+  }
+
   document.getElementById('generateUuid').addEventListener('click', generate);
+  nilBtn.addEventListener('click', () => showSpecial(NIL_UUID, 'Nil UUID'));
+  maxBtn.addEventListener('click', () => showSpecial(MAX_UUID, 'Max UUID'));
 
   document.getElementById('clearUuid').addEventListener('click', () => {
     output.value = '';
