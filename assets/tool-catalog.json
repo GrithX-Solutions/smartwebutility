@@ -41,8 +41,8 @@
     "category": "Developer",
     "url": "/csv-to-json/",
     "title": "CSV to JSON",
-    "description": "Convert quoted CSV rows into formatted JSON locally.",
-    "keywords": []
+    "description": "Convert CSV to pretty, compact or JSON Lines output locally.",
+    "keywords": ["csv to json", "csv to json format", "csv to json conversion", "convert csv to json", "csv to json converter", "online csv to json converter", "csv to json online", "csv to json lines", "csv to ndjson"]
   },
   {
     "category": "Developer",
