@@ -661,6 +661,11 @@ const cases = [
     await p.locator('#bgColor').fill('#123456');
     await p.locator('#transparentBg').check();
     await p.locator('#generateFavicons').click();
+    await p.waitForFunction(() => {
+      const status = document.getElementById('faviconStatus');
+      const button = document.getElementById('generateFavicons');
+      return status && /maskable/i.test(status.textContent || '') && button && !button.disabled;
+    });
 
     const status = (await p.locator('#faviconStatus').innerText()).trim();
     assert.match(status, /maskable/i);
