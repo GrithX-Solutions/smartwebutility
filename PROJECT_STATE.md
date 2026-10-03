@@ -4,16 +4,18 @@ Last verified: 2026-10-03
 
 ## Objective
 
-Complete Content Re-Audit Batch 2 by releasing the researched YAML/JSON and Base64 improvements plus the active-voice cleanup, while retaining evidence-based no-change decisions for pages where expansion would add filler.
+Continue evidence-driven content and SEO improvement after successfully releasing Content Re-Audit Batch 2. Production now includes the researched YAML/JSON and Base64 improvements plus the active-voice cleanup, while evidence-based no-change decisions remain documented for pages where expansion would add filler.
 
 ## Source / deployment state
 
-- Current merged implementation SHA: `3fea7c0ee44be66d366c3e1a6a5980de491ec81d`
+- Deployed source/artifact SHA: `04ce96286f0baaff1a175f4cae7c9491b0607688`
+- Batch 2 implementation merge SHA: `3fea7c0ee44be66d366c3e1a6a5980de491ec81d`
 - Merged PR: #44 — Improve YAML converters and Base64 from content re-audit
-- Production source/artifact SHA remains: `5d780ecf6e891c18d0a39ab4a19a4e70f84b3a27`
-- Production has NOT received Batch 2 yet.
-- Existing rollback tree remains `/srv/smartwebutility/site.prev`.
-- Production runtime preflight: VERIFIED healthy, 22/22 containers running, 0 unhealthy, 0 unstable, 0 stopped.
+- Production release directory: `/srv/smartwebutility/releases/04ce962-content-reaudit-batch2`
+- Staged ZIP: `/srv/smartwebutility/releases/04ce962-content-reaudit-batch2.zip`
+- Verified artifact SHA-256: `02ad71b6bffeb2d5668e4b8516bcbcf501c26edfc044d5f6846364ea077a1341`
+- Rollback preserved at `/srv/smartwebutility/site.prev`.
+- Production runtime after activation: VERIFIED healthy, 22/22 containers running, 0 unhealthy, 0 unstable, 0 stopped.
 
 ## Last completed work
 
@@ -28,6 +30,16 @@ VERIFIED:
 - Avoidable passive constructions were rewritten across 14 existing pages without adding search-targeting filler.
 - Password Generator and Text Tools were researched and intentionally left compact because no justified content gap was identified for their difficult/navigational U.S. head terms.
 - PR #44 merged with an exact head-SHA guard.
+- The exact current-main artifact was checksum-verified and ZIP-tested on the production host before extraction.
+- Guarded production deployment completed with rollback preservation and on-host QA.
+- Live HTTPS verification returned HTTP 200 with the new content/controls for:
+  - `/yaml-to-json/`
+  - `/json-to-yaml/`
+  - `/base64-encoder-decoder/`
+- Live API smoke verification returned the expected HTTP 400 JSON error contract for:
+  - `/api/seo-audit.php`
+  - `/api/http-status.php`
+- IndexNow accepted the three materially upgraded canonical URLs with HTTP 200.
 
 ## Research evidence
 
@@ -58,8 +70,20 @@ VERIFIED post-merge on `3fea7c0ee44be66d366c3e1a6a5980de491ec81d`:
 - Chromium run 256: SUCCESS.
 - Static SEO QA: 89 HTML pages, 0 errors, 0 warnings.
 - Content QA: 89 HTML pages, 0 errors, 2 advisory warnings.
-- Build artifact ID: `11272296209`.
-- Build artifact SHA-256: `491d7487c5cd216cb3e9f778133a8596fcb5f9aa6c924ce3c221b426e1420618`.
+
+VERIFIED on deployed artifact source `04ce96286f0baaff1a175f4cae7c9491b0607688`:
+- Build run 573: SUCCESS.
+- Chromium run 257: SUCCESS.
+- Artifact ID: `11271413114`.
+- GitHub artifact SHA-256: `02ad71b6bffeb2d5668e4b8516bcbcf501c26edfc044d5f6846364ea077a1341`.
+- Production-host SHA-256: exact match.
+- ZIP integrity: PASS.
+- Required deploy/QA/API/page files present before switch.
+- Guarded deploy script: return code 0.
+- On-host SEO QA: 89 pages, 0 errors, 0 warnings.
+- On-host content QA: 89 pages, 0 errors, 2 advisory warnings.
+- Production API routing and JSON smoke checks: PASS.
+- Post-deploy runtime health: 22/22 containers healthy/running.
 
 The two retained warnings are:
 - `/password-generator/` compact page: reviewed, no justified expansion in this batch.
@@ -71,26 +95,30 @@ They remain visible rather than being suppressed or padded away.
 
 - PR #44 merge: VERIFIED.
 - Post-merge CI: VERIFIED green.
-- Batch 2 production deployment: NOT STARTED.
-- Batch 2 IndexNow submission: NOT STARTED.
-- Existing production remains VERIFIED on source `5d780ecf6e891c18d0a39ab4a19a4e70f84b3a27`.
+- Batch 2 production deployment: VERIFIED.
+- Rollback preservation: VERIFIED.
+- Live canonical pages: VERIFIED HTTP 200 with new release content.
+- Live API contract checks: VERIFIED.
+- IndexNow submission: VERIFIED HTTP 200 for exactly 3 materially upgraded URLs.
+- Google sitemap discovery remains available through the existing submitted sitemap and updated `lastmod` values.
+- Direct Google Search Console request-indexing status for these three URLs: UNKNOWN / not verified in this deployment workflow.
 
 ## Blockers
 
-- Production activation requires explicit deployment approval for this new release.
-- After this state-only commit, its own Build + Chromium checks must pass before it can become the deployment source.
+- None for Batch 2 production completion.
 
 ## Risks
 
 - Multi-document YAML has no native JSON document-stream equivalent; the implementation visibly documents its top-level-array mapping.
 - Base64 file support encodes binary bytes but does not claim arbitrary binary-file decoding.
-- Head-term ranking/traffic gains are UNKNOWN; no ranking forecast is treated as verified.
+- Ranking and traffic gains remain UNKNOWN until first-party performance data accumulates.
 - Do not expand Password Generator or Text Tools solely to remove compact-content warnings.
 - Historical production release storage remains larger than the preferred current + rollback retention; cleanup requires a separate verified retention task.
+- The repository may advance with state-only documentation commits after the deployed source SHA; do not treat those as runtime releases unless separately deployed.
 
 ## Work in progress
 
-Batch 2 code and content are merged. Production remains unchanged while the final state-only main commit passes CI and explicit deployment approval is pending.
+No production work is currently in progress. Batch 2 is complete and live.
 
 ## Affected files
 
@@ -128,4 +156,4 @@ Active-voice editorial cleanup:
 
 ## NEXT ACTION
 
-Verify Build and Chromium CI on this state-only main commit; after explicit production deployment approval, deploy the exact green current-main artifact through the guarded release path, preserve rollback, verify canonical live pages/API/runtime health, submit only materially changed search-facing URLs to IndexNow, and update this state with verified production evidence.
+Continue the manual content re-audit with the next evidence-backed page set: use Ubersuggest + current U.S. SERPs + existing first-party search data where available, change only pages with a real intent/product/content gap, preserve canonical ownership, and keep Password Generator/Text Tools unchanged unless new evidence justifies expansion.
