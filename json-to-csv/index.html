@@ -49,7 +49,7 @@
 <section class="section wrap prose">
   <h2>JSON to CSV conversion: what this tool does</h2>
   <p>Convert a JSON object or an array of objects into CSV without uploading the payload. The tool builds a union of object keys for the header row and safely quotes CSV values when needed.</p>
-  <div class="info-grid"><article><h3>Objects and arrays</h3><p>A single JSON object becomes one data row, while an array of objects becomes multiple CSV rows.</p></article><article><h3>Union of keys</h3><p>If objects contain different keys, the converter creates columns for the union of those keys and leaves missing values blank.</p></article><article><h3>CSV-safe quoting</h3><p>Commas, quotes and line breaks are escaped using standard double-quote CSV conventions.</p></article><article><h3>Nested values retained</h3><p>Nested objects and arrays are serialized as JSON strings inside CSV cells rather than silently discarded.</p></article></div>
+  <div class="info-grid"><article><h3>Objects and arrays</h3><p>A single JSON object becomes one data row, while an array of objects becomes multiple CSV rows.</p></article><article><h3>Union of keys</h3><p>If objects contain different keys, the converter creates columns for the union of those keys and leaves missing values blank.</p></article><article><h3>CSV-safe quoting</h3><p>The converter escapes commas, quotes and line breaks with standard double-quote CSV conventions.</p></article><article><h3>Nested values retained</h3><p>The converter serializes nested objects and arrays as JSON strings inside CSV cells rather than silently discarding them.</p></article></div>
   <h2>Important conversion limitations</h2>
   <p>CSV is a flat table while JSON can be deeply nested. This converter keeps nested objects and arrays inside individual CSV cells as compact JSON. If you need flattened paths such as user.address.city, use a schema-aware transformation in your application.</p>
   <h2>When this converter is useful</h2>
@@ -61,7 +61,7 @@
 </section>
 <section class="section alt" data-quality-content="v1"><div class="wrap prose">
   <h2>Frequently asked questions</h2>
-  <h3>Can I convert a JSON object instead of an array?</h3><p>Yes. A single object is treated as one CSV row.</p><h3>How are nested objects handled?</h3><p>Nested values are serialized as compact JSON inside the corresponding CSV cell.</p><h3>Will commas inside values break the CSV?</h3><p>No. Values containing commas, quotes or line breaks are escaped and wrapped in double quotes.</p>
+  <h3>Can I convert a JSON object instead of an array?</h3><p>Yes. The converter treats a single object as one CSV row.</p><h3>How are nested objects handled?</h3><p>The converter serializes nested values as compact JSON inside the corresponding CSV cell.</p><h3>Will commas inside values break the CSV?</h3><p>No. The converter escapes values that contain commas, quotes or line breaks and wraps them in double quotes.</p>
 </div></section>
 </main>
 <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
