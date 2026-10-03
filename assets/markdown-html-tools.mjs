@@ -200,6 +200,40 @@ if (mode === 'html-to-markdown') {
     });
     if (useGfm.checked && gfmPlugin) service.use(gfmPlugin);
 
+    const codeLanguage = (codeNode, preNode) => {
+      const candidates = [
+        codeNode?.getAttribute('data-language'),
+        preNode?.getAttribute('data-language'),
+        codeNode?.getAttribute('class'),
+        preNode?.getAttribute('class')
+      ].filter(Boolean);
+
+      for (const candidate of candidates) {
+        const direct = String(candidate).trim();
+        if (/^[A-Za-z0-9_+#.-]+$/.test(direct) && !/\s/.test(direct)) return direct;
+        const match = direct.match(/(?:^|\s)(?:language-|lang-)([A-Za-z0-9_+#.-]+)/i);
+        if (match) return match[1];
+      }
+      return '';
+    };
+
+    service.addRule('languageAwareFencedCodeBlock', {
+      filter(node) {
+        if (node.nodeName !== 'PRE') return false;
+        const codeNode = node.firstElementChild;
+        return codeNode?.nodeName === 'CODE' && Boolean(codeLanguage(codeNode, node));
+      },
+      replacement(_content, node) {
+        const codeNode = node.firstElementChild;
+        const language = codeLanguage(codeNode, node);
+        const code = codeNode.textContent.replace(/\n$/, '');
+        const runs = code.match(/`+/g) || [];
+        const longestRun = runs.reduce((max, run) => Math.max(max, run.length), 0);
+        const fence = '`'.repeat(Math.max(3, longestRun + 1));
+        return '\n\n' + fence + language + '\n' + code + '\n' + fence + '\n\n';
+      }
+    });
+
     const markdown = service.turndown(doc.body);
     output.value = markdown;
     stats.hidden = false;
