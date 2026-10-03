@@ -1,6 +1,6 @@
 # Smart Web Utility — Project State
 
-Last verified: 2026-10-03 09:48 UTC (14:48 PKT)
+Last verified: 2026-10-03 09:56 UTC (14:56 PKT)
 
 ## Objective
 
@@ -8,61 +8,75 @@ Complete the full-site content-quality re-audit and make the seven editorial req
 
 ## Source / deployment state
 
-- Working branch: `content-quality-hard-gate-2026-10-03`
-- Working source SHA: `0b2afeba0474e2b56f2cfdb93681de88cbc61f96`
-- Base/main SHA: `993c4d6441c6dd1ac26321d512782251fc285b89`
-- Open PR: #43 — Make content quality a hard release gate
-- Production SHA: UNKNOWN in this session; PR #43 has not been merged or deployed.
+- Release-candidate source SHA: `a6212dfbc5a0f1ec15e11ba85e169fd6494698a5`
+- PR #43: MERGED into `main` on 2026-10-03.
+- Verified PR head: `7810e3b9936ec71726272d059f698184daf0ec91`
+- Production SHA: UNKNOWN; the active production tree was verified not to contain `CONTENT_QUALITY_STANDARD.md`, so this release is not live yet.
+- Production host: VERIFIED healthy before deployment; Smart Web Utility Docker project has four running services.
 
 ## Last completed work
 
 VERIFIED:
 - Audited 89 public `index.html` pages structurally.
-- Added `CONTENT_QUALITY_STANDARD.md`.
+- Added `CONTENT_QUALITY_STANDARD.md` as the hard editorial release gate.
 - Added `CONTENT_AUDIT_2026-10-03.md`.
 - Added `scripts/content-quality-qa.py`.
 - Wired content QA into build CI and the production deploy pre-switch gate.
 - Added the PR editorial/competitive-review checklist.
 - Strengthened the compact priority pages listed in the audit.
 - Corrected the content-QA parser so inline `<code>` literals are excluded from prose punctuation checks.
+- Added `AGENTS.md`, `DECISIONS.md`, and this state file for durable continuity.
+- Merged PR #43 using the exact green PR head as the merge guard.
 
 ## Tests / evidence
 
 VERIFIED:
-- PR #43 Chromium run 239 passed on source SHA `52246c21309c6b7db03370072e525181c08350af`.
-- Build run 555 failed because the first punctuation heuristic treated inline code punctuation as prose.
-- Build run 556 exposed a placeholder-adjacency bug in the attempted fix; a second parser correction is now committed at `0b2afeba0474e2b56f2cfdb93681de88cbc61f96`.
-- Static SEO QA in the failed build reached 89 HTML pages with 0 errors and 0 warnings before content QA failed.
+- PR-head Build run 559: SUCCESS.
+- PR-head Chromium run 243: SUCCESS.
+- Post-merge Build run 560 on `a6212dfbc5a0f1ec15e11ba85e169fd6494698a5`: SUCCESS.
+- Post-merge Chromium run 244 on the same SHA: SUCCESS.
+- Static SEO QA: 89 HTML pages, 0 errors, 0 warnings.
+- Content QA: 89 HTML pages, 0 errors, 20 advisory warnings.
+- Post-merge deployment artifact ID: `11270472621`.
+- Verified artifact SHA-256: `b4b6ea57e0f1e79bc612fdd67f98c5a903054867cf30d1165e78def155f15846`.
+- Artifact digest was independently recomputed after download and matched GitHub.
+- Production host preflight: server health reports no issues; Smart Web Utility containers are running.
 - Current Google Search Central people-first guidance and Google Publisher Policies were rechecked on 2026-10-03; the hard rule remains aligned with original/useful publisher content and user-first quality principles.
 
 PARTIALLY VERIFIED:
-- Passive-voice warnings were manually sampled and are frequently technically justified passive constructions; they remain review signals rather than hard failures.
-- Compact-page warnings remain review signals. Current SERP sampling confirms competitors often add file handling, bidirectional conversion, parser-detail, entropy/passphrase, or broader hub functionality, so each compact page must document a concrete value advantage instead of being padded.
+- Passive-voice warnings were manually sampled and are frequently technically justified constructions; they remain review signals rather than hard failures.
+- Compact-page warnings remain review signals. Some current competitors expose broader functionality, so full sitewide competitive superiority must not be claimed from automation alone.
 
 ## Deployment / indexing
 
-- PR #43: OPEN, DRAFT.
-- Merge: BLOCKED until latest Build + Chromium CI are green.
-- Production deploy of PR #43: BLOCKED.
-- Indexing submission for PR #43: not applicable until deployment.
+- PR #43 merge: VERIFIED.
+- Post-merge CI: VERIFIED green.
+- Artifact integrity: VERIFIED.
+- Production activation: BLOCKED at the host's explicit approval gate before staging the artifact.
+- No production files from this release have been activated.
+- Indexing submission for these content changes remains blocked until successful production deployment and live verification.
 
 ## Blockers
 
-- Latest CI for source SHA `0b2afeba0474e2b56f2cfdb93681de88cbc61f96` has not yet been verified green.
+- Explicit approval is required by the host control plane before the verified artifact can be written to the release staging directory and deployed.
 
 ## Risks
 
-- Regex-based prose heuristics can produce false positives around technical tokens; keep code literals excluded.
+- Regex-based prose heuristics can produce false positives around technical tokens; code literals remain excluded from ordinary prose punctuation checks.
 - “Better than competitors” cannot be proven by automation; material rewrites require recorded live-SERP/editorial evidence.
 - Some compact pages have competitors with broader functionality. Do not claim full competitive superiority until page-specific review confirms a real value advantage.
+- Production release retention currently contains many historical release directories; do not delete them during this deployment without a separate verified retention cleanup plan.
 
 ## Work in progress
 
-PR #43 contains the content-quality governance, CI/deploy gate, audit record, and targeted content improvements.
+GitHub implementation and merge are complete. Production activation is waiting at the explicit host approval boundary.
 
 ## Affected files
 
-See PR #43. Core governance files:
+See merged PR #43. Core governance/release files:
+- `AGENTS.md`
+- `PROJECT_STATE.md`
+- `DECISIONS.md`
 - `CONTENT_QUALITY_STANDARD.md`
 - `CONTENT_AUDIT_2026-10-03.md`
 - `NEW_PAGE_SEO_RELEASE_STANDARD.md`
@@ -73,4 +87,4 @@ See PR #43. Core governance files:
 
 ## NEXT ACTION
 
-Verify the latest Build and Chromium CI on source SHA `0b2afeba0474e2b56f2cfdb93681de88cbc61f96`; if both pass, finish the PR review/merge gate before any production activation.
+After explicit production approval, stage artifact `11270472621`, verify SHA-256 `b4b6ea57e0f1e79bc612fdd67f98c5a903054867cf30d1165e78def155f15846` on the host, unpack it into a versioned release, execute the guarded deployment script, then perform API/browser/live verification before any indexing action.
