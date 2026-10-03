@@ -545,6 +545,21 @@ const cases = [
     const firstMsText = await rows.nth(0).locator('td').nth(1).innerText();
     const decodedMs = Number(firstMsText.replace(/,/g, ''));
     assert.equal(decodedMs, expectedMs);
+
+    await p.locator('#useFirstUlid').click();
+    assert.equal(await p.locator('#ulidInspectError').isHidden(), true);
+    assert.equal((await p.locator('#ulidInspectNormalized').innerText()).trim(), values[0]);
+    assert.equal(Number((await p.locator('#ulidInspectTimestampMs').innerText()).replace(/,/g, '')), expectedMs);
+    assert.equal((await p.locator('#ulidInspectRandomBase32').innerText()).trim().length, 16);
+    assert.match((await p.locator('#ulidInspectRandomHex').innerText()).trim(), /^[0-9A-F]{20}$/);
+
+    await p.locator('#ulidInspectInput').fill(values[0].toLowerCase());
+    await p.locator('#inspectUlid').click();
+    assert.equal((await p.locator('#ulidInspectNormalized').innerText()).trim(), values[0]);
+
+    await p.locator('#ulidInspectInput').fill('8' + '0'.repeat(25));
+    await p.locator('#inspectUlid').click();
+    assert.equal(await p.locator('#ulidInspectError').isHidden(), false);
     assert.equal(await p.locator('#ulidError').isHidden(), true);
   }],
   ['random-port-generator', async p => {
