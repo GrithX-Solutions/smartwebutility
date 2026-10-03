@@ -1192,3 +1192,134 @@ Chromium coverage now verifies:
 - ULID generation/inspection regressions: PASS.
 - Sitemap-wide browser initialization: PASS.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 5 — /html-to-markdown/
+
+Status: IMPLEMENTED, CI PENDING
+
+### Primary intent
+
+Convert supplied HTML into readable Markdown, including GitHub Flavored Markdown structures where supported.
+
+Canonical owner:
+- `https://smartwebutility.com/html-to-markdown/`
+
+Related but separate owner:
+- `/markdown-to-html/` handles the reverse conversion and remains distinct.
+
+### Ubersuggest US evidence
+
+Primary:
+- `html to markdown`: 1,600 searches/month, SD 32, CPC $21.11.
+
+Relevant variants:
+- `convert html to markdown`: 480, SD 45, CPC $8.06.
+- `html to markdown converter`: 390, SD 33.
+- `html to markdown converter online`: 90, SD 21.
+- `online html to markdown converter`: 50, SD 14.
+- `html to markdown online`: 50, SD 4.
+- `html to markdown table`: 30, SD 34.
+
+Ubersuggest currently reports no US ranking-keyword data for Smart Web Utility's page. Ranking gains remain UNKNOWN.
+
+### SERP / competitor evidence
+
+Ubersuggest's current US SERP includes:
+- CodeBeautify — DA 60
+- htmlmarkdown.com — DA 14
+- Whippy — DA 23
+- html-to-markdown.com — DA 18
+- ConvertSimple — DA 21
+- ContextExtractor — DA 8
+- HelpLoom — DA 18
+- htmltomarkdown.io — DA 11
+- MarkdownTools — DA 17
+
+Current live competitor review on 2026-10-03 confirmed recurring functionality such as:
+- GFM table support;
+- links, images, lists and code conversion;
+- local/browser conversion;
+- file input;
+- fenced code blocks;
+- on stronger converters, preservation of code language hints from HTML classes/metadata.
+
+### Existing Smart Web Utility strengths before this change
+
+Already present:
+- local HTML file input up to 5 MB;
+- browser-side conversion;
+- active script/style/embed removal;
+- Turndown-based semantic conversion;
+- optional GFM plugin;
+- GFM tables/tasks/strikethrough;
+- heading style choice;
+- bullet marker choice;
+- copy/download;
+- explicit no-web-scraping boundary;
+- strong semantic explanations and privacy guidance.
+
+The page therefore did not need broad copy expansion.
+
+### Confirmed gap
+
+The existing Turndown fenced-code output preserved code text but dropped an explicit programming-language hint from common HTML forms such as:
+- `class="language-js"`
+- `class="lang-python"`
+- `data-language="go"`
+
+That is a meaningful loss for README/documentation migration because Markdown renderers commonly use the fence language hint for syntax highlighting.
+
+Current competing converters explicitly advertise language-hint preservation.
+
+### Implementation
+
+The HTML-to-Markdown pipeline now adds a custom Turndown rule that:
+- detects a language on `<code>` or `<pre>` through `data-language`, `language-*` or `lang-*`;
+- emits that language after the opening Markdown fence;
+- does not guess a programming language when no explicit hint exists;
+- inspects backtick runs inside the code and makes the surrounding fence longer than the longest embedded run, preventing code that contains triple backticks from accidentally closing the block.
+
+Existing GFM/table/task-list behavior remains unchanged.
+
+Visible page content now:
+- documents language-hint preservation;
+- explains supported hint patterns;
+- explains that language detection is explicit rather than inferred;
+- updates WebApplication feature metadata.
+
+Tool-search aliases now include:
+- `html to markdown`
+- `html to markdown converter`
+- `html to markdown converter online`
+- `online html to markdown converter`
+- `html to markdown online`
+- `convert html to markdown`
+- `html to markdown table`
+
+No new canonical URL was created.
+
+### Regression test
+
+Chromium coverage now converts a code block whose HTML includes `class="language-js"` and whose code text itself contains a triple-backtick string.
+
+The test verifies:
+- normal heading/bold/table conversion still works;
+- generated code fence includes the `js` language;
+- the outer fence expands to four backticks because the code contains a triple-backtick run;
+- code content is preserved;
+- no converter error is shown.
+
+### Page 5 acceptance status
+
+- Demand / difficulty: VERIFIED.
+- Current SERP intent: VERIFIED.
+- Canonical ownership / reverse-intent separation: VERIFIED.
+- Existing functionality inspected: VERIFIED.
+- Product/output-fidelity gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Browser regression coverage: COMPLETED.
+- Static/Build/Chromium CI: PENDING.
+- Production deployment: NOT STARTED.
