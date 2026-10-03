@@ -4,6 +4,8 @@
 
   const countEl = document.getElementById('macCount');
   const formatEl = document.getElementById('macFormat');
+  const administrationEl = document.getElementById('macAdministration');
+  const transmissionEl = document.getElementById('macTransmission');
   const listFormatEl = document.getElementById('macListFormat');
   const uppercaseEl = document.getElementById('macUppercase');
   const sortEl = document.getElementById('macSort');
@@ -21,7 +23,11 @@
   function randomMacBytes() {
     const bytes = new Uint8Array(6);
     crypto.getRandomValues(bytes);
-    bytes[0] = (bytes[0] & 0xfc) | 0x02;
+
+    const localBit = administrationEl.value === 'local' ? 0x02 : 0x00;
+    const groupBit = transmissionEl.value === 'multicast' ? 0x01 : 0x00;
+    bytes[0] = (bytes[0] & 0xfc) | localBit | groupBit;
+
     return bytes;
   }
 
@@ -63,8 +69,8 @@
     stats.innerHTML =
       '<span><b>' + values.length.toLocaleString() + '</b> generated</span>' +
       '<span><b>48-bit</b> address width</span>' +
-      '<span><b>Local</b> U/L bit</span>' +
-      '<span><b>Unicast</b> I/G bit</span>' +
+      '<span><b>' + (administrationEl.value === 'local' ? 'Local' : 'Universal-style') + '</b> U/L bit</span>' +
+      '<span><b>' + (transmissionEl.value === 'unicast' ? 'Unicast' : 'Multicast') + '</b> I/G bit</span>' +
       '<span><b>' + formatEl.options[formatEl.selectedIndex].text.split(' · ')[0] + '</b> MAC format</span>' +
       '<span><b>' + listFormatEl.options[listFormatEl.selectedIndex].text + '</b> list output</span>';
   }
@@ -108,6 +114,8 @@
   document.getElementById('clearMac').addEventListener('click', () => {
     countEl.value = '1';
     formatEl.value = 'colon';
+    administrationEl.value = 'local';
+    transmissionEl.value = 'unicast';
     listFormatEl.value = 'lines';
     uppercaseEl.checked = true;
     sortEl.checked = false;
@@ -149,6 +157,13 @@
       if (!currentBatch.length) return;
       render();
       setStatus('Batch re-rendered', 'success');
+    });
+  }
+
+  for (const control of [administrationEl, transmissionEl]) {
+    control.addEventListener('change', () => {
+      if (!currentBatch.length) return;
+      setStatus('Generate again to apply address-bit changes');
     });
   }
 
