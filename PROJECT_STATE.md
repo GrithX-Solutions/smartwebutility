@@ -60,28 +60,30 @@ Research record:
 
 ## Current page
 
-### Page 6 — /html-minifier/
+### Page 5 — /jwt-decoder/
 
 Status: IMPLEMENTED ON BRANCH; CI PENDING.
 
 Research evidence:
-- `html minifier`: 1,600 US searches/month, SD 32, CPC $11.24.
-- `online html minifier`: 110, SD 32.
-- Current U.S. SERP contains multiple low-to-mid-authority tool domains.
-- Smart Web Utility currently has no Ubersuggest US ranking-keyword data for this page.
+- `jwt decoder`: 18,100 US searches/month, SD 42.
+- `jwt decoder online`: 880, SD 27.
+- Current SERP includes multiple DA 9–27 utility domains.
 
 Confirmed gap:
-- html-minifier-terser already supports useful HTML5 cleanup options;
-- existing UI did not expose short doctype, boolean-attribute collapse or legacy CSS/JS type-attribute cleanup.
+- page decoded JSON but lacked Bearer-prefix handling, raw signature display and explicit exp/nbf state.
 
 Implemented:
-- one opt-in HTML5 cleanup control;
-- short HTML5 doctype;
-- boolean-attribute collapse;
-- remove legacy script/style/link type attributes;
-- conservative defaults remain unchanged;
-- updated visible guidance, WebApplication metadata, search aliases and sitemap lastmod;
-- Chromium regression coverage for legacy HTML -> HTML5 cleanup.
+- optional Bearer-prefix stripping;
+- raw signature segment output;
+- expired/not-before timing states from the browser clock;
+- strict local inspection/trust boundary;
+- `alg:none` warning;
+- current-time sample token;
+- updated semantic copy, search aliases and sitemap lastmod;
+- Chromium coverage for future/expired/Bearer/malformed cases.
+
+Security decision:
+- no signature verification or key/secret collection added.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
