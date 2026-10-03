@@ -1890,3 +1890,83 @@ The test verifies:
 - Browser regression coverage: COMPLETED.
 - Static/Build/Chromium CI: PENDING.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 8 — /random-port-generator/
+
+Status: IMPLEMENTED, CI PENDING
+
+### Primary intent
+Generate random TCP/UDP port numbers for development, testing and configuration.
+
+Canonical owner:
+- `https://smartwebutility.com/random-port-generator/`
+
+### Ubersuggest US evidence
+- `random port generator`: 170 searches/month, SD 11.
+- `random tcp port generator`: 170, SD 10.
+- `random port number`: 40, SD 19.
+- `random port number generator`: 10, SD 5.
+- `port number generator`: 10, SD 13.
+
+The current U.S. SERP is highly attainable by authority profile:
+- it-tools.tech — DA 1 at position 1
+- thirty11.com — DA 3
+- utilitycove.com — DA 6
+- devtoys.pro — DA 6
+- next-tools.dev — DA 3
+- Crucials Tools / RapidToolset — DA 10
+
+### Existing Smart Web Utility strengths
+Already implemented:
+- Web Crypto rejection-sampling generation;
+- IANA Dynamic/Private 49152–65535 preset;
+- User 1024–49151 preset;
+- non-system 1024–65535 preset;
+- custom ranges;
+- unique batches up to 500;
+- sorting;
+- copy/download;
+- explicit no-availability-scan warning;
+- correct port-0 explanation.
+
+No generator logic change was needed.
+
+### Confirmed information gap
+The page correctly called 49152–65535 the Dynamic/Private range, but it did not clearly distinguish that IANA registry range from an operating system's configured ephemeral/local source-port range.
+
+This distinction matters because:
+- IANA defines System 0–1023, User 1024–49151 and Dynamic/Private 49152–65535;
+- RFC 6335 reserves Dynamic/Private ports for local/dynamic use and does not assign individual services from that range;
+- an operating system can configure its own local/ephemeral source-port range;
+- on Linux, global and per-socket local-port-range controls can affect automatic source-port selection.
+
+Several current ranking pages loosely use “dynamic” and “ephemeral” as though the IANA range always equals the host configuration. The Smart Web Utility page now avoids that overstatement.
+
+### Implementation
+Content-only update:
+- clarifies that the default 49152–65535 preset is the IANA Dynamic/Private registry range;
+- explains that it is not proof of the target host's configured ephemeral range;
+- tells users to inspect the actual host when they need to reproduce/avoid automatic source-port allocation;
+- keeps the existing “random does not mean available” warning;
+- adds an FAQ directly answering whether 49152–65535 is always the computer's ephemeral range;
+- updates internal search aliases for `random port number generator`, `port number generator` and `random port number`;
+- updates sitemap `lastmod`.
+
+### Primary technical references
+- IANA Service Name and Transport Protocol Port Number Registry, updated 2026-09-30.
+- RFC 6335, IANA Procedures for Service Name and Transport Protocol Port Number Registry.
+- Linux `IP_LOCAL_PORT_RANGE` / local-port-range documentation.
+
+### Page 8 acceptance status
+- Demand / difficulty: VERIFIED.
+- Current SERP intent: VERIFIED.
+- Canonical ownership: VERIFIED.
+- Existing functionality inspected: VERIFIED.
+- Information gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Generator behavior change: NONE.
+- Static/Build/Chromium CI: PENDING.
+- Production deployment: NOT STARTED.
