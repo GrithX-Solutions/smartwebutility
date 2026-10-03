@@ -650,9 +650,25 @@ const cases = [
     assert.ok((await p.locator('#htmlEntityOutput').inputValue()).includes('&lt;h1&gt;'));
   }],
   ['cron-expression-helper', async p => {
-    await p.locator('#cronInput').fill('*/5 * * * *');
+    await p.locator('#cronMinute').fill('*/15');
+    await p.locator('#cronHour').fill('*');
+    await p.locator('#cronDay').fill('*');
+    await p.locator('#cronMonth').fill('*');
+    await p.locator('#cronWeekday').fill('*');
+    assert.equal((await p.locator('#cronInput').inputValue()).trim(), '*/15 * * * *');
+    assert.match(await p.locator('#cronDescription').innerText(), /Every 15 minutes/i);
+    assert.equal(await p.locator('#cronNextRuns li').count(), 5);
+
+    await p.locator('#cronInput').fill('0 9 * * MON-FRI');
     await p.locator('#parseCron').click();
     assert.equal(await p.locator('#cronError').isHidden(), true);
+    assert.equal(await p.locator('#cronWeekday').inputValue(), 'MON-FRI');
+    assert.equal(await p.locator('#cronNextRuns li').count(), 5);
+
+    await p.locator('#cronInput').fill('0 0 9 * * 1-5');
+    await p.locator('#parseCron').click();
+    assert.equal(await p.locator('#cronError').isHidden(), false);
+    assert.match(await p.locator('#cronError').innerText(), /5-field/i);
   }],
   ['meta-tag-generator', async p => {
     await p.locator('#metaTitle').fill('Sample Page');
