@@ -26,9 +26,9 @@
   {
     "category": "Developer",
     "url": "/cron-expression-helper/",
-    "title": "Cron Expression Helper",
-    "description": "Understand common cron schedules.",
-    "keywords": []
+    "title": "Cron Expression Generator & Parser",
+    "description": "Build, validate and preview standard 5-field cron schedules locally.",
+    "keywords": ["cron expression generator", "cron generator", "cron generator online", "cron expression generator online", "crontab generator", "cron parser", "cron schedule generator"]
   },
   {
     "category": "Developer",
