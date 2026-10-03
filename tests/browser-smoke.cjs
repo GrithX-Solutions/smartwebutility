@@ -677,8 +677,35 @@ const cases = [
   }],
   ['jwt-decoder', async p => {
     await p.locator('#exampleJwt').click();
-    await p.locator('#decodeJwt').click();
     assert.ok((await p.locator('#jwtHeader').inputValue()).includes('alg'));
+    assert.ok((await p.locator('#jwtPayload').inputValue()).includes('"exp"'));
+    assert.equal(await p.locator('#jwtSignature').inputValue(), 'signature-not-verified');
+    assert.match(await p.locator('#jwtTimeStatus').innerText(), /Not expired by exp/i);
+
+    const expiredToken = await p.evaluate(() => {
+      const encode = value => btoa(JSON.stringify(value))
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=+$/g, '');
+      const now = Math.floor(Date.now() / 1000);
+      return [
+        encode({alg:'HS256',typ:'JWT',kid:'test-key'}),
+        encode({sub:'user-1',iat:now-3600,nbf:now-3600,exp:now-60}),
+        'test-signature'
+      ].join('.');
+    });
+
+    await p.locator('#jwtInput').fill('Bearer ' + expiredToken);
+    await p.locator('#decodeJwt').click();
+    assert.equal(await p.locator('#jwtError').isHidden(), true);
+    assert.match(await p.locator('#jwtStatus').innerText(), /Bearer prefix removed/i);
+    assert.equal(await p.locator('#jwtSignature').inputValue(), 'test-signature');
+    assert.match(await p.locator('#jwtTimeStatus').innerText(), /Expired by exp/i);
+
+    await p.locator('#jwtInput').fill('one.two');
+    await p.locator('#decodeJwt').click();
+    assert.equal(await p.locator('#jwtError').isHidden(), false);
+    assert.match(await p.locator('#jwtError').innerText(), /three dot-separated parts/i);
   }],
   ['regex-tester', async p => {
     await p.locator('#regexPattern').fill('\\d+');
