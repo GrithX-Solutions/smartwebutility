@@ -658,8 +658,28 @@ const cases = [
   ['favicon-generator', async p => {
     await p.locator('[data-mode="text"]').click();
     await p.locator('#faviconText').fill('SW');
+    await p.locator('#bgColor').fill('#123456');
+    await p.locator('#transparentBg').check();
     await p.locator('#generateFavicons').click();
-    assert.ok((await p.locator('#faviconStatus').innerText()).trim().length);
+
+    const status = (await p.locator('#faviconStatus').innerText()).trim();
+    assert.match(status, /maskable/i);
+
+    const manifest = JSON.parse(await p.locator('#manifestCode').inputValue());
+    const maskable = manifest.icons.filter(icon => icon.purpose === 'maskable');
+    assert.equal(maskable.length, 2);
+    assert.deepEqual(maskable.map(icon => icon.sizes), ['192x192', '512x512']);
+    assert.deepEqual(maskable.map(icon => icon.src), [
+      '/android-chrome-192x192-maskable.png',
+      '/android-chrome-512x512-maskable.png'
+    ]);
+    assert.equal(manifest.icons.filter(icon => icon.purpose === 'any').length, 2);
+
+    const cornerPixel = await p.locator('#previewMaskable192').evaluate(canvas =>
+      [...canvas.getContext('2d').getImageData(0, 0, 1, 1).data]
+    );
+    assert.deepEqual(cornerPixel, [18, 52, 86, 255]);
+    assert.equal(await p.locator('#downloadZip').isEnabled(), true);
   }],
   ['case-converter', async p => {
     await p.locator('#caseInput').fill('hello world');
