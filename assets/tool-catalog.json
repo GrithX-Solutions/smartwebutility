@@ -10,11 +10,16 @@
     "category": "Developer",
     "url": "/chmod-calculator/",
     "title": "chmod Calculator",
-    "description": "Convert Linux permissions between octal, rwx and chmod commands.",
+    "description": "Convert Linux permissions between octal, rwx, ls -l strings and chmod commands.",
     "keywords": [
       "chmod calculator",
+      "linux chmod calculator",
+      "chmod calculator online",
+      "unix chmod calculator",
       "unix permissions calculator",
-      "linux permissions"
+      "linux permissions",
+      "ls -l permissions",
+      "octal permissions calculator"
     ]
   },
   {
