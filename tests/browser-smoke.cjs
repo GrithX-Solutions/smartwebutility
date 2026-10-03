@@ -745,9 +745,26 @@ const cases = [
     assert.match(await p.locator('#cronError').innerText(), /5-field/i);
   }],
   ['meta-tag-generator', async p => {
-    await p.locator('#metaTitle').fill('Sample Page');
-    await p.locator('#metaDescription').fill('A sample description');
-    assert.ok((await p.locator('#metaOutput').inputValue()).includes('Sample Page'));
+    await p.locator('#metaTitle').fill('The "Sample" Page & Tools');
+    await p.locator('#metaDescription').fill('A sample description for search and social previews.');
+    await p.locator('#metaCanonical').fill('https://example.com/sample?x=1&y=2');
+    await p.locator('#metaSiteName').fill('Example Site');
+    await p.locator('#metaImage').fill('https://example.com/social.jpg');
+    await p.locator('#metaImageAlt').fill('Example "social" card');
+    await p.locator('#metaTwitterSite').fill('@example');
+
+    const meta = await p.locator('#metaOutput').inputValue();
+    assert.ok(meta.includes('&quot;Sample&quot;'));
+    assert.ok(meta.includes('https://example.com/sample?x=1&amp;y=2'));
+    assert.ok(meta.includes('property="og:title"'));
+    assert.ok(meta.includes('property="og:image:alt"'));
+    assert.ok(meta.includes('name="twitter:card"'));
+    assert.ok(meta.includes('name="twitter:site"'));
+    assert.equal(meta.includes('name="keywords"'), false);
+    assert.match(await p.locator('#metaTitleCount').innerText(), /25 characters/);
+    assert.ok((await p.locator('#metaSearchPreview').innerText()).includes('Sample'));
+    assert.ok((await p.locator('#metaSocialPreview').innerText()).includes('Example Site'));
+    assert.equal(await p.locator('#metaSocialPreview img').count(), 0);
   }],
   ['robots-txt-generator', async p => {
     await p.locator('#robotsDisallow').fill('/admin/');
