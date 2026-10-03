@@ -60,36 +60,28 @@ Research record:
 
 ## Current page
 
-### Page 2 — /favicon-generator/
+### Page 2 — /chmod-calculator/
 
-Status: VERIFIED ON BRANCH.
+Status: IMPLEMENTED ON BRANCH; CI PENDING.
 
 Research evidence:
-- `favicon generator`: 14,800 US searches/month, SD 24, CPC $2.92.
-- `favicon maker`: 1,600, SD 47.
-- `favicon generator from image`: 210, SD 57.
-- `image to favicon generator`: 140, SD 33.
-- `svg favicon generator`: 90, SD 29.
-- `favicon generator for website`: 50, SD 6.
+- `chmod calculator`: 1,900 US searches/month, SD 27, CPC $10.41.
+- Current Ubersuggest SERP includes multiple low-to-mid-authority utility domains.
 - Smart Web Utility currently has no Ubersuggest US ranking-keyword data for this page.
 
 Confirmed gap:
-- existing package had ordinary 192/512 PWA icons only;
-- it had no dedicated maskable icons or manifest `purpose: "maskable"` entries;
-- current MDN guidance requires mask-safe artwork and an opaque full-canvas background for maskable icons.
+- existing parser supported 9-character symbolic permissions and special `s/S/t/T` notation;
+- it rejected the normal 10-character permission field copied from `ls -l`.
 
 Implemented:
-- dedicated maskable 192×192 and 512×512 PNG files;
-- opaque selected background for maskable exports even when ordinary icons use transparency;
-- conservative artwork placement inside the 80%-diameter mask-safe circle;
-- explicit ordinary `purpose: "any"` and maskable manifest entries;
-- safe-zone preview;
-- visible maskable/PWA guidance;
-- favicon search aliases and sitemap lastmod;
-- Chromium checks for manifest entries and opaque maskable corner pixels.
+- accept standard leading `ls -l` file-type characters;
+- parse `-rwsr-xr-x` and `drwxrwxrwt` correctly;
+- normalize output to the 9 chmod permission characters;
+- update visible semantic guidance, WebApplication features, tool-search aliases and sitemap lastmod;
+- add Chromium regression coverage.
 
-Security:
-- raw uploaded SVG is not copied into the ZIP; the tool continues to rasterize uploaded SVG to generated PNG/ICO assets rather than redistribute unsanitized SVG markup.
+Research record:
+- `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
 
 ## Tests / evidence
 
