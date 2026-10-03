@@ -1475,3 +1475,96 @@ The maintained html-minifier-terser option reference documents these options as 
 - Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
 - Chromium run 320: SUCCESS.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 5 — /jwt-decoder/
+
+Status: IMPLEMENTED, CI PENDING
+
+### Primary intent
+Decode and inspect JSON Web Tokens locally, with registered-claim and token-timing visibility.
+
+Canonical owner:
+- `https://smartwebutility.com/jwt-decoder/`
+
+### Ubersuggest US evidence
+- `jwt decoder`: 18,100 searches/month, SD 42.
+- `jwt decoder online`: 880, SD 27.
+- `online jwt decoder`: 110, SD 34.
+
+Current SERP contains attainable utility domains as well as strong brands:
+- jstoolset.com — DA 15
+- domainscan.in — DA 9
+- jwt.is — DA 16
+- kinde.com — DA 27
+- logto.io — DA 25
+
+### Current SERP / competitor pattern
+Current results repeatedly expose:
+- local browser decoding;
+- header + payload display;
+- raw signature segment visibility;
+- `exp`, `nbf` and `iat` as readable dates;
+- expired/not-yet-valid status;
+- optional Bearer-prefix handling;
+- explicit warnings that decoding is not signature verification.
+
+Some competitors also offer HMAC/public-key verification. This batch does not add that capability because collecting secrets/keys materially changes the security surface and is not required to satisfy the core decoder intent.
+
+### Current Smart Web Utility behavior before this change
+Already present:
+- local Base64URL decoding;
+- header/payload JSON output;
+- registered claims table;
+- ISO conversion for `exp`, `nbf`, `iat`;
+- copy buttons;
+- explicit “signature not verified” language.
+
+Missing:
+- Bearer-prefix normalization;
+- signature-segment display;
+- explicit expired/not-yet-valid state;
+- stronger distinction between time checks and trust decisions.
+
+### Implementation
+`assets/jwt.js` now:
+- strips an optional leading `Bearer ` prefix;
+- validates Base64URL/UTF-8 JSON for header and payload;
+- displays the raw signature segment;
+- evaluates numeric `exp` and `nbf` against the browser clock;
+- reports “Expired by exp,” “Not active yet,” “Not expired by exp,” or no temporal verdict;
+- keeps time status explicitly separate from signature/issuer/audience validation;
+- warns when the header declares `alg: none`;
+- generates a fresh sample token relative to the current browser time instead of shipping a stale fixed-expiry example.
+
+`jwt-decoder/index.html` now:
+- exposes signature segment output;
+- accepts Bearer-prefixed input;
+- explains RFC 7519 NumericDate timing;
+- explains RFC 8725-style algorithm-policy boundaries;
+- clarifies that the page does not collect secrets, keys or JWKS URLs;
+- keeps decoding local and read-only.
+
+### Regression tests
+Chromium coverage now verifies:
+- generated example decodes;
+- signature segment is shown;
+- future `exp` reports not expired;
+- Bearer-prefixed expired token is normalized and reports expired;
+- malformed two-part input is rejected.
+
+### No-change security decision
+Signature verification is deliberately NOT added in this page audit. A verifier would require broader algorithm/key handling, trust-policy decisions and additional security review. The decoder remains a local inspection tool.
+
+### Page 5 acceptance status
+- Demand / difficulty: VERIFIED.
+- Current SERP intent: VERIFIED.
+- Canonical ownership: VERIFIED.
+- Existing functionality inspected: VERIFIED.
+- Product/content gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Browser regression coverage: COMPLETED.
+- Static/Build/Chromium CI: PENDING.
+- Production deployment: NOT STARTED.
