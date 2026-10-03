@@ -249,3 +249,36 @@ Sources reviewed on 2026-10-03:
 - Ubersuggest keyword overview, keyword matching, SERP analysis, page overview and page keyword data for the US market.
 - Current SERP/web samples including OnlineYAMLTools, Dadroit, BairesDev, jsonfmt.dev, yamltojsonfree.com, Clean.tools, JSONRender, Delimiter.live, ToolNinja, 712 Tools, Base64 Studio and similar relevant utility results.
 - RFC 4648 for Base64/Base64URL semantics.
+
+
+## Active-voice advisory cleanup
+
+After the functional/content upgrades, the automated content QA still flagged repeated passive-voice patterns on 14 existing pages. These were treated as editorial review signals, not as a reason to weaken the checker.
+
+A sentence-level pass rewrote avoidable passive constructions on:
+- About
+- Guides hub
+- Methodology
+- Privacy
+- Terms
+- CSS Minifier
+- CSV to XML
+- CSV Viewer
+- Hash Generator
+- HTML Entity Encoder / Decoder
+- HTML to Markdown
+- JSON Diff
+- JSON to CSV
+- TOML Formatter & Validator
+
+The edits preserve the same technical/legal meaning and do not add search-targeting sections or new functionality.
+
+Latest Build run 570 on branch head `91a920161065eafb52977d9890ca4b286aefe135` reports:
+- Static SEO QA: 89 HTML pages, 0 errors, 0 warnings.
+- Content QA: 89 HTML pages, 0 errors, 2 advisory warnings.
+
+The only remaining warnings are:
+- `/password-generator/` compact search-facing page — reviewed and intentionally unchanged because the U.S. head term is authority-heavy (SD 70) and no justified content gap was identified in this batch.
+- `/text-tools/` compact search-facing page — reviewed and intentionally unchanged because the U.S. head term is navigational and highly difficult (SD 78), while the page's role is category navigation.
+
+These warnings remain visible rather than being suppressed. They document pages that require future evidence before expansion.
