@@ -253,9 +253,9 @@
   {
     "category": "Developer",
     "url": "/ulid-generator/",
-    "title": "ULID Generator",
-    "description": "Generate monotonic time-sortable ULIDs with decoded timestamps.",
-    "keywords": []
+    "title": "ULID Generator & Decoder",
+    "description": "Generate monotonic ULIDs and inspect existing ULID timestamps and randomness.",
+    "keywords": ["ulid generator", "online ulid generator", "ulid generator online", "ulid decoder", "ulid timestamp decoder", "monotonic ulid", "sortable id generator"]
   },
   {
     "category": "Developer",
