@@ -481,6 +481,16 @@ const cases = [
     await p.locator('#chmodSymbolic').fill('rwxr-xr-x');
     assert.equal(await p.locator('#chmodOctal').inputValue(), '755');
 
+    await p.locator('#chmodSymbolic').fill('-rwsr-xr-x');
+    assert.equal(await p.locator('#chmodOctal').inputValue(), '4755');
+    assert.equal(await p.locator('#chmodSymbolic').inputValue(), 'rwsr-xr-x');
+    assert.equal(await p.locator('#chmodSpecialResult').innerText(), 'setuid');
+
+    await p.locator('#chmodSymbolic').fill('drwxrwxrwt');
+    assert.equal(await p.locator('#chmodOctal').inputValue(), '1777');
+    assert.equal(await p.locator('#chmodSymbolic').inputValue(), 'rwxrwxrwt');
+    assert.equal(await p.locator('#chmodSpecialResult').innerText(), 'sticky');
+
     await p.locator('[data-mode="1777"]').click();
     assert.equal(await p.locator('#chmodOctal').inputValue(), '1777');
     assert.equal(await p.locator('#chmodSymbolic').inputValue(), 'rwxrwxrwt');
