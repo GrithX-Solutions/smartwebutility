@@ -1573,3 +1573,88 @@ Signature verification is deliberately NOT added in this page audit. A verifier 
 - Browser regression coverage: COMPLETED.
 - Static/Build/Chromium CI: PENDING.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 6 — /csv-to-json/
+
+Status: VERIFIED NO-CHANGE DECISION
+
+### Primary intent
+Convert CSV/delimited text to JSON online.
+
+Canonical owner:
+- `https://smartwebutility.com/csv-to-json/`
+
+Reverse direction stays separately owned by:
+- `/json-to-csv/`
+
+Merging both directions into one canonical URL is not justified because each direction has distinct task intent and already has a dedicated working page.
+
+### Ubersuggest US evidence
+- `csv to json`: 2,400 searches/month, SD 39, CPC $10.34.
+- `csv to json format`: 3,600, SD 34.
+- `csv to json conversion`: 1,900, SD 31.
+- `csv to json converter`: 720, SD 31.
+- `online csv to json converter`: 480, SD 26.
+- `convert csv to json online`: 50, SD 25.
+- `csv to json array`: 20, SD 11.
+
+Current SERP includes attainable utility domains such as Tooloogle (DA 14), Agents for Data (DA 11), JSON Copilot (DA 9) and other mid-authority converters.
+
+### Current live SERP feature pattern
+Reviewed 2026-10-03. Strong current tools commonly provide:
+- RFC-style quoted-field handling;
+- embedded delimiter/newline support;
+- comma/semicolon/tab/pipe detection or selection;
+- optional header-row behavior;
+- optional type inference;
+- local file input;
+- copy/download;
+- browser-local processing;
+- in some cases reverse JSON-to-CSV or JSON Lines output.
+
+### Existing Smart Web Utility coverage
+The current page already provides:
+- quoted fields, doubled quotes, delimiters and line breaks inside quoted cells;
+- automatic comma/tab/semicolon/pipe detection plus manual selection;
+- header-object mode and array-of-arrays mode;
+- safe opt-in booleans/null/safe-number inference;
+- leading-zero and unsafe-integer protection by leaving ambiguous values as strings;
+- duplicate-header disambiguation instead of silent key overwrites;
+- padding for uneven rows and preservation of extra columns;
+- local CSV files up to 5 MB;
+- 2-space, 4-space and compact JSON;
+- JSON Lines / NDJSON;
+- output statistics, warnings, copy and download;
+- browser-local conversion;
+- direct links to the separate JSON-to-CSV, CSV Viewer and JSON Formatter intents.
+
+### Gap analysis
+No material gap was identified that justifies changing the public page in this audit.
+
+Possible additions such as arbitrary custom delimiters, bidirectional UI on the same page, or broader automatic type/date coercion would add complexity or ambiguity without verified demand sufficient to justify changing the current canonical experience.
+
+The current page is already more functionally complete than many current results because it combines safe type inference, duplicate-header handling, uneven-row preservation and JSON Lines output while keeping JSON-to-CSV on its own canonical page.
+
+### Decision
+NO CHANGE.
+
+Do not change:
+- page copy;
+- parser behavior;
+- URL/canonical;
+- title/H1;
+- sitemap lastmod.
+
+No fake freshness is introduced. The page remains in the audit as a verified no-change decision.
+
+### Page 6 acceptance status
+- Demand / difficulty: VERIFIED.
+- Current SERP intent: VERIFIED.
+- Existing functionality: VERIFIED.
+- Cannibalization: VERIFIED.
+- Material competitor/product gap: NOT FOUND.
+- Public page modification: NOT JUSTIFIED.
+- Production deployment for this page: NOT APPLICABLE.
