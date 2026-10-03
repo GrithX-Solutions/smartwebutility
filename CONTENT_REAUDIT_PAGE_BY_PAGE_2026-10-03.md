@@ -1330,3 +1330,138 @@ The test verifies:
 - Language-hint + safe-fence regression: PASS.
 - Sitemap-wide browser initialization: PASS.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 6 — /html-minifier/
+
+Status: IMPLEMENTED, CI PENDING
+
+### Primary intent
+
+Minify/compress HTML source safely for production or quick size reduction.
+
+Canonical owner:
+- `https://smartwebutility.com/html-minifier/`
+
+### Ubersuggest US evidence
+
+Primary:
+- `html minifier`: 1,600 searches/month, SD 32, CPC $11.24, transactional intent.
+
+Relevant variants:
+- `online html minifier`: 110, SD 32.
+- `html minifier terser`: 50, SD 17.
+- `html minifier online`: low-volume long-tail variants also exist around the same direct-tool intent.
+
+Ubersuggest currently reports no US ranking-keyword data for Smart Web Utility's HTML Minifier. Ranking gains remain UNKNOWN.
+
+### SERP / competitor evidence
+
+Ubersuggest's current US SERP includes:
+- kangax HTML Minifier — DA 58;
+- minifier.org — DA 38;
+- CodeBeautify — DA 60;
+- Toptal — DA 86;
+- DebugBear — DA 49;
+- Genelify — DA 20;
+- static.app — DA 25;
+- CodeShack — DA 25;
+- EmproIT — DA 12;
+- WebDevData — DA 5.
+
+Current competitor review on 2026-10-03 confirmed recurring controls for:
+- whitespace/comment minification;
+- attribute quote removal;
+- optional tag removal;
+- inline CSS/JS minification;
+- preservation/removal of comments;
+- HTML5-specific cleanup such as short doctype and legacy type-attribute removal on configurable engines.
+
+### Existing Smart Web Utility strengths before this change
+
+Already present:
+- html-minifier-terser 7.2.0 in browser;
+- conservative whitespace collapse;
+- comment removal;
+- redundant-attribute removal;
+- optional quote removal;
+- optional tag removal;
+- optional inline CSS/JS minification;
+- attribute/class sorting;
+- local file input up to 5 MB;
+- exact before/after byte metrics;
+- copy/download;
+- strong safety guidance and browser-local processing.
+
+The page therefore did not need a general rewrite or a new engine.
+
+### Confirmed gap
+
+The current engine supports several common HTML5 cleanup operations that the UI did not expose:
+- collapse boolean attributes;
+- remove legacy `type="text/javascript"` from script tags;
+- remove legacy `type="text/css"` from style/link tags;
+- normalize a legacy doctype to the short HTML5 doctype.
+
+These are useful for modern HTML5 output but can be undesirable for legacy compatibility workflows, so they should remain opt-in rather than joining the conservative defaults.
+
+### Implementation
+
+Added one advanced `HTML5 cleanup` checkbox.
+
+When enabled it passes:
+- `collapseBooleanAttributes: true`;
+- `removeScriptTypeAttributes: true`;
+- `removeStyleLinkTypeAttributes: true`;
+- `useShortDoctype: true`.
+
+When disabled, previous behavior remains unchanged.
+
+Visible content explains:
+- exactly which constructs the option can change;
+- why it remains off by default;
+- that the destination should be modern HTML5 before applying the cleanup.
+
+WebApplication metadata now includes optional HTML5 cleanup.
+
+Tool-search aliases now include:
+- `html minifier`
+- `online html minifier`
+- `html minifier online`
+- `minify html`
+- `html compressor`
+- `compress html`
+
+No new public URL was created.
+
+### Regression test
+
+Chromium coverage now feeds a legacy HTML document containing:
+- an HTML 4.01 doctype;
+- `style type="text/css"`;
+- `script type="text/javascript"`;
+- `disabled="disabled"`.
+
+With HTML5 cleanup enabled, the test requires:
+- short `<!doctype html>`;
+- CSS/JS legacy type attributes removed;
+- boolean `disabled` collapsed;
+- existing ordinary minification behavior still passing.
+
+### Primary technical reference
+
+The maintained html-minifier-terser option reference documents these options as independently disabled by default. The UI groups the four common HTML5 reductions into one explicit opt-in rather than enabling aggressive transformations silently.
+
+### Page 6 acceptance status
+
+- Demand / difficulty: VERIFIED.
+- Current SERP intent: VERIFIED.
+- Canonical ownership: VERIFIED.
+- Existing functionality inspected: VERIFIED.
+- Product/configuration gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Browser regression coverage: COMPLETED.
+- Static/Build/Chromium CI: PENDING.
+- Production deployment: NOT STARTED.
