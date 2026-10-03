@@ -3,8 +3,8 @@
     "category": "Developer",
     "url": "/base64-encoder-decoder/",
     "title": "Base64 Encoder / Decoder",
-    "description": "Encode and decode UTF-8 and Base64URL data.",
-    "keywords": []
+    "description": "Encode UTF-8 text or local files to Base64 and decode Base64URL text.",
+    "keywords": ["base64 decoder", "base64 encoder", "base64url", "base64 file encoder"]
   },
   {
     "category": "Developer",
@@ -147,8 +147,8 @@
     "category": "Developer",
     "url": "/json-to-yaml/",
     "title": "JSON to YAML",
-    "description": "Convert JSON objects and arrays into clean YAML.",
-    "keywords": []
+    "description": "Convert JSON objects and arrays into clean YAML with configurable indentation.",
+    "keywords": ["json to yaml converter", "json yaml", "convert json to yaml"]
   },
   {
     "category": "Developer",
@@ -339,8 +339,8 @@
     "category": "Developer",
     "url": "/yaml-to-json/",
     "title": "YAML to JSON",
-    "description": "Parse YAML into readable JSON in the browser.",
-    "keywords": []
+    "description": "Parse single or multi-document YAML into readable JSON with configurable indentation.",
+    "keywords": ["yaml to json converter", "yaml json", "yaml2json", "convert yaml to json"]
   },
   {
     "category": "SEO",
