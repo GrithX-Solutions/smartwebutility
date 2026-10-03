@@ -3,28 +3,38 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MAC Address Generator — Random MACs Online</title>
-<meta name="description" content="Generate random MAC addresses online for testing and labs. Create locally administered unicast MAC-48 values in colon, hyphen, Cisco, compact, JSON or CSV formats.">
+<meta name="description" content="Generate random MAC addresses online for testing and labs. Choose local or universal-style administration, unicast or multicast, plus colon, hyphen, Cisco, JSON or CSV output.">
 <link rel="canonical" href="https://smartwebutility.com/mac-address-generator/">
 <meta property="og:title" content="MAC Address Generator — Random MACs Online">
-<meta property="og:description" content="Generate random locally administered unicast MAC addresses locally with bulk and format options.">
+<meta property="og:description" content="Generate random MAC-48 addresses locally with local/universal-style and unicast/multicast controls plus bulk output formats.">
 <meta property="og:url" content="https://smartwebutility.com/mac-address-generator/"><meta property="og:type" content="website">
 <meta name="twitter:card" content="summary"><meta name="theme-color" content="#071426">
 <link rel="icon" href="/favicon-sw-v5.svg?v=20261001e" type="image/svg+xml">
 <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"MAC Address Generator Online","url":"https://smartwebutility.com/mac-address-generator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Generate random locally administered unicast 48-bit MAC addresses in the browser.","featureList":["Locally administered unicast MAC generation","MAC-48 output","Bulk generation up to 1,000","Colon format","Hyphen format","Cisco dotted format","Compact format","Line comma JSON or CSV output","Uppercase or lowercase hexadecimal","Copy and download"]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What type of MAC address does this generate?","acceptedAnswer":{"@type":"Answer","text":"It generates random 48-bit locally administered unicast MAC addresses for testing, labs, virtual machines and fixtures."}},{"@type":"Question","name":"Can I generate multiple MAC addresses?","acceptedAnswer":{"@type":"Answer","text":"Yes. You can generate up to 1,000 unique MAC addresses in one batch."}},{"@type":"Question","name":"Which MAC address formats are supported?","acceptedAnswer":{"@type":"Answer","text":"Colon, hyphen, Cisco dotted and compact hexadecimal formats are supported, with uppercase or lowercase output."}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"MAC Address Generator Online","url":"https://smartwebutility.com/mac-address-generator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Generate random 48-bit MAC addresses in the browser with administration and transmission-bit controls.","featureList":["Locally administered MAC generation","Universal-style test MAC generation","Unicast MAC generation","Multicast MAC generation","MAC-48 output","Bulk generation up to 1,000","Colon format","Hyphen format","Cisco dotted format","Compact format","Line comma JSON or CSV output","Uppercase or lowercase hexadecimal","Copy and download"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What type of MAC address does this generate?","acceptedAnswer":{"@type":"Answer","text":"By default it generates random 48-bit locally administered unicast MAC addresses. You can also switch the U/L bit to universal-style or the I/G bit to multicast for controlled test data."}},{"@type":"Question","name":"Can I generate multiple MAC addresses?","acceptedAnswer":{"@type":"Answer","text":"Yes. You can generate up to 1,000 unique MAC addresses in one batch."}},{"@type":"Question","name":"Which MAC address formats are supported?","acceptedAnswer":{"@type":"Answer","text":"Colon, hyphen, Cisco dotted and compact hexadecimal formats are supported, with uppercase or lowercase output."}}]}</script>
 </head>
 <body data-mac-generator>
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
 <main>
 <section class="tool-hero wrap json-tool-hero">
 <div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>MAC Address Generator</span></div>
-<span class="kicker">Developer tool · locally administered unicast MACs</span>
+<span class="kicker">Developer tool · MAC-48 bit controls and bulk generation</span>
 <h1>MAC Address Generator Online</h1>
-<p class="lead compact">Generate random 48-bit locally administered unicast MAC addresses in your browser. Create one or up to 1,000 unique values, then render the same batch as colon, hyphen, Cisco dotted or compact hexadecimal output.</p>
+<p class="lead compact">Generate one or up to 1,000 random 48-bit MAC addresses in your browser. The safe default is locally administered + unicast, but you can explicitly test universal-style or multicast address bits and render the batch as colon, hyphen, Cisco dotted or compact hexadecimal output.</p>
 
 <div class="json-toolbar data-view-toolbar">
 <label class="compact-control">Count <input id="macCount" type="number" min="1" max="1000" value="1" style="width:78px"></label>
+<label class="compact-control">Administration
+<select id="macAdministration" aria-label="MAC address administration">
+<option value="local" selected>Locally administered</option>
+<option value="universal">Universal-style test value</option>
+</select></label>
+<label class="compact-control">Transmission
+<select id="macTransmission" aria-label="MAC address transmission type">
+<option value="unicast" selected>Unicast / individual</option>
+<option value="multicast">Multicast / group</option>
+</select></label>
 <label class="compact-control">Format
 <select id="macFormat">
 <option value="colon" selected>Colon · 02:AA:BB:CC:DD:EE</option>
@@ -46,21 +56,21 @@
 </section>
 <div id="macError" class="error" hidden role="alert"></div>
 <div id="macStats" class="json-stats" hidden></div>
-<div class="trustbar"><span>Browser-side generation</span><span>Web Crypto randomness</span><span>48-bit MAC addresses</span><span>Local bit set</span><span>Unicast bit clear</span><span>No vendor/OUI claim</span></div>
+<div class="trustbar"><span>Browser-side generation</span><span>Web Crypto randomness</span><span>48-bit MAC addresses</span><span>Local + unicast default</span><span>U/L + I/G controls</span><span>No vendor/OUI lookup claim</span></div>
 </section>
 
-<section class="section wrap prose">
-<h2>Generate locally administered unicast MAC addresses</h2>
-<p>This generator creates six-octet, 48-bit MAC addresses intended for local development, virtualization, fixtures, labs and other environments where you need synthetic addresses without pretending to own an IEEE-assigned vendor prefix. The first octet is adjusted so the individual/group bit is clear and the universal/local bit is set.</p>
+<section class="section wrap prose" data-quality-content="v2">
+<h2>Generate MAC addresses with explicit U/L and I/G bit control</h2>
+<p>This generator creates six-octet, 48-bit MAC addresses for development, virtualization, fixtures and network testing. By default it sets the universal/local (U/L) bit to locally administered and clears the individual/group (I/G) bit for unicast. You can change either control when a parser, protocol test or lab scenario needs a different bit pattern.</p>
 <div class="info-grid">
-<article><h3>Locally administered</h3><p>The U/L bit in the first octet is set to 1. That marks the address as locally administered instead of representing it as an IEEE-assigned globally unique hardware identifier.</p></article>
-<article><h3>Unicast</h3><p>The I/G bit is cleared to 0, so the generated address represents an individual/unicast address rather than a group or multicast address.</p></article>
-<article><h3>48 random bits with controlled flags</h3><p>Six random octets come from the browser Web Crypto API. Two flag bits in the first octet are then set to the required local-unicast values; the remaining bits stay random.</p></article>
+<article><h3>Local or universal-style</h3><p>The U/L bit is the second least-significant bit of the first octet. Local mode sets it to 1. Universal-style mode clears it to 0 for test data, but a random cleared bit does not create a real IEEE-assigned OUI.</p></article>
+<article><h3>Unicast or multicast</h3><p>The I/G bit is the least-significant bit of the first octet. Unicast clears it to 0 for an individual address; multicast sets it to 1 for a group address.</p></article>
+<article><h3>Cryptographic random bytes</h3><p>Six octets come from the browser Web Crypto API. The generator then overwrites only the U/L and I/G control bits you selected; the remaining 46 bits stay random.</p></article>
 <article><h3>Bulk output</h3><p>Create up to 1,000 unique values in one batch, optionally sort them, and export as lines, comma-separated text, JSON or CSV for fixtures and configuration workflows.</p></article>
 </div>
 
-<h2>Why the generator does not invent vendor OUIs</h2>
-<p>IEEE-assigned Organizationally Unique Identifiers belong to their assignees. Generating a random globally administered prefix can make synthetic data look like an address assigned by a real organization. This tool therefore generates locally administered addresses and does not label random prefixes with vendor names.</p>
+<h2>Universal-style output is not a vendor OUI assignment</h2>
+<p>IEEE-assigned Organizationally Unique Identifiers belong to their assignees. If you choose Universal-style, this tool only clears the U/L bit in a random first octet; it does not verify that the resulting prefix belongs to any organization and does not label it with a vendor name. Keep Locally administered selected for ordinary invented addresses unless your test specifically needs the universal bit cleared.</p>
 
 <h2>MAC address formatting</h2>
 <p>The same 48 bits can be displayed with colon separators such as <code>02:AA:BB:CC:DD:EE</code>, hyphen separators such as <code>02-AA-BB-CC-DD-EE</code>, Cisco-style dotted groups such as <code>02AA.BBCC.DDEE</code>, or as 12 compact hexadecimal characters. Changing separators, letter case or list output re-renders the existing batch without generating different addresses.</p>
@@ -78,9 +88,11 @@
 <div class="related-tools"><a href="/random-port-generator/">Random Port Generator<span>Generate random TCP/UDP port numbers for test configurations.</span></a><a href="/uuid-generator/">UUID & GUID Generator<span>Generate UUID v4/v7 and GUID-friendly identifiers.</span></a><a href="/random-string-generator/">Random String Generator<span>Create random text values for fixtures and testing.</span></a></div>
 </section>
 
-<section class="section alt" data-quality-content="v1"><div class="wrap prose">
+<section class="section alt" data-quality-content="v2"><div class="wrap prose">
 <h2>Frequently asked questions</h2>
-<h3>What type of MAC address does this generate?</h3><p>It generates 48-bit locally administered unicast MAC addresses.</p>
+<h3>What type of MAC address does this generate?</h3><p>It generates 48-bit MAC addresses. The default is locally administered unicast; you can also select universal-style administration or multicast for controlled test cases.</p>
+<h3>What does unicast versus multicast change?</h3><p>It changes the I/G bit in the first octet. Unicast clears that bit for an individual address; multicast sets it for a group address.</p>
+<h3>Does Universal-style create a real vendor MAC?</h3><p>No. It only clears the U/L bit. The random prefix is not an IEEE-assigned OUI and should not be presented as belonging to a real manufacturer.</p>
 <h3>Does it generate a real vendor OUI?</h3><p>No. The local-administration bit is set, so the result is not presented as an IEEE-assigned globally unique vendor address.</p>
 <h3>Can I generate multiple MAC addresses?</h3><p>Yes. Generate up to 1,000 unique values in one batch and export them as line-separated text, comma-separated text, JSON or CSV.</p>
 <h3>Which MAC address formats are supported?</h3><p>Colon, hyphen, Cisco dotted and compact hexadecimal formats are available, with uppercase or lowercase output.</p>
