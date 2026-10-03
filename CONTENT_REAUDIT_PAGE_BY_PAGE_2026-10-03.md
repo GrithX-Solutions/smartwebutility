@@ -1198,7 +1198,7 @@ Chromium coverage now verifies:
 
 ## Page 5 — /html-to-markdown/
 
-Status: IMPLEMENTED, CI PENDING
+Status: VERIFIED ON BRANCH
 
 ### Primary intent
 
@@ -1321,5 +1321,12 @@ The test verifies:
 - Product/output-fidelity gap: VERIFIED.
 - Implementation: COMPLETED on working branch.
 - Browser regression coverage: COMPLETED.
-- Static/Build/Chromium CI: PENDING.
+- Initial Chromium run 325: FAILED because `class="language-js"` was treated as literal `language-js`.
+- Parser normalization fix committed.
+- Build run 642: SUCCESS.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings on Password Generator and Text Tools.
+- Chromium run 326: SUCCESS.
+- Language-hint + safe-fence regression: PASS.
+- Sitemap-wide browser initialization: PASS.
 - Production deployment: NOT STARTED.
