@@ -167,12 +167,33 @@ const cases = [
   }],
   ['markdown-to-html', async p => {
     await p.waitForFunction(() => document.getElementById('markdownHtmlStatus').textContent === 'Ready');
-    await p.locator('#markdownInput').fill('# Hello\n\n| A | B |\n| --- | --- |\n| one | two |');
+    const source = '# Hello\n\n| A | B |\n| --- | --- |\n| one | two |\n\n<script>window.__mdXss = true</script>\n\n<img src="x" onerror="window.__mdXss=true">';
+    await p.locator('#markdownInput').fill(source);
     await p.locator('#convertMarkdownHtml').click();
-    const html = await p.locator('#markdownHtmlOutput').inputValue();
+
+    let html = await p.locator('#markdownHtmlOutput').inputValue();
     assert.ok(html.includes('<h1>Hello</h1>'));
     assert.ok(html.includes('<table>'));
+    assert.equal(html.includes('<script'), false);
+    assert.equal(/onerror\s*=/.test(html), false);
+    assert.match(await p.locator('#markdownHtmlStatus').innerText(), /sanitized/i);
     assert.equal(await p.locator('#markdownHtmlPreview').getAttribute('sandbox'), '');
+
+    await p.locator('#markdownSanitize').uncheck();
+    html = await p.locator('#markdownHtmlOutput').inputValue();
+    assert.ok(html.includes('<script>window.__mdXss = true</script>'));
+    assert.ok(/onerror\s*=/.test(html));
+    assert.match(await p.locator('#markdownHtmlStatus').innerText(), /raw html/i);
+
+    const frame = p.frameLocator('#markdownHtmlPreview');
+    await frame.locator('body').waitFor();
+    const executed = await frame.locator('body').evaluate(() => Boolean(window.__mdXss));
+    assert.equal(executed, false);
+
+    await p.locator('#markdownSanitize').check();
+    html = await p.locator('#markdownHtmlOutput').inputValue();
+    assert.equal(html.includes('<script'), false);
+    assert.equal(/onerror\s*=/.test(html), false);
     assert.equal(await p.locator('#markdownHtmlError').isHidden(), true);
   }],
   ['html-to-markdown', async p => {
