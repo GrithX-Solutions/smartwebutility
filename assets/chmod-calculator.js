@@ -108,11 +108,16 @@
   }
 
   function applySymbolic(raw) {
-    const value = raw.trim();
+    const inputValue = raw.trim();
+    const value = inputValue.length === 10 && /^[bcdlps-]/.test(inputValue)
+      ? inputValue.slice(1)
+      : inputValue;
+
     if (!/^[r-][w-][xSs-][r-][w-][xSs-][r-][w-][xTt-]$/.test(value)) {
-      showError('Enter a 9-character permission string such as rwxr-xr-x or rwxr-sr-t.');
+      showError('Enter permissions such as rwxr-xr-x, rwxr-sr-t, or an ls -l field such as -rwxr-xr-x.');
       return false;
     }
+
     const positions = [[0,1,2],[3,4,5],[6,7,8]];
     ['u','g','o'].forEach((cls, group) => {
       const p = positions[group];
@@ -120,6 +125,7 @@
       bits[cls][1].checked = value[p[1]] === 'w';
       bits[cls][2].checked = /[xst]/.test(value[p[2]]);
     });
+
     special.setuid.checked = /[sS]/.test(value[2]);
     special.setgid.checked = /[sS]/.test(value[5]);
     special.sticky.checked = /[tT]/.test(value[8]);
