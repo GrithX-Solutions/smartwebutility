@@ -83,6 +83,37 @@ Implemented:
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
 
+## Current page
+
+### Page 3 — /chmod-calculator/
+
+Status: IMPLEMENTED ON BRANCH; CI PENDING.
+
+Research evidence:
+- `chmod calculator`: 1,900 US searches/month, SD 27, CPC $10.41.
+- `linux permissions calculator`: 390, SD 15, CPC $10.02.
+- current SERP includes multiple low/mid-authority utility domains.
+
+Existing strengths:
+- octal/rwx/ls -l conversion;
+- special bits;
+- presets;
+- umask;
+- numeric command generation.
+
+Confirmed gap:
+- ranking competitor coverage includes symbolic chmod command generation;
+- the page calculated symbolic bits but did not generate an actual symbolic chmod assignment.
+
+Implemented:
+- exact `u=...,g=...,o=...` symbolic assignment command;
+- special `s`/`t` bits carried into the correct class;
+- separate Copy Octal / Copy Symbolic controls;
+- clearer distinction between ls-style display strings and chmod symbolic syntax;
+- stronger recursive-mode warning;
+- exact `linux permissions calculator` search alias;
+- regression checks for 1777/sticky and 4655/setuid-without-execute.
+
 ## Tests / evidence
 
 Previous production release remains VERIFIED:
@@ -129,7 +160,7 @@ Page 2 branch validation:
 
 ## Work in progress
 
-Page 1 UUID Generator and Page 2 Favicon Generator are fully green on the audit branch. Production remains unchanged.
+Page 1 UUID Generator and Page 2 Favicon Generator are fully green. Page 3 chmod Calculator is implemented and awaiting CI. Production remains unchanged.
 
 ## Affected files — completed/current pages
 
@@ -141,6 +172,12 @@ Page 2:
 - `favicon-generator/index.html`
 - `assets/favicon-generator.js`
 - `assets/favicon-generator.css`
+
+Page 3:
+- `chmod-calculator/index.html`
+- `assets/chmod-calculator.js`
+
+Material sitemap updates:
 - `sitemap.xml`
 
 Shared direct requirements:
@@ -151,4 +188,4 @@ Shared direct requirements:
 
 ## NEXT ACTION
 
-Verify the documentation-only Page 2 state head. If green, select exactly one Page 3 using fresh U.S. demand + current SERP evidence, then research and modify only that page. Do not deploy production.
+Run Build and Chromium CI for the final Page 3 chmod head. Fix any failure before selecting Page 4. Do not deploy production.
