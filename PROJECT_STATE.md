@@ -1,114 +1,105 @@
 # Smart Web Utility — Project State
 
-Last verified: 2026-10-03 10:08 UTC (15:08 PKT)
+Last verified: 2026-10-03
 
 ## Objective
 
-Complete the full-site content-quality re-audit and make the seven editorial requirements a hard release gate before resuming new traffic-page expansion.
+Continue the manual full-site content re-audit from the advisory warning queue, changing only pages where current U.S. demand, SERP evidence and a real product/content gap justify work.
 
 ## Source / deployment state
 
-- Current GitHub `main` before this state-only update: `5d780ecf6e891c18d0a39ab4a19a4e70f84b3a27`
+- Default branch before this batch: `d8c6c2576b31e94c88e4c87a497dbbb36d3935d2`
+- Working branch: `content-reaudit-batch2-2026-10-03`
 - Production source/artifact SHA: `5d780ecf6e891c18d0a39ab4a19a4e70f84b3a27`
-- Production artifact ID: `11270468152`
-- Production artifact SHA-256: `8ba3dac532453e985c72afe0f632d1d863cbdd2ac01107f21cb67ae09320b0b7`
-- Production release directory: `/srv/smartwebutility/releases/5d780ec-content-quality`
-- Active site: VERIFIED deployed from the artifact above.
-- Rollback tree: `/srv/smartwebutility/site.prev`
-- Production host/runtime: VERIFIED healthy after deployment.
+- Production remains unchanged during this branch work.
+- Rollback tree remains `/srv/smartwebutility/site.prev`.
 
 ## Last completed work
 
 VERIFIED:
-- Audited 89 public `index.html` pages structurally.
-- Added `CONTENT_QUALITY_STANDARD.md` as the hard editorial release gate.
-- Added `CONTENT_AUDIT_2026-10-03.md`.
-- Added `scripts/content-quality-qa.py`.
-- Wired content QA into build CI and the production deploy pre-switch gate.
-- Added the PR editorial/competitive-review checklist.
-- Strengthened the compact priority pages listed in the audit.
-- Corrected the content-QA parser so inline `<code>` literals are excluded from prose punctuation checks.
-- Added `AGENTS.md`, `DECISIONS.md`, and this state file for durable continuity.
-- Merged PR #43 and deployed the fully verified current-main artifact through the guarded production release path.
-- Submitted exactly nine materially changed canonical URLs to IndexNow after successful live verification.
+- Previous content-quality governance release is live and healthy.
+- Final state-only `main` commit `d8c6c2576b31e94c88e4c87a497dbbb36d3935d2` passed Build 562 and Chromium 246.
+- Ubersuggest authentication is active at Tier 3.
+- US market resolved as Ubersuggest `locId 2840`.
+- Batch 2 research is recorded in `CONTENT_REAUDIT_BATCH2_2026-10-03.md`.
+- YAML→JSON, JSON→YAML and Base64 were selected for material improvement from verified demand/SERP gaps.
+- Password Generator and Text Tools hub were explicitly reviewed and left unchanged rather than padded.
+- YAML→JSON now supports multi-document streams and 2/4-space JSON indentation.
+- JSON→YAML now supports 2/4-space YAML indentation.
+- Base64 now supports local file-to-Base64 encoding up to 5 MB while keeping decode output intentionally UTF-8 text only.
+- Browser smoke tests were expanded for new functionality.
+- Tool-search aliases and sitemap lastmod were updated for the three materially changed pages.
+- Rewrote avoidable passive constructions across 14 existing pages without adding keyword-targeted filler.
+- Latest content QA reduced the advisory queue from 20 warnings to 2 intentionally retained compact-page review signals.
+
+## Research evidence
+
+Ubersuggest US:
+- `yaml to json`: 1,600 volume, SD 23.
+- `yaml to json convert`: 720 volume, SD 7.
+- `yaml to json conversion`: 320 volume, SD 6.
+- `json to yaml`: 1,300 volume, SD 35, CPC $11.31.
+- `json to yaml conversion`: 590 volume, SD 6, CPC $4.67.
+- `json to yaml converter`: 480 volume, SD 28.
+- `base64 encoder decoder`: 260 volume, SD 29.
+- `base64 encoder/decoder`: 260 volume, SD 18.
+- `base64 decoder`: 74,000 volume, SD 31.
+- `password generator`: 246,000 volume, SD 70; authority-heavy SERP.
+- `text tools`: 720 volume, SD 78; navigational intent.
+
+Current SERP review also confirmed multi-document/indentation patterns on YAML tools and local file support on several Base64 competitors.
 
 ## Tests / evidence
 
-VERIFIED:
-- PR-head Build run 559: SUCCESS.
-- PR-head Chromium run 243: SUCCESS.
-- Post-merge Build run 560: SUCCESS.
-- Post-merge Chromium run 244: SUCCESS.
-- Current-main Build run 561 on `5d780ecf6e891c18d0a39ab4a19a4e70f84b3a27`: SUCCESS.
-- Current-main Chromium run 245 on the same SHA: SUCCESS.
-- Static SEO QA: 89 HTML pages, 0 errors, 0 warnings.
-- Content QA: 89 HTML pages, 0 errors, 20 advisory warnings.
-- Artifact SHA-256 independently recomputed before upload and again on the production host; both matched GitHub.
-- ZIP integrity check: no compressed-data errors.
-- Guarded deploy script completed with exit code 0.
-- Production API routing and JSON smoke checks passed during deployment.
-- Public canonical HTTPS verification from the host: homepage, XML to CSV, YAML Formatter, Unix Timestamp Converter and Robots.txt Generator all returned HTTP 200 with HTML content.
-- Release-specific XML-to-CSV and YAML content markers were present through the canonical public domain.
-- Versioned global theme asset references were present on all sampled public pages.
-- Post-deploy Docker runtime health: 22/22 containers running, 0 stopped, 0 unhealthy, 0 unstable.
-- IndexNow accepted 9 materially changed canonical URLs: HTTP 200.
+VERIFIED before this branch:
+- Production release Build/Chromium/SEO/content/API/live/runtime checks passed as recorded previously.
 
-PARTIALLY VERIFIED:
-- The independent web-fetch service used in chat could not access `smartwebutility.com` from its network, so that specific external verification path is BLOCKED. Canonical-domain HTTPS checks from the production host succeeded.
-- Passive-voice warnings were manually sampled and are frequently technically justified constructions; they remain review signals rather than hard failures.
-- Compact-page warnings remain review signals. Some current competitors expose broader functionality, so full sitewide competitive superiority must not be claimed from automation alone.
+VERIFIED on branch head `91a920161065eafb52977d9890ca4b286aefe135`:
+- JavaScript syntax validation: PASS.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content quality QA: 89 pages, 0 errors, 2 advisory warnings.
+- Build deployment bundle run 570: SUCCESS.
+
+PENDING:
+- Final Chromium run for the latest content/code head.
+- Final documentation-only head CI after this state/audit update.
+- PR diff review and merge gate.
 
 ## Deployment / indexing
 
-- PR #43 merge: VERIFIED.
-- Production deployment: VERIFIED.
-- Rollback preservation: VERIFIED at `/srv/smartwebutility/site.prev`.
-- Live API smoke checks: VERIFIED.
-- Live sampled page checks: VERIFIED.
-- IndexNow submission: VERIFIED for 9 changed canonical URLs.
-- Google Search Console indexing status after this release: UNKNOWN; no claim of indexing or ranking gain is made.
+- Batch 2 merge: NOT STARTED.
+- Batch 2 production deployment: NOT STARTED.
+- Batch 2 IndexNow submission: NOT STARTED.
+- Existing production remains VERIFIED on source `5d780ecf6e891c18d0a39ab4a19a4e70f84b3a27`.
 
 ## Blockers
 
-- No deployment blocker remains.
-- Independent chat web-fetch access to the domain remains BLOCKED by that fetch environment; this does not match the successful canonical-domain HTTPS checks from the production host.
+- Batch 2 cannot merge or deploy until Build and Chromium CI pass on the final branch head.
 
 ## Risks
 
-- Regex-based prose heuristics can produce false positives around technical tokens; code literals remain excluded from ordinary prose punctuation checks.
-- “Better than competitors” cannot be proven by automation; material rewrites require recorded live-SERP/editorial evidence.
-- 20 content-QA warnings remain as manual review signals, including passive-voice heuristics and compact search-facing pages.
-- Production release storage contains many historical releases; do not delete them without a separate verified retention-cleanup task.
+- Multi-document YAML has no direct JSON document-stream representation; this implementation uses a top-level JSON array for two or more documents and documents that behavior visibly.
+- Base64 file support encodes binary files but does not claim binary-file decoding; decode mode intentionally requires valid UTF-8 text.
+- Head-term traffic is not guaranteed. Current pages have no verified Ubersuggest US ranking data yet.
+- Do not expand Password Generator or the Text Tools hub solely to clear compact-content warnings.
 
 ## Work in progress
 
-The content-quality governance/release work is complete and live. The remaining content audit should now focus on the advisory warning queue and page-specific live-SERP/competitor evidence rather than arbitrary expansion.
+Content re-audit Batch 2 implementation is complete. Static/build gates are green; only final Chromium and documentation-head CI remain before PR merge review.
 
 ## Affected files
 
-See merged PR #43. Core governance/release files:
-- `AGENTS.md`
+- `CONTENT_REAUDIT_BATCH2_2026-10-03.md`
+- `yaml-to-json/index.html`
+- `json-to-yaml/index.html`
+- `base64-encoder-decoder/index.html`
+- `assets/data-converters.js`
+- `assets/base64.js`
+- `assets/tool-catalog.json`
+- `tests/browser-smoke.cjs`
+- `sitemap.xml`
 - `PROJECT_STATE.md`
-- `DECISIONS.md`
-- `CONTENT_QUALITY_STANDARD.md`
-- `CONTENT_AUDIT_2026-10-03.md`
-- `NEW_PAGE_SEO_RELEASE_STANDARD.md`
-- `.github/pull_request_template.md`
-- `.github/workflows/build-deploy-bundle.yml`
-- `scripts/content-quality-qa.py`
-- `deploy/deploy-site.sh`
-
-Materially rewritten/index-submitted pages:
-- `/case-converter/`
-- `/character-counter/`
-- `/lorem-ipsum-generator/`
-- `/open-graph-preview/`
-- `/robots-txt-generator/`
-- `/slug-generator/`
-- `/unix-timestamp-converter/`
-- `/xml-to-csv/`
-- `/yaml-formatter/`
 
 ## NEXT ACTION
 
-Continue the manual full-site content re-audit from the 20 advisory content-QA warnings, prioritizing compact search-facing pages and confirmed avoidable passive-voice sections; for each material rewrite, validate current US SERP intent, Ubersuggest demand/competition where available, semantic coverage, competitor gaps, functionality, and cannibalization before changing content.
+Verify Build and Chromium CI on the final documentation-updated branch head; if both pass, mark PR #44 ready, merge with an exact head-SHA guard, then stop before production activation unless explicit production deployment approval is confirmed.

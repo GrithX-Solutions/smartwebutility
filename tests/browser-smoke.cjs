@@ -26,14 +26,23 @@ const cases = [
     assert.ok(csv.includes('Ada,admin'));
   }],
   ['yaml-to-json', async p => {
-    await p.locator('#converterInput').fill('service:\n  name: api\n  port: 8080');
+    await p.locator('#converterIndent').selectOption('4');
+    await p.locator('#converterInput').fill('service:\n  name: api\n---\nservice:\n  name: worker');
     await p.locator('#convertBtn').click();
-    assert.ok((await p.locator('#converterOutput').inputValue()).includes('"service"'));
+    const output = await p.locator('#converterOutput').inputValue();
+    const parsed = JSON.parse(output);
+    assert.equal(parsed.length, 2);
+    assert.equal(parsed[0].service.name, 'api');
+    assert.equal(parsed[1].service.name, 'worker');
+    assert.ok(output.includes('\n    {'));
   }],
   ['json-to-yaml', async p => {
+    await p.locator('#converterIndent').selectOption('4');
     await p.locator('#converterInput').fill('{"service":{"name":"api","port":8080}}');
     await p.locator('#convertBtn').click();
-    assert.ok((await p.locator('#converterOutput').inputValue()).includes('service:'));
+    const output = await p.locator('#converterOutput').inputValue();
+    assert.ok(output.includes('service:'));
+    assert.match(output, /service:\n {4}name: api/);
   }],
   ['csv-viewer', async p => {
     await p.locator('#csvInput').fill('name,role\nAda,admin\nLinus,developer');
@@ -387,6 +396,18 @@ const cases = [
     await p.locator('#base64Input').fill('hello');
     await p.locator('#runBase64').click();
     assert.equal((await p.locator('#base64Output').inputValue()).trim(), 'aGVsbG8=');
+
+    await p.locator('#base64File').setInputFiles({
+      name: 'sample.bin',
+      mimeType: 'application/octet-stream',
+      buffer: Buffer.from([0xfb, 0xff])
+    });
+    await p.waitForFunction(() => document.getElementById('base64Output').value === '+/8=');
+    assert.equal((await p.locator('#base64Output').inputValue()).trim(), '+/8=');
+
+    await p.locator('#urlSafe').check();
+    await p.waitForFunction(() => document.getElementById('base64Output').value === '-_8');
+    assert.equal((await p.locator('#base64Output').inputValue()).trim(), '-_8');
   }],
   ['unix-timestamp-converter', async p => {
     await p.locator('#unixInput').fill('1767225600');

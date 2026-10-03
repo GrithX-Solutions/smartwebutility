@@ -59,27 +59,27 @@
 <div class="info-grid">
 <article><h3>Quoted CSV fields</h3><p>Quoted values can contain delimiters, doubled quotes and line breaks. The parser keeps those characters inside the same field instead of splitting the row incorrectly.</p></article>
 <article><h3>Delimiter detection</h3><p>Auto mode checks comma, tab, semicolon and pipe separators. You can also select the delimiter explicitly when the source format is known.</p></article>
-<article><h3>Header-based XML elements</h3><p>With the header option enabled, each CSV header becomes an XML child element when it is a valid XML name. Invalid or blank headers are preserved with a generic <code>field</code> element and a <code>name</code> attribute.</p></article>
+<article><h3>Header-based XML elements</h3><p>With the header option enabled, each valid CSV header becomes an XML child element. The converter preserves invalid or blank headers with a generic <code>field</code> element and a <code>name</code> attribute.</p></article>
 <article><h3>Configurable XML structure</h3><p>Choose the document root and row element names so the output can match a simple integration contract such as <code>&lt;records&gt;</code> containing repeated <code>&lt;record&gt;</code> nodes.</p></article>
 </div>
 
 <h2>How CSV headers map to XML</h2>
-<p>A header such as <code>name,role,active</code> becomes child elements named <code>name</code>, <code>role</code> and <code>active</code>. CSV allows column labels that XML cannot use directly, including blank labels, names beginning with digits and labels containing spaces. Those values are not discarded: they are written as <code>&lt;field name="original header"&gt;</code>.</p>
+<p>A header such as <code>name,role,active</code> becomes child elements named <code>name</code>, <code>role</code> and <code>active</code>. CSV allows column labels that XML cannot use directly, including blank labels, names beginning with digits and labels containing spaces. The converter keeps those values as <code>&lt;field name="original header"&gt;</code>.</p>
 
 <h2>Headerless CSV files</h2>
 <p>Disable “First row is header” when every row is data. The converter then emits generic column elements such as <code>&lt;column index="1"&gt;</code>, preserving the original field order without inventing semantic names.</p>
 
 <h2>Rows with different column counts</h2>
-<p>CSV exports are not always perfectly rectangular. The converter preserves the widest row it finds and pads missing cells with empty values. When a data row is wider than the header row, extra columns are emitted as indexed generic column elements rather than being silently dropped.</p>
+<p>CSV exports are not always perfectly rectangular. The converter preserves the widest row it finds and pads missing cells with empty values. When a data row is wider than the header row, the converter emits extra columns as indexed generic column elements instead of silently dropping them.</p>
 
 <h2>CSV and XML represent structure differently</h2>
 <p>CSV is fundamentally tabular, while XML can represent nested hierarchies, attributes, namespaces and mixed content. This tool creates a simple row-and-field XML representation. It does not infer nested XML relationships, attributes, namespaces or an XSD schema from flat CSV values.</p>
 
 <h2>XML escaping</h2>
-<p>Field values and fallback header names are escaped so ampersands, angle brackets and quotation marks cannot accidentally become markup. The generated output is intended to be well-formed XML for ordinary text CSV input.</p>
+<p>The converter escapes field values and fallback header names so ampersands, angle brackets and quotation marks cannot accidentally become markup. It generates well-formed XML for ordinary text CSV input.</p>
 
 <h2>Large files and data pipelines</h2>
-<p>Local file input is capped at 5 MB to keep browser processing responsive. Larger or streaming datasets are better handled with an ETL pipeline, database tool, script or command-line converter where memory use, schema enforcement and error handling can be controlled more precisely.</p>
+<p>The tool caps local file input at 5 MB to keep browser processing responsive. For larger or streaming datasets, use an ETL pipeline, database tool, script or command-line converter that gives you tighter control over memory use, schema enforcement and error handling.</p>
 
 <h2>Related developer tools</h2>
 <div class="related-tools"><a href="/xml-to-csv/">XML to CSV<span>Convert repeated XML records back into CSV.</span></a><a href="/csv-to-json/">CSV to JSON<span>Convert CSV rows into JSON objects or arrays.</span></a><a href="/xml-formatter-validator/">XML Formatter & Validator<span>Check and format the generated XML.</span></a></div>
@@ -88,9 +88,9 @@
 <section class="section alt" data-quality-content="v1"><div class="wrap prose">
 <h2>Frequently asked questions</h2>
 <h3>Can I convert a CSV file to XML online?</h3><p>Yes. Open a local CSV file up to 5 MB or paste CSV text, then convert it in the browser.</p>
-<h3>Does it handle commas inside values?</h3><p>Yes, when those fields are quoted correctly.</p>
+<h3>Does it handle commas inside values?</h3><p>Yes, when the source quotes those fields correctly.</p>
 <h3>Can I change the XML root and row names?</h3><p>Yes. Both names are configurable and validated before conversion.</p>
-<h3>What happens to invalid XML header names?</h3><p>They are preserved using a generic <code>field</code> element with the original header stored in a <code>name</code> attribute.</p>
+<h3>What happens to invalid XML header names?</h3><p>The converter preserves them with a generic <code>field</code> element and stores the original header in a <code>name</code> attribute.</p>
 <h3>Is the CSV uploaded?</h3><p>No. Conversion runs locally in browser JavaScript.</p>
 </div></section>
 </main>

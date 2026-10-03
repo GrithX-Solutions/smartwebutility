@@ -63,11 +63,11 @@
 
 <section class="section wrap prose">
   <h2>Generate SHA digests locally in your browser</h2>
-  <p>The Hash Generator uses the browser Web Crypto API to calculate SHA-1, SHA-256, SHA-384 or SHA-512. Text is encoded as UTF-8 before hashing, while selected files are read locally and passed directly to the browser's digest function. The file contents are not uploaded to Smart Web Utility.</p>
+  <p>The Hash Generator uses the browser Web Crypto API to calculate SHA-1, SHA-256, SHA-384 or SHA-512. It encodes text as UTF-8 before hashing, reads selected files locally and passes their bytes directly to the browser's digest function. Smart Web Utility does not upload the file contents.</p>
   <div class="info-grid">
     <article><h3>SHA-256</h3><p>A widely used SHA-2 digest for checksums, integrity verification, content identifiers and many modern application workflows.</p></article>
-    <article><h3>SHA-384 and SHA-512</h3><p>Longer SHA-2 outputs that can be required by particular protocols, policies or interoperability workflows.</p></article>
-    <article><h3>SHA-1</h3><p>Available for legacy compatibility and old checksum systems. SHA-1 should not be chosen where modern collision resistance is a security requirement.</p></article>
+    <article><h3>SHA-384 and SHA-512</h3><p>Use these longer SHA-2 outputs when a protocol, policy or interoperability workflow requires them.</p></article>
+    <article><h3>SHA-1</h3><p>Use SHA-1 only for legacy compatibility and old checksum systems. Choose a stronger modern algorithm when collision resistance matters.</p></article>
     <article><h3>Hex output</h3><p>Copy the digest as lowercase hexadecimal or toggle uppercase when matching a tool or checksum format that expects capital letters.</p></article>
   </div>
 
@@ -78,7 +78,7 @@
   <p>A cryptographic hash is a one-way digest and does not make sensitive content confidential. Plain SHA algorithms are also not suitable password-storage schemes by themselves. Password systems should use a dedicated password-hashing or key-derivation design with salts and an appropriate work factor rather than storing a simple SHA digest of the password.</p>
 
   <h2>Text hashing details</h2>
-  <p>The text field is converted to UTF-8 bytes before hashing. Small differences—including capitalization, spaces, line endings or invisible characters—change the input bytes and therefore change the digest. If two systems produce different hashes for “the same text,” compare their exact encoding and line-ending behavior.</p>
+  <p>The tool converts the text field to UTF-8 bytes before hashing. Small differences—including capitalization, spaces, line endings or invisible characters—change the input bytes and therefore change the digest. If two systems produce different hashes for “the same text,” compare their exact encoding and line-ending behavior.</p>
 
   <h2>Large-file considerations</h2>
   <p>The current browser implementation reads the selected file into memory before calculating the digest. That is convenient for normal files, but very large files can consume significant browser memory. Streaming command-line tools are better suited to unusually large disk images, backups or archives.</p>
@@ -93,11 +93,11 @@
 <section class="section alt" data-quality-content="v2"><div class="wrap prose">
   <h2>Frequently asked hash questions</h2>
   <h3>Will the same file always have the same SHA-256?</h3>
-  <p>Yes, provided the file bytes are identical and the same algorithm is used. Even a one-byte change will normally produce a very different digest.</p>
+  <p>Yes, when both systems hash identical file bytes with the same algorithm. Even a one-byte change will normally produce a very different digest.</p>
   <h3>Can I reverse a SHA-256 hash to get the original file?</h3>
-  <p>No practical inverse operation is built into the hash. Hashing is designed as a one-way transformation, although weak or guessable original inputs can sometimes be discovered by trying candidate values.</p>
+  <p>No practical inverse operation recovers the original value from a cryptographic hash. Hash functions work as one-way transformations, although an attacker can sometimes discover weak or guessable inputs by trying candidate values.</p>
   <h3>Why should I avoid SHA-1 for security-sensitive integrity?</h3>
-  <p>Practical collision attacks have been demonstrated against SHA-1, so modern security designs generally use stronger SHA-2 family algorithms or another currently appropriate primitive.</p>
+  <p>Researchers have demonstrated practical collision attacks against SHA-1, so modern security designs generally use stronger SHA-2 family algorithms or another currently appropriate primitive.</p>
   <h3>Does the file leave my browser?</h3>
   <p>No. The current implementation reads the selected file locally and computes the digest using Web Crypto in the browser.</p>
 </div></section></main>

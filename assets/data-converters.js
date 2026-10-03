@@ -106,16 +106,29 @@
     }
   }
 
+  function selectedIndent() {
+    return Number(document.getElementById('converterIndent')?.value) === 4 ? 4 : 2;
+  }
+
   function yamlToJson(text) {
     requireYaml();
-    const parsed = window.jsyaml.load(text);
-    return JSON.stringify(parsed === undefined ? null : parsed, null, 2);
+    const documents = [];
+    window.jsyaml.loadAll(text, documentValue => {
+      documents.push(documentValue === undefined ? null : documentValue);
+    });
+    const parsed = documents.length <= 1 ? (documents[0] ?? null) : documents;
+    return JSON.stringify(parsed, null, selectedIndent());
   }
 
   function jsonToYaml(text) {
     requireYaml();
     const parsed = JSON.parse(text);
-    return window.jsyaml.dump(parsed, {noRefs:true, lineWidth:-1, sortKeys:false});
+    return window.jsyaml.dump(parsed, {
+      noRefs:true,
+      lineWidth:-1,
+      sortKeys:false,
+      indent:selectedIndent()
+    });
   }
 
   function validXmlName(name) {
@@ -281,6 +294,10 @@
       event.preventDefault();
       convert();
     }
+  });
+
+  document.getElementById('converterIndent')?.addEventListener('change', () => {
+    if (input.value.trim()) convert();
   });
 
   for (const controlId of ['jsonXmlRoot','jsonXmlItem']) {

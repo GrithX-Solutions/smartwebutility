@@ -50,23 +50,23 @@
   <h2>Format and validate TOML in one step</h2>
   <p>This TOML formatter parses the document first and only produces formatted output when the syntax is valid. It is useful for configuration files such as <code>Cargo.toml</code>, <code>pyproject.toml</code> and other application settings that use Tom's Obvious, Minimal Language.</p>
   <div class="info-grid">
-    <article><h3>TOML syntax validation</h3><p>Detect malformed keys, values, arrays, tables, dates and other syntax that cannot be parsed as a valid TOML document.</p></article>
-    <article><h3>Consistent formatting</h3><p>Valid TOML is parsed and serialized again so spacing, arrays, values and table layout use a consistent representation.</p></article>
+    <article><h3>TOML syntax validation</h3><p>Detect malformed keys, values, arrays, tables, dates and other syntax that the TOML parser cannot read as a valid document.</p></article>
+    <article><h3>Consistent formatting</h3><p>The formatter parses valid TOML and serializes it again so spacing, arrays, values and table layout use a consistent representation.</p></article>
     <article><h3>Local file workflow</h3><p>Open a local <code>.toml</code> file up to 5 MB. The file text is read by your browser and is not uploaded for this workflow.</p></article>
     <article><h3>Copy or download</h3><p>Copy formatted TOML to the clipboard or download the regenerated configuration as <code>formatted.toml</code>.</p></article>
   </div>
 
   <h2>What the TOML validator checks</h2>
-  <p>Validation is parser-based rather than a simple bracket or regex check. The page uses a TOML v1.1-compatible parser to read keys, dotted keys, tables, arrays, inline tables, booleans, numbers, strings and TOML date/time values. Invalid syntax is reported instead of generating output.</p>
+  <p>A TOML v1.1-compatible parser performs validation rather than a simple bracket or regex check. It reads keys, dotted keys, tables, arrays, inline tables, booleans, numbers, strings and TOML date/time values. When it finds invalid syntax, the page reports the parser error instead of generating output.</p>
 
   <h2>Formatting can normalize representation</h2>
-  <p>A parser-and-serializer formatter does not preserve the source file byte-for-byte. Comments are not retained, whitespace is regenerated, and equivalent numeric or date representations can be normalized. If comments or exact lexical formatting are part of your workflow, keep the original file in version control and review the formatted output before replacing it.</p>
+  <p>A parser-and-serializer formatter does not preserve the source file byte-for-byte. The serializer drops comments, regenerates whitespace and may normalize equivalent numeric or date representations. If comments or exact lexical formatting are part of your workflow, keep the original file in version control and review the formatted output before replacing it.</p>
 
   <h2>Cargo.toml and pyproject.toml</h2>
-  <p>TOML is commonly used by Rust projects in <code>Cargo.toml</code> and by Python tooling in <code>pyproject.toml</code>. This page validates TOML syntax only; it does not verify Cargo package rules, Python build-system metadata, dependency availability or application-specific schemas.</p>
+  <p>Rust projects commonly use TOML in <code>Cargo.toml</code>, and Python tooling commonly uses it in <code>pyproject.toml</code>. This page validates TOML syntax only; it does not verify Cargo package rules, Python build-system metadata, dependency availability or application-specific schemas.</p>
 
   <h2>Large integers and safer key handling</h2>
-  <p>The parser is configured to preserve integers beyond JavaScript's safe-number range when needed and to reject potentially unsafe object keys. That keeps formatting focused on TOML syntax without silently accepting values that could be represented incorrectly in ordinary JavaScript numbers.</p>
+  <p>The configuration preserves integers beyond JavaScript's safe-number range when needed and rejects potentially unsafe object keys. That keeps formatting focused on TOML syntax without silently accepting values that ordinary JavaScript numbers could represent incorrectly.</p>
 
   <h2>Related developer tools</h2>
   <div class="related-tools">
@@ -79,7 +79,7 @@
 <section class="section alt" data-quality-content="v1"><div class="wrap prose">
   <h2>Frequently asked questions</h2>
   <h3>Does this validate TOML syntax?</h3><p>Yes. The formatter parses the input as TOML and reports a parser error when the document is invalid.</p>
-  <h3>Does formatting preserve comments?</h3><p>No. The document is parsed into data and serialized again, so comments and exact source formatting are not retained.</p>
+  <h3>Does formatting preserve comments?</h3><p>No. The formatter parses the document into data and serializes it again, so it does not retain comments or exact source formatting.</p>
   <h3>Can I format Cargo.toml or pyproject.toml?</h3><p>Yes, as TOML documents. The tool does not validate Cargo- or Python-specific metadata rules.</p>
   <h3>Is TOML uploaded to the server?</h3><p>No. Parsing and formatting run in browser JavaScript on this page.</p>
   <h3>Which TOML syntax does the parser support?</h3><p>The implementation uses a TOML v1.1-compatible parser and serializer.</p>
