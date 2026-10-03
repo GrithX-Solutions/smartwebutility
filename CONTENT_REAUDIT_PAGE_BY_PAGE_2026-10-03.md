@@ -1058,3 +1058,132 @@ Chromium coverage now verifies:
 - CSV JSON/JSONL output regressions: PASS.
 - Sitemap-wide browser initialization: PASS.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 6 — /ulid-generator/
+
+Status: IMPLEMENTED, CI PENDING
+
+### Primary intent
+
+Generate sortable ULIDs and inspect the timestamp/randomness encoded in an existing ULID.
+
+Canonical owner:
+- `https://smartwebutility.com/ulid-generator/`
+
+Related but separate intent owners:
+- `/uuid-generator/` owns UUID/GUID generation.
+- `/uuid-validator/` owns UUID/GUID validation; ULID inspection stays on the ULID page.
+
+### Ubersuggest US evidence
+
+Primary:
+- `ulid generator`: 210 searches/month, SD 17, transactional intent.
+
+Relevant variants:
+- `online ulid generator`: 20, SD 13.
+- `ulid generator online`: 10, SD 13.
+- `ulid generator java`: 10, SD 13.
+
+Ubersuggest currently reports no US ranking-keyword data for Smart Web Utility's ULID page. Ranking gains remain UNKNOWN.
+
+### SERP / competitor evidence
+
+The current Ubersuggest US SERP is unusually accessible:
+- ulidgenerator.com — DA 5
+- IT-Tools — DA 1
+- ulidtools.com — DA 5
+- nddapp.com — DA 5
+- uuid.lol — DA 4
+- tools.nian.ro — DA 1
+- uuid.codexneo.com — DA 6
+- additional low-authority utility sites.
+
+Current live review on 2026-10-03 shows recurring useful features:
+- bulk generation;
+- monotonic generation;
+- custom timestamps;
+- timestamp decoding for pasted/existing ULIDs;
+- on some tools, additional conversion views.
+
+### Current Smart Web Utility strengths before this change
+
+Already present:
+- canonical 26-character Crockford Base32 ULID generation;
+- 48-bit millisecond timestamp + 80-bit randomness;
+- Web Crypto randomness;
+- monotonic same-millisecond generation;
+- bulk generation up to 500;
+- custom timestamp generation;
+- generated-value timestamp table;
+- copy/download;
+- timestamp-range and security caveats.
+
+The page did not need its generator rewritten.
+
+### Confirmed gap
+
+Timestamp decoding existed only for values the page had just generated. A user could not paste an arbitrary ULID to:
+- validate the 26-character representation;
+- normalize lowercase input;
+- decode the timestamp;
+- inspect the 80-bit randomness component.
+
+This inspection workflow appears repeatedly on current ULID tools and is a distinct practical need from generation.
+
+### Technical reference
+
+The canonical ULID specification defines:
+- 128 total bits;
+- a 48-bit Unix millisecond timestamp;
+- 80 bits of randomness;
+- 26 Crockford Base32 characters;
+- case-insensitive text;
+- the alphabet excluding I, L, O and U;
+- maximum valid encoded value beginning with `7`, because 26 Base32 characters can otherwise represent 130 bits.
+
+### Implementation
+
+`assets/ulid-generator.js` now includes an arbitrary ULID decoder that:
+- trims and uppercases input;
+- requires exactly 26 characters;
+- validates the Crockford ULID alphabet;
+- rejects first-character/overflow values outside the 128-bit ULID space;
+- decodes the 48-bit timestamp;
+- displays timestamp milliseconds and UTC;
+- exposes the final 16 Base32 characters as the 80-bit randomness component;
+- also renders that randomness as exactly 20 hexadecimal characters.
+
+`ulid-generator/index.html` now:
+- adds an “Inspect an existing ULID” panel;
+- lets the user inspect the first generated value without retyping it;
+- explains validation, timestamp and randomness semantics;
+- documents lowercase acceptance and uppercase normalization;
+- updates page/schema metadata to reflect generation + decoding.
+
+No new public URL was created.
+
+### Regression tests
+
+Chromium coverage now verifies:
+- generated monotonic custom-time ULIDs still work;
+- the first generated ULID can be inspected;
+- decoded timestamp equals the custom generation timestamp;
+- randomness is 16 Base32 characters and 20 hex characters;
+- lowercase valid ULID input normalizes to uppercase;
+- an overflow/invalid first-character value beginning with `8` is rejected.
+
+### Page 6 acceptance status
+
+- Demand / difficulty: VERIFIED.
+- Current SERP intent: VERIFIED.
+- Canonical ownership: VERIFIED.
+- Existing functionality inspected: VERIFIED.
+- Product/workflow gap: VERIFIED.
+- Technical specification: VERIFIED against the canonical ULID spec.
+- Implementation: COMPLETED on working branch.
+- Browser regression coverage: COMPLETED.
+- Static/Build/Chromium CI: PENDING.
+- Production deployment: NOT STARTED.
