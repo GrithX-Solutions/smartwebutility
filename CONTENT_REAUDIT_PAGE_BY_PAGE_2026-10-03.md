@@ -1772,7 +1772,12 @@ Chromium coverage now verifies:
 - Product/content gap: VERIFIED.
 - Implementation: COMPLETED on working branch.
 - Browser regression coverage: COMPLETED.
-- Static/Build/Chromium CI: PENDING.
+- Build run 675: SUCCESS.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings on Password Generator and Text Tools.
+- Chromium run 359: SUCCESS.
+- Automatic clock-rollback monotonic regression: PASS.
+- Sitemap-wide browser initialization: PASS.
 - Production deployment: NOT STARTED.
 
 
@@ -1790,7 +1795,7 @@ Chromium coverage now verifies:
 
 ## Page 7 — /ulid-generator/
 
-Status: IMPLEMENTED, CI PENDING
+Status: VERIFIED ON BRANCH
 
 ### Primary intent
 Generate, inspect and decode ULIDs, including monotonic sortable identifiers.
