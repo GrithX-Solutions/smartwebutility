@@ -197,8 +197,15 @@
     "category": "Developer",
     "url": "/markdown-to-html/",
     "title": "Markdown to HTML",
-    "description": "Convert Markdown and GFM content into HTML with a sandboxed preview.",
-    "keywords": []
+    "description": "Convert Markdown/GFM to sanitized HTML by default with optional raw output and sandboxed preview.",
+    "keywords": [
+      "markdown to html",
+      "markdown to html converter",
+      "online markdown to html converter",
+      "markdown to html online",
+      "markdown to html converter online",
+      "free markdown to html converter"
+    ]
   },
   {
     "category": "Developer",
