@@ -488,7 +488,14 @@ Chromium test now verifies:
 - Product gap: VERIFIED.
 - Implementation: COMPLETED on working branch.
 - Browser regression coverage: COMPLETED.
-- Static/Build/Chromium CI: PENDING.
+- Initial Build run 599: SUCCESS with one new editorial meta-description length warning.
+- Meta description was shortened; no functionality/content coverage was removed.
+- Build run 600: SUCCESS.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- Chromium run 284: SUCCESS.
+- Symbolic chmod command + special-bit regression checks: PASS.
+- Full sitemap browser initialization sweep: PASS.
 - Production deployment: NOT STARTED.
 
 
@@ -496,7 +503,7 @@ Chromium test now verifies:
 
 ## Page 3 — /chmod-calculator/
 
-Status: IMPLEMENTED, CI PENDING
+Status: VERIFIED GREEN
 
 ### Primary intent
 
