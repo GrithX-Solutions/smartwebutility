@@ -60,28 +60,27 @@ Research record:
 
 ## Current page
 
-### Page 10 — /yaml-formatter/
+### Page 11 — /json-escape-unescape/
 
-Status: VERIFIED ON BRANCH.
+Status: IMPLEMENTED ON BRANCH; CI PENDING.
 
 Research evidence:
-- `yaml formatter`: 2,400 US searches/month, SD 18, CPC $21.91.
-- `yaml formatter online`: 140, SD 24.
-- Current SERP includes DA 4–11 utility domains.
+- `json escape`: 1,900 US searches/month, SD 32.
+- `json escape chars`: 590, SD 13.
+- `json escape online`: 320, SD 31.
+- Current SERP includes a DA 16 utility at position 1.
 
 Confirmed gap:
-- existing formatter used single-document `jsyaml.load()`;
-- valid YAML streams with multiple `---` documents were rejected.
+- implementation was already correct for JSON strings;
+- page under-explained context boundaries and the practical purpose of optional `\/`.
 
 Implemented:
-- `jsyaml.loadAll()` stream parsing;
-- format each document independently;
-- preserve explicit `---` boundaries for multi-document output;
-- keep single-document output behavior unchanged;
-- show document count in stats;
-- invalidate/clear the whole output when any stream document is invalid;
-- update visible semantic guidance, tool-search aliases and sitemap lastmod;
-- add Chromium coverage for single/multi/invalid-stream cases.
+- explicit JSON-vs-HTML/URL/SQL/shell boundary guidance;
+- explain `</script>` and optional slash escaping;
+- clarify ordinary Unicode need not be forced to `\uXXXX`;
+- preserve focused scope: no new HTML-safe or ASCII-only toggle because verified direct demand is minimal;
+- update search aliases and sitemap lastmod;
+- add browser regression for slash escaping, Unicode preservation and existing malformed-escape rejection.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
