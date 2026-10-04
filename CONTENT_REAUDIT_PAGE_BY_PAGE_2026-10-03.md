@@ -2216,7 +2216,7 @@ No new parser dependency was introduced.
 ## Page 11 — /json-escape-unescape/
 
 Research/update date: 2026-10-04  
-Status: IMPLEMENTED, CI PENDING
+Status: VERIFIED ON BRANCH
 
 ### Primary intent
 Escape or unescape JSON string content according to JSON string rules.
@@ -2306,5 +2306,10 @@ Chromium coverage now verifies:
 - Extra-feature demand: INSUFFICIENT for a new toggle.
 - Implementation: COMPLETED on working branch.
 - Browser regression coverage: COMPLETED.
-- Static/Build/Chromium CI: PENDING.
+- Build run 701: SUCCESS.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings on Password Generator and Text Tools.
+- Chromium run 385: SUCCESS.
+- Slash/Unicode/malformed-escape regressions: PASS.
+- Sitemap-wide browser initialization: PASS.
 - Production deployment: NOT STARTED.
