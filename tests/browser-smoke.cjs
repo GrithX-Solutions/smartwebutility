@@ -276,6 +276,27 @@ const cases = [
       workerType: 'function',
       status: 'Ready'
     });
+
+    await p.evaluate(() => {
+      window.__swuNativeWorker = window.Worker;
+      let primaryFailed = false;
+      window.Worker = class TestWorker extends EventTarget {
+        constructor(url) {
+          if (!primaryFailed && String(url).includes('engine=jsdelivr')) {
+            super();
+            primaryFailed = true;
+            setTimeout(() => {
+              this.dispatchEvent(new ErrorEvent('error', {message:'synthetic primary provider failure'}));
+            }, 0);
+            return;
+          }
+          return new window.__swuNativeWorker(url);
+        }
+        terminate() {}
+        postMessage() {}
+      };
+    });
+
     assert.equal(await p.locator('#minAttributeQuotes').isChecked(), false);
     const source = '<!doctype html>\n<html>\n  <body>\n    <!-- remove me -->\n    <main>\n      <h1>Hello</h1>\n      <p>World</p>\n    </main>\n  </body>\n</html>';
     const waitForHtmlMinifier = async () => {
@@ -330,6 +351,13 @@ const cases = [
     assert.equal(await p.locator('#htmlMinifierStatus').innerText(), 'Ready');
 
     assert.equal(await p.locator('#htmlMinifierError').isHidden(), true);
+
+    await p.evaluate(() => {
+      if (window.__swuNativeWorker) {
+        window.Worker = window.__swuNativeWorker;
+        delete window.__swuNativeWorker;
+      }
+    });
   }],
   ['jsonpath-tester', async p => {
     await p.waitForFunction(() => document.getElementById('jsonPathStatus').textContent === 'Ready');
