@@ -2098,7 +2098,7 @@ Chromium coverage now verifies:
 ## Page 10 — /yaml-formatter/
 
 Research/update date: 2026-10-04  
-Status: IMPLEMENTED, CI PENDING
+Status: VERIFIED ON BRANCH
 
 ### Primary intent
 Format and validate YAML online, including configuration files and YAML document streams.
@@ -2188,5 +2188,14 @@ No new parser dependency was introduced.
 - Functional gap: VERIFIED.
 - Implementation: COMPLETED on working branch.
 - Browser regression coverage: COMPLETED.
-- Static/Build/Chromium CI: PENDING.
+- Initial Build run 695: SUCCESS.
+- Initial Chromium run 379: FAILED only because the stats assertion expected a literal space instead of rendered line-break whitespace; 143 other browser checks passed.
+- Test assertion corrected without changing formatter behavior.
+- Final Build run 696: SUCCESS.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings on Password Generator and Text Tools.
+- Final Chromium run 380: SUCCESS.
+- Single/multi-document YAML regression: PASS.
+- Invalid second-document regression: PASS.
+- Sitemap-wide browser initialization: PASS.
 - Production deployment: NOT STARTED.
