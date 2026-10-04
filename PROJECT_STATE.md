@@ -64,27 +64,27 @@ Research record:
 
 ## Current page
 
-### Page 14 — /css-minifier/
+### Page 15 — /curl-converter/
 
-Status: VERIFIED ON BRANCH.
+Status: IMPLEMENTED ON BRANCH; ZTHOSTING CI PENDING.
 
 Research evidence:
-- `css minifier`: 720 US searches/month, SD 26, transactional.
-- `online css minifier`: 110, SD 46.
-- Current U.S. SERP includes several DA 4–19 utility domains.
+- `curl converter`: 720 US searches/month, SD 34, CPC $30.57.
+- `curl to python`: 590, SD 39.
+- `curl json post`: 720, SD 33.
+- `curl --json`: 140, SD 18.
+- Current SERP includes multiple DA 2–12 converter sites.
 
 Confirmed gap:
-- existing CSSO call forced `comments:false`;
-- that removed `/*! ... */` banners often used for license/copyright/build notices.
+- existing parser rejected curl `--json`;
+- official curl semantics and current competitor coverage justify supporting inline JSON.
 
 Implemented:
-- preserve CSSO exclamation comments by default;
-- user can explicitly remove all comments;
-- ordinary comments still removed;
-- Clear restores safer default;
-- stats disclose comment mode;
-- updated visible guidance, WebApplication metadata, search aliases and sitemap lastmod;
-- Chromium regression for preserved/removed comment modes plus existing restructuring behavior.
+- inline/repeated `--json` support;
+- curl-default JSON Content-Type + Accept headers unless explicitly overridden;
+- JSON-native generation with application/json and application/*+json;
+- visible rejection of file/stdin JSON forms and ambiguous mixed body modes;
+- updated page guidance, search aliases, sitemap lastmod and Chromium regressions.
 
 Production remains unchanged.
 
@@ -276,7 +276,7 @@ Current-head ZTHosting CI fallback validation:
 
 ## Work in progress
 
-Pages 1–14 are complete/verified on the audit branch, including the documented CSV-to-JSON no-change decision where applicable. The ZTHosting CI fallback is VERIFIED for the current runtime-equivalent head. Production remains unchanged. Page 15 is ready for evidence-first research.
+Pages 1–14 are complete/verified on the audit branch. Page 15 cURL Converter is implemented and awaiting the ZTHosting isolated CI gate. Production remains unchanged.
 
 ## Affected files — completed/current pages
 
@@ -304,4 +304,4 @@ Shared direct requirements:
 
 ## NEXT ACTION
 
-Research exactly one Page 15 candidate using Ubersuggest and current US SERPs. Commit only that page plus direct implementation/tests/search metadata. Use ZTHosting isolated CI for the page gate while GitHub-hosted runner allocation is unavailable. Do not deploy production.
+Run the ZTHosting isolated Build/static/Chromium gate for Page 15. Fix any cURL/SEO/content/browser failure before researching Page 16. Do not deploy production.
