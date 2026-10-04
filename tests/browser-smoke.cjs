@@ -278,9 +278,23 @@ const cases = [
     });
     assert.equal(await p.locator('#minAttributeQuotes').isChecked(), false);
     const source = '<!doctype html>\n<html>\n  <body>\n    <!-- remove me -->\n    <main>\n      <h1>Hello</h1>\n      <p>World</p>\n    </main>\n  </body>\n</html>';
+    const waitForHtmlMinifier = async () => {
+      await p.waitForFunction(() => {
+        const status = document.getElementById('htmlMinifierStatus')?.textContent || '';
+        const error = document.getElementById('htmlMinifierError');
+        return status === 'Minified' || (error && !error.hidden);
+      }, null, {timeout: 15000});
+
+      if (!await p.locator('#htmlMinifierError').isHidden()) {
+        const message = await p.locator('#htmlMinifierError').innerText();
+        throw new Error('HTML Minifier runtime error: ' + message);
+      }
+      assert.equal(await p.locator('#htmlMinifierStatus').innerText(), 'Minified');
+    };
+
     await p.locator('#htmlMinifierInput').fill(source);
     await p.locator('#minifyHtml').click();
-    await p.waitForFunction(() => document.getElementById('htmlMinifierStatus').textContent === 'Minified');
+    await waitForHtmlMinifier();
     const minified = await p.locator('#htmlMinifierOutput').inputValue();
     assert.ok(minified.length < source.length);
     assert.ok(!minified.includes('remove me'));
@@ -290,7 +304,7 @@ const cases = [
     await p.locator('#htmlMinifierInput').fill(legacy);
     await p.locator('#minHtml5Cleanup').check();
     await p.locator('#minifyHtml').click();
-    await p.waitForFunction(() => document.getElementById('htmlMinifierStatus').textContent === 'Minified');
+    await waitForHtmlMinifier();
     const html5 = await p.locator('#htmlMinifierOutput').inputValue();
     assert.match(html5, /^<!doctype html>/i);
     assert.ok(!html5.includes('type="text/css"'));
@@ -301,7 +315,7 @@ const cases = [
     await p.locator('#htmlMinifierInput').fill('<meta property="og:image" content="https://example.com/image.jpg">');
     await p.locator('#minAttributeQuotes').check();
     await p.locator('#minifyHtml').click();
-    await p.waitForFunction(() => document.getElementById('htmlMinifierStatus').textContent === 'Minified');
+    await waitForHtmlMinifier();
     const unquoted = await p.locator('#htmlMinifierOutput').inputValue();
     assert.ok(unquoted.includes('property=og:image'));
     assert.ok(unquoted.includes('content=https://example.com/image.jpg'));
