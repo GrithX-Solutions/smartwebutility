@@ -261,9 +261,21 @@ const cases = [
     assert.equal(await p.locator('#htmlMarkdownError').isHidden(), true);
   }],
   ['html-minifier', async p => {
-    await p.waitForFunction(() => window.__swuHtmlMinifierBooted === true);
-    assert.equal(await p.evaluate(() => typeof Worker), 'function');
-    assert.equal((await p.locator('#htmlMinifierStatus').innerText()).trim(), 'Ready');
+    await p.waitForFunction(() => window.__swuHtmlMinifierScriptLoaded === true || window.__swuHtmlMinifierScriptError === true, null, {timeout: 10000});
+    const startup = await p.evaluate(() => ({
+      loaded: window.__swuHtmlMinifierScriptLoaded === true,
+      loadError: window.__swuHtmlMinifierScriptError === true,
+      booted: window.__swuHtmlMinifierBooted === true,
+      workerType: typeof Worker,
+      status: document.getElementById('htmlMinifierStatus')?.textContent || ''
+    }));
+    assert.deepEqual(startup, {
+      loaded: true,
+      loadError: false,
+      booted: true,
+      workerType: 'function',
+      status: 'Ready'
+    });
     assert.equal(await p.locator('#minAttributeQuotes').isChecked(), false);
     const source = '<!doctype html>\n<html>\n  <body>\n    <!-- remove me -->\n    <main>\n      <h1>Hello</h1>\n      <p>World</p>\n    </main>\n  </body>\n</html>';
     await p.locator('#htmlMinifierInput').fill(source);
