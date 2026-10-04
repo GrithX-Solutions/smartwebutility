@@ -2570,7 +2570,7 @@ Chromium coverage now verifies:
 ## Page 13 — /html-minifier/
 
 Research/update date: 2026-10-04  
-Status: IMPLEMENTED, CI PENDING
+Status: VERIFIED ON BRANCH
 
 ### Primary intent
 Minify/compress HTML safely enough for developer build and deployment workflows.
