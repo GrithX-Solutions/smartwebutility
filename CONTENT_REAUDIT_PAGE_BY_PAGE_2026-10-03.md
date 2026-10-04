@@ -2689,3 +2689,105 @@ This checks the primary acceptance property: expensive minification work cannot 
 - Content QA: 89 pages, 0 errors, 2 retained advisories.
 - Chromium 421: SUCCESS.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 14 — /css-minifier/
+
+Research/update date: 2026-10-04  
+Status: IMPLEMENTED, CI PENDING
+
+### Primary intent
+Minify/compress CSS for production or development workflows while preserving deliberate build metadata.
+
+Canonical owner:
+- `https://smartwebutility.com/css-minifier/`
+
+### Ubersuggest US evidence
+- `css minifier`: 720 searches/month, SD 26, transactional intent.
+- `online css minifier`: 110, SD 46.
+- `css minifier tool`: 50, SD 35.
+
+Smart Web Utility currently has no U.S. ranking-keyword data for this page in Ubersuggest.
+
+Current U.S. SERP contains attainable utility domains beneath stronger incumbents:
+- truedevtools.com — DA 11.
+- oktopus.cloud — DA 13.
+- toolbox-kit.com — DA 16.
+- cleanor.app — DA 17.
+- css-minifier.com — DA 19.
+- mytoolstudio.com — DA 4.
+
+The SERP also contains a People Also Ask feature and a video result.
+
+### Existing Smart Web Utility strengths
+Already present:
+- browser-local CSS minification;
+- CSSO 5.0.5;
+- whitespace/value compression;
+- optional structural optimization;
+- exact byte-savings reporting;
+- local CSS file input up to 5 MB;
+- copy/download;
+- clear distinction between minification and unused-CSS removal;
+- HTTP-compression guidance;
+- modern CSS/generated CSS cautions.
+
+### Confirmed build-safety gap
+The implementation explicitly passed `comments:false` to CSSO.
+
+That removed every CSS comment, including `/*! ... */` exclamation comments.
+
+CSSO's documented comment behavior supports:
+- `'exclamation'` / `true`: preserve all `/*! ... */` comments;
+- `'first-exclamation'`: preserve only the first one;
+- `false`: remove all comments.
+
+This matters because production stylesheets commonly use `/*! ... */` for license, copyright or build notices that are expected to survive minification. Other production CSS optimizers also preserve special comments by default or expose equivalent controls.
+
+Direct Ubersuggest demand for `css minifier keep comments` is 0, so this is not being added as a keyword-driven toggle. It is a build-integrity improvement to the core minification workflow.
+
+### Implementation
+`assets/css-minifier.js` now:
+- exposes the comment-preservation state;
+- defaults to CSSO `comments:'exclamation'`;
+- keeps `/*! ... */` comments;
+- continues removing ordinary `/* ... */` comments;
+- allows the user to disable preservation and remove every comment;
+- restores the safer preserve state after Clear;
+- reports the chosen comment mode in output stats.
+
+`css-minifier/index.html` now:
+- adds a default-on “Preserve `/*! ... */` comments” control;
+- explains the exact CSSO exclamation-comment behavior;
+- states that a normal `/* @license ... */` comment is not equivalent to `/*! ... */`;
+- tells users with attribution/legal requirements to verify the source form and artifact;
+- retains structural optimization as opt-in;
+- updates WebApplication features, search-facing copy and trust messaging.
+
+### Regression tests
+Chromium coverage now verifies:
+- preserve control is on by default;
+- `/*! Package license */` survives minification by default;
+- an ordinary comment is removed;
+- disabling preservation removes the exclamation comment;
+- stats identify “Remove all comments” mode;
+- structural optimization still produces output;
+- Clear restores comment preservation and disables restructuring.
+
+### Primary technical evidence
+- CSSO API documentation for `comments` and `restructure` options.
+- Current CSS optimizer documentation reviewed on 2026-10-04 showing special-comment preservation as a normal production concern.
+
+### Page 14 acceptance status
+- Ubersuggest authentication/location: VERIFIED (Tier 3; United States locId 2840).
+- Demand / difficulty: VERIFIED.
+- Current SERP intent: VERIFIED.
+- Canonical ownership: VERIFIED.
+- Existing implementation inspected: VERIFIED.
+- Product/build-integrity gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Browser regression coverage: COMPLETED.
+- Static/Build/Chromium CI: PENDING.
+- Production deployment: NOT STARTED.
