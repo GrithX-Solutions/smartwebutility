@@ -68,7 +68,7 @@ const cases = [
     assert.match(output, /service:\n {4}name: api/);
     assert.match(output, /service:\n {4}name: worker/);
     assert.match(await p.locator('#yamlStatus').innerText(), /formatted stream/i);
-    assert.match(await p.locator('#yamlStats').innerText(), /2 documents/i);
+    assert.match(await p.locator('#yamlStats').innerText(), /2\s+documents/i);
 
     await p.locator('#yamlInput').fill('service:\n  name: api\n---\nservice: [broken');
     await p.locator('#formatYaml').click();
