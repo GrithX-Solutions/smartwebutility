@@ -377,20 +377,34 @@ const cases = [
   }],
   ['css-minifier', async p => {
     await p.waitForFunction(() => document.getElementById('cssMinifierStatus').textContent === 'Ready');
-    const source = '.card { color: #ff0000; margin: 0px 0px 0px 0px; padding: 16px 16px 16px 16px; }';
+    assert.equal(await p.locator('#cssPreserveComments').isChecked(), true);
+
+    const source = '/*! Package license */\n/* remove this note */\n.card { color: #ff0000; margin: 0px 0px 0px 0px; padding: 16px 16px 16px 16px; }';
     await p.locator('#cssMinifierInput').fill(source);
     await p.locator('#minifyCss').click();
     await p.waitForFunction(() => document.getElementById('cssMinifierStatus').textContent === 'Minified');
-    const minified = await p.locator('#cssMinifierOutput').inputValue();
+    let minified = await p.locator('#cssMinifierOutput').inputValue();
     assert.ok(minified.length < source.length);
+    assert.ok(minified.includes('/*! Package license */'));
+    assert.equal(minified.includes('remove this note'), false);
     assert.ok(minified.includes('.card{'));
     assert.ok(minified.includes('color:red'));
     assert.equal(await p.locator('#cssMinifierError').isHidden(), true);
+
+    await p.locator('#cssPreserveComments').uncheck();
+    minified = await p.locator('#cssMinifierOutput').inputValue();
+    assert.equal(minified.includes('Package license'), false);
+    assert.match(await p.locator('#cssMinifierStats').innerText(), /Remove all\s+comments/i);
+
     await p.locator('#cssRestructure').check();
     await p.locator('#minifyCss').click();
     const restructured = await p.locator('#cssMinifierOutput').inputValue();
     assert.ok(restructured.length > 0);
     assert.equal(await p.locator('#cssMinifierError').isHidden(), true);
+
+    await p.locator('#clearCssMinifier').click();
+    assert.equal(await p.locator('#cssPreserveComments').isChecked(), true);
+    assert.equal(await p.locator('#cssRestructure').isChecked(), false);
   }],
   ['json-to-xml', async p => {
     await p.locator('#converterInput').fill(JSON.stringify({store:{book:[{title:'A'},{title:'B'}]},'first name':'Ada',active:true,note:null}));
