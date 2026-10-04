@@ -2954,3 +2954,12 @@ Chromium test now verifies:
 - Browser regression coverage: COMPLETED.
 - ZTHosting isolated CI: PENDING.
 - Production deployment: NOT STARTED.
+
+
+### CI infrastructure note after Page 12
+
+Page 12 itself remains VERIFIED by Build 714 + Chromium 398.
+
+A later documentation-only checkpoint exposed an unrelated HTML Minifier external-worker timeout; 143 other browser checks passed. Re-runs reproduced that timeout. A temporary deterministic test-only rewrite was not retained because subsequent GitHub Actions jobs failed before step 1 with no logs, preventing exact-head validation. The browser smoke file was restored to the last version that passed Chromium 398.
+
+This is tracked as a branch-level release blocker, not as a Page 12 product failure. Continue page-by-page research/implementation, but do not merge or deploy until GitHub Actions can execute the exact final head normally and both Build + Chromium pass.
