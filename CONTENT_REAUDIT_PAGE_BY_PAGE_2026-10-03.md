@@ -2428,7 +2428,7 @@ Chromium coverage now verifies:
 ## Page 12 — /html-to-markdown/
 
 Research/update date: 2026-10-04  
-Status: IMPLEMENTED, CI PENDING
+Status: VERIFIED ON BRANCH
 
 ### Primary intent
 Convert HTML into clean, portable Markdown for documentation, CMS migration and repository workflows.
@@ -2545,5 +2545,11 @@ Chromium coverage now verifies:
 - Security/product gap: VERIFIED.
 - Implementation: COMPLETED on working branch.
 - Browser security regression coverage: COMPLETED.
-- Static/Build/Chromium CI: PENDING.
+- Build run 714: SUCCESS.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings on Password Generator and Text Tools.
+- Chromium run 398: SUCCESS.
+- Sanitizer/dangerous-URL/external-request regression: PASS.
+- Browser smoke: 144 passed, 0 failed.
+- Sitemap-wide browser initialization: PASS.
 - Production deployment: NOT STARTED.
