@@ -2807,3 +2807,58 @@ Chromium coverage now verifies:
 - Content QA: 89 pages, 0 errors, 2 retained advisories.
 - Chromium 432: SUCCESS.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## CI fallback after Page 14
+
+Verified: 2026-10-04
+
+### Trigger
+
+GitHub-hosted Build 757 and Chromium 441 for current head `89d6a59e8d675de0cd19bc4febfd5dfde8f8c65c` failed before checkout or repository test execution because a hosted runner was not allocated.
+
+This is a CI-platform allocation/quota blocker, not evidence of a repository regression.
+
+### Runtime equivalence
+
+Git comparison verified that current head `89d6a59...` differs from the last green Page 14 checkpoint `896e7f8cb3473c947c16f5f500afb5206b1aa03a` only in:
+- `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
+- `PROJECT_STATE.md`
+
+All public/runtime/test files are identical.
+
+### ZTHosting isolated CI verification
+
+The authenticated GitHub connector supplied Build 748 artifact ID `11309366580`.
+
+Artifact integrity:
+- GitHub SHA-256: `3e74cadc820cc6be506db4dba02b0df24fd1b9437b41a8b73aad13e06708477f`.
+- ZTHosting SHA-256: exact match.
+
+Isolation:
+- CI root: `/srv/smartwebutility-ci/`.
+- Production root `/srv/smartwebutility/` was not used as the test workspace and was not mutated.
+- Playwright image: `mcr.microsoft.com/playwright:v1.55.1-noble`.
+- Image digest: `sha256:2f29369043d81d6d69a815ceb80760f55e85f5020371ad06a4d996f18503ad1c`.
+
+Server-side gate:
+- PHP syntax: PASS.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisories.
+- JavaScript syntax: PASS.
+- Chromium functional smoke: 144 passed, 0 failed.
+- Browser page sweep: 89 pages checked.
+- Active-navigation regressions: PASS.
+- Global tool search/navigation: PASS.
+- Mobile navigation/layout: PASS.
+
+### Operating decision
+
+While GitHub-hosted runners/quota are unavailable:
+- GitHub remains authoritative for code, page commits, PR history and review.
+- ZTHosting isolated CI may satisfy Build/static/browser acceptance gates.
+- Never use `site.current`, `site.prev` or production containers as the working CI tree.
+- Do not deploy page-by-page.
+- Continue one page at a time only after the previous page passes the ZTHosting fallback gate.
