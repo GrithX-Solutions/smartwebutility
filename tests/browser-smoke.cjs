@@ -292,6 +292,15 @@ const cases = [
     assert.ok(unquoted.includes('property=og:image'));
     assert.ok(unquoted.includes('content=https://example.com/image.jpg'));
 
+    await p.locator('#htmlMinifierInput').evaluate(el => {
+      el.value = '\t'.repeat(550000) + '.\t1x';
+    });
+    await p.locator('#minifyHtml').click();
+    await p.waitForTimeout(75);
+    await p.locator('#clearHtmlMinifier').click({timeout: 1500});
+    assert.equal(await p.locator('#htmlMinifierInput').inputValue(), '');
+    assert.equal(await p.locator('#htmlMinifierStatus').innerText(), 'Ready');
+
     assert.equal(await p.locator('#htmlMinifierError').isHidden(), true);
   }],
   ['jsonpath-tester', async p => {
