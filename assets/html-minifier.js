@@ -20,7 +20,8 @@
     html5Cleanup: document.getElementById('minHtml5Cleanup')
   };
 
-  const WORKER_LOAD_TIMEOUT_MS = 10000;
+  const WORKER_LOAD_TIMEOUT_MS = 6000;
+  const WORKER_PROVIDERS = ['jsdelivr', 'unpkg'];
   const MINIFY_TIMEOUT_MS = 8000;
   let nextRequestId = 0;
   let activeTask = null;
@@ -78,7 +79,7 @@
     activeTask = null;
     clearTimeout(task.loadTimer);
     clearTimeout(task.runTimer);
-    task.worker.terminate();
+    if (task.worker) task.worker.terminate();
     task.reject(abortError());
   };
 
@@ -91,64 +92,115 @@
     cancelActive();
 
     const requestId = ++nextRequestId;
-    const worker = new Worker('/assets/html-minifier-worker.js?v=20261004-1');
-
     const task = {
       requestId,
-      worker,
+      worker:null,
       reject,
-      loadTimer: null,
-      runTimer: null
+      loadTimer:null,
+      runTimer:null,
+      runStarted:false,
+      settled:false,
+      failures:[]
     };
     activeTask = task;
 
-    const finish = (callback, value) => {
-      if (activeTask === task) activeTask = null;
+    const clearTimers = () => {
       clearTimeout(task.loadTimer);
       clearTimeout(task.runTimer);
-      worker.terminate();
+      task.loadTimer = null;
+      task.runTimer = null;
+    };
+
+    const finish = (callback, value) => {
+      if (task.settled) return;
+      task.settled = true;
+      if (activeTask === task) activeTask = null;
+      clearTimers();
+      if (task.worker) task.worker.terminate();
       callback(value);
     };
 
-    const failTask = caught => {
-      finish(reject, caught instanceof Error ? caught : new Error(String(caught)));
+    const launchProvider = providerIndex => {
+      if (task.settled || activeTask !== task) return;
+
+      if (providerIndex >= WORKER_PROVIDERS.length) {
+        const detail = task.failures.length
+          ? task.failures.join(' | ')
+          : 'No provider returned a usable engine.';
+        finish(reject, new Error('HTML minifier engine could not load: ' + detail));
+        return;
+      }
+
+      clearTimers();
+      if (task.worker) task.worker.terminate();
+
+      const provider = WORKER_PROVIDERS[providerIndex];
+      const worker = new Worker(
+        '/assets/html-minifier-worker.js?v=20261004-2&engine=' + encodeURIComponent(provider)
+      );
+      task.worker = worker;
+      task.runStarted = false;
+
+      const providerFailed = caught => {
+        if (task.settled || task.worker !== worker) return;
+        const message = caught instanceof Error ? caught.message : String(caught);
+        task.failures.push(provider + ': ' + message);
+        clearTimers();
+        worker.terminate();
+
+        if (!task.runStarted && providerIndex + 1 < WORKER_PROVIDERS.length) {
+          launchProvider(providerIndex + 1);
+          return;
+        }
+
+        launchProvider(WORKER_PROVIDERS.length);
+      };
+
+      task.loadTimer = setTimeout(() => {
+        providerFailed(new Error('engine load exceeded ' + (WORKER_LOAD_TIMEOUT_MS / 1000) + ' seconds'));
+      }, WORKER_LOAD_TIMEOUT_MS);
+
+      worker.addEventListener('error', event => {
+        providerFailed(new Error(event.message || 'worker failed to load'));
+      }, { once:true });
+
+      worker.addEventListener('message', event => {
+        if (task.settled || task.worker !== worker) return;
+        const data = event.data || {};
+
+        if (data.type === 'ready') {
+          clearTimeout(task.loadTimer);
+          task.loadTimer = null;
+          task.runStarted = true;
+          task.runTimer = setTimeout(() => {
+            finish(reject, new Error('Minification exceeded 8 seconds and was stopped to keep this tab responsive.'));
+          }, MINIFY_TIMEOUT_MS);
+          worker.postMessage({
+            type:'minify',
+            requestId,
+            source,
+            options:workerOptions
+          });
+          return;
+        }
+
+        if (data.type === 'error' && (data.requestId == null || data.requestId === requestId)) {
+          const caught = new Error(data.message || 'HTML minification failed.');
+          if (!task.runStarted) {
+            providerFailed(caught);
+          } else {
+            finish(reject, caught);
+          }
+          return;
+        }
+
+        if (data.type === 'result' && data.requestId === requestId) {
+          finish(resolve, String(data.result || ''));
+        }
+      });
     };
 
-    task.loadTimer = setTimeout(() => {
-      failTask(new Error('HTML minifier worker failed to load within 10 seconds.'));
-    }, WORKER_LOAD_TIMEOUT_MS);
-
-    worker.addEventListener('error', event => {
-      failTask(new Error(event.message || 'HTML minifier worker failed.'));
-    }, { once: true });
-
-    worker.addEventListener('message', event => {
-      const data = event.data || {};
-
-      if (data.type === 'ready') {
-        clearTimeout(task.loadTimer);
-        task.loadTimer = null;
-        task.runTimer = setTimeout(() => {
-          failTask(new Error('Minification exceeded 8 seconds and was stopped to keep this tab responsive.'));
-        }, MINIFY_TIMEOUT_MS);
-        worker.postMessage({
-          type: 'minify',
-          requestId,
-          source,
-          options: workerOptions
-        });
-        return;
-      }
-
-      if (data.type === 'error' && (data.requestId == null || data.requestId === requestId)) {
-        failTask(new Error(data.message || 'HTML minification failed.'));
-        return;
-      }
-
-      if (data.type === 'result' && data.requestId === requestId) {
-        finish(resolve, String(data.result || ''));
-      }
-    });
+    launchProvider(0);
   });
 
   const fail = caught => {
