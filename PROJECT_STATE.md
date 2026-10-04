@@ -60,29 +60,34 @@ Research record:
 
 ## Current page
 
-### Page 12 — /html-to-markdown/
+### Page 13 — /html-minifier/
 
-Status: VERIFIED ON BRANCH.
+Status: IMPLEMENTED ON BRANCH; CI PENDING.
 
 Research evidence:
-- `html to markdown`: 1,600 US searches/month, SD 32, CPC $21.11.
-- `html to markdown converter online`: 90, SD 21.
-- `html to markdown online`: 50, SD 4.
-- Current SERP includes DA 9–18 converter sites.
+- `html minifier`: 1,600 US searches/month, SD 32, CPC $11.24.
+- `html minifier terser`: 50, SD 17.
+- Current SERP includes DA 5–25 utility sites beneath stronger incumbents.
 
-Confirmed gap:
-- raw HTML was parsed first and cleaned afterward;
-- Turndown/MDN security guidance shows untrusted HTML parsing can have pre-conversion side effects;
-- unsafe URL schemes could exist in the parsed tree before conversion.
+Existing page was already functionally/editorially strong.
+
+Security finding:
+- CVE-2022-37620 formally applies to legacy `html-minifier`, not established for `html-minifier-terser`.
+- Upstream `html-minifier-terser` issue #182 remains open; maintainer discussion confirms a valid crafted input can trigger expensive processing.
+- Since Smart Web Utility runs this tool client-side, risk is browser-tab availability rather than server DoS.
 
 Implemented:
-- pinned DOMPurify 3.4.16 pre-sanitization;
-- sanitized DOM DocumentFragment passed directly to Turndown;
-- explicit active/non-content tag removal;
-- unsafe URL scheme removal;
-- safe links/images/GFM/code behavior preserved;
-- Chromium probe verifies conversion does not request the embedded external image URL;
-- updated public safety guidance, catalog description and sitemap lastmod.
+- new module Web Worker for all HTML minification;
+- 10-second worker-load guard;
+- 8-second minification execution timeout;
+- stale-run and Clear cancellation terminate workers;
+- existing options/output semantics preserved;
+- main-thread UMD dependency removed;
+- Chromium regression checks immediate cancellation on a ~550k-character crafted input.
+
+Page 12 documentation checkpoint:
+- Build 716: SUCCESS.
+- Chromium 400: SUCCESS.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
