@@ -236,6 +236,28 @@ Page 14 CSS Minifier validation:
 - Structural optimization regression: PASS.
 - Full sitemap browser sweep: PASS.
 
+## Current CI blocker — 2026-10-04
+
+Status: BLOCKED by GitHub-hosted runner provisioning, not by repository test execution.
+
+Verified evidence:
+- Page 14 implementation head passed Build 746 and Chromium 430.
+- Page 14 documentation checkpoint head `896e7f8cb3473c947c16f5f500afb5206b1aa03a` passed Build 748 and Chromium 432.
+- The subsequent docs/state-only head `ee5a1742b593ad5984a8bb0ba57f2f3f31110cbb` triggered Build 750 and Chromium 434.
+- Initial attempts and one explicit failed-job rerun both failed before any workflow step started.
+- Raw job metadata shows `runner_id: 0`, empty runner name, and `steps: []` for both workflows.
+- GitHub public status reports Actions operational.
+- Repository visibility is internal/private under the GrithX-Solutions organization.
+- No repository code/test failure is available because checkout never started.
+
+Likely account/control-plane causes include GitHub Actions allowance, payment/billing entitlement, or a blocking Actions budget. Exact account-side cause is UNKNOWN because the connected GitHub tooling does not expose organization billing/budget state.
+
+Required recovery:
+1. Organization owner/billing manager checks GitHub billing/usage and Actions budgets for GrithX-Solutions.
+2. Confirm no Actions budget with “Stop usage when budget limit is reached” is exhausted, and confirm a valid payment method/Actions entitlement if included minutes are exhausted.
+3. Re-run Build 750 and Chromium 434 (or trigger fresh runs) on the current branch head after the account-side block is cleared.
+4. Only after an exact current head receives real runner allocation and both workflows are green may Page 15 begin.
+
 ## Deployment / indexing
 
 - Page 1 production deployment: NOT STARTED.
@@ -282,4 +304,4 @@ Shared direct requirements:
 
 ## NEXT ACTION
 
-Page 14 documentation checkpoint is green: Build 748 SUCCESS and Chromium 432 SUCCESS. Research exactly one Page 15 candidate using Ubersuggest and current US SERPs. Do not deploy production.
+BLOCKED: resolve GitHub-hosted Actions runner provisioning/billing/budget for the GrithX-Solutions internal repository, then re-run CI on the current branch head. Do not start Page 15 and do not deploy production until Build + Chromium receive runners and pass.
