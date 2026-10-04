@@ -91,7 +91,7 @@
     cancelActive();
 
     const requestId = ++nextRequestId;
-    const worker = new Worker('/assets/html-minifier-worker.mjs?v=20261004-1', { type: 'module' });
+    const worker = new Worker('/assets/html-minifier-worker.js?v=20261004-1');
 
     const task = {
       requestId,
