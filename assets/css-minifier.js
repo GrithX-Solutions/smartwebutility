@@ -6,6 +6,7 @@
   const output = document.getElementById('cssMinifierOutput');
   const file = document.getElementById('cssMinifierFile');
   const restructure = document.getElementById('cssRestructure');
+  const preserveComments = document.getElementById('cssPreserveComments');
   const status = document.getElementById('cssMinifierStatus');
   const error = document.getElementById('cssMinifierError');
   const stats = document.getElementById('cssMinifierStats');
@@ -44,7 +45,7 @@
 
     const result = minify(source, {
       restructure: restructure.checked,
-      comments: false
+      comments: preserveComments.checked ? 'exclamation' : false
     });
 
     const minified = String(result.css || '');
@@ -61,7 +62,8 @@
       '<span><b>' + after.toLocaleString() + '</b> output bytes</span>' +
       '<span><b>' + saved.toLocaleString() + '</b> bytes saved</span>' +
       '<span><b>' + percent.toFixed(1) + '%</b> smaller</span>' +
-      '<span><b>' + (restructure.checked ? 'On' : 'Off') + '</b> restructuring</span>';
+      '<span><b>' + (restructure.checked ? 'On' : 'Off') + '</b> restructuring</span>' +
+      '<span><b>' + (preserveComments.checked ? 'Keep /*! */' : 'Remove all') + '</b> comments</span>';
 
     setStatus('Minified', 'success');
   };
@@ -95,6 +97,7 @@
     error.hidden = true;
     stats.hidden = true;
     restructure.checked = false;
+    preserveComments.checked = true;
     setStatus(engine() ? 'Ready' : 'Loading minifier…');
     input.focus();
   });
@@ -137,10 +140,12 @@
     }
   });
 
-  restructure.addEventListener('change', () => {
-    if (!input.value.trim()) return;
-    try { run(); } catch (caught) { fail(caught); }
-  });
+  for (const control of [restructure, preserveComments]) {
+    control.addEventListener('change', () => {
+      if (!input.value.trim()) return;
+      try { run(); } catch (caught) { fail(caught); }
+    });
+  }
 
   input.addEventListener('keydown', event => {
     if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
