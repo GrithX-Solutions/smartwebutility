@@ -68,8 +68,17 @@
     "category": "Developer",
     "url": "/curl-converter/",
     "title": "cURL Converter",
-    "description": "Convert cURL API commands to Python, fetch, Axios or PHP.",
-    "keywords": []
+    "description": "Convert cURL API commands, including inline --json, to Python, fetch, Axios or PHP.",
+    "keywords": [
+      "curl converter",
+      "curl to python",
+      "curl converter python",
+      "curl json",
+      "curl json post",
+      "curl post json",
+      "curl to fetch",
+      "curl to axios"
+    ]
   },
   {
     "category": "Developer",
