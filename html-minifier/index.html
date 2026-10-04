@@ -48,10 +48,10 @@
 </div>
 <div id="htmlMinifierError" class="error" hidden role="alert"></div>
 <div id="htmlMinifierStats" class="json-stats" hidden></div>
-<div class="trustbar"><span>Browser-side minification</span><span>Web Worker isolation</span><span>8-second execution limit</span><span>No upload</span><span>Inline CSS/JS minification off by default</span></div>
+<div class="trustbar"><span>Browser-side minification</span><span>Web Worker isolation</span><span>CDN engine fallback</span><span>8-second execution limit</span><span>No HTML upload</span><span>Inline CSS/JS minification off by default</span></div>
 </section>
 
-<section class="section wrap prose" data-quality-content="v4">
+<section class="section wrap prose" data-quality-content="v5">
 <h2>Minify HTML without uploading the document</h2>
 <p>This HTML minifier compresses source markup in browser JavaScript. Its conservative default profile removes ordinary comments, collapses unnecessary whitespace and removes redundant HTML attributes while avoiding more aggressive transformations unless you explicitly enable them.</p>
 <div class="info-grid">
@@ -79,6 +79,7 @@
 
 <h2>Minification runs outside the main browser thread</h2>
 <p>The underlying <code>html-minifier-terser</code> parser can perform expensive work on pathological input. Smart Web Utility therefore runs each minification in a dedicated Web Worker rather than on the page's main thread. If a run exceeds eight seconds, the worker is terminated and the page returns a recoverable timeout error instead of allowing that job to keep the interface busy indefinitely. Starting a new run or clearing the tool also cancels the previous worker.</p>
+<p>The worker loads the pinned <code>html-minifier-terser</code> 7.2.0 browser bundle from jsDelivr first. If that engine does not become ready within six seconds or fails during startup, the page automatically retries the same pinned bundle from UNPKG. Only the library asset is fetched from those CDNs; the HTML you paste or open stays in the browser and is sent only to the local worker.</p>
 <p>This timeout is an availability guard, not a statement that every valid large document will finish within eight seconds. If legitimate production HTML repeatedly reaches the limit, use a controlled build pipeline where you can choose resource limits appropriate to that project.</p>
 
 <h2>Malformed or partial HTML</h2>
@@ -91,18 +92,19 @@
 <div class="related-tools"><a href="/markdown-to-html/">Markdown to HTML<span>Generate HTML source from Markdown.</span></a><a href="/html-to-markdown/">HTML to Markdown<span>Convert HTML content into Markdown.</span></a><a href="/html-entity-encoder-decoder/">HTML Entity Encoder / Decoder<span>Encode or decode HTML entities.</span></a></div>
 </section>
 
-<section class="section alt" data-quality-content="v4"><div class="wrap prose">
+<section class="section alt" data-quality-content="v5"><div class="wrap prose">
 <h2>Frequently asked questions</h2>
 <h3>Does minifying HTML change the page?</h3><p>Conservative minification is intended to preserve normal browser behavior, but aggressive options and unusual markup should always be tested with the browsers and downstream consumers that matter to your deployment.</p>
 <h3>Is removing attribute quotes always safe?</h3><p>No. The minifier only removes quotes where HTML syntax permits unquoted values, but downstream parsers and social-preview services can still behave differently. The option stays off by default; test metadata and machine-consumed HTML before enabling it in a production build.</p>
 <h3>What does HTML5 cleanup change?</h3><p>It can shorten the doctype, collapse standard boolean attributes, and remove legacy JavaScript/CSS type attributes that HTML5 does not require. It is opt-in.</p>
 <h3>Does this minify CSS and JavaScript too?</h3><p>Only when you explicitly enable the inline CSS or inline JavaScript options.</p>
 <h3>Can I minify an HTML file?</h3><p>Yes. Open a local <code>.html</code> or <code>.htm</code> file up to 5 MB.</p>
-<h3>Is HTML uploaded to the server?</h3><p>No. The document is processed in your browser on this page.</p>
+<h3>Is HTML uploaded to the server?</h3><p>No. Your HTML is processed in a local Web Worker. The page fetches the minifier library asset from a pinned CDN source, with a second CDN as a startup fallback, but it does not send your HTML content to either CDN.</p>
+<h3>What happens if the primary minifier CDN fails?</h3><p>The worker first tries the pinned jsDelivr bundle. If it cannot become ready within six seconds or returns a startup error, the page retries the same pinned version from UNPKG before reporting an engine-load failure.</p>
 <h3>What happens if minification takes too long?</h3><p>The minifier runs in a Web Worker. A single run is stopped after eight seconds so pathological input cannot indefinitely block the page interface. You can also clear the tool to cancel an active run.</p>
 <h3>Should I keep the original HTML?</h3><p>Yes. Keep source markup in version control or another backup and deploy minified output as a build artifact.</p>
 </div></section>
 </main>
 <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
-<script src="/assets/html-minifier.js?v=20261004-3" onload="window.__swuHtmlMinifierScriptLoaded=true" onerror="window.__swuHtmlMinifierScriptError=true;document.getElementById('htmlMinifierStatus').textContent='Minifier script failed to load';document.getElementById('htmlMinifierStatus').dataset.kind='error'"></script>
+<script src="/assets/html-minifier.js?v=20261004-4" onload="window.__swuHtmlMinifierScriptLoaded=true" onerror="window.__swuHtmlMinifierScriptError=true;document.getElementById('htmlMinifierStatus').textContent='Minifier script failed to load';document.getElementById('htmlMinifierStatus').dataset.kind='error'"></script>
 </body></html>
