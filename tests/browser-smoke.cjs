@@ -279,14 +279,20 @@ const cases = [
 
     await p.evaluate(() => {
       window.__swuNativeWorker = window.Worker;
-      let primaryFailed = false;
+      const failedProviders = new Set();
       window.Worker = class TestWorker extends EventTarget {
         constructor(url) {
-          if (!primaryFailed && String(url).includes('engine=jsdelivr')) {
+          const text = String(url);
+          const provider = text.includes('engine=jsdelivr')
+            ? 'jsdelivr'
+            : text.includes('engine=unpkg')
+              ? 'unpkg'
+              : null;
+          if (provider && !failedProviders.has(provider)) {
             super();
-            primaryFailed = true;
+            failedProviders.add(provider);
             setTimeout(() => {
-              this.dispatchEvent(new ErrorEvent('error', {message:'synthetic primary provider failure'}));
+              this.dispatchEvent(new ErrorEvent('error', {message:'synthetic ' + provider + ' provider failure'}));
             }, 0);
             return;
           }
