@@ -114,6 +114,31 @@ const cases = [
     code = await p.locator('#curlOutput').inputValue();
     assert.ok(code.includes('fetch('));
     assert.ok(code.includes('JSON.stringify'));
+
+    await p.locator('#curlInput').fill("curl --json '{\"name\":' --json '\"Ada\",\"active\":true}' https://api.example.com/v1/items");
+    await p.locator('#curlTarget').selectOption('python');
+    await p.locator('#convertCurl').click();
+    code = await p.locator('#curlOutput').inputValue();
+    assert.ok(code.includes('json=payload'));
+    assert.ok(code.includes('Content-Type'));
+    assert.ok(code.includes('application/json'));
+    assert.ok(code.includes('Accept'));
+    assert.equal(await p.locator('#curlError').isHidden(), true);
+
+    await p.locator('#curlInput').fill("curl --json '{\"name\":\"Ada\"}' -H 'Content-Type: application/vnd.api+json' -H 'Accept: application/problem+json' https://api.example.com/v1/items");
+    await p.locator('#curlTarget').selectOption('fetch');
+    await p.locator('#convertCurl').click();
+    code = await p.locator('#curlOutput').inputValue();
+    assert.ok(code.includes('application/vnd.api+json'));
+    assert.ok(code.includes('application/problem+json'));
+    assert.ok(code.includes('JSON.stringify'));
+    assert.equal((code.match(/Content-Type/g) || []).length, 1);
+
+    await p.locator('#curlInput').fill("curl --json @payload.json https://api.example.com/v1/items");
+    await p.locator('#convertCurl').click();
+    assert.equal(await p.locator('#curlError').isHidden(), false);
+    assert.match(await p.locator('#curlError').innerText(), /file\/stdin/i);
+
     await p.locator('#curlInput').fill("curl https://example.com -F 'file=@demo.txt'");
     await p.locator('#convertCurl').click();
     assert.equal(await p.locator('#curlError').isHidden(), false);
