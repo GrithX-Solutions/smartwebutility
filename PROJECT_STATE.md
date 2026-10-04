@@ -1,6 +1,6 @@
 # Smart Web Utility — Project State
 
-Last verified: 2026-10-03
+Last verified: 2026-10-04
 
 ## Objective
 
@@ -11,6 +11,8 @@ Run the remaining content/SEO re-audit page by page. Research, improve, test and
 - Current production source/artifact SHA: `04ce96286f0baaff1a175f4cae7c9491b0607688`
 - Current GitHub main state-only head before this batch: `ee460eb96606bbf93cd7a8347e51be8c851672d3`
 - Working branch: `content-reaudit-page-by-page-2026-10-03`
+- Verified recovery content baseline: `ba595d2a3c5d09539ad62fd5995df445895df686`.
+- Recovery baseline has zero file diff versus verified/blocker checkpoint `ee5a1742b593ad5984a8bb0ba57f2f3f31110cbb`; only Git history differs.
 - Production remains unchanged during this audit batch.
 - Rollback remains preserved at `/srv/smartwebutility/site.prev`.
 
@@ -244,7 +246,9 @@ Page 14 CSS Minifier validation:
 
 ## Blockers
 
-- No Page 1 blocker remains. A docs-only validation-state commit is being recorded before Page 2 research begins.
+- BLOCKED: GitHub-hosted Actions is not allocating a runner to the current audit branch.
+- Current failures occur before checkout or any repository test step; repository code is not implicated by those runs.
+- Page 15 must not start until an exact current-head Build + Chromium run receives a runner and passes.
 
 ## Risks
 
@@ -254,7 +258,7 @@ Page 14 CSS Minifier validation:
 
 ## Work in progress
 
-Pages 1–3 (UUID Generator, Favicon Generator, chmod Calculator) are fully green on the audit branch. Production remains unchanged.
+Pages 1–14 are complete/verified on the audit branch, including the documented CSV-to-JSON no-change decision where applicable. Production remains unchanged. Page 15 is intentionally not started because the current-head CI gate is blocked before runner allocation.
 
 ## Affected files — completed/current pages
 
