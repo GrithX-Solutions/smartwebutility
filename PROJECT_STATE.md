@@ -66,28 +66,24 @@ Status: IMPLEMENTED ON BRANCH; CI PENDING.
 
 Research evidence:
 - `html minifier`: 1,600 US searches/month, SD 32, CPC $11.24.
-- `html minifier terser`: 50, SD 17.
-- Current SERP includes DA 5–25 utility sites beneath stronger incumbents.
+- `online html minifier`: 110, SD 32.
+- Current SERP includes lower-authority utility domains below stronger incumbents.
 
-Existing page was already functionally/editorially strong.
-
-Security finding:
-- CVE-2022-37620 formally applies to legacy `html-minifier`, not established for `html-minifier-terser`.
-- Upstream `html-minifier-terser` issue #182 remains open; maintainer discussion confirms a valid crafted input can trigger expensive processing.
-- Since Smart Web Utility runs this tool client-side, risk is browser-tab availability rather than server DoS.
+Verified reliability gap:
+- Page 12 functional head passed Build 714 and Chromium 398.
+- A later documentation checkpoint failed browser validation twice only at HTML Minifier worker startup.
+- 143 other browser checks passed on those attempts.
+- Diagnostic head `20a01b8…` later passed Build 729 and Chromium 413.
 
 Implemented:
-- new module Web Worker for all HTML minification;
-- 10-second worker-load guard;
-- 8-second minification execution timeout;
-- stale-run and Clear cancellation terminate workers;
-- existing options/output semantics preserved;
-- main-thread UMD dependency removed;
-- Chromium regression checks immediate cancellation on a ~550k-character crafted input.
+- jsDelivr primary and UNPKG secondary for the same pinned html-minifier-terser 7.2.0 worker engine;
+- six-second provider startup fallback;
+- provider-specific startup errors;
+- existing eight-second execution timeout preserved;
+- browser fallback coverage;
+- public privacy/reliability disclosure.
 
-Page 12 documentation checkpoint:
-- Build 716: SUCCESS.
-- Chromium 400: SUCCESS.
+Production remains unchanged.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
@@ -213,6 +209,12 @@ Page 12 HTML to Markdown validation:
 - Sanitizer/dangerous-URL/external-request regression: PASS.
 - Browser smoke: 144 passed, 0 failed.
 - Full sitemap browser sweep: PASS.
+
+Page 12 checkpoint note:
+- Page 12 remained VERIFIED on its functional head.
+- Later checkpoint Build 723 succeeded, while Chromium 407 failed twice because of HTML Minifier worker startup.
+- Diagnostic head Build 729 and Chromium 413 succeeded.
+- The HTML Minifier reliability issue is tracked as Page 13.
 
 ## Deployment / indexing
 
