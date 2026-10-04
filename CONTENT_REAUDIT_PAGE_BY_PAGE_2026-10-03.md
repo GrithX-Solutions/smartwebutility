@@ -2313,3 +2313,106 @@ Chromium coverage now verifies:
 - Slash/Unicode/malformed-escape regressions: PASS.
 - Sitemap-wide browser initialization: PASS.
 - Production deployment: NOT STARTED.
+
+
+### Documentation checkpoint after Page 11
+
+- Branch head before this checkpoint: `fd950ecad136427790501180732c3a2fb175d6a8`.
+- Build run 702: SUCCESS.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- Chromium run 386: SUCCESS.
+- Production deployment: NOT STARTED.
+
+
+---
+
+## Page 12 — /html-minifier/
+
+Research/update date: 2026-10-04  
+Status: IMPLEMENTED, CI PENDING
+
+### Primary intent
+Minify/compress HTML source with conservative defaults and optional advanced transformations.
+
+Canonical owner:
+- `https://smartwebutility.com/html-minifier/`
+
+### Ubersuggest US evidence
+- `html minifier`: 1,600 searches/month, SD 32, CPC $11.24.
+- `online html minifier`: 110, SD 32.
+
+Current U.S. SERP includes attainable utility domains:
+- GeneLify — DA 20.
+- static.app — DA 25.
+- CodeShack — DA 25.
+- emproit.com — DA 12.
+- webdevdata.net — DA 5.
+
+### Existing Smart Web Utility strengths
+Already implemented:
+- pinned `html-minifier-terser` 7.2.0 browser bundle;
+- conservative defaults for whitespace/comments/redundant attributes;
+- advanced controls off by default;
+- optional attribute quote removal;
+- optional tag removal;
+- optional inline CSS/JS minification;
+- optional attribute/class sorting;
+- optional HTML5 cleanup;
+- local files up to 5 MB;
+- byte-savings reporting;
+- copy/download;
+- strong warnings around templates, malformed fragments and aggressive transforms.
+
+### Dependency review
+Official upstream GitHub currently lists v7.2.0 as the latest release.
+
+Security-database evidence around CVE-2022-37620 is inconsistent:
+- GitHub's reviewed advisory applies to the older `html-minifier` package;
+- some OSV/NVD package/CPE mappings also associate the CVE with `html-minifier-terser` versions through 7.2.0.
+
+Decision:
+- dependency security status is PARTIALLY VERIFIED / ambiguous;
+- do not claim the current browser bundle is definitively affected or definitively clean from database mapping alone;
+- do not replace the official current release with an unofficial fork during this content audit;
+- retain browser-local, user-initiated processing and record the ambiguity for future dependency/security review.
+
+### Confirmed product/interoperability gap
+The advanced checkbox was labeled “Remove safe attribute quotes.”
+
+That wording was too strong:
+- `html-minifier-terser` only knows whether quotes are syntactically eligible for removal under HTML parsing rules;
+- an open upstream v7.2.0 issue (#183) reports that quote removal from Open Graph metadata can prevent WhatsApp from loading an `og:image` preview.
+
+The transform can therefore be syntactically valid HTML while still causing downstream interoperability problems.
+
+### Implementation
+Content/UI correction:
+- rename the option to “Remove eligible attribute quotes”;
+- explain that syntactic eligibility is not a downstream compatibility guarantee;
+- explicitly call out Open Graph/social-preview/machine-parser testing;
+- keep quote removal OFF by default;
+- retain the broader rule that advanced options require testing against real consumers;
+- update the FAQ accordingly;
+- update sitemap `lastmod` to 2026-10-04.
+
+No minifier-engine behavior or dependency version was changed.
+
+### Regression test
+Chromium coverage now verifies:
+- attribute quote removal is unchecked by default;
+- enabling it on an Open Graph example actually removes quotes from `property` and `content` values;
+- existing conservative minification and HTML5-cleanup regressions remain covered.
+
+### Page 12 acceptance status
+- Demand / difficulty: VERIFIED.
+- Current SERP intent: VERIFIED.
+- Canonical ownership: VERIFIED.
+- Existing functionality inspected: VERIFIED.
+- Upstream latest version: VERIFIED.
+- Dependency CVE applicability: PARTIALLY VERIFIED / ambiguous.
+- Product/interoperability wording gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Browser regression coverage: COMPLETED.
+- Static/Build/Chromium CI: PENDING.
+- Production deployment: NOT STARTED.
