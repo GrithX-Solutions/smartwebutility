@@ -2553,3 +2553,124 @@ Chromium coverage now verifies:
 - Browser smoke: 144 passed, 0 failed.
 - Sitemap-wide browser initialization: PASS.
 - Production deployment: NOT STARTED.
+
+
+### Documentation checkpoint after Page 12
+
+- Branch head before this checkpoint: `adb4e92d1d398460f3036947871584d51563ebb3`.
+- Build run 716: SUCCESS.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- Chromium run 400: SUCCESS.
+- Production deployment: NOT STARTED.
+
+
+---
+
+## Page 13 — /html-minifier/
+
+Research/update date: 2026-10-04  
+Status: IMPLEMENTED, CI PENDING
+
+### Primary intent
+Minify/compress HTML safely enough for developer build and deployment workflows.
+
+Canonical owner:
+- `https://smartwebutility.com/html-minifier/`
+
+### Ubersuggest US evidence
+- `html minifier`: 1,600 searches/month, SD 32, CPC $11.24.
+- `online html minifier`: 110, SD 32.
+- `html minifier terser`: 50, SD 17.
+
+Current U.S. SERP includes lower-authority utility sites beneath stronger incumbents:
+- genelify.com — DA 20
+- static.app — DA 25
+- codeshack.io — DA 25
+- emproit.com — DA 12
+- webdevdata.net — DA 5
+
+### Existing Smart Web Utility strengths
+Already present:
+- conservative default profile;
+- remove comments;
+- conservative whitespace collapse;
+- redundant attribute removal;
+- opt-in attribute-quote removal;
+- opt-in optional-tag removal;
+- opt-in inline CSS/JavaScript minification;
+- attribute/class sorting;
+- opt-in HTML5 cleanup;
+- exact byte savings;
+- local files up to 5 MB;
+- copy/download;
+- browser-local processing;
+- current warning about Open Graph/downstream-parser risk when removing quotes;
+- guidance for templates, malformed fragments and performance expectations.
+
+Search aliases and sitemap freshness were already current, so they were not changed just to create activity.
+
+### Upstream security evidence
+The dependency is pinned to `html-minifier-terser` 7.2.0.
+
+Important distinction:
+- CVE-2022-37620 officially names the older `html-minifier` package and does not formally list `html-minifier-terser`.
+- Current Snyk data does not list a direct vulnerability for `html-minifier-terser` 7.2.0.
+- However, upstream `html-minifier-terser` issue #182 remains open and alleges similar expensive-regex behavior.
+- In that issue, an upstream maintainer reported that the originally described malformed PoC was not representative, but a valid-string reproduction did trigger the expensive behavior.
+- The v7.2.0 source no longer contains the exact old `srcset` lookahead regex searched from legacy discussions, but the unresolved upstream behavior is enough to treat pathological-input availability as a real engineering concern rather than declare the browser dependency risk-free.
+
+Status:
+- Official CVE applicability to the fork: UNKNOWN / not established.
+- Expensive crafted-input behavior in the fork: PARTIALLY VERIFIED from upstream maintainer reproduction.
+- Smart Web Utility server exposure: NOT APPLICABLE because minification is client-side.
+- Browser-tab availability risk before this change: VERIFIED as a design risk worth isolating.
+
+### Implementation
+A new `assets/html-minifier-worker.mjs`:
+- loads pinned `html-minifier-terser` 7.2.0 as an ESM dependency from jsDelivr;
+- performs minification outside the main browser thread;
+- returns results/errors through `postMessage`.
+
+`assets/html-minifier.js` now:
+- creates a dedicated module Web Worker per minification run;
+- keeps all existing minifier options unchanged;
+- allows up to 10 seconds for the worker/dependency to load;
+- allows up to 8 seconds for one minification execution;
+- terminates the worker on timeout;
+- cancels and terminates a stale worker when a new run starts;
+- cancels the active worker when Clear is used;
+- ignores normal cancellation errors rather than presenting them as broken HTML;
+- keeps exact byte-savings statistics after successful completion.
+
+`html-minifier/index.html` now:
+- removes the main-thread UMD minifier script;
+- loads only the local controller, whose worker imports the pinned minifier module;
+- explains Web Worker isolation and the 8-second execution guard;
+- keeps the existing conservative/advanced-option guidance.
+
+### Why a Worker instead of a smaller input cap
+A fixed byte limit would be an arbitrary proxy for regex/runtime complexity and could reject legitimate HTML without guaranteeing that every pathological case is excluded. Worker isolation plus a hard execution budget directly protects UI responsiveness while preserving useful input capacity.
+
+### Regression tests
+Existing minification, HTML5 cleanup and attribute-quote regressions remain.
+
+New Chromium coverage:
+- injects a crafted ~550k-character input based on the upstream expensive-input shape;
+- starts minification;
+- immediately clears the tool with a 1.5-second interaction timeout;
+- verifies the input clears and UI returns to Ready.
+
+This checks the primary acceptance property: expensive minification work cannot block main-thread interaction/cancellation.
+
+### Page 13 acceptance status
+- Demand / difficulty: VERIFIED.
+- Current SERP intent: VERIFIED.
+- Canonical ownership: VERIFIED.
+- Existing functionality/content inspected: VERIFIED.
+- Official fork CVE status: UNKNOWN / not established.
+- Pathological-input availability concern: PARTIALLY VERIFIED upstream.
+- Local mitigation: IMPLEMENTED on working branch.
+- Browser cancellation regression: COMPLETED.
+- Static/Build/Chromium CI: PENDING.
+- Production deployment: NOT STARTED.
