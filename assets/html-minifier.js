@@ -20,7 +20,7 @@
     html5Cleanup: document.getElementById('minHtml5Cleanup')
   };
 
-  const WORKER_LOAD_TIMEOUT_MS = 6000;
+  const WORKER_LOAD_TIMEOUT_MS = 3500;
   const WORKER_PROVIDERS = ['jsdelivr', 'unpkg', 'local'];
   const MINIFY_TIMEOUT_MS = 8000;
   let nextRequestId = 0;
