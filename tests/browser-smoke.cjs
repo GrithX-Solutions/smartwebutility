@@ -305,10 +305,10 @@ const cases = [
           if (this.terminated || data?.type !== 'minify') return;
           let result = String(data.source || '');
           if (data.options?.removeComments) {
-            result = result.replace(/<!--(?!\\[if)[\\s\\S]*?-->/gi, '');
+            result = result.replace(/<!--(?!\[if)[\s\S]*?-->/gi, '');
           }
           if (data.options?.collapseWhitespace) {
-            result = result.replace(/>\\s+</g, '><').trim();
+            result = result.replace(/>\s+</g, '><').trim();
           }
           setTimeout(() => {
             if (this.terminated) return;
@@ -363,25 +363,25 @@ const cases = [
           let result = source;
 
           if (options.removeComments) {
-            result = result.replace(/<!--(?!\\[if)[\\s\\S]*?-->/gi, '');
+            result = result.replace(/<!--(?!\[if)[\s\S]*?-->/gi, '');
           }
           if (options.useShortDoctype) {
             result = result.replace(/<!doctype[^>]*>/i, '<!doctype html>');
           }
           if (options.removeScriptTypeAttributes) {
-            result = result.replace(/\\s+type=(["'])text\\/javascript\\1/gi, '');
+            result = result.replace(/\s+type=(["'])text\/javascript\1/gi, '');
           }
           if (options.removeStyleLinkTypeAttributes) {
-            result = result.replace(/\\s+type=(["'])text\\/css\\1/gi, '');
+            result = result.replace(/\s+type=(["'])text\/css\1/gi, '');
           }
           if (options.collapseBooleanAttributes) {
-            result = result.replace(/\\s+(disabled|checked|selected|readonly|required|multiple|autofocus)=(["'])\\1\\2/gi, ' $1');
+            result = result.replace(/\s+(disabled|checked|selected|readonly|required|multiple|autofocus)=(["'])\1\2/gi, ' $1');
           }
           if (options.removeAttributeQuotes) {
-            result = result.replace(/\\s+([:\\w-]+)="([A-Za-z0-9._:\\/-]+)"/g, ' $1=$2');
+            result = result.replace(/\s+([:\w-]+)="([A-Za-z0-9._:\/-]+)"/g, ' $1=$2');
           }
           if (options.collapseWhitespace) {
-            result = result.replace(/>\\s+</g, '><').trim();
+            result = result.replace(/>\s+</g, '><').trim();
           }
 
           const delay = source.length > 500000 ? 500 : 0;
