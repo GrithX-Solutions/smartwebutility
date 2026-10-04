@@ -21,14 +21,15 @@
     html5Cleanup: document.getElementById('minHtml5Cleanup')
   };
 
+  const WORKER_LOAD_TIMEOUT_MS = 10000;
+  const MINIFY_TIMEOUT_MS = 8000;
+  let nextRequestId = 0;
+  let activeTask = null;
+
   const setStatus = (text, kind = 'neutral') => {
     status.textContent = text;
     status.dataset.kind = kind;
   };
-
-  const engine = () => window.HTMLMinifier && typeof window.HTMLMinifier.minify === 'function'
-    ? window.HTMLMinifier.minify
-    : null;
 
   const options = () => ({
     removeComments: controls.removeComments.checked,
@@ -49,6 +50,91 @@
     removeEmptyAttributes: false
   });
 
+  const abortError = () => {
+    const caught = new Error('Minification cancelled.');
+    caught.name = 'AbortError';
+    return caught;
+  };
+
+  const cancelActive = () => {
+    if (!activeTask) return;
+    const task = activeTask;
+    activeTask = null;
+    clearTimeout(task.loadTimer);
+    clearTimeout(task.runTimer);
+    task.worker.terminate();
+    task.reject(abortError());
+  };
+
+  const minifyInWorker = (source, workerOptions) => new Promise((resolve, reject) => {
+    if (typeof Worker !== 'function') {
+      reject(new Error('Web Workers are not available in this browser.'));
+      return;
+    }
+
+    cancelActive();
+
+    const requestId = ++nextRequestId;
+    const worker = new Worker('/assets/html-minifier-worker.mjs?v=20261004-1', { type: 'module' });
+
+    const task = {
+      requestId,
+      worker,
+      reject,
+      loadTimer: null,
+      runTimer: null
+    };
+    activeTask = task;
+
+    const finish = (callback, value) => {
+      if (activeTask === task) activeTask = null;
+      clearTimeout(task.loadTimer);
+      clearTimeout(task.runTimer);
+      worker.terminate();
+      callback(value);
+    };
+
+    const failTask = caught => {
+      finish(reject, caught instanceof Error ? caught : new Error(String(caught)));
+    };
+
+    task.loadTimer = setTimeout(() => {
+      failTask(new Error('HTML minifier worker failed to load within 10 seconds.'));
+    }, WORKER_LOAD_TIMEOUT_MS);
+
+    worker.addEventListener('error', event => {
+      failTask(new Error(event.message || 'HTML minifier worker failed.'));
+    }, { once: true });
+
+    worker.addEventListener('message', event => {
+      const data = event.data || {};
+
+      if (data.type === 'ready') {
+        clearTimeout(task.loadTimer);
+        task.loadTimer = null;
+        task.runTimer = setTimeout(() => {
+          failTask(new Error('Minification exceeded 8 seconds and was stopped to keep this tab responsive.'));
+        }, MINIFY_TIMEOUT_MS);
+        worker.postMessage({
+          type: 'minify',
+          requestId,
+          source,
+          options: workerOptions
+        });
+        return;
+      }
+
+      if (data.type === 'error' && (data.requestId == null || data.requestId === requestId)) {
+        failTask(new Error(data.message || 'HTML minification failed.'));
+        return;
+      }
+
+      if (data.type === 'result' && data.requestId === requestId) {
+        finish(resolve, String(data.result || ''));
+      }
+    });
+  });
+
   const fail = caught => {
     output.value = '';
     stats.hidden = true;
@@ -58,21 +144,19 @@
   };
 
   const run = async () => {
-    const minify = engine();
-    if (!minify) throw new Error('HTML minifier engine failed to load. Refresh the page and try again.');
-
     error.hidden = true;
     error.textContent = '';
     const source = input.value;
     if (!source.trim()) {
+      cancelActive();
       output.value = '';
       stats.hidden = true;
       setStatus('Add HTML');
       return;
     }
 
-    const result = await minify(source, options());
-    const minified = String(result);
+    setStatus('Minifying…', 'neutral');
+    const minified = await minifyInWorker(source, options());
     output.value = minified;
 
     const before = new Blob([source]).size;
@@ -89,22 +173,29 @@
     setStatus('Minified', 'success');
   };
 
-  document.getElementById('minifyHtml').addEventListener('click', () => {
-    run().catch(fail);
-  });
+  const runSafely = () => {
+    run().catch(caught => {
+      if (caught?.name !== 'AbortError') fail(caught);
+    });
+  };
+
+  document.getElementById('minifyHtml').addEventListener('click', runSafely);
 
   document.getElementById('exampleHtmlMinifier').addEventListener('click', () => {
     input.value = '<!doctype html>\n<html>\n  <head>\n    <!-- build comment -->\n    <title>Example</title>\n  </head>\n  <body>\n    <main class="content">\n      <h1>Hello world</h1>\n      <p>This is an example page.</p>\n    </main>\n  </body>\n</html>';
-    run().catch(fail);
+    runSafely();
   });
 
   document.getElementById('clearHtmlMinifier').addEventListener('click', () => {
+    cancelActive();
     input.value = '';
     output.value = '';
     file.value = '';
     error.hidden = true;
+    error.textContent = '';
     stats.hidden = true;
-    setStatus(engine() ? 'Ready' : 'Loading minifier…');
+    setStatus(typeof Worker === 'function' ? 'Ready' : 'Web Workers unavailable',
+      typeof Worker === 'function' ? 'neutral' : 'error');
     input.focus();
   });
 
@@ -142,23 +233,24 @@
       input.value = await chosen.text();
       await run();
     } catch (caught) {
-      fail(caught);
+      if (caught?.name !== 'AbortError') fail(caught);
     }
   });
 
   Object.values(controls).forEach(control => {
     control.addEventListener('change', () => {
       if (!input.value.trim()) return;
-      run().catch(fail);
+      runSafely();
     });
   });
 
   input.addEventListener('keydown', event => {
     if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
       event.preventDefault();
-      run().catch(fail);
+      runSafely();
     }
   });
 
-  setStatus(engine() ? 'Ready' : 'Minifier failed to load', engine() ? 'neutral' : 'error');
+  setStatus(typeof Worker === 'function' ? 'Ready' : 'Web Workers unavailable',
+    typeof Worker === 'function' ? 'neutral' : 'error');
 })();
