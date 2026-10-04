@@ -264,15 +264,6 @@ Current-head ZTHosting CI fallback validation:
 
 ## Blockers
 
-GitHub Actions execution blocker after Page 12:
-- Page 12 application code itself is VERIFIED by Build 714 + Chromium 398.
-- Later documentation-checkpoint Chromium 407 failed only because the unrelated HTML Minifier's external worker engine timed out; 143 other browser checks passed.
-- Re-runs reproduced the external worker timeout.
-- A test-only deterministic smoke rewrite was attempted, but newly triggered Build/Chromium jobs then failed before step 1 with `steps: null` and no logs.
-- GitHub Status reports Actions operational; the connector cannot inspect organization Actions billing/quota/spending state.
-- The unverified test-only rewrite was reverted. `tests/browser-smoke.cjs` now matches the last Page 12 head that passed Chromium 398.
-- Final branch merge/release remains BLOCKED until GitHub Actions can execute jobs normally and the exact final head passes Build + Chromium.
-
 - GitHub-hosted Actions runner allocation remains unavailable for the current branch, but this no longer blocks the audit because the approved ZTHosting isolated CI fallback has passed the equivalent current-runtime gate.
 - No production blocker exists for continuing Page 15 research/implementation on GitHub.
 - Production deployment remains intentionally blocked until the full page-by-page batch is complete and receives one final controlled release gate.

@@ -98,7 +98,7 @@
     "category": "Developer",
     "url": "/html-minifier/",
     "title": "HTML Minifier",
-    "description": "Minify HTML with a full parser when available plus a conservative local fallback and measurable byte savings.",
+    "description": "Minify HTML with conservative defaults, optional HTML5 cleanup and measurable byte savings.",
     "keywords": ["html minifier", "online html minifier", "html minifier online", "minify html", "html compressor", "compress html"]
   },
   {

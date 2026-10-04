@@ -114,6 +114,31 @@ const cases = [
     code = await p.locator('#curlOutput').inputValue();
     assert.ok(code.includes('fetch('));
     assert.ok(code.includes('JSON.stringify'));
+
+    await p.locator('#curlInput').fill("curl --json '{\"name\":' --json '\"Ada\",\"active\":true}' https://api.example.com/v1/items");
+    await p.locator('#curlTarget').selectOption('python');
+    await p.locator('#convertCurl').click();
+    code = await p.locator('#curlOutput').inputValue();
+    assert.ok(code.includes('json=payload'));
+    assert.ok(code.includes('Content-Type'));
+    assert.ok(code.includes('application/json'));
+    assert.ok(code.includes('Accept'));
+    assert.equal(await p.locator('#curlError').isHidden(), true);
+
+    await p.locator('#curlInput').fill("curl --json '{\"name\":\"Ada\"}' -H 'Content-Type: application/vnd.api+json' -H 'Accept: application/problem+json' https://api.example.com/v1/items");
+    await p.locator('#curlTarget').selectOption('fetch');
+    await p.locator('#convertCurl').click();
+    code = await p.locator('#curlOutput').inputValue();
+    assert.ok(code.includes('application/vnd.api+json'));
+    assert.ok(code.includes('application/problem+json'));
+    assert.ok(code.includes('JSON.stringify'));
+    assert.equal((code.match(/Content-Type/g) || []).length, 1);
+
+    await p.locator('#curlInput').fill("curl --json @payload.json https://api.example.com/v1/items");
+    await p.locator('#convertCurl').click();
+    assert.equal(await p.locator('#curlError').isHidden(), false);
+    assert.match(await p.locator('#curlError').innerText(), /file\/stdin/i);
+
     await p.locator('#curlInput').fill("curl https://example.com -F 'file=@demo.txt'");
     await p.locator('#convertCurl').click();
     assert.equal(await p.locator('#curlError').isHidden(), false);
@@ -261,38 +286,59 @@ const cases = [
     assert.equal(await p.locator('#htmlMarkdownError').isHidden(), true);
   }],
   ['html-minifier', async p => {
-    await p.waitForFunction(() => document.getElementById('htmlMinifierStatus').textContent === 'Ready');
+    await p.waitForFunction(() => window.__swuHtmlMinifierScriptLoaded === true || window.__swuHtmlMinifierScriptError === true, null, {timeout: 10000});
+    const startup = await p.evaluate(() => ({
+      loaded: window.__swuHtmlMinifierScriptLoaded === true,
+      loadError: window.__swuHtmlMinifierScriptError === true,
+      booted: window.__swuHtmlMinifierBooted === true,
+      workerType: typeof Worker,
+      status: document.getElementById('htmlMinifierStatus')?.textContent || ''
+    }));
+    assert.deepEqual(startup, {
+      loaded: true,
+      loadError: false,
+      booted: true,
+      workerType: 'function',
+      status: 'Ready'
+    });
+
     assert.equal(await p.locator('#minAttributeQuotes').isChecked(), false);
 
     const waitForHtmlMinifier = async () => {
       await p.waitForFunction(() => {
         const status = document.getElementById('htmlMinifierStatus')?.textContent || '';
         const error = document.getElementById('htmlMinifierError');
-        return status.startsWith('Minified') || (error && !error.hidden);
-      }, null, {timeout:10000});
+        return status === 'Minified' || (error && !error.hidden);
+      }, null, {timeout: 15000});
 
       if (!await p.locator('#htmlMinifierError').isHidden()) {
-        throw new Error('HTML Minifier runtime error: ' + await p.locator('#htmlMinifierError').innerText());
+        const message = await p.locator('#htmlMinifierError').innerText();
+        throw new Error('HTML Minifier runtime error: ' + message);
       }
+      assert.equal(await p.locator('#htmlMinifierStatus').innerText(), 'Minified');
     };
 
-    // Verify the production provider sequence degrades from both remote engines
-    // to the built-in local conservative worker.
+    // Exercise provider fallback deterministically without depending on the fallback CDN.
     await p.evaluate(() => {
       window.__swuNativeWorker = window.Worker;
-      window.Worker = class LocalFallbackWorker extends EventTarget {
+      let primaryFailed = false;
+
+      window.Worker = class TestWorker extends EventTarget {
         constructor(url) {
           super();
           this.url = String(url);
           this.terminated = false;
+
           setTimeout(() => {
             if (this.terminated) return;
-            if (this.url.includes('engine=jsdelivr') || this.url.includes('engine=unpkg')) {
-              this.dispatchEvent(new ErrorEvent('error', {message:'synthetic remote provider failure'}));
+            if (!primaryFailed && this.url.includes('engine=jsdelivr')) {
+              primaryFailed = true;
+              this.dispatchEvent(new ErrorEvent('error', {message:'synthetic primary provider failure'}));
               return;
             }
+
             this.dispatchEvent(new MessageEvent('message', {
-              data:{type:'ready', provider:'local', limited:true}
+              data:{type:'ready', provider:'unpkg'}
             }));
           }, 0);
         }
@@ -303,20 +349,13 @@ const cases = [
 
         postMessage(data) {
           if (this.terminated || data?.type !== 'minify') return;
-          let result = String(data.source || '');
-          if (data.options?.removeComments) {
-            result = result.replace(/<!--(?!\[if)[\s\S]*?-->/gi, '');
-          }
-          if (data.options?.collapseWhitespace) {
-            result = result.replace(/>\s+</g, '><').trim();
-          }
+          const result = String(data.source || '').replace(/>\s+</g, '><').trim();
           setTimeout(() => {
             if (this.terminated) return;
             this.dispatchEvent(new MessageEvent('message', {
               data:{
                 type:'result',
-                provider:'local',
-                limited:true,
+                provider:'unpkg',
                 requestId:data.requestId,
                 result
               }
@@ -326,80 +365,24 @@ const cases = [
       };
     });
 
-    const source = '<!doctype html>\\n<html>\\n  <body>\\n    <!-- remove me -->\\n    <main>\\n      <h1>Hello</h1>\\n      <p>World</p>\\n    </main>\\n  </body>\\n</html>';
+    await p.locator('#htmlMinifierInput').fill('<p>fallback</p>\n<p>provider</p>');
+    await p.locator('#minifyHtml').click();
+    await waitForHtmlMinifier();
+    assert.equal(await p.locator('#htmlMinifierOutput').inputValue(), '<p>fallback</p><p>provider</p>');
+
+    await p.evaluate(() => {
+      window.Worker = window.__swuNativeWorker;
+    });
+
+    // Exercise the real production worker/minifier path with its normal provider order.
+    const source = '<!doctype html>\n<html>\n  <body>\n    <!-- remove me -->\n    <main>\n      <h1>Hello</h1>\n      <p>World</p>\n    </main>\n  </body>\n</html>';
     await p.locator('#htmlMinifierInput').fill(source);
     await p.locator('#minifyHtml').click();
     await waitForHtmlMinifier();
-    let minified = await p.locator('#htmlMinifierOutput').inputValue();
+    const minified = await p.locator('#htmlMinifierOutput').inputValue();
     assert.ok(minified.length < source.length);
     assert.ok(!minified.includes('remove me'));
     assert.ok(minified.includes('<h1>Hello</h1>'));
-    assert.match(await p.locator('#htmlMinifierStatus').innerText(), /basic fallback/i);
-    assert.match(await p.locator('#htmlMinifierStats').innerText(), /Local basic fallback/i);
-
-    // Exercise advanced/full-engine transformations deterministically without
-    // making CI availability depend on a third-party CDN.
-    await p.evaluate(() => {
-      window.Worker = class FullEngineTestWorker extends EventTarget {
-        constructor() {
-          super();
-          this.terminated = false;
-          setTimeout(() => {
-            if (this.terminated) return;
-            this.dispatchEvent(new MessageEvent('message', {
-              data:{type:'ready', provider:'test-full-engine', limited:false}
-            }));
-          }, 0);
-        }
-
-        terminate() {
-          this.terminated = true;
-        }
-
-        postMessage(data) {
-          if (this.terminated || data?.type !== 'minify') return;
-          const source = String(data.source || '');
-          const options = data.options || {};
-          let result = source;
-
-          if (options.removeComments) {
-            result = result.replace(/<!--(?!\[if)[\s\S]*?-->/gi, '');
-          }
-          if (options.useShortDoctype) {
-            result = result.replace(/<!doctype[^>]*>/i, '<!doctype html>');
-          }
-          if (options.removeScriptTypeAttributes) {
-            result = result.replace(/\s+type=(["'])text\/javascript\1/gi, '');
-          }
-          if (options.removeStyleLinkTypeAttributes) {
-            result = result.replace(/\s+type=(["'])text\/css\1/gi, '');
-          }
-          if (options.collapseBooleanAttributes) {
-            result = result.replace(/\s+(disabled|checked|selected|readonly|required|multiple|autofocus)=(["'])\1\2/gi, ' $1');
-          }
-          if (options.removeAttributeQuotes) {
-            result = result.replace(/\s+([:\w-]+)="([A-Za-z0-9._:\/-]+)"/g, ' $1=$2');
-          }
-          if (options.collapseWhitespace) {
-            result = result.replace(/>\s+</g, '><').trim();
-          }
-
-          const delay = source.length > 500000 ? 500 : 0;
-          setTimeout(() => {
-            if (this.terminated) return;
-            this.dispatchEvent(new MessageEvent('message', {
-              data:{
-                type:'result',
-                provider:'test-full-engine',
-                limited:false,
-                requestId:data.requestId,
-                result
-              }
-            }));
-          }, delay);
-        }
-      };
-    });
 
     const legacy = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html><head><style type="text/css">body { color: red; }</style><script type="text/javascript">console.log("x");</script></head><body><input disabled="disabled"></body></html>';
     await p.locator('#htmlMinifierInput').fill(legacy);
@@ -422,19 +405,21 @@ const cases = [
     assert.ok(unquoted.includes('content=https://example.com/image.jpg'));
 
     await p.locator('#htmlMinifierInput').evaluate(el => {
-      el.value = '\\t'.repeat(550000) + '.\\t1x';
+      el.value = '\t'.repeat(550000) + '.\t1x';
     });
     await p.locator('#minifyHtml').click();
     await p.waitForTimeout(75);
-    await p.locator('#clearHtmlMinifier').click({timeout:1500});
+    await p.locator('#clearHtmlMinifier').click({timeout: 1500});
     assert.equal(await p.locator('#htmlMinifierInput').inputValue(), '');
     assert.equal(await p.locator('#htmlMinifierStatus').innerText(), 'Ready');
 
     assert.equal(await p.locator('#htmlMinifierError').isHidden(), true);
 
     await p.evaluate(() => {
-      window.Worker = window.__swuNativeWorker;
-      delete window.__swuNativeWorker;
+      if (window.__swuNativeWorker) {
+        window.Worker = window.__swuNativeWorker;
+        delete window.__swuNativeWorker;
+      }
     });
   }],
   ['jsonpath-tester', async p => {
@@ -455,20 +440,34 @@ const cases = [
   }],
   ['css-minifier', async p => {
     await p.waitForFunction(() => document.getElementById('cssMinifierStatus').textContent === 'Ready');
-    const source = '.card { color: #ff0000; margin: 0px 0px 0px 0px; padding: 16px 16px 16px 16px; }';
+    assert.equal(await p.locator('#cssPreserveComments').isChecked(), true);
+
+    const source = '/*! Package license */\n/* remove this note */\n.card { color: #ff0000; margin: 0px 0px 0px 0px; padding: 16px 16px 16px 16px; }';
     await p.locator('#cssMinifierInput').fill(source);
     await p.locator('#minifyCss').click();
     await p.waitForFunction(() => document.getElementById('cssMinifierStatus').textContent === 'Minified');
-    const minified = await p.locator('#cssMinifierOutput').inputValue();
+    let minified = await p.locator('#cssMinifierOutput').inputValue();
     assert.ok(minified.length < source.length);
+    assert.ok(minified.includes('/*! Package license */'));
+    assert.equal(minified.includes('remove this note'), false);
     assert.ok(minified.includes('.card{'));
     assert.ok(minified.includes('color:red'));
     assert.equal(await p.locator('#cssMinifierError').isHidden(), true);
+
+    await p.locator('#cssPreserveComments').uncheck();
+    minified = await p.locator('#cssMinifierOutput').inputValue();
+    assert.equal(minified.includes('Package license'), false);
+    assert.match(await p.locator('#cssMinifierStats').innerText(), /Remove all\s+comments/i);
+
     await p.locator('#cssRestructure').check();
     await p.locator('#minifyCss').click();
     const restructured = await p.locator('#cssMinifierOutput').inputValue();
     assert.ok(restructured.length > 0);
     assert.equal(await p.locator('#cssMinifierError').isHidden(), true);
+
+    await p.locator('#clearCssMinifier').click();
+    assert.equal(await p.locator('#cssPreserveComments').isChecked(), true);
+    assert.equal(await p.locator('#cssRestructure').isChecked(), false);
   }],
   ['json-to-xml', async p => {
     await p.locator('#converterInput').fill(JSON.stringify({store:{book:[{title:'A'},{title:'B'}]},'first name':'Ada',active:true,note:null}));
