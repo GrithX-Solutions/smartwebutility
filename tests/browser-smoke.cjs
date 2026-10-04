@@ -302,28 +302,8 @@ const cases = [
       status: 'Ready'
     });
 
-    await p.evaluate(() => {
-      window.__swuNativeWorker = window.Worker;
-      let primaryFailed = false;
-      window.Worker = class TestWorker extends EventTarget {
-        constructor(url) {
-          if (!primaryFailed && String(url).includes('engine=jsdelivr')) {
-            super();
-            primaryFailed = true;
-            setTimeout(() => {
-              this.dispatchEvent(new ErrorEvent('error', {message:'synthetic primary provider failure'}));
-            }, 0);
-            return;
-          }
-          return new window.__swuNativeWorker(url);
-        }
-        terminate() {}
-        postMessage() {}
-      };
-    });
-
     assert.equal(await p.locator('#minAttributeQuotes').isChecked(), false);
-    const source = '<!doctype html>\n<html>\n  <body>\n    <!-- remove me -->\n    <main>\n      <h1>Hello</h1>\n      <p>World</p>\n    </main>\n  </body>\n</html>';
+
     const waitForHtmlMinifier = async () => {
       await p.waitForFunction(() => {
         const status = document.getElementById('htmlMinifierStatus')?.textContent || '';
@@ -338,6 +318,64 @@ const cases = [
       assert.equal(await p.locator('#htmlMinifierStatus').innerText(), 'Minified');
     };
 
+    // Exercise provider fallback deterministically without depending on the fallback CDN.
+    await p.evaluate(() => {
+      window.__swuNativeWorker = window.Worker;
+      let primaryFailed = false;
+
+      window.Worker = class TestWorker extends EventTarget {
+        constructor(url) {
+          super();
+          this.url = String(url);
+          this.terminated = false;
+
+          setTimeout(() => {
+            if (this.terminated) return;
+            if (!primaryFailed && this.url.includes('engine=jsdelivr')) {
+              primaryFailed = true;
+              this.dispatchEvent(new ErrorEvent('error', {message:'synthetic primary provider failure'}));
+              return;
+            }
+
+            this.dispatchEvent(new MessageEvent('message', {
+              data:{type:'ready', provider:'unpkg'}
+            }));
+          }, 0);
+        }
+
+        terminate() {
+          this.terminated = true;
+        }
+
+        postMessage(data) {
+          if (this.terminated || data?.type !== 'minify') return;
+          const result = String(data.source || '').replace(/>\s+</g, '><').trim();
+          setTimeout(() => {
+            if (this.terminated) return;
+            this.dispatchEvent(new MessageEvent('message', {
+              data:{
+                type:'result',
+                provider:'unpkg',
+                requestId:data.requestId,
+                result
+              }
+            }));
+          }, 0);
+        }
+      };
+    });
+
+    await p.locator('#htmlMinifierInput').fill('<p>fallback</p>\n<p>provider</p>');
+    await p.locator('#minifyHtml').click();
+    await waitForHtmlMinifier();
+    assert.equal(await p.locator('#htmlMinifierOutput').inputValue(), '<p>fallback</p><p>provider</p>');
+
+    await p.evaluate(() => {
+      window.Worker = window.__swuNativeWorker;
+    });
+
+    // Exercise the real production worker/minifier path with its normal provider order.
+    const source = '<!doctype html>\n<html>\n  <body>\n    <!-- remove me -->\n    <main>\n      <h1>Hello</h1>\n      <p>World</p>\n    </main>\n  </body>\n</html>';
     await p.locator('#htmlMinifierInput').fill(source);
     await p.locator('#minifyHtml').click();
     await waitForHtmlMinifier();
