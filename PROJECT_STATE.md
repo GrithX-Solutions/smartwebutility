@@ -11,6 +11,7 @@ Run the remaining content/SEO re-audit page by page. Research, improve, test and
 - Current production source/artifact SHA: `04ce96286f0baaff1a175f4cae7c9491b0607688`
 - Current GitHub main state-only head before this batch: `ee460eb96606bbf93cd7a8347e51be8c851672d3`
 - Working branch: `content-reaudit-page-by-page-2026-10-03`
+- Current audit branch head before CI-fallback state sync: `89d6a59e8d675de0cd19bc4febfd5dfde8f8c65c`.
 - Verified recovery content baseline: `ba595d2a3c5d09539ad62fd5995df445895df686`.
 - Recovery baseline has zero file diff versus verified/blocker checkpoint `ee5a1742b593ad5984a8bb0ba57f2f3f31110cbb`; only Git history differs.
 - Production remains unchanged during this audit batch.
@@ -24,6 +25,7 @@ ACTIVE:
 - Each page gets a documented demand/SERP/semantic/competitor-gap decision.
 - A no-change decision is valid when no real gap exists.
 - Each changed page must pass Build + SEO QA + content QA + Chromium before page #N+1 starts.
+- When GitHub-hosted Actions cannot allocate a runner or quota/package limits block execution, the approved ZTHosting isolated CI fallback may satisfy the same gate. GitHub remains the source of truth for code/commits; production paths must not be used as the CI workspace.
 - Do not merge/deploy piecemeal to production.
 - After the complete batch is finished, use one final merge/release/deploy sequence.
 
@@ -238,6 +240,22 @@ Page 14 CSS Minifier validation:
 - Structural optimization regression: PASS.
 - Full sitemap browser sweep: PASS.
 
+Current-head ZTHosting CI fallback validation:
+- GitHub audit head: `89d6a59e8d675de0cd19bc4febfd5dfde8f8c65c`.
+- Current head differs from green Page 14 checkpoint `896e7f8cb3473c947c16f5f500afb5206b1aa03a` only in `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md` and `PROJECT_STATE.md`; runtime/test/public files are identical.
+- GitHub-hosted current-head Build 757 and Chromium 441 failed before checkout/test execution because no hosted runner was allocated; no repository-test log was produced.
+- Reused verified Build 748 artifact ID `11309366580` for the runtime-identical checkpoint.
+- GitHub artifact SHA-256: `3e74cadc820cc6be506db4dba02b0df24fd1b9437b41a8b73aad13e06708477f`.
+- ZTHosting server-side artifact SHA-256: exact match.
+- Isolated CI root: `/srv/smartwebutility-ci/`; production tree `/srv/smartwebutility/` was not used or mutated.
+- Cached browser image: `mcr.microsoft.com/playwright:v1.55.1-noble` (image digest `sha256:2f29369043d81d6d69a815ceb80760f55e85f5020371ad06a4d996f18503ad1c`).
+- ZTHosting SEO QA: 89 pages, 0 errors, 0 warnings.
+- ZTHosting content QA: 89 pages, 0 errors, 2 intentionally retained advisories.
+- ZTHosting PHP lint: PASS.
+- ZTHosting JavaScript syntax + Chromium smoke: 144 passed, 0 failed.
+- Full 89-page browser initialization sweep, navigation checks, global search and mobile layout checks: PASS.
+- Production deployment: NOT STARTED.
+
 ## Deployment / indexing
 
 - Page 1 production deployment: NOT STARTED.
@@ -246,9 +264,9 @@ Page 14 CSS Minifier validation:
 
 ## Blockers
 
-- BLOCKED: GitHub-hosted Actions is not allocating a runner to the current audit branch.
-- Current failures occur before checkout or any repository test step; repository code is not implicated by those runs.
-- Page 15 must not start until an exact current-head Build + Chromium run receives a runner and passes.
+- GitHub-hosted Actions runner allocation remains unavailable for the current branch, but this no longer blocks the audit because the approved ZTHosting isolated CI fallback has passed the equivalent current-runtime gate.
+- No production blocker exists for continuing Page 15 research/implementation on GitHub.
+- Production deployment remains intentionally blocked until the full page-by-page batch is complete and receives one final controlled release gate.
 
 ## Risks
 
@@ -258,7 +276,7 @@ Page 14 CSS Minifier validation:
 
 ## Work in progress
 
-Pages 1–14 are complete/verified on the audit branch, including the documented CSV-to-JSON no-change decision where applicable. Production remains unchanged. Page 15 is intentionally not started because the current-head CI gate is blocked before runner allocation.
+Pages 1–14 are complete/verified on the audit branch, including the documented CSV-to-JSON no-change decision where applicable. The ZTHosting CI fallback is VERIFIED for the current runtime-equivalent head. Production remains unchanged. Page 15 is ready for evidence-first research.
 
 ## Affected files — completed/current pages
 
@@ -286,4 +304,4 @@ Shared direct requirements:
 
 ## NEXT ACTION
 
-Page 14 documentation checkpoint is green: Build 748 SUCCESS and Chromium 432 SUCCESS. Research exactly one Page 15 candidate using Ubersuggest and current US SERPs. Do not deploy production.
+Research exactly one Page 15 candidate using Ubersuggest and current US SERPs. Commit only that page plus direct implementation/tests/search metadata. Use ZTHosting isolated CI for the page gate while GitHub-hosted runner allocation is unavailable. Do not deploy production.
