@@ -1,6 +1,5 @@
 (() => {
   'use strict';
-  if (!document.body.hasAttribute('data-html-minifier')) return;
 
   const input = document.getElementById('htmlMinifierInput');
   const output = document.getElementById('htmlMinifierOutput');
@@ -30,6 +29,23 @@
     status.textContent = text;
     status.dataset.kind = kind;
   };
+
+  const requiredElements = [
+    input, output, file, status, error, stats,
+    ...Object.values(controls),
+    document.getElementById('minifyHtml'),
+    document.getElementById('exampleHtmlMinifier'),
+    document.getElementById('clearHtmlMinifier'),
+    document.getElementById('copyHtmlMinifier'),
+    document.getElementById('downloadHtmlMinifier')
+  ];
+  if (requiredElements.some(element => !element)) {
+    throw new Error('HTML Minifier UI failed to initialize because a required element is missing.');
+  }
+
+  window.__swuHtmlMinifierBooted = true;
+  setStatus(typeof Worker === 'function' ? 'Ready' : 'Web Workers unavailable',
+    typeof Worker === 'function' ? 'neutral' : 'error');
 
   const options = () => ({
     removeComments: controls.removeComments.checked,
@@ -251,6 +267,4 @@
     }
   });
 
-  setStatus(typeof Worker === 'function' ? 'Ready' : 'Web Workers unavailable',
-    typeof Worker === 'function' ? 'neutral' : 'error');
 })();
