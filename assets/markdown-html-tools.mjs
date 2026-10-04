@@ -180,6 +180,7 @@ if (mode === 'html-to-markdown') {
 
   let TurndownService = null;
   let gfmPlugin = null;
+  let DOMPurify = null;
 
   const setStatus = (text, kind = 'neutral') => {
     statusEl.textContent = text;
@@ -206,8 +207,16 @@ if (mode === 'html-to-markdown') {
       return;
     }
 
-    const doc = new DOMParser().parseFromString(source, 'text/html');
-    doc.querySelectorAll('script,style,noscript,template,iframe,object,embed').forEach(node => node.remove());
+    if (!DOMPurify || typeof DOMPurify.sanitize !== 'function') {
+      throw new Error('HTML sanitizer is still loading. Please try again.');
+    }
+
+    const safeFragment = DOMPurify.sanitize(source, {
+      USE_PROFILES: { html: true },
+      RETURN_DOM_FRAGMENT: true,
+      FORBID_TAGS: ['script','style','noscript','template','iframe','object','embed','link','meta','base']
+    });
+    safeFragment.querySelectorAll('script,style,noscript,template,iframe,object,embed,link,meta,base').forEach(node => node.remove());
 
     const service = new TurndownService({
       headingStyle: heading.value,
@@ -256,7 +265,7 @@ if (mode === 'html-to-markdown') {
       }
     });
 
-    const markdown = service.turndown(doc.body);
+    const markdown = service.turndown(safeFragment);
     output.value = markdown;
     stats.hidden = false;
     stats.innerHTML =
@@ -267,16 +276,20 @@ if (mode === 'html-to-markdown') {
   };
 
   try {
-    const [turndownMod, gfmMod] = await Promise.all([
+    const [turndownMod, gfmMod, purifyMod] = await Promise.all([
       import('https://cdn.jsdelivr.net/npm/turndown@7.2.4/+esm'),
-      import('https://cdn.jsdelivr.net/npm/turndown-plugin-gfm@1.0.2/+esm')
+      import('https://cdn.jsdelivr.net/npm/turndown-plugin-gfm@1.0.2/+esm'),
+      import('https://cdn.jsdelivr.net/npm/dompurify@3.4.16/dist/purify.es.mjs')
     ]);
     TurndownService = turndownMod.default || turndownMod.TurndownService;
     gfmPlugin = gfmMod.gfm || gfmMod.default?.gfm || null;
-    if (!TurndownService) throw new Error('Turndown constructor not found.');
+    DOMPurify = purifyMod.default || purifyMod;
+    if (!TurndownService || !DOMPurify || typeof DOMPurify.sanitize !== 'function') {
+      throw new Error('Converter dependency missing.');
+    }
     setStatus('Ready');
   } catch {
-    fail(new Error('HTML-to-Markdown converter failed to load. Refresh the page and try again.'));
+    fail(new Error('HTML-to-Markdown converter or sanitizer failed to load. Refresh the page and try again.'));
   }
 
   document.getElementById('convertHtmlMarkdown').addEventListener('click', () => {
