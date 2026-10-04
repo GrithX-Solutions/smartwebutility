@@ -234,14 +234,30 @@ const cases = [
   }],
   ['html-to-markdown', async p => {
     await p.waitForFunction(() => document.getElementById('htmlMarkdownStatus').textContent === 'Ready');
-    await p.locator('#htmlMarkdownInput').fill('<h1>Hello</h1><p>A <strong>bold</strong> paragraph.</p><table><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td>one</td><td>two</td></tr></tbody></table><pre><code class="language-js">const fence = "\x60\x60\x60";\nconsole.log(fence);</code></pre>');
+
+    let probeRequests = 0;
+    const requestListener = request => {
+      if (request.url().includes('swu-probe.invalid')) probeRequests += 1;
+    };
+    p.on('request', requestListener);
+
+    await p.locator('#htmlMarkdownInput').fill('<h1>Hello</h1><p>A <strong>bold</strong> paragraph with <a href="https://example.com/docs">docs</a> and <a href="javascript:alert(1)">unsafe</a>.</p><img src="https://swu-probe.invalid/pixel.png" alt="probe"><script>window.__htmlMdXss=true</script><table><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td>one</td><td>two</td></tr></tbody></table><pre><code class="language-js">const fence = "\x60\x60\x60";\nconsole.log(fence);</code></pre>');
     await p.locator('#convertHtmlMarkdown').click();
     const markdown = await p.locator('#htmlMarkdownOutput').inputValue();
+
     assert.ok(markdown.includes('# Hello'));
     assert.ok(markdown.includes('**bold**'));
+    assert.ok(markdown.includes('[docs](https://example.com/docs)'));
+    assert.equal(markdown.includes('javascript:'), false);
+    assert.ok(markdown.includes('![probe](https://swu-probe.invalid/pixel.png)'));
+    assert.equal(markdown.includes('__htmlMdXss'), false);
     assert.ok(markdown.includes('| A'));
     assert.ok(markdown.includes('\x60\x60\x60\x60js'));
     assert.ok(markdown.includes('const fence = "\x60\x60\x60";'));
+
+    await p.waitForTimeout(250);
+    p.off('request', requestListener);
+    assert.equal(probeRequests, 0);
     assert.equal(await p.locator('#htmlMarkdownError').isHidden(), true);
   }],
   ['html-minifier', async p => {
