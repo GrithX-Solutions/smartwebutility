@@ -21,7 +21,7 @@
   };
 
   const WORKER_LOAD_TIMEOUT_MS = 6000;
-  const WORKER_PROVIDERS = ['jsdelivr', 'unpkg'];
+  const WORKER_PROVIDERS = ['jsdelivr', 'unpkg', 'local'];
   const MINIFY_TIMEOUT_MS = 8000;
   let nextRequestId = 0;
   let activeTask = null;
@@ -195,7 +195,11 @@
         }
 
         if (data.type === 'result' && data.requestId === requestId) {
-          finish(resolve, String(data.result || ''));
+          finish(resolve, {
+            result:String(data.result || ''),
+            provider:String(data.provider || provider),
+            limited:Boolean(data.limited)
+          });
         }
       });
     };
@@ -224,7 +228,8 @@
     }
 
     setStatus('Minifying…', 'neutral');
-    const minified = await minifyInWorker(source, options());
+    const minification = await minifyInWorker(source, options());
+    const minified = minification.result;
     output.value = minified;
 
     const before = new Blob([source]).size;
@@ -237,8 +242,12 @@
       '<span><b>' + before.toLocaleString() + '</b> input bytes</span>' +
       '<span><b>' + after.toLocaleString() + '</b> output bytes</span>' +
       '<span><b>' + saved.toLocaleString() + '</b> bytes saved</span>' +
-      '<span><b>' + percent.toFixed(1) + '%</b> smaller</span>';
-    setStatus('Minified', 'success');
+      '<span><b>' + percent.toFixed(1) + '%</b> smaller</span>' +
+      '<span><b>' + (minification.limited ? 'Local basic fallback' : 'Full engine') + '</b> mode</span>';
+    setStatus(
+      minification.limited ? 'Minified · basic fallback' : 'Minified',
+      minification.limited ? 'warning' : 'success'
+    );
   };
 
   const runSafely = () => {
