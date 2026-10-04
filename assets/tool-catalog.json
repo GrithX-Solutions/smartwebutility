@@ -360,8 +360,12 @@
     "category": "Developer",
     "url": "/yaml-formatter/",
     "title": "YAML Formatter",
-    "description": "Format and validate YAML with consistent indentation.",
+    "description": "Format and validate single or multi-document YAML with consistent indentation.",
     "keywords": [
+      "yaml formatter",
+      "yaml formatter online",
+      "online yaml formatter",
+      "yaml formatter and validator",
       "yaml validator",
       "format yaml"
     ]
