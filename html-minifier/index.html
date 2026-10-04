@@ -34,7 +34,7 @@
 
 <div class="json-toolbar data-view-toolbar" aria-label="Advanced HTML minifier options">
 <span class="kicker" style="margin:0">Advanced</span>
-<label class="check-control"><input id="minAttributeQuotes" type="checkbox"> Remove safe attribute quotes</label>
+<label class="check-control"><input id="minAttributeQuotes" type="checkbox"> Remove eligible attribute quotes</label>
 <label class="check-control"><input id="minOptionalTags" type="checkbox"> Remove optional tags</label>
 <label class="check-control"><input id="minInlineCss" type="checkbox"> Minify inline CSS</label>
 <label class="check-control"><input id="minInlineJs" type="checkbox"> Minify inline JavaScript</label>
@@ -51,7 +51,7 @@
 <div class="trustbar"><span>Browser-side minification</span><span>No upload</span><span>Inline CSS/JS minification off by default</span><span>Local files up to 5 MB</span><span>Ctrl/⌘ + Enter to minify</span></div>
 </section>
 
-<section class="section wrap prose" data-quality-content="v2">
+<section class="section wrap prose" data-quality-content="v3">
 <h2>Minify HTML without uploading the document</h2>
 <p>This HTML minifier compresses source markup in browser JavaScript. Its conservative default profile removes ordinary comments, collapses unnecessary whitespace and removes redundant HTML attributes while avoiding more aggressive transformations unless you explicitly enable them.</p>
 <div class="info-grid">
@@ -62,7 +62,11 @@
 </div>
 
 <h2>Why aggressive options are disabled by default</h2>
-<p>HTML minification is not merely deleting spaces. Removing optional tags, stripping safe attribute quotes, sorting attributes, or rewriting inline CSS and JavaScript can create larger semantic or debugging changes than basic whitespace compression. Those controls are available, but they are opt-in so a first run remains conservative.</p>
+<p>HTML minification is not merely deleting spaces. Removing optional tags, stripping quotes that HTML syntax permits you to omit, sorting attributes, or rewriting inline CSS and JavaScript can create larger interoperability or debugging changes than basic whitespace compression. Those controls are available, but they are opt-in so a first run remains conservative.</p>
+
+<h2>Attribute quotes can be optional in HTML but still matter to downstream parsers</h2>
+<p>The “Remove eligible attribute quotes” option asks the minifier to unquote attribute values when HTML syntax allows it. That does not guarantee every crawler, social preview service, email client, template pipeline or downstream parser will interpret the transformed markup exactly as your browser does.</p>
+<p>The upstream <code>html-minifier-terser</code> project currently has an open v7.2.0 issue reporting that quote removal on Open Graph metadata can prevent WhatsApp from loading an <code>og:image</code> preview. Keep this option off unless you have tested the minified output with the actual consumers that read your HTML—especially Open Graph, Twitter/X card, structured-data-adjacent templates and machine-consumed metadata.</p>
 
 <h2>Optional HTML5 cleanup</h2>
 <p>Enable HTML5 cleanup when the destination is modern HTML5 and you want the minifier to remove common legacy verbosity. The option can shorten an older doctype to <code>&lt;!doctype html&gt;</code>, collapse boolean attributes such as <code>disabled="disabled"</code> to <code>disabled</code>, remove <code>type="text/javascript"</code> from script tags, and remove <code>type="text/css"</code> from style/link tags. It remains off by default because older documents or compatibility workflows may intentionally retain those forms.</p>
@@ -83,9 +87,10 @@
 <div class="related-tools"><a href="/markdown-to-html/">Markdown to HTML<span>Generate HTML source from Markdown.</span></a><a href="/html-to-markdown/">HTML to Markdown<span>Convert HTML content into Markdown.</span></a><a href="/html-entity-encoder-decoder/">HTML Entity Encoder / Decoder<span>Encode or decode HTML entities.</span></a></div>
 </section>
 
-<section class="section alt" data-quality-content="v2"><div class="wrap prose">
+<section class="section alt" data-quality-content="v3"><div class="wrap prose">
 <h2>Frequently asked questions</h2>
-<h3>Does minifying HTML change the page?</h3><p>Conservative minification is intended to preserve normal document behavior, but aggressive options and unusual markup should always be tested.</p>
+<h3>Does minifying HTML change the page?</h3><p>Conservative minification is intended to preserve normal browser behavior, but aggressive options and unusual markup should always be tested with the browsers and downstream consumers that matter to your deployment.</p>
+<h3>Is removing attribute quotes always safe?</h3><p>No. The minifier only removes quotes where HTML syntax permits unquoted values, but downstream parsers and social-preview services can still behave differently. The option stays off by default; test metadata and machine-consumed HTML before enabling it in a production build.</p>
 <h3>What does HTML5 cleanup change?</h3><p>It can shorten the doctype, collapse standard boolean attributes, and remove legacy JavaScript/CSS type attributes that HTML5 does not require. It is opt-in.</p>
 <h3>Does this minify CSS and JavaScript too?</h3><p>Only when you explicitly enable the inline CSS or inline JavaScript options.</p>
 <h3>Can I minify an HTML file?</h3><p>Yes. Open a local <code>.html</code> or <code>.htm</code> file up to 5 MB.</p>
