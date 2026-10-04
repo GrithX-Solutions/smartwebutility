@@ -55,8 +55,25 @@ const cases = [
   ['yaml-formatter', async p => {
     await p.locator('#yamlInput').fill('service:\n name: api\n port: 8080');
     await p.locator('#formatYaml').click();
-    assert.ok((await p.locator('#yamlOutput').inputValue()).includes('service:'));
+    let output = await p.locator('#yamlOutput').inputValue();
+    assert.ok(output.includes('service:'));
+    assert.equal(output.startsWith('---\n'), false);
     assert.equal(await p.locator('#yamlError').isHidden(), true);
+
+    await p.locator('#yamlIndent').selectOption('4');
+    await p.locator('#yamlInput').fill('service:\n  name: api\n---\nservice:\n  name: worker');
+    await p.locator('#formatYaml').click();
+    output = await p.locator('#yamlOutput').inputValue();
+    assert.equal((output.match(/^---$/gm) || []).length, 2);
+    assert.match(output, /service:\n {4}name: api/);
+    assert.match(output, /service:\n {4}name: worker/);
+    assert.match(await p.locator('#yamlStatus').innerText(), /formatted stream/i);
+    assert.match(await p.locator('#yamlStats').innerText(), /2 documents/i);
+
+    await p.locator('#yamlInput').fill('service:\n  name: api\n---\nservice: [broken');
+    await p.locator('#formatYaml').click();
+    assert.equal(await p.locator('#yamlError').isHidden(), false);
+    assert.equal(await p.locator('#yamlOutput').inputValue(), '');
   }],
   ['xml-to-csv', async p => {
     await p.locator('#xmlCsvInput').fill('<users><user id="1"><name>Ada</name></user><user id="2"><name>Linus</name></user></users>');
