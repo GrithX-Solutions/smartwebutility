@@ -327,4 +327,10 @@ Status: BLOCKED.
   - Chromium 452 attempt 1: FAILED before any steps/logs.
   - Chromium 452 attempt 2: FAILED before any steps/logs.
 - These four startup failures have no workflow steps and no job logs, so they are classified as external GitHub Actions runner/infrastructure failures, not repository test failures.
-- Page 13 remains blocked by the page-by-page hard gate until a real Build + Chromium execution completes on the hardened branch head.
+- Fresh state-head retries confirmed the blocker:
+  - Build run 769 attempt 1: FAILED before steps.
+  - Build run 769 attempt 2: FAILED before steps.
+  - Chromium run 453 attempt 1: FAILED before steps.
+  - Chromium run 453 attempt 2: FAILED before steps.
+- GitHub public status currently reports Actions operational, so the remaining cause appears repository/account/runner-specific; the exact annotation text is not exposed by the available connector.
+- Page 13 remains blocked by the page-by-page hard gate until a real Build + Chromium execution completes on the hardened branch head. Do not create Page 13 code/content commits while this condition remains unresolved.
