@@ -62,7 +62,7 @@ Research record:
 
 ### Page 12 — /html-to-markdown/
 
-Status: IMPLEMENTED ON BRANCH; CI PENDING.
+Status: VERIFIED ON BRANCH.
 
 Research evidence:
 - `html to markdown`: 1,600 US searches/month, SD 32, CPC $21.11.
@@ -196,6 +196,17 @@ Page 11 JSON Escape / Unescape validation:
 - Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
 - Chromium run 385: SUCCESS.
 - Slash/Unicode/malformed-escape regressions: PASS.
+- Full sitemap browser sweep: PASS.
+
+Page 12 HTML to Markdown validation:
+- Implementation/content commits: VERIFIED in GitHub.
+- Build run 714: SUCCESS.
+- JavaScript syntax validation: PASS.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- Chromium run 398: SUCCESS.
+- Sanitizer/dangerous-URL/external-request regression: PASS.
+- Browser smoke: 144 passed, 0 failed.
 - Full sitemap browser sweep: PASS.
 
 ## Deployment / indexing
