@@ -246,6 +246,7 @@ const cases = [
   }],
   ['html-minifier', async p => {
     await p.waitForFunction(() => document.getElementById('htmlMinifierStatus').textContent === 'Ready');
+    assert.equal(await p.locator('#minAttributeQuotes').isChecked(), false);
     const source = '<!doctype html>\n<html>\n  <body>\n    <!-- remove me -->\n    <main>\n      <h1>Hello</h1>\n      <p>World</p>\n    </main>\n  </body>\n</html>';
     await p.locator('#htmlMinifierInput').fill(source);
     await p.locator('#minifyHtml').click();
@@ -266,6 +267,14 @@ const cases = [
     assert.ok(!html5.includes('type="text/javascript"'));
     assert.ok(html5.includes(' disabled'));
     assert.ok(!html5.includes('disabled="disabled"'));
+
+    await p.locator('#htmlMinifierInput').fill('<meta property="og:image" content="https://example.com/image.jpg">');
+    await p.locator('#minAttributeQuotes').check();
+    await p.locator('#minifyHtml').click();
+    await p.waitForFunction(() => document.getElementById('htmlMinifierStatus').textContent === 'Minified');
+    const unquoted = await p.locator('#htmlMinifierOutput').inputValue();
+    assert.ok(unquoted.includes('property=og:image'));
+    assert.ok(unquoted.includes('content=https://example.com/image.jpg'));
 
     assert.equal(await p.locator('#htmlMinifierError').isHidden(), true);
   }],
