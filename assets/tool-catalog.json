@@ -34,8 +34,14 @@
     "category": "Developer",
     "url": "/css-minifier/",
     "title": "CSS Minifier",
-    "description": "Compress CSS with conservative defaults and optional restructuring.",
-    "keywords": []
+    "description": "Compress CSS with preserved /*! */ banners by default and optional restructuring.",
+    "keywords": [
+      "css minifier",
+      "online css minifier",
+      "css minifier tool",
+      "css minifier online",
+      "css minifier compressor"
+    ]
   },
   {
     "category": "Developer",
