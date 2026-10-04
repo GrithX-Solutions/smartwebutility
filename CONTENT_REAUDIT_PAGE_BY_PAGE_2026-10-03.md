@@ -2421,3 +2421,129 @@ Chromium coverage now verifies:
 - Slash-escape/Unicode/malformed-escape regressions: PASS.
 - Sitemap-wide browser initialization: PASS.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 12 — /html-to-markdown/
+
+Research/update date: 2026-10-04  
+Status: IMPLEMENTED, CI PENDING
+
+### Primary intent
+Convert HTML into clean, portable Markdown for documentation, CMS migration and repository workflows.
+
+Canonical owner:
+- `https://smartwebutility.com/html-to-markdown/`
+
+### Ubersuggest US evidence
+- `html to markdown`: 1,600 searches/month, SD 32, CPC $21.11.
+- `convert html to markdown`: 480, SD 45.
+- `html to markdown converter`: 390, SD 33.
+- `html to markdown converter online`: 90, SD 21.
+- `online html to markdown converter`: 50, SD 14.
+- `html to markdown online`: 50, SD 4.
+- `html to markdown table`: 30, SD 34.
+
+Current U.S. SERP includes attainable utility/content sites:
+- unmarkdown.com — DA 9.
+- htmltomarkdown.io — DA 11.
+- htmlmarkdown.com — DA 14.
+- html-to-markdown.com — DA 18.
+- several additional DA 17–23 converter pages.
+
+### Existing Smart Web Utility strengths
+Already present:
+- local browser-side conversion;
+- Turndown 7.2.4;
+- GFM plugin support;
+- headings, emphasis, links, images, lists and blockquotes;
+- GFM tables, task lists and strikethrough;
+- fenced code blocks;
+- explicit code-language hints from `language-*`, `lang-*` or `data-language`;
+- fence-length protection when code itself contains backticks;
+- heading style and bullet-marker controls;
+- local HTML file input up to 5 MB;
+- copy/download;
+- active/non-content element removal;
+- clear limits around CSS/layout conversion.
+
+### Confirmed security/product gap
+Before this change the browser parsed the raw source with `DOMParser.parseFromString()`, then removed active/non-content elements.
+
+Current evidence matters here:
+- Turndown's own security policy warns that untrusted HTML should be sanitized or parsed with a safer parser before conversion because DOM parsing can have side effects before Turndown processes the tree.
+- MDN documents that `DOMParser.parseFromString(..., "text/html")` creates an inert document for scripts/events, but resources referenced by elements such as images/iframes can still be downloaded.
+- The page also preserved attributes until after parsing, so dangerous URL schemes could reach the DOM tree before later conversion logic.
+- DOMPurify documents its string-sanitization pipeline as parsing into an isolated DOM, removing dangerous markup/URLs, and returning a cleaned tree.
+
+This made the previous “local/no execution” story weaker than it should be for untrusted HTML.
+
+### Implementation
+`assets/markdown-html-tools.mjs` now:
+- loads pinned DOMPurify 3.4.16 for the HTML→Markdown mode;
+- sanitizes the source before Turndown receives it;
+- requests a DOM `DocumentFragment` from DOMPurify instead of reparsing the raw HTML with `DOMParser`;
+- restricts sanitization to the HTML profile;
+- explicitly forbids active/non-content tags:
+  - `script`
+  - `style`
+  - `noscript`
+  - `template`
+  - `iframe`
+  - `object`
+  - `embed`
+  - `link`
+  - `meta`
+  - `base`
+- passes the sanitized fragment directly to Turndown, which officially accepts DocumentFragment input;
+- keeps normal safe HTTPS links/images, semantic content, GFM tables/tasks and code-language hints;
+- removes unsafe URL schemes such as `javascript:` before Markdown generation.
+
+No server dependency, framework, database or persistent backend was added.
+
+### Content update
+The page now:
+- explains sanitizer-first conversion;
+- states that dangerous URL schemes are removed;
+- clarifies that normal safe links/images remain convertible;
+- updates the trust bar and WebApplication feature list;
+- keeps the existing limits around layout/CSS and webpage scraping;
+- updates the shared module cache key and sitemap lastmod.
+
+### Dependency analysis
+DOMPurify is already an approved pinned browser dependency on the companion Markdown→HTML page because of a concrete XSS/output-safety requirement.
+
+Reusing it here:
+- avoids writing a home-grown sanitizer;
+- adds one pinned browser ESM import to this mode;
+- keeps conversion client-side;
+- preserves the same existing jsDelivr runtime dependency model already used by Turndown/GFM;
+- materially strengthens untrusted-input handling.
+
+### Regression tests
+Chromium coverage now verifies:
+- normal headings/emphasis/GFM tables/code hints still convert;
+- a safe HTTPS link remains a Markdown link;
+- a `javascript:` link does not survive into Markdown;
+- a script payload does not survive into Markdown;
+- an external image URL remains representable as Markdown content;
+- converting that external image reference does not trigger a browser request to the probe host during the conversion step;
+- existing converter error state remains clean.
+
+### Primary technical evidence
+- Turndown security policy and README.
+- MDN `DOMParser.parseFromString()` security/resource-loading behavior.
+- DOMPurify security documentation and isolated-DOM sanitization pipeline.
+- Current 2026 HTML→Markdown competitor review.
+
+### Page 12 acceptance status
+- Demand / difficulty: VERIFIED.
+- Current SERP intent: VERIFIED.
+- Canonical ownership: VERIFIED.
+- Existing implementation inspected: VERIFIED.
+- Security/product gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Browser security regression coverage: COMPLETED.
+- Static/Build/Chromium CI: PENDING.
+- Production deployment: NOT STARTED.
