@@ -130,6 +130,25 @@ const cases = [
     value = await p.locator('#jsonEscapeOutput').inputValue();
     assert.ok(value.includes('Line 1\nLine 2'));
     assert.equal(await p.locator('#jsonEscapeError').isHidden(), true);
+
+    await p.locator('#jsonEscapeInput').fill('</script>');
+    await p.locator('#jsonEscapeSlashes').check();
+    await p.locator('#escapeJsonString').click();
+    value = await p.locator('#jsonEscapeOutput').inputValue();
+    assert.equal(value[0], '<');
+    assert.equal(value.charCodeAt(1), 92);
+    assert.equal(value.slice(2), '/script>');
+
+    await p.locator('#jsonEscapeInput').fill(value);
+    await p.locator('#unescapeJsonString').click();
+    assert.equal(await p.locator('#jsonEscapeOutput').inputValue(), '</script>');
+
+    await p.locator('#jsonEscapeSlashes').uncheck();
+    await p.locator('#jsonEscapeInput').fill('café 😀');
+    await p.locator('#escapeJsonString').click();
+    value = await p.locator('#jsonEscapeOutput').inputValue();
+    assert.equal(value, 'café 😀');
+
     await p.locator('#jsonEscapeInput').fill('\\q');
     await p.locator('#unescapeJsonString').click();
     assert.equal(await p.locator('#jsonEscapeError').isHidden(), false);
