@@ -2199,3 +2199,112 @@ No new parser dependency was introduced.
 - Invalid second-document regression: PASS.
 - Sitemap-wide browser initialization: PASS.
 - Production deployment: NOT STARTED.
+
+
+### Documentation checkpoint after Page 10
+
+- Branch head before this checkpoint: `830d3cff2ff145a5e0a3456e3c81a46039dd9568`.
+- Build run 697: SUCCESS.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- Chromium run 381: SUCCESS.
+- Production deployment: NOT STARTED.
+
+
+---
+
+## Page 11 — /json-escape-unescape/
+
+Research/update date: 2026-10-04  
+Status: IMPLEMENTED, CI PENDING
+
+### Primary intent
+Escape or unescape JSON string content according to JSON string rules.
+
+Canonical owner:
+- `https://smartwebutility.com/json-escape-unescape/`
+
+### Ubersuggest US evidence
+- `json escape`: 1,900 searches/month, SD 32.
+- `json escape chars`: 590, SD 13.
+- `json escape online`: 320, SD 31, CPC $10.04.
+- `json escape character`: 320, SD 21.
+- `json escape quote`: 170, SD 20.
+- `json escape double quote`: 140, SD 20.
+- `json escape unescape`: 40, SD 21.
+
+Current U.S. SERP includes attainable utility domains:
+- devtoolsdaily.com — DA 16 at position 1.
+- shortc.com — DA 9.
+- additional converter/tool results below stronger documentation sites.
+
+### Existing Smart Web Utility strengths
+Already implemented:
+- JSON-standard string escaping through `JSON.stringify()`;
+- optional surrounding quotes;
+- optional forward-slash escaping;
+- unescape for either quoted JSON strings or raw escaped string content;
+- valid `\b`, `\f`, `\n`, `\r`, `\t`, quote, backslash and `\uXXXX` decoding;
+- malformed escape rejection;
+- local browser processing;
+- copy/download;
+- explicit separation from full-object JSON formatting.
+
+No new converter mode was needed.
+
+### Confirmed semantic/safety gap
+The existing page correctly implemented JSON string escaping but did not explain the output-context boundary strongly enough.
+
+Important distinctions:
+- RFC 8259 requires quotation marks, reverse solidus and control characters below U+0020 to be escaped inside JSON strings;
+- ordinary Unicode characters may remain unescaped;
+- escaping `/` as `\/` is optional in JSON;
+- a JSON-valid string is not automatically safe for HTML, SQL, shell commands or URLs;
+- literal `</script>` can matter when JSON is embedded directly in an HTML script element because the HTML parser processes the closing tag before JSON/JavaScript parsing.
+
+### Search-gap decision
+Ubersuggest shows only small direct U.S. demand for:
+- `json escape html`: 10, SD 13.
+- `json escape unicode`: 10, SD 13.
+- related “HTML-safe”/script-tag variants: 0 measured volume.
+
+Decision:
+- do not add another UI toggle for “HTML-safe JSON” or forced ASCII-only Unicode in this audit;
+- preserve the focused JSON-string tool;
+- improve interpretation and safety guidance around the existing slash option and output contexts.
+
+### Implementation
+Content/semantic update only:
+- explains that optional `\/` is useful for avoiding a literal `</script>` sequence when JSON text is embedded inside an HTML script element;
+- states clearly that JSON escaping is not a general sanitizer;
+- directs users to destination-specific escaping/parameterization for HTML, URLs, SQL and shell commands;
+- clarifies RFC 8259 Unicode behavior instead of implying non-ASCII must be escaped;
+- removes the overly broad “generated source code” use-case wording;
+- improves related-tool routing to HTML Entity Encoder/Decoder and URL Encoder/Decoder;
+- updates WebApplication features, internal search aliases and sitemap `lastmod`.
+
+No JavaScript implementation change was required.
+
+### Regression tests
+Chromium coverage now verifies:
+- existing newline/tab/quote round-trip behavior;
+- with slash escaping enabled, `</script>` output contains a literal backslash before `/`;
+- unescape restores `</script>`;
+- ordinary Unicode text such as `café 😀` remains readable when slash escaping is off;
+- malformed `\q` remains rejected.
+
+### Primary technical evidence
+- RFC 8259, JSON string escaping and Unicode rules.
+- Current converter competitors reviewed on 2026-10-04, including tools that explicitly distinguish JSON escaping from HTML/script-context handling.
+
+### Page 11 acceptance status
+- Demand / difficulty: VERIFIED.
+- Current SERP intent: VERIFIED.
+- Canonical ownership: VERIFIED.
+- Existing implementation inspected: VERIFIED.
+- Semantic/safety gap: VERIFIED.
+- Extra-feature demand: INSUFFICIENT for a new toggle.
+- Implementation: COMPLETED on working branch.
+- Browser regression coverage: COMPLETED.
+- Static/Build/Chromium CI: PENDING.
+- Production deployment: NOT STARTED.
