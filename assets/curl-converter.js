@@ -49,7 +49,7 @@ function parseCurl(source){
   if(!tokens.length)throw new Error('Add a cURL command to convert.');
   const first=tokens[0].split(/[\\/]/).pop().toLowerCase();
   if(first!=='curl'&&first!=='curl.exe')throw new Error('The command must start with curl.');
-  const req={method:'',url:'',headers:[],data:[],auth:null,getWithData:false,warnings:[]};
+  const req={method:'',url:'',headers:[],data:[],jsonData:[],auth:null,getWithData:false,warnings:[]};
   const ignored=new Set(['-s','--silent','-S','--show-error','--compressed']);
   for(let i=1;i<tokens.length;i++){
     const t=tokens[i];
@@ -70,10 +70,18 @@ function parseCurl(source){
     }
     if(t==='-d'||t==='--data'||t==='--data-raw'||t==='--data-binary'||t==='--data-ascii'){
       const v=need(tokens,i,t);if(v.startsWith('@'))throw new Error('Local-file request bodies such as @payload.json are not supported.');
+      if(req.jsonData.length)throw new Error('Mixing --json with -d/--data options is not supported because curl combines those forms differently.');
       req.data.push(v);i++;continue
+    }
+    if(t==='--json'){
+      const v=need(tokens,i,t);
+      if(v.startsWith('@'))throw new Error('--json file/stdin forms such as @payload.json or @- are not supported. Paste the inline JSON data instead.');
+      if(req.data.length)throw new Error('Mixing --json with -d/--data options is not supported because curl combines those forms differently.');
+      req.jsonData.push(v);i++;continue
     }
     if(t.startsWith('-d')&&t.length>2){
       const v=t.slice(2);if(v.startsWith('@'))throw new Error('Local-file request bodies such as @payload.json are not supported.');
+      if(req.jsonData.length)throw new Error('Mixing --json with -d/--data options is not supported because curl combines those forms differently.');
       req.data.push(v);continue
     }
     if(t==='--data-urlencode')throw new Error('--data-urlencode is not supported because its encoding form is context-dependent.');
@@ -93,6 +101,15 @@ function parseCurl(source){
   }
   if(!req.url)throw new Error('No request URL was found.');
   if(!/^https?:\/\//i.test(req.url))req.warnings.push('URL does not start with http:// or https://.');
+  if(req.jsonData.length){
+    if(req.getWithData)throw new Error('--json cannot be combined with -G/--get in this converter.');
+    if(req.method==='HEAD')throw new Error('--json cannot be combined with -I/--head.');
+    if(!req.method)req.method='POST';
+    const hasType=req.headers.some(pair=>pair[0].toLowerCase()==='content-type');
+    const hasAccept=req.headers.some(pair=>pair[0].toLowerCase()==='accept');
+    if(!hasType)req.headers.push(['Content-Type','application/json']);
+    if(!hasAccept)req.headers.push(['Accept','application/json']);
+  }
   if(req.data.length){
     if(req.getWithData){
       req.url+=(req.url.includes('?')?'&':'?')+req.data.join('&');req.data=[];if(!req.method)req.method='GET'
@@ -101,12 +118,13 @@ function parseCurl(source){
   if(!req.method)req.method='GET';
   const hasType=req.headers.some(pair=>pair[0].toLowerCase()==='content-type');
   if(req.data.length&&!hasType)req.headers.push(['Content-Type','application/x-www-form-urlencoded']);
-  req.body=req.data.join('&');
+  req.body=req.jsonData.length?req.jsonData.join(''):req.data.join('&');
   const typePair=req.headers.find(pair=>pair[0].toLowerCase()==='content-type');
   const contentType=typePair?typePair[1]:'';
   req.jsonBody=null;
-  if(req.body&&/application\/json/i.test(contentType)){
-    try{req.jsonBody=JSON.parse(req.body)}catch(e){req.warnings.push('Content-Type is application/json but the body is not valid JSON; preserving it as a string.')}
+  if(req.body&&(req.jsonData.length||/application\/(?:[A-Za-z0-9.+-]+\+)?json/i.test(contentType))){
+    try{req.jsonBody=JSON.parse(req.body)}
+    catch(e){req.warnings.push((req.jsonData.length?'--json data':'Content-Type is JSON')+' but the body is not valid JSON; preserving it as a string.')}
   }
   return req;
 }
