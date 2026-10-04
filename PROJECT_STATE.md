@@ -62,7 +62,7 @@ Research record:
 
 ### Page 11 — /json-escape-unescape/
 
-Status: IMPLEMENTED ON BRANCH; CI PENDING.
+Status: VERIFIED ON BRANCH.
 
 Research evidence:
 - `json escape`: 1,900 US searches/month, SD 32.
@@ -184,6 +184,16 @@ Page 10 YAML Formatter validation:
 - Initial Chromium run 379 exposed only a test whitespace assertion mismatch; formatter behavior itself passed.
 - Corrected Chromium run 380: SUCCESS.
 - Single/multi-document/invalid-stream regressions: PASS.
+- Full sitemap browser sweep: PASS.
+
+Page 11 JSON Escape / Unescape validation:
+- Implementation/content commits: VERIFIED in GitHub.
+- Build run 701: SUCCESS.
+- JavaScript syntax validation: PASS.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- Chromium run 385: SUCCESS.
+- Slash/Unicode/malformed-escape regressions: PASS.
 - Full sitemap browser sweep: PASS.
 
 ## Deployment / indexing
