@@ -60,29 +60,29 @@ Research record:
 
 ## Current page
 
-### Page 12 — /html-minifier/
+### Page 12 — /html-to-markdown/
 
 Status: IMPLEMENTED ON BRANCH; CI PENDING.
 
 Research evidence:
-- `html minifier`: 1,600 US searches/month, SD 32, CPC $11.24.
-- Current SERP includes DA 5–25 utility domains.
+- `html to markdown`: 1,600 US searches/month, SD 32, CPC $21.11.
+- `html to markdown converter online`: 90, SD 21.
+- `html to markdown online`: 50, SD 4.
+- Current SERP includes DA 9–18 converter sites.
 
 Confirmed gap:
-- advanced option wording said “Remove safe attribute quotes”;
-- upstream v7.2.0 issue #183 shows syntactically unquoted Open Graph attributes can break WhatsApp preview behavior.
+- raw HTML was parsed first and cleaned afterward;
+- Turndown/MDN security guidance shows untrusted HTML parsing can have pre-conversion side effects;
+- unsafe URL schemes could exist in the parsed tree before conversion.
 
 Implemented:
-- rename to “Remove eligible attribute quotes”;
-- explain downstream/social-parser compatibility risk;
-- keep quote removal off by default;
-- add browser regression proving default off and actual Open Graph quote removal when enabled;
-- update sitemap lastmod.
-
-Dependency decision:
-- v7.2.0 remains latest official upstream release;
-- CVE-2022-37620 package applicability is PARTIALLY VERIFIED / ambiguous across advisory databases;
-- no speculative dependency replacement in this audit.
+- pinned DOMPurify 3.4.16 pre-sanitization;
+- sanitized DOM DocumentFragment passed directly to Turndown;
+- explicit active/non-content tag removal;
+- unsafe URL scheme removal;
+- safe links/images/GFM/code behavior preserved;
+- Chromium probe verifies conversion does not request the embedded external image URL;
+- updated public safety guidance, catalog description and sitemap lastmod.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
