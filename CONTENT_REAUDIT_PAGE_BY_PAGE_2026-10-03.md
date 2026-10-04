@@ -2091,3 +2091,102 @@ Chromium coverage now verifies:
 - Sanitized/raw-mode XSS regression: PASS.
 - Sitemap-wide browser initialization: PASS.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 10 — /yaml-formatter/
+
+Research/update date: 2026-10-04  
+Status: IMPLEMENTED, CI PENDING
+
+### Primary intent
+Format and validate YAML online, including configuration files and YAML document streams.
+
+Canonical owner:
+- `https://smartwebutility.com/yaml-formatter/`
+
+### Ubersuggest US evidence
+- `yaml formatter`: 2,400 searches/month, SD 18, CPC $21.91.
+- `yaml formatter online`: 140, SD 24.
+- `online yaml formatter`: 140, SD 33.
+- `yaml formatter cli`: 20, SD 15.
+- `yaml formatter and validator`: 10, SD 5.
+
+Current U.S. SERP includes attainable utility domains:
+- string.is — DA 9
+- jsonformatter.gg — DA 4
+- fe.tools — DA 9
+- flashformat.com — DA 9
+- jsonformatterspro.com — DA 6
+- chatdb.ai — DA 11
+
+### Existing Smart Web Utility strengths
+Already present:
+- YAML syntax validation;
+- 2-space or 4-space output;
+- local files up to 5 MB;
+- copy/download;
+- browser-side parsing via pinned `js-yaml` 4.1.0;
+- precise warnings about comment loss;
+- anchor/alias rewrite caveats;
+- parse-and-dump semantics;
+- direct links to YAML→JSON and other config tools.
+
+The page was already editorially mature, so this audit did not add generic length.
+
+### Confirmed functional gap
+The formatter used `jsyaml.load()`, which accepts only one YAML document and rejects a stream containing multiple documents.
+
+That gap matters because:
+- YAML streams can contain several documents separated by `---`;
+- `js-yaml` officially exposes `loadAll()` for multi-document streams;
+- the site's YAML→JSON converter already supports multi-document input;
+- current formatter/validator intent includes users pasting configuration streams, manifests and concatenated YAML documents.
+
+### Implementation
+`assets/data-view-tools.js` now:
+- parses formatter input with `jsyaml.loadAll()`;
+- validates the complete stream before emitting output;
+- formats each parsed document independently;
+- keeps existing 2/4-space indentation behavior;
+- keeps single-document output unchanged, without forcing a leading marker;
+- when two or more documents exist, emits each document with an explicit `---` boundary;
+- reports document count, characters and lines;
+- reports “Valid · formatted stream” for multi-document input;
+- still clears output and shows the parser error if any document is invalid.
+
+### Content update
+The page now:
+- states that single and multi-document YAML are accepted;
+- explains output document-boundary behavior;
+- clarifies that each document remains an independent parse-and-dump unit;
+- retains the existing comment/anchor/presentation caveats;
+- updates WebApplication features and internal search aliases.
+
+### Regression tests
+Chromium now verifies:
+- a normal single YAML document still formats without an added `---`;
+- two YAML documents format successfully;
+- two explicit document boundaries remain in output;
+- 4-space indentation applies to both documents;
+- stats report two documents;
+- invalid YAML in the second document invalidates the stream and clears output.
+
+### Technical evidence
+Current js-yaml documentation confirms:
+- `load()` expects a single document;
+- `loadAll()` understands multi-document YAML streams and returns the documents.
+
+No new parser dependency was introduced.
+
+### Page 10 acceptance status
+- Demand / difficulty: VERIFIED.
+- Current SERP intent: VERIFIED.
+- Canonical ownership: VERIFIED.
+- Existing functionality inspected: VERIFIED.
+- Functional gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Browser regression coverage: COMPLETED.
+- Static/Build/Chromium CI: PENDING.
+- Production deployment: NOT STARTED.
