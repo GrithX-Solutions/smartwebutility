@@ -62,7 +62,7 @@ Research record:
 
 ### Page 13 — /html-minifier/
 
-Status: IMPLEMENTED ON BRANCH; CI PENDING.
+Status: VERIFIED ON BRANCH.
 
 Research evidence:
 - `html minifier`: 1,600 US searches/month, SD 32, CPC $11.24.
@@ -215,6 +215,16 @@ Page 12 checkpoint note:
 - Later checkpoint Build 723 succeeded, while Chromium 407 failed twice because of HTML Minifier worker startup.
 - Diagnostic head Build 729 and Chromium 413 succeeded.
 - The HTML Minifier reliability issue is tracked as Page 13.
+
+Page 13 HTML Minifier validation:
+- Implementation/content commits: VERIFIED in GitHub.
+- Build run 735: SUCCESS.
+- JavaScript syntax validation: PASS.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- Chromium run 419: SUCCESS.
+- Primary-provider failure / secondary-provider fallback regression: PASS.
+- Existing minifier regressions and full sitemap browser sweep: PASS.
 
 ## Deployment / indexing
 
