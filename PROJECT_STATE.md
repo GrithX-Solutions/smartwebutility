@@ -62,7 +62,7 @@ Research record:
 
 ### Page 10 — /yaml-formatter/
 
-Status: IMPLEMENTED ON BRANCH; CI PENDING.
+Status: VERIFIED ON BRANCH.
 
 Research evidence:
 - `yaml formatter`: 2,400 US searches/month, SD 18, CPC $21.91.
@@ -174,6 +174,17 @@ Page 9 Markdown to HTML validation:
 - Chromium run 370: SUCCESS.
 - Sanitized/raw-output XSS regression: PASS.
 - Sandboxed raw-preview non-execution regression: PASS.
+- Full sitemap browser sweep: PASS.
+
+Page 10 YAML Formatter validation:
+- Implementation/content commits: VERIFIED in GitHub.
+- Final Build run 696: SUCCESS.
+- JavaScript syntax validation: PASS.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- Initial Chromium run 379 exposed only a test whitespace assertion mismatch; formatter behavior itself passed.
+- Corrected Chromium run 380: SUCCESS.
+- Single/multi-document/invalid-stream regressions: PASS.
 - Full sitemap browser sweep: PASS.
 
 ## Deployment / indexing
