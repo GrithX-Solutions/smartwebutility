@@ -114,8 +114,16 @@
     "category": "Developer",
     "url": "/json-escape-unescape/",
     "title": "JSON Escape / Unescape",
-    "description": "Escape JSON string content or decode JSON escape sequences.",
-    "keywords": []
+    "description": "Escape JSON string content or decode JSON escape sequences with context-specific guidance.",
+    "keywords": [
+      "json escape",
+      "json escape chars",
+      "json escape online",
+      "json escape character",
+      "json escape quote",
+      "json escape double quote",
+      "json escape unescape"
+    ]
   },
   {
     "category": "Developer",
