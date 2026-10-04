@@ -60,27 +60,29 @@ Research record:
 
 ## Current page
 
-### Page 11 — /json-escape-unescape/
+### Page 12 — /html-minifier/
 
-Status: VERIFIED ON BRANCH.
+Status: IMPLEMENTED ON BRANCH; CI PENDING.
 
 Research evidence:
-- `json escape`: 1,900 US searches/month, SD 32.
-- `json escape chars`: 590, SD 13.
-- `json escape online`: 320, SD 31.
-- Current SERP includes a DA 16 utility at position 1.
+- `html minifier`: 1,600 US searches/month, SD 32, CPC $11.24.
+- Current SERP includes DA 5–25 utility domains.
 
 Confirmed gap:
-- implementation was already correct for JSON strings;
-- page under-explained context boundaries and the practical purpose of optional `\/`.
+- advanced option wording said “Remove safe attribute quotes”;
+- upstream v7.2.0 issue #183 shows syntactically unquoted Open Graph attributes can break WhatsApp preview behavior.
 
 Implemented:
-- explicit JSON-vs-HTML/URL/SQL/shell boundary guidance;
-- explain `</script>` and optional slash escaping;
-- clarify ordinary Unicode need not be forced to `\uXXXX`;
-- preserve focused scope: no new HTML-safe or ASCII-only toggle because verified direct demand is minimal;
-- update search aliases and sitemap lastmod;
-- add browser regression for slash escaping, Unicode preservation and existing malformed-escape rejection.
+- rename to “Remove eligible attribute quotes”;
+- explain downstream/social-parser compatibility risk;
+- keep quote removal off by default;
+- add browser regression proving default off and actual Open Graph quote removal when enabled;
+- update sitemap lastmod.
+
+Dependency decision:
+- v7.2.0 remains latest official upstream release;
+- CVE-2022-37620 package applicability is PARTIALLY VERIFIED / ambiguous across advisory databases;
+- no speculative dependency replacement in this audit.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
