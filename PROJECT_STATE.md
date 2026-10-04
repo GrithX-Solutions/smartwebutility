@@ -305,3 +305,26 @@ Shared direct requirements:
 ## NEXT ACTION
 
 Run the ZTHosting isolated Build/static/Chromium gate for Page 15. Fix any cURL/SEO/content/browser failure before researching Page 16. Do not deploy production.
+
+
+## Current CI infrastructure blocker
+
+Status: BLOCKED.
+
+- Page 12 HTML-to-Markdown application/content implementation itself is VERIFIED:
+  - Build 714: SUCCESS.
+  - SEO QA: 89 pages, 0 errors, 0 warnings.
+  - Content QA: 0 errors, 2 retained advisories.
+  - Chromium 398: SUCCESS.
+- Page 12 documentation checkpoint later exposed a reproducible unrelated HTML Minifier test dependency on forced UNPKG fallback:
+  - Chromium 407 attempts 1–3 failed only on `html-minifier`; `html-to-markdown` and 143 other browser checks passed.
+- Test hardening commit `59d223ddfd98add1ac0909723ea836d04039ac91` separates:
+  - deterministic mocked provider-fallback control-flow coverage; and
+  - real minifier behavior through the normal production worker provider order.
+- CI could not execute that commit:
+  - Build 768 attempt 1: FAILED before any steps/logs.
+  - Build 768 attempt 2: FAILED before any steps/logs.
+  - Chromium 452 attempt 1: FAILED before any steps/logs.
+  - Chromium 452 attempt 2: FAILED before any steps/logs.
+- These four startup failures have no workflow steps and no job logs, so they are classified as external GitHub Actions runner/infrastructure failures, not repository test failures.
+- Page 13 remains blocked by the page-by-page hard gate until a real Build + Chromium execution completes on the hardened branch head.
