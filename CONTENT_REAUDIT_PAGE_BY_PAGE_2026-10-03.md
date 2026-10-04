@@ -2862,3 +2862,95 @@ While GitHub-hosted runners/quota are unavailable:
 - Never use `site.current`, `site.prev` or production containers as the working CI tree.
 - Do not deploy page-by-page.
 - Continue one page at a time only after the previous page passes the ZTHosting fallback gate.
+
+
+---
+
+## Page 15 — /curl-converter/
+
+Research/update date: 2026-10-04  
+Status: IMPLEMENTED, ZTHOSTING CI PENDING
+
+### Primary intent
+Convert cURL API request examples into application code without executing the request.
+
+Canonical owner:
+- `https://smartwebutility.com/curl-converter/`
+
+### Ubersuggest US evidence
+- `curl converter`: 720 searches/month, SD 34, CPC $30.57.
+- `curl to python`: 590, SD 39.
+- `curl json post`: 720, SD 33.
+- `curl post json`: 480, SD 33.
+- `curl --json`: 140, SD 18.
+- `curl json`: 140, SD 35.
+
+Current U.S. SERP includes multiple low-authority competitors:
+- Penumbra Forge — DA 2 at position 2.
+- induwara.lk — DA 12.
+- compu-tools — DA 6.
+- WebUtils.dev — DA 4.
+- veojson.com — DA 4.
+- ScaleWhite — DA 3.
+- Toolbox4devs — DA 3.
+- ScrapingBot — DA 7.
+
+### Existing strengths before this change
+Already supported:
+- Python requests, JavaScript fetch, Axios and PHP cURL output.
+- Shell-like quoting and line continuations.
+- method/header/data/auth/cookie/user-agent/referer parsing.
+- GET query conversion with `-G`.
+- JSON detection from JSON Content-Type.
+- explicit rejection of shell pipelines, variables, command substitution, multipart/file-body ambiguity and unsupported flags.
+- browser-local conversion and credential warnings.
+
+### Confirmed product gap
+The parser rejected curl's modern `--json` option.
+
+Official curl documentation defines `--json` (added in 7.82.0) as a shortcut for:
+- `--data-binary [arg]`
+- `Content-Type: application/json`
+- `Accept: application/json`
+
+curl also permits repeated `--json` arguments and concatenates those fragments before sending. Current converter competitors explicitly advertise `--json` handling.
+
+### Implementation
+`assets/curl-converter.js` now:
+- supports inline `--json <data>`;
+- concatenates repeated inline `--json` fragments without `&`;
+- infers POST when no request method is specified;
+- adds default JSON Content-Type and Accept headers only when the source did not explicitly provide them;
+- recognizes JSON payload semantics even when an explicit custom `application/*+json` Content-Type is used;
+- keeps JSON-native generation in Python/fetch/Axios where the inline data parses successfully;
+- rejects `--json @file` and `--json @-` because pasted command text cannot provide shell-local file/stdin contents;
+- rejects mixing `--json` with existing `-d/--data` forms rather than guessing curl combination semantics;
+- rejects `--json` with `-G` or HEAD in this converter.
+
+### Content/search update
+- page now documents curl 7.82.0 `--json` semantics;
+- explains repeated fragment concatenation and header overrides;
+- explicitly documents unsupported file/stdin JSON forms;
+- internal search aliases now include `curl to python`, `curl json`, `curl json post`, `curl post json`, `curl to fetch` and `curl to axios`;
+- sitemap lastmod updated to 2026-10-04.
+
+### Regression coverage
+Chromium test now verifies:
+- repeated inline `--json` fragments become one valid JSON body;
+- default Content-Type and Accept headers are present;
+- Python uses native JSON payload output;
+- explicit custom JSON Content-Type/Accept headers are preserved without duplicate defaults;
+- fetch still uses JSON-native output;
+- `--json @payload.json` fails visibly;
+- existing multipart rejection remains.
+
+### Page 15 acceptance status
+- Demand / difficulty: VERIFIED.
+- Current SERP intent/attainability: VERIFIED.
+- Canonical ownership: VERIFIED.
+- Existing implementation inspected: VERIFIED.
+- Product gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Browser regression coverage: COMPLETED.
+- ZTHosting isolated CI: PENDING.
+- Production deployment: NOT STARTED.
