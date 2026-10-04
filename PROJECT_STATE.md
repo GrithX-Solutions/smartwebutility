@@ -60,34 +60,28 @@ Research record:
 
 ## Current page
 
-### Page 9 — /markdown-to-html/
+### Page 10 — /yaml-formatter/
 
-Status: VERIFIED ON BRANCH.
+Status: IMPLEMENTED ON BRANCH; CI PENDING.
 
 Research evidence:
-- `markdown to html`: 2,400 US searches/month, SD 27, CPC $10.12.
-- `markdown to html converter`: 320, SD 31.
-- `markdown to html converter online`: 50, SD 12.
-- Current SERP includes DA 3–25 converter sites.
+- `yaml formatter`: 2,400 US searches/month, SD 18, CPC $21.91.
+- `yaml formatter online`: 140, SD 24.
+- Current SERP includes DA 4–11 utility domains.
 
 Confirmed gap:
-- Marked does not sanitize generated HTML;
-- existing preview isolation was strong, but copied/downloaded HTML remained raw.
+- existing formatter used single-document `jsyaml.load()`;
+- valid YAML streams with multiple `---` documents were rejected.
 
 Implemented:
-- pinned DOMPurify 3.4.16 browser-side sanitization;
-- sanitized output enabled by default;
-- explicit raw-output opt-out;
-- output/copy/download/preview all use selected mode;
-- sandbox + restrictive CSP retained in both modes;
-- Chromium XSS regression for script/event attributes and raw-preview non-execution;
-- updated semantic copy, search aliases and sitemap lastmod.
-
-Dependency decision:
-- security gap justifies the additional pinned browser ESM;
-- no server package/framework/backend added;
-- conversion content remains local;
-- CDN runtime dependency is explicitly retained/known.
+- `jsyaml.loadAll()` stream parsing;
+- format each document independently;
+- preserve explicit `---` boundaries for multi-document output;
+- keep single-document output behavior unchanged;
+- show document count in stats;
+- invalidate/clear the whole output when any stream document is invalid;
+- update visible semantic guidance, tool-search aliases and sitemap lastmod;
+- add Chromium coverage for single/multi/invalid-stream cases.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
