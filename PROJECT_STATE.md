@@ -60,28 +60,27 @@ Research record:
 
 ## Current page
 
-### Page 13 — /html-minifier/
+### Page 14 — /css-minifier/
 
-Status: VERIFIED ON BRANCH.
+Status: IMPLEMENTED ON BRANCH; CI PENDING.
 
 Research evidence:
-- `html minifier`: 1,600 US searches/month, SD 32, CPC $11.24.
-- `online html minifier`: 110, SD 32.
-- Current SERP includes lower-authority utility domains below stronger incumbents.
+- `css minifier`: 720 US searches/month, SD 26, transactional.
+- `online css minifier`: 110, SD 46.
+- Current U.S. SERP includes several DA 4–19 utility domains.
 
-Verified reliability gap:
-- Page 12 functional head passed Build 714 and Chromium 398.
-- A later documentation checkpoint failed browser validation twice only at HTML Minifier worker startup.
-- 143 other browser checks passed on those attempts.
-- Diagnostic head `20a01b8…` later passed Build 729 and Chromium 413.
+Confirmed gap:
+- existing CSSO call forced `comments:false`;
+- that removed `/*! ... */` banners often used for license/copyright/build notices.
 
 Implemented:
-- jsDelivr primary and UNPKG secondary for the same pinned html-minifier-terser 7.2.0 worker engine;
-- six-second provider startup fallback;
-- provider-specific startup errors;
-- existing eight-second execution timeout preserved;
-- browser fallback coverage;
-- public privacy/reliability disclosure.
+- preserve CSSO exclamation comments by default;
+- user can explicitly remove all comments;
+- ordinary comments still removed;
+- Clear restores safer default;
+- stats disclose comment mode;
+- updated visible guidance, WebApplication metadata, search aliases and sitemap lastmod;
+- Chromium regression for preserved/removed comment modes plus existing restructuring behavior.
 
 Production remains unchanged.
 
@@ -272,4 +271,4 @@ Shared direct requirements:
 
 ## NEXT ACTION
 
-Verify the documentation-only Page 3 state head. If green, select exactly one Page 4 from fresh U.S. demand + current SERP evidence. Do not deploy production.
+Run Build and Chromium CI on the final Page 14 CSS Minifier head. Fix any CSS/SEO/content/browser failure before selecting Page 15. Do not deploy production.
