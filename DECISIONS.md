@@ -31,3 +31,21 @@ Do not merge or deploy material changes until applicable Build and Chromium/brow
 Status: ACTIVE
 
 Grammar/punctuation heuristics must not classify punctuation inside inline `<code>` examples as prose errors. Code/protocol literals remain subject to technical correctness but are excluded from ordinary prose punctuation matching.
+
+
+## 2026-10-04 — ZTHosting isolated CI is the approved GitHub Actions fallback
+
+Status: ACTIVE
+
+When GitHub-hosted Actions cannot allocate runners, reaches package/quota limits, or otherwise fails before repository tests execute, do not block the audit or consume repeated hosted reruns.
+
+Use the ZTHosting MCP server as an isolated CI fallback with these constraints:
+- GitHub remains authoritative for source, commits and PR history.
+- Verify the exact source/runtime handoff using an authenticated artifact or a proven runtime-equivalent green checkpoint plus Git diff evidence.
+- Verify artifact SHA-256 on the server before testing.
+- Use `/srv/smartwebutility-ci/` or another explicitly non-production workspace.
+- Never use `/srv/smartwebutility/site.current`, `site.prev`, production release directories or running production containers as the CI worktree.
+- Mirror the applicable Build gate: PHP/JavaScript syntax, static SEO QA and content QA.
+- Mirror Chromium with the pinned project Playwright version; currently Playwright 1.55.1.
+- A server fallback PASS can unblock the next page, but it does not authorize production deployment.
+- Production still requires the final one-go verified release, rollback preservation and live checks.
