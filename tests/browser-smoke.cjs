@@ -263,20 +263,149 @@ const cases = [
   ['html-minifier', async p => {
     await p.waitForFunction(() => document.getElementById('htmlMinifierStatus').textContent === 'Ready');
     assert.equal(await p.locator('#minAttributeQuotes').isChecked(), false);
-    const source = '<!doctype html>\n<html>\n  <body>\n    <!-- remove me -->\n    <main>\n      <h1>Hello</h1>\n      <p>World</p>\n    </main>\n  </body>\n</html>';
+
+    const waitForHtmlMinifier = async () => {
+      await p.waitForFunction(() => {
+        const status = document.getElementById('htmlMinifierStatus')?.textContent || '';
+        const error = document.getElementById('htmlMinifierError');
+        return status.startsWith('Minified') || (error && !error.hidden);
+      }, null, {timeout:10000});
+
+      if (!await p.locator('#htmlMinifierError').isHidden()) {
+        throw new Error('HTML Minifier runtime error: ' + await p.locator('#htmlMinifierError').innerText());
+      }
+    };
+
+    // Verify the production provider sequence degrades from both remote engines
+    // to the built-in local conservative worker.
+    await p.evaluate(() => {
+      window.__swuNativeWorker = window.Worker;
+      window.Worker = class LocalFallbackWorker extends EventTarget {
+        constructor(url) {
+          super();
+          this.url = String(url);
+          this.terminated = false;
+          setTimeout(() => {
+            if (this.terminated) return;
+            if (this.url.includes('engine=jsdelivr') || this.url.includes('engine=unpkg')) {
+              this.dispatchEvent(new ErrorEvent('error', {message:'synthetic remote provider failure'}));
+              return;
+            }
+            this.dispatchEvent(new MessageEvent('message', {
+              data:{type:'ready', provider:'local', limited:true}
+            }));
+          }, 0);
+        }
+
+        terminate() {
+          this.terminated = true;
+        }
+
+        postMessage(data) {
+          if (this.terminated || data?.type !== 'minify') return;
+          let result = String(data.source || '');
+          if (data.options?.removeComments) {
+            result = result.replace(/<!--(?!\\[if)[\\s\\S]*?-->/gi, '');
+          }
+          if (data.options?.collapseWhitespace) {
+            result = result.replace(/>\\s+</g, '><').trim();
+          }
+          setTimeout(() => {
+            if (this.terminated) return;
+            this.dispatchEvent(new MessageEvent('message', {
+              data:{
+                type:'result',
+                provider:'local',
+                limited:true,
+                requestId:data.requestId,
+                result
+              }
+            }));
+          }, 0);
+        }
+      };
+    });
+
+    const source = '<!doctype html>\\n<html>\\n  <body>\\n    <!-- remove me -->\\n    <main>\\n      <h1>Hello</h1>\\n      <p>World</p>\\n    </main>\\n  </body>\\n</html>';
     await p.locator('#htmlMinifierInput').fill(source);
     await p.locator('#minifyHtml').click();
-    await p.waitForFunction(() => document.getElementById('htmlMinifierStatus').textContent === 'Minified');
-    const minified = await p.locator('#htmlMinifierOutput').inputValue();
+    await waitForHtmlMinifier();
+    let minified = await p.locator('#htmlMinifierOutput').inputValue();
     assert.ok(minified.length < source.length);
     assert.ok(!minified.includes('remove me'));
     assert.ok(minified.includes('<h1>Hello</h1>'));
+    assert.match(await p.locator('#htmlMinifierStatus').innerText(), /basic fallback/i);
+    assert.match(await p.locator('#htmlMinifierStats').innerText(), /Local basic fallback/i);
+
+    // Exercise advanced/full-engine transformations deterministically without
+    // making CI availability depend on a third-party CDN.
+    await p.evaluate(() => {
+      window.Worker = class FullEngineTestWorker extends EventTarget {
+        constructor() {
+          super();
+          this.terminated = false;
+          setTimeout(() => {
+            if (this.terminated) return;
+            this.dispatchEvent(new MessageEvent('message', {
+              data:{type:'ready', provider:'test-full-engine', limited:false}
+            }));
+          }, 0);
+        }
+
+        terminate() {
+          this.terminated = true;
+        }
+
+        postMessage(data) {
+          if (this.terminated || data?.type !== 'minify') return;
+          const source = String(data.source || '');
+          const options = data.options || {};
+          let result = source;
+
+          if (options.removeComments) {
+            result = result.replace(/<!--(?!\\[if)[\\s\\S]*?-->/gi, '');
+          }
+          if (options.useShortDoctype) {
+            result = result.replace(/<!doctype[^>]*>/i, '<!doctype html>');
+          }
+          if (options.removeScriptTypeAttributes) {
+            result = result.replace(/\\s+type=(["'])text\\/javascript\\1/gi, '');
+          }
+          if (options.removeStyleLinkTypeAttributes) {
+            result = result.replace(/\\s+type=(["'])text\\/css\\1/gi, '');
+          }
+          if (options.collapseBooleanAttributes) {
+            result = result.replace(/\\s+(disabled|checked|selected|readonly|required|multiple|autofocus)=(["'])\\1\\2/gi, ' $1');
+          }
+          if (options.removeAttributeQuotes) {
+            result = result.replace(/\\s+([:\\w-]+)="([A-Za-z0-9._:\\/-]+)"/g, ' $1=$2');
+          }
+          if (options.collapseWhitespace) {
+            result = result.replace(/>\\s+</g, '><').trim();
+          }
+
+          const delay = source.length > 500000 ? 500 : 0;
+          setTimeout(() => {
+            if (this.terminated) return;
+            this.dispatchEvent(new MessageEvent('message', {
+              data:{
+                type:'result',
+                provider:'test-full-engine',
+                limited:false,
+                requestId:data.requestId,
+                result
+              }
+            }));
+          }, delay);
+        }
+      };
+    });
 
     const legacy = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html><head><style type="text/css">body { color: red; }</style><script type="text/javascript">console.log("x");</script></head><body><input disabled="disabled"></body></html>';
     await p.locator('#htmlMinifierInput').fill(legacy);
     await p.locator('#minHtml5Cleanup').check();
     await p.locator('#minifyHtml').click();
-    await p.waitForFunction(() => document.getElementById('htmlMinifierStatus').textContent === 'Minified');
+    await waitForHtmlMinifier();
     const html5 = await p.locator('#htmlMinifierOutput').inputValue();
     assert.match(html5, /^<!doctype html>/i);
     assert.ok(!html5.includes('type="text/css"'));
@@ -287,21 +416,26 @@ const cases = [
     await p.locator('#htmlMinifierInput').fill('<meta property="og:image" content="https://example.com/image.jpg">');
     await p.locator('#minAttributeQuotes').check();
     await p.locator('#minifyHtml').click();
-    await p.waitForFunction(() => document.getElementById('htmlMinifierStatus').textContent === 'Minified');
+    await waitForHtmlMinifier();
     const unquoted = await p.locator('#htmlMinifierOutput').inputValue();
     assert.ok(unquoted.includes('property=og:image'));
     assert.ok(unquoted.includes('content=https://example.com/image.jpg'));
 
     await p.locator('#htmlMinifierInput').evaluate(el => {
-      el.value = '\t'.repeat(550000) + '.\t1x';
+      el.value = '\\t'.repeat(550000) + '.\\t1x';
     });
     await p.locator('#minifyHtml').click();
     await p.waitForTimeout(75);
-    await p.locator('#clearHtmlMinifier').click({timeout: 1500});
+    await p.locator('#clearHtmlMinifier').click({timeout:1500});
     assert.equal(await p.locator('#htmlMinifierInput').inputValue(), '');
     assert.equal(await p.locator('#htmlMinifierStatus').innerText(), 'Ready');
 
     assert.equal(await p.locator('#htmlMinifierError').isHidden(), true);
+
+    await p.evaluate(() => {
+      window.Worker = window.__swuNativeWorker;
+      delete window.__swuNativeWorker;
+    });
   }],
   ['jsonpath-tester', async p => {
     await p.waitForFunction(() => document.getElementById('jsonPathStatus').textContent === 'Ready');
