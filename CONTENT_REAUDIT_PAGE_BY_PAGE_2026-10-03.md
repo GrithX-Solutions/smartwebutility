@@ -2084,5 +2084,10 @@ Chromium coverage now verifies:
 - Product/security gap: VERIFIED.
 - Implementation: COMPLETED on working branch.
 - Browser regression coverage: COMPLETED.
-- Static/Build/Chromium CI: PENDING.
+- Build run 686: SUCCESS.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings on Password Generator and Text Tools.
+- Chromium run 370: SUCCESS.
+- Sanitized/raw-mode XSS regression: PASS.
+- Sitemap-wide browser initialization: PASS.
 - Production deployment: NOT STARTED.
