@@ -3106,8 +3106,8 @@ Unrelated failures found by broad checks do not invalidate a page-specific audit
 
 ## Page 15 — /uuid-validator/
 
-Research/update date: 2026-10-05  
-Status: PARTIALLY VERIFIED — CI BLOCKED
+Research/update date: 2026-10-06  
+Status: VERIFIED VIA ISOLATED CI FALLBACK
 
 ### Primary intent
 Validate UUID/GUID text, identify version/variant and normalize common textual forms.
@@ -3187,6 +3187,28 @@ The browser case now verifies:
 - the same parenthesized value becomes invalid when wrapper compatibility is disabled;
 - existing v7 timestamp, reserved-variant and malformed-input checks remain.
 
+### Isolated CI validation — 2026-10-06
+The existing `uuid-validator-b991890` workspace was initially stale. Acceptance was deliberately withheld until the five material files were restaged from the current GitHub branch and their Git blob identities matched exactly:
+
+- `uuid-validator/index.html` — `486a395685a6190e35c8ec98cf15b47d8eab9284`
+- `assets/uuid-validator.js` — `482f665ef283e1f56f33acc48914717ec7a7cf8a`
+- `tests/browser-smoke.cjs` — `dc97cfeabbb84e3c49173298dec9e44867c39981`
+- `assets/tool-catalog.json` — `648481e06d35c8e308ec51a8350cf0f4ea7c102b`
+- `sitemap.xml` — `28ec3f9c22b18f09d811f181e3ffd814ddb925dd`
+
+Isolated fallback gate:
+- static SEO QA: 89 pages, 0 errors, 0 warnings;
+- content QA: 89 pages, 0 errors, 2 intentionally retained advisories;
+- `assets/uuid-validator.js` syntax: PASS in `mcr.microsoft.com/playwright:v1.55.1-noble`;
+- committed `tests/browser-smoke.cjs` syntax: PASS;
+- Chromium smoke explicitly reported `PASS uuid-validator`;
+- browser page sweep checked 89 pages;
+- active navigation, global tool search/navigation and mobile layout checks passed.
+
+The broad smoke run finished 142 passed / 2 failed because `html-minifier` and `css-minifier` each timed out waiting for their provider readiness. Those two failures are unrelated to UUID Validator and do not invalidate this page-specific acceptance. They remain a final-batch release concern and must be green before merge/deploy.
+
+Production paths were not used as the CI workspace and production was not deployed.
+
 ### Scope decision
 No attempt was made to turn this page into a general UUID decoder.
 
@@ -3199,8 +3221,12 @@ Although `uuid decoder` has measurable demand, decoder intent is broader than va
 - Existing implementation inspected: VERIFIED.
 - Product compatibility gap: VERIFIED.
 - Implementation: COMPLETED on working branch.
-- Page-specific regression coverage: UPDATED.
-- Automated CI result: BLOCKED because GitHub Actions currently fails before runner assignment.
+- Page-specific regression coverage: VERIFIED.
+- Static SEO/content QA: VERIFIED via isolated fallback.
+- JavaScript syntax: VERIFIED via pinned Playwright container.
+- UUID Validator Chromium regression: VERIFIED.
+- GitHub-hosted Actions: infrastructure-unreliable; isolated fallback used instead.
+- Broad smoke status: 142/144, with only unrelated HTML/CSS Minifier readiness timeouts.
 - Production deployment: NOT STARTED.
 
 
