@@ -67,7 +67,7 @@ Research record:
 
 ### Page 13 — /html-minifier/
 
-Status: IMPLEMENTED ON BRANCH; PAGE-SCOPED CI PENDING.
+Status: PARTIALLY VERIFIED — GITHUB ACTIONS BLOCKED.
 
 Research evidence:
 - `html minifier`: 1,600 US searches/month, SD 32, CPC $11.24.
@@ -269,6 +269,19 @@ Page 15 cURL Converter validation:
 - Global tool search/navigation: PASS.
 - Mobile navigation/layout: PASS.
 - Production deployment: NOT STARTED.
+
+## CI infrastructure blocker
+
+BLOCKED:
+- Current pull-request GitHub Actions jobs are failing before runner assignment.
+- Page 13 head `c0292f5c8fce787af822b2f47384b0453c617a52`:
+  - Build run 799: failure before steps, `runner_id: 0`.
+  - Browser run 483: failure before steps, `runner_id: 0`.
+  - Failed-job rerun attempt 2 repeated the same condition.
+- Multiple immediately preceding branch-head Build/Browser runs show the same no-runner failure pattern.
+- Therefore these runs do not validate or invalidate Page 13 code.
+- Continue page-by-page source work with truthful PARTIALLY VERIFIED / CI BLOCKED status.
+- Do not merge, deploy, index or claim batch completion until GitHub Actions runs normally and the final full release gate is green.
 
 ## Deployment / indexing
 
