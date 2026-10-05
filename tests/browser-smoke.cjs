@@ -635,6 +635,17 @@ const cases = [
     assert.ok(result.includes('&quot;quoted&quot;'));
     assert.ok(result.includes("'single'"));
 
+    await p.evaluate(() => {
+      const input = document.getElementById('xmlEscapeInput');
+      input.value = 'safe' + String.fromCharCode(0) + 'unsafe';
+    });
+    await p.locator('#runXmlEscape').click();
+    assert.equal(await p.locator('#xmlEscapeOutput').inputValue(), '');
+    assert.equal(await p.locator('#xmlEscapeError').isHidden(), false);
+    const invalidMessage = await p.locator('#xmlEscapeError').innerText();
+    assert.ok(invalidMessage.includes('XML 1.0'));
+    assert.ok(invalidMessage.includes('U+0000'));
+
     await p.locator('#xmlEscapeMode').selectOption('unescape');
     await p.locator('#xmlEscapeInput').fill('&lt;tag&gt;Tom &amp; Jerry&#33; &#x1F600; &nbsp; &#0;');
     await p.locator('#runXmlEscape').click();
