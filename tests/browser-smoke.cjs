@@ -89,9 +89,14 @@ const cases = [
     assert.ok(formatted.includes('<catalog>'));
     assert.ok(formatted.includes('  <item id="1">'));
     assert.equal(await p.locator('#xmlFormatError').isHidden(), true);
-    await p.locator('#xmlFormatInput').fill('<catalog><item></catalog>');
+
+    await p.locator('#xmlFormatInput').fill('<catalog>\n  <item>\n</catalog>');
     await p.locator('#validateXml').click();
     assert.equal(await p.locator('#xmlFormatError').isHidden(), false);
+    const parseError = await p.locator('#xmlFormatError').innerText();
+    assert.match(parseError, /Invalid XML/i);
+    assert.match(parseError, /line\s+\d+/i);
+    assert.match(parseError, /column\s+\d+/i);
   }],
   ['toml-formatter-validator', async p => {
     await p.locator('#tomlInput').fill('title = "Example"\n\n[database]\nserver = "db.example.com"\n');
