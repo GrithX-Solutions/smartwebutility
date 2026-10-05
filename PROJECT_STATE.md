@@ -1,6 +1,6 @@
 # Smart Web Utility — Project State
 
-Last verified: 2026-10-05
+Last verified: 2026-10-06
 
 ## Objective
 
@@ -11,6 +11,7 @@ Run the remaining content/SEO re-audit page by page. Research, improve, test and
 - Current production source/artifact SHA: `04ce96286f0baaff1a175f4cae7c9491b0607688`
 - Current GitHub main state-only head before this batch: `ee460eb96606bbf93cd7a8347e51be8c851672d3`
 - Working branch: `content-reaudit-page-by-page-2026-10-03`
+- UUID Validator audit evidence commit before state sync: `ac43beb102cac6a4a940f266e74cec721061a0b1`.
 - Page 15 implementation head before CI-result state sync: `faee67d5881be04c1df8e988a02dd7055591a867`.
 - Verified recovery content baseline: `ba595d2a3c5d09539ad62fd5995df445895df686`.
 - Recovery baseline has zero file diff versus verified/blocker checkpoint `ee5a1742b593ad5984a8bb0ba57f2f3f31110cbb`; only Git history differs.
@@ -65,21 +66,21 @@ Research record:
 
 ## Current page
 
-### /uuid-validator/ — validation closure
+### /xml-escape-unescape/ — next page research
 
-Status: PARTIALLY VERIFIED — ISOLATED CI FALLBACK PENDING.
+Status: UNKNOWN — NOT YET AUDITED UNDER THE CURRENT HARD GATE.
 
-Implementation/research are already complete on GitHub:
-- `uuid validator`: 320 US searches/month, SD 15.
-- `guid validator`: 320, SD 17.
-- parenthesized Microsoft/.NET GUID P-format support added;
-- canonical lowercase normalization retained;
-- wrapper-off rejection regression added;
-- public copy documents D/B/P/N compatibility and scope boundaries.
+UUID Validator is now VERIFIED via the approved isolated ZTHosting fallback:
+- exact current-branch Git blob identity was verified for the page HTML, implementation JS, browser test, tool catalog and sitemap;
+- static SEO QA passed 89 pages with 0 errors / 0 warnings;
+- content QA passed with 0 errors and the same 2 intentionally retained advisories;
+- JavaScript syntax passed in the pinned Playwright 1.55.1 image;
+- committed Chromium smoke explicitly reported `PASS uuid-validator`;
+- production was not used as the CI workspace and was not deployed.
 
-The immediately preceding XML Formatter & Validator page is now VERIFIED via the approved isolated ZTHosting CI fallback.
+Meta Tag Generator remains a completed evidence-based no-change review.
 
-Meta Tag Generator has also been reviewed and intentionally left unchanged; it requires no runtime implementation gate.
+The next unresolved canonical in the page-by-page queue is `/xml-escape-unescape/`. No change is authorized until Ubersuggest US demand, the current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
@@ -264,6 +265,24 @@ Page 15 cURL Converter validation:
 - Mobile navigation/layout: PASS.
 - Production deployment: NOT STARTED.
 
+UUID Validator isolated validation — 2026-10-06:
+- Implementation/research material files: VERIFIED current GitHub branch identity.
+- `uuid-validator/index.html`: `486a395685a6190e35c8ec98cf15b47d8eab9284`.
+- `assets/uuid-validator.js`: `482f665ef283e1f56f33acc48914717ec7a7cf8a`.
+- `tests/browser-smoke.cjs`: `dc97cfeabbb84e3c49173298dec9e44867c39981`.
+- `assets/tool-catalog.json`: `648481e06d35c8e308ec51a8350cf0f4ea7c102b`.
+- `sitemap.xml`: `28ec3f9c22b18f09d811f181e3ffd814ddb925dd`.
+- ZTHosting static SEO QA: 89 pages, 0 errors, 0 warnings.
+- ZTHosting content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- UUID Validator JavaScript syntax: PASS in `mcr.microsoft.com/playwright:v1.55.1-noble`.
+- Committed browser-smoke syntax: PASS.
+- Chromium: `PASS uuid-validator`.
+- Browser page sweep: 89 pages checked.
+- Active navigation, global tool search/navigation and mobile layout: PASS.
+- Broad smoke total: 142 passed, 2 failed; only `html-minifier` and `css-minifier` timed out waiting for provider readiness.
+- Those two broad-suite failures are unrelated to UUID Validator, so the page-specific gate is VERIFIED; they must still be green before the final batch merge/deploy.
+- Production mutation: NONE.
+
 ## CI infrastructure blocker
 
 BLOCKED:
@@ -296,8 +315,9 @@ XML Formatter & Validator isolated validation:
 
 ## Blockers
 
-- GitHub-hosted Actions runner allocation remains unreliable for this branch.
-- This does not currently block the audit because the approved ZTHosting isolated CI fallback has passed the equivalent Page 15 Build/static/browser gate on a non-production workspace.
+- GitHub-hosted Actions runner allocation remains unreliable for this long-running branch.
+- The approved isolated ZTHosting fallback remains operational and has now verified cURL Converter, XML Formatter & Validator and UUID Validator without using production as a CI workspace.
+- The latest broad Chromium smoke on the UUID Validator snapshot was 142/144 because HTML Minifier and CSS Minifier each timed out on provider readiness. This is not a UUID Validator failure, but final merge/deploy remains blocked until the accumulated branch is fully green.
 - Production deployment remains intentionally blocked until the complete page-by-page batch is finished and one final controlled release gate is approved.
 
 ## Risks
@@ -309,15 +329,15 @@ XML Formatter & Validator isolated validation:
 
 ## Work in progress
 
-XML Formatter & Validator is verified via the isolated fallback. UUID Validator is the next unresolved implementation gate. Meta Tag Generator is a completed no-change review. Production remains unchanged.
+UUID Validator is VERIFIED via the isolated fallback. Meta Tag Generator remains a completed no-change review. The next page is `/xml-escape-unescape/`, beginning with research only. Production remains unchanged.
 
 ## Affected files — completed/current pages
 
-Page 15:
-- `curl-converter/index.html`
-- `assets/curl-converter.js`
+Most recently verified page:
+- `uuid-validator/index.html`
+- `assets/uuid-validator.js`
 
-Shared direct requirements:
+Shared direct requirements verified with that page:
 - `assets/tool-catalog.json`
 - `tests/browser-smoke.cjs`
 - `sitemap.xml`
@@ -326,12 +346,13 @@ Shared direct requirements:
 
 ## NEXT ACTION
 
-Validate `/uuid-validator/` using the approved isolated CI fallback:
-1. create a non-production workspace derived from the verified XML/current audit snapshot;
-2. stage the exact GitHub UUID Validator material files from commit `b991890ac58ae2060b9d60e52dbb473a10d03412`;
-3. verify Git blob identity;
-4. run static SEO/content QA, JavaScript syntax and targeted Chromium regression;
-5. record the result before researching the next page.
+Audit `/xml-escape-unescape/` as the next and only active page:
+1. verify Ubersuggest U.S. demand, difficulty, CPC/intent and useful semantic variants;
+2. inspect the current U.S. SERP and relevant competitors;
+3. confirm canonical ownership and no cannibalization;
+4. inspect current functionality/content against the verified intent;
+5. identify a concrete product/content gap or record an evidence-based NO CHANGE decision;
+6. only if a real gap exists, implement that page plus directly required tests/search metadata and validate it before moving to another page.
 
 Do not deploy production.
 
