@@ -65,27 +65,28 @@ Research record:
 
 ## Current page
 
-### Page 13 — /html-minifier/
+### Page 14 — /css-minifier/
 
 Status: PARTIALLY VERIFIED — GITHUB ACTIONS BLOCKED.
 
 Research evidence:
-- `html minifier`: 1,600 US searches/month, SD 32, CPC $11.24.
-- Current U.S. SERP includes lower-authority utilities down to DA 5–25.
+- `css minifier`: 720 US searches/month, SD 26, transactional.
+- Current U.S. SERP includes multiple DA 4–19 utility domains.
 
 Confirmed gap:
-- page script reported `Ready` before the Web Worker engine was proven loadable;
-- Chromium 407 and rerun attempt 3 reproduced the HTML Minifier readiness/runtime failure.
+- CSSO engine depended on a single hard-coded jsDelivr script;
+- no fallback or precise engine-ready/error contract existed.
 
 Implemented:
-- worker-engine startup preflight;
-- real engine-ready/error state;
-- jsDelivr -> UNPKG pinned-provider fallback during preflight;
+- jsDelivr → UNPKG fallback for pinned CSSO 5.0.5;
 - 10-second provider startup boundary;
-- minify action waits for preflight when needed;
-- public copy now defines Ready accurately;
-- browser test reports the actual provider/load failure instead of timing out ambiguously;
-- existing real worker/fallback/aggressive-option/cancel regressions preserved.
+- explicit engine-ready/provider/error diagnostics;
+- Ready only after `csso.minify` is available;
+- minification awaits engine initialization;
+- removed the single fixed CDN script tag;
+- updated privacy/reliability guidance;
+- updated browser regression startup checks;
+- sitemap lastmod updated to 2026-10-05.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
