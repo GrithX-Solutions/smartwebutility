@@ -2869,7 +2869,7 @@ While GitHub-hosted runners/quota are unavailable:
 ## Page 15 — /curl-converter/
 
 Research/update date: 2026-10-04  
-Status: IMPLEMENTED, ZTHOSTING CI PENDING
+Status: VERIFIED ON BRANCH
 
 ### Primary intent
 Convert cURL API request examples into application code without executing the request.
@@ -2932,7 +2932,7 @@ curl also permits repeated `--json` arguments and concatenates those fragments b
 - explains repeated fragment concatenation and header overrides;
 - explicitly documents unsupported file/stdin JSON forms;
 - internal search aliases now include `curl to python`, `curl json`, `curl json post`, `curl post json`, `curl to fetch` and `curl to axios`;
-- sitemap lastmod updated to 2026-10-04.
+- sitemap lastmod updated to 2026-10-05 after the final editorial correction.
 
 ### Regression coverage
 Chromium test now verifies:
@@ -2952,5 +2952,17 @@ Chromium test now verifies:
 - Product gap: VERIFIED.
 - Implementation: COMPLETED on working branch.
 - Browser regression coverage: COMPLETED.
-- ZTHosting isolated CI: PENDING.
+- GitHub material-file identity vs staged CI workspace: VERIFIED by exact Git blob SHA match for:
+  - `curl-converter/index.html` — `dc9cfcc0f1d772ae477fd4daf00e514ebf7d8a83`
+  - `assets/curl-converter.js` — `15563b181de9f52944f18aa5e1fbedaf0126680a`
+  - `assets/tool-catalog.json` — `a3f2a2cae15538fb1a28fdaebc0655cae7318638`
+  - `tests/browser-smoke.cjs` — `86b01dabb3f035506ba614033959795a0bcede89`
+  - `sitemap.xml` — `61a4e5d6a6609bcd653516f27e0113a4fcf054ac`
+- ZTHosting isolated SEO QA: 89 pages, 0 errors, 0 warnings.
+- ZTHosting isolated content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- ZTHosting isolated PHP lint: PASS.
+- ZTHosting isolated JavaScript syntax: PASS in pinned Playwright 1.55.1 container.
+- ZTHosting isolated Chromium smoke: 144 passed, 0 failed.
+- Full 89-page browser initialization sweep: PASS.
+- Active navigation, global tool search/navigation and mobile layout checks: PASS.
 - Production deployment: NOT STARTED.
