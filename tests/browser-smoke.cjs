@@ -292,20 +292,32 @@ const cases = [
   }],
   ['html-minifier', async p => {
     await p.waitForFunction(() => window.__swuHtmlMinifierScriptLoaded === true || window.__swuHtmlMinifierScriptError === true, null, {timeout: 10000});
+    await p.waitForFunction(() =>
+      window.__swuHtmlMinifierEngineReady === true ||
+      Boolean(window.__swuHtmlMinifierEngineError),
+      null,
+      {timeout: 25000}
+    );
+
     const startup = await p.evaluate(() => ({
       loaded: window.__swuHtmlMinifierScriptLoaded === true,
       loadError: window.__swuHtmlMinifierScriptError === true,
       booted: window.__swuHtmlMinifierBooted === true,
       workerType: typeof Worker,
+      engineReady: window.__swuHtmlMinifierEngineReady === true,
+      engineProvider: window.__swuHtmlMinifierEngineProvider || '',
+      engineError: window.__swuHtmlMinifierEngineError || '',
       status: document.getElementById('htmlMinifierStatus')?.textContent || ''
     }));
-    assert.deepEqual(startup, {
-      loaded: true,
-      loadError: false,
-      booted: true,
-      workerType: 'function',
-      status: 'Ready'
-    });
+
+    assert.equal(startup.loaded, true);
+    assert.equal(startup.loadError, false);
+    assert.equal(startup.booted, true);
+    assert.equal(startup.workerType, 'function');
+    assert.equal(startup.engineReady, true, startup.engineError || 'HTML minifier engine did not become ready.');
+    assert.ok(['jsdelivr', 'unpkg'].includes(startup.engineProvider));
+    assert.equal(startup.engineError, '');
+    assert.equal(startup.status, 'Ready');
 
     assert.equal(await p.locator('#minAttributeQuotes').isChecked(), false);
 
