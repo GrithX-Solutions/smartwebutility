@@ -2973,7 +2973,7 @@ Chromium test now verifies:
 ## Page 16 — /xml-formatter-validator/
 
 Research/update date: 2026-10-05  
-Status: IMPLEMENTED, CI PENDING
+Status: VERIFIED VIA ISOLATED CI FALLBACK
 
 ### Primary intent
 Format, beautify, validate well-formed XML and minify formatting whitespace in the browser.
@@ -3057,6 +3057,16 @@ Chromium coverage now verifies:
 - the visible error includes `Invalid XML`;
 - Chromium's parser-reported line and column are surfaced.
 
+Isolated CI evidence on 2026-10-05:
+- workspace: `/srv/smartwebutility-ci/workspaces/page16-xml-41a4333`;
+- page HTML, implementation JS, browser test, tool catalog and sitemap Git blob hashes exactly match GitHub commit `41a4333d1b09fc1b16075dcd274a779ed260a66b`;
+- static SEO QA: 89 pages, 0 errors, 0 warnings;
+- content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings;
+- JavaScript syntax: PASS in pinned Playwright 1.55.1 container;
+- targeted Chromium: PASS;
+- malformed XML surfaced the real Chromium parser location `line 3, column 11`;
+- production paths were not used or mutated.
+
 ### Scope boundary
 This remains a well-formedness validator. It does NOT claim:
 - XSD schema conformance;
@@ -3071,8 +3081,11 @@ This remains a well-formedness validator. It does NOT claim:
 - Existing implementation inspected: VERIFIED.
 - Product/usability gap: VERIFIED.
 - Implementation: COMPLETED on working branch.
-- Browser regression coverage: COMPLETED.
-- Build/static/Chromium CI: PENDING.
+- Browser regression coverage: VERIFIED.
+- Static SEO/content QA: VERIFIED via isolated ZTHosting fallback.
+- JavaScript syntax: VERIFIED via pinned Playwright container.
+- Targeted Chromium regression: VERIFIED via isolated ZTHosting fallback.
+- GitHub-hosted Actions: infrastructure-blocked before runner assignment; not treated as a code failure.
 - Production deployment: NOT STARTED.
 
 
