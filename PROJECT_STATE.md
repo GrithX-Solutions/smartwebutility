@@ -24,9 +24,10 @@ ACTIVE:
 - Only that page and directly required JS/tests/search metadata are changed before moving on.
 - Each page gets a documented demand/SERP/semantic/competitor-gap decision.
 - A no-change decision is valid when no real gap exists.
-- Each changed page must pass Build + SEO QA + content QA + Chromium before page #N+1 starts.
+- Each changed page must pass page-scoped functionality/regression checks plus applicable static SEO/content checks before page #N+1 starts.
 - When GitHub-hosted Actions cannot allocate a runner or quota/package limits block execution, the approved ZTHosting isolated CI fallback may satisfy the same gate. GitHub remains the source of truth for code/commits; production paths must not be used as the CI workspace.
 - Do not merge/deploy piecemeal to production.
+- Full 89-page Chromium/sitemap-wide browser sweep is a final batch release gate rather than a mandatory per-page gate.
 - After the complete batch is finished, use one final merge/release/deploy sequence.
 
 ## Completed page
