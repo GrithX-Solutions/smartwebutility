@@ -9,17 +9,33 @@ const workerUrl = new URL(self.location.href);
 const provider = workerUrl.searchParams.get('engine') || 'jsdelivr';
 const engineUrl = providers[provider];
 
-const postError = error => {
+const postError = (error, requestId = null) => {
   self.postMessage({
     type: 'error',
     provider,
+    requestId,
     message: error && error.message ? error.message : String(error)
   });
 };
 
-try {
+const initialize = async () => {
   if (!engineUrl) throw new Error('Unknown HTML minifier engine provider.');
-  importScripts(engineUrl);
+
+  const response = await fetch(engineUrl, {
+    mode: 'cors',
+    credentials: 'omit',
+    cache: 'force-cache'
+  });
+  if (!response.ok) {
+    throw new Error('HTML minifier engine request failed with HTTP ' + response.status + '.');
+  }
+
+  const source = await response.text();
+  if (!source.trim()) throw new Error('HTML minifier engine response was empty.');
+
+  // Evaluate the pinned UMD bundle inside this isolated worker global.
+  (0, eval)(source + '\n//# sourceURL=' + engineUrl);
+
   minifyHtml = self.HTMLMinifier && typeof self.HTMLMinifier.minify === 'function'
     ? self.HTMLMinifier.minify
     : null;
@@ -29,13 +45,18 @@ try {
   }
 
   self.postMessage({ type: 'ready', provider });
-} catch (error) {
-  postError(error);
-}
+};
+
+initialize().catch(postError);
 
 self.addEventListener('message', async event => {
   const data = event.data || {};
-  if (data.type !== 'minify' || typeof minifyHtml !== 'function') return;
+  if (data.type !== 'minify') return;
+
+  if (typeof minifyHtml !== 'function') {
+    postError(new Error('HTML minifier engine is not ready.'), data.requestId);
+    return;
+  }
 
   try {
     const result = await minifyHtml(String(data.source || ''), data.options || {});
@@ -46,11 +67,6 @@ self.addEventListener('message', async event => {
       result: String(result)
     });
   } catch (error) {
-    self.postMessage({
-      type: 'error',
-      provider,
-      requestId: data.requestId,
-      message: error && error.message ? error.message : String(error)
-    });
+    postError(error, data.requestId);
   }
 });
