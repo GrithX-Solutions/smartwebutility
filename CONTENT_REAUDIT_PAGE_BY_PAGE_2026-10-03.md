@@ -15,7 +15,7 @@ For each page:
 4. inspect current functionality/content;
 5. identify a concrete information or product gap;
 6. update only that page and its directly required implementation/tests/search metadata;
-7. run Build, static SEO QA, content QA and Chromium smoke tests;
+7. run page-scoped functionality/regression checks plus applicable static SEO/content QA;
 8. keep the page as a distinct Git commit/review unit;
 9. move to the next page only after the current page passes.
 
@@ -3074,3 +3074,16 @@ This remains a well-formedness validator. It does NOT claim:
 - Browser regression coverage: COMPLETED.
 - Build/static/Chromium CI: PENDING.
 - Production deployment: NOT STARTED.
+
+
+## Final batch release gate
+
+Per-page work is intentionally scoped to the current page. Before merge/deploy, the accumulated branch must still pass:
+- full Build bundle;
+- full static SEO QA;
+- full content QA;
+- full Chromium functional smoke suite;
+- full sitemap-wide browser initialization;
+- production deployment guardrails.
+
+Unrelated failures found by broad checks do not invalidate a page-specific audit decision, but they must be fixed before the final batch is merged/deployed.
