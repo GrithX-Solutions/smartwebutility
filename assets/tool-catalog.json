@@ -355,9 +355,12 @@
     "category": "Developer",
     "url": "/xml-formatter-validator/",
     "title": "XML Formatter & Validator",
-    "description": "Format, validate and minify XML locally in your browser.",
+    "description": "Format, validate and minify XML locally with clear parser errors.",
     "keywords": [
       "xml formatter",
+      "online xml formatter",
+      "xml formatter online",
+      "xml beautifier",
       "xml validator",
       "xml formatter and validator"
     ]
