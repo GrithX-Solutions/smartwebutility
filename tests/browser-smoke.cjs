@@ -456,7 +456,26 @@ const cases = [
     assert.equal(await p.locator('#jsonPathError').isHidden(), false);
   }],
   ['css-minifier', async p => {
-    await p.waitForFunction(() => document.getElementById('cssMinifierStatus').textContent === 'Ready');
+    await p.waitForFunction(() =>
+      window.__swuCssMinifierEngineReady === true ||
+      Boolean(window.__swuCssMinifierEngineError),
+      null,
+      {timeout: 25000}
+    );
+
+    const startup = await p.evaluate(() => ({
+      booted: window.__swuCssMinifierBooted === true,
+      engineReady: window.__swuCssMinifierEngineReady === true,
+      engineProvider: window.__swuCssMinifierEngineProvider || '',
+      engineError: window.__swuCssMinifierEngineError || '',
+      status: document.getElementById('cssMinifierStatus')?.textContent || ''
+    }));
+
+    assert.equal(startup.booted, true);
+    assert.equal(startup.engineReady, true, startup.engineError || 'CSS minifier engine did not become ready.');
+    assert.ok(['jsdelivr', 'unpkg'].includes(startup.engineProvider));
+    assert.equal(startup.engineError, '');
+    assert.equal(startup.status, 'Ready');
     assert.equal(await p.locator('#cssPreserveComments').isChecked(), true);
 
     const source = '/*! Package license */\n/* remove this note */\n.card { color: #ff0000; margin: 0px 0px 0px 0px; padding: 16px 16px 16px 16px; }';
