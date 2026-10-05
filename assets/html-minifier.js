@@ -20,7 +20,7 @@
     html5Cleanup: document.getElementById('minHtml5Cleanup')
   };
 
-  const WORKER_LOAD_TIMEOUT_MS = 10000;
+  const WORKER_LOAD_TIMEOUT_MS = 6000;
   const WORKER_PROVIDERS = ['jsdelivr', 'unpkg'];
   const MINIFY_TIMEOUT_MS = 8000;
   let nextRequestId = 0;
@@ -55,7 +55,7 @@
 
   const probeProvider = provider => new Promise((resolve, reject) => {
     const worker = new Worker(
-      '/assets/html-minifier-worker.js?v=20261005-1&engine=' + encodeURIComponent(provider)
+      '/assets/html-minifier-worker.js?v=20261005-2&engine=' + encodeURIComponent(provider)
     );
     let settled = false;
     const timer = setTimeout(() => {
@@ -207,7 +207,7 @@
 
       const provider = WORKER_PROVIDERS[providerIndex];
       const worker = new Worker(
-        '/assets/html-minifier-worker.js?v=20261005-1&engine=' + encodeURIComponent(provider)
+        '/assets/html-minifier-worker.js?v=20261005-2&engine=' + encodeURIComponent(provider)
       );
       task.worker = worker;
       task.runStarted = false;
