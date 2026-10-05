@@ -65,27 +65,25 @@ Research record:
 
 ## Current page
 
-### Page 14 — /css-minifier/
+### Page 15 — /uuid-validator/
 
 Status: PARTIALLY VERIFIED — GITHUB ACTIONS BLOCKED.
 
 Research evidence:
-- `css minifier`: 720 US searches/month, SD 26, transactional.
-- Current U.S. SERP includes multiple DA 4–19 utility domains.
+- `uuid validator`: 320 US searches/month, SD 15.
+- `guid validator`: 320, SD 17.
+- Current SERP includes multiple DA 2–14 validator tools.
 
 Confirmed gap:
-- CSSO engine depended on a single hard-coded jsDelivr script;
-- no fallback or precise engine-ready/error contract existed.
+- UUID Generator supports Microsoft/.NET D/B/P/N text formats;
+- UUID Validator rejected P/parenthesized GUID text.
 
 Implemented:
-- jsDelivr → UNPKG fallback for pinned CSSO 5.0.5;
-- 10-second provider startup boundary;
-- explicit engine-ready/provider/error diagnostics;
-- Ready only after `csso.minify` is available;
-- minification awaits engine initialization;
-- removed the single fixed CDN script tag;
-- updated privacy/reliability guidance;
-- updated browser regression startup checks;
+- parenthesized GUID wrapper normalization;
+- visible D/B/P/N compatibility guidance;
+- no binary COM/X-format expansion;
+- browser regression for P-format enabled/disabled behavior;
+- search aliases for online UUID validator/version checker;
 - sitemap lastmod updated to 2026-10-05.
 
 Research record:
