@@ -2966,3 +2966,111 @@ Chromium test now verifies:
 - Full 89-page browser initialization sweep: PASS.
 - Active navigation, global tool search/navigation and mobile layout checks: PASS.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 16 — /xml-formatter-validator/
+
+Research/update date: 2026-10-05  
+Status: IMPLEMENTED, CI PENDING
+
+### Primary intent
+Format, beautify, validate well-formed XML and minify formatting whitespace in the browser.
+
+Canonical owner:
+- `https://smartwebutility.com/xml-formatter-validator/`
+
+### Ubersuggest US evidence
+- `xml formatter`: 27,100 searches/month, SD 41, CPC $4.24, transactional intent.
+- `online xml formatter`: 4,400, SD 38, CPC $7.40.
+- `xml formatter and validator`: 50, SD 4.
+- `xml formatter tool`: 140, SD 38.
+- `best xml formatter`: 70, SD 31.
+
+Smart Web Utility currently has no U.S. ranking-keyword data for this page in Ubersuggest.
+
+### Current SERP / attainability
+The current U.S. SERP contains strong incumbents plus lower-authority utility pages:
+- CodeShack — DA 25.
+- DataBeautifier — DA 12.
+- Pangolin Tools — DA 5.
+- JA Technology Solutions — DA 10.
+- Tooloogle — DA 13.
+
+This does not predict ranking, but it confirms the result set is not authority-locked.
+
+### Existing Smart Web Utility strengths before this change
+Already implemented:
+- browser-local XML parsing;
+- well-formedness validation;
+- 2-space or 4-space pretty printing;
+- conservative XML minification;
+- local XML files up to 5 MB;
+- copy/download;
+- XML declaration preservation;
+- mixed-content protection;
+- inherited `xml:space="preserve"` handling during minification;
+- comment/processing-instruction serialization;
+- element/attribute/depth statistics;
+- explicit statement that this is not XSD schema validation.
+
+The page therefore did not need generic length expansion or a second overlapping XML URL.
+
+### Confirmed usability gap
+The validator already used the browser XML parser and surfaced its error text, but it only returned a flattened/truncated parser message.
+
+Current XML formatter/validator competitors frequently surface a source location for malformed XML. That is useful because users normally need to repair a specific mismatched tag, unclosed element or malformed attribute rather than merely learn that parsing failed.
+
+Browser XML parser wording is implementation-dependent, so the page should not invent a location. The improvement is to normalize line/column only when the parser itself reports them and retain the parser detail.
+
+### Implementation
+`assets/data-advanced-tools.js` now:
+- keeps the existing `DOMParser(..., "application/xml")` validation path;
+- normalizes parser-error whitespace;
+- extracts `line N` and optional `column M` when the browser parser reports them;
+- emits a clearer error such as `Invalid XML at line N, column M: …`;
+- preserves the original parser detail after the normalized location;
+- does not claim line/column when the browser does not provide one;
+- does not change formatting/minification semantics.
+
+`xml-formatter-validator/index.html` now:
+- explains parser location reporting;
+- keeps the scope explicitly limited to well-formedness rather than XSD/DTD/application validation;
+- updates WebApplication features, lead/trust messaging and FAQ;
+- keeps processing local in the browser.
+
+Search aliases now include:
+- `xml formatter`
+- `online xml formatter`
+- `xml formatter online`
+- `xml beautifier`
+- `xml validator`
+- `xml formatter and validator`
+
+Sitemap `lastmod` is updated to 2026-10-05 because the public page materially changed.
+
+### Regression coverage
+Chromium coverage now verifies:
+- valid XML still formats with indentation;
+- malformed multi-line XML fails validation;
+- the visible error includes `Invalid XML`;
+- Chromium's parser-reported line and column are surfaced.
+
+### Scope boundary
+This remains a well-formedness validator. It does NOT claim:
+- XSD schema conformance;
+- DTD validity against an external grammar;
+- business-rule validation;
+- API contract validation.
+
+### Page 16 acceptance status
+- Demand / difficulty: VERIFIED.
+- Current SERP intent/attainability: VERIFIED.
+- Canonical ownership: VERIFIED.
+- Existing implementation inspected: VERIFIED.
+- Product/usability gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Browser regression coverage: COMPLETED.
+- Build/static/Chromium CI: PENDING.
+- Production deployment: NOT STARTED.
