@@ -4,7 +4,12 @@
     "url": "/base64-encoder-decoder/",
     "title": "Base64 Encoder / Decoder",
     "description": "Encode UTF-8 text or local files to Base64 and decode Base64URL text.",
-    "keywords": ["base64 decoder", "base64 encoder", "base64url", "base64 file encoder"]
+    "keywords": [
+      "base64 decoder",
+      "base64 encoder",
+      "base64url",
+      "base64 file encoder"
+    ]
   },
   {
     "category": "Developer",
@@ -28,7 +33,15 @@
     "url": "/cron-expression-helper/",
     "title": "Cron Expression Generator & Parser",
     "description": "Build, validate and preview standard 5-field cron schedules locally.",
-    "keywords": ["cron expression generator", "cron generator", "cron generator online", "cron expression generator online", "crontab generator", "cron parser", "cron schedule generator"]
+    "keywords": [
+      "cron expression generator",
+      "cron generator",
+      "cron generator online",
+      "cron expression generator online",
+      "crontab generator",
+      "cron parser",
+      "cron schedule generator"
+    ]
   },
   {
     "category": "Developer",
@@ -48,7 +61,17 @@
     "url": "/csv-to-json/",
     "title": "CSV to JSON",
     "description": "Convert CSV to pretty, compact or JSON Lines output locally.",
-    "keywords": ["csv to json", "csv to json format", "csv to json conversion", "convert csv to json", "csv to json converter", "online csv to json converter", "csv to json online", "csv to json lines", "csv to ndjson"]
+    "keywords": [
+      "csv to json",
+      "csv to json format",
+      "csv to json conversion",
+      "convert csv to json",
+      "csv to json converter",
+      "online csv to json converter",
+      "csv to json online",
+      "csv to json lines",
+      "csv to ndjson"
+    ]
   },
   {
     "category": "Developer",
@@ -99,7 +122,14 @@
     "url": "/html-minifier/",
     "title": "HTML Minifier",
     "description": "Minify HTML with conservative defaults, optional HTML5 cleanup and measurable byte savings.",
-    "keywords": ["html minifier", "online html minifier", "html minifier online", "minify html", "html compressor", "compress html"]
+    "keywords": [
+      "html minifier",
+      "online html minifier",
+      "html minifier online",
+      "minify html",
+      "html compressor",
+      "compress html"
+    ]
   },
   {
     "category": "Developer",
@@ -113,7 +143,15 @@
     "url": "/html-to-markdown/",
     "title": "HTML to Markdown",
     "description": "Sanitize and convert semantic HTML into readable Markdown with GFM tables and fenced-code language hints.",
-    "keywords": ["html to markdown", "html to markdown converter", "html to markdown converter online", "online html to markdown converter", "html to markdown online", "convert html to markdown", "html to markdown table"]
+    "keywords": [
+      "html to markdown",
+      "html to markdown converter",
+      "html to markdown converter online",
+      "online html to markdown converter",
+      "html to markdown online",
+      "convert html to markdown",
+      "html to markdown table"
+    ]
   },
   {
     "category": "Developer",
@@ -177,7 +215,11 @@
     "url": "/json-to-yaml/",
     "title": "JSON to YAML",
     "description": "Convert JSON objects and arrays into clean YAML with configurable indentation.",
-    "keywords": ["json to yaml converter", "json yaml", "convert json to yaml"]
+    "keywords": [
+      "json to yaml converter",
+      "json yaml",
+      "convert json to yaml"
+    ]
   },
   {
     "category": "Developer",
@@ -296,7 +338,15 @@
     "url": "/ulid-generator/",
     "title": "ULID Generator & Decoder",
     "description": "Generate monotonic ULIDs and inspect existing ULID timestamps and randomness.",
-    "keywords": ["ulid generator", "online ulid generator", "ulid generator online", "ulid decoder", "ulid timestamp decoder", "monotonic ulid", "sortable id generator"]
+    "keywords": [
+      "ulid generator",
+      "online ulid generator",
+      "ulid generator online",
+      "ulid decoder",
+      "ulid timestamp decoder",
+      "monotonic ulid",
+      "sortable id generator"
+    ]
   },
   {
     "category": "Developer",
@@ -350,8 +400,18 @@
     "category": "Developer",
     "url": "/xml-escape-unescape/",
     "title": "XML Escape / Unescape",
-    "description": "Escape XML text or attributes and decode predefined or numeric entities.",
-    "keywords": []
+    "description": "Escape XML text or attributes, reject XML 1.0-illegal characters, and decode predefined or numeric entities.",
+    "keywords": [
+      "xml escape",
+      "xml unescape",
+      "xml escape online",
+      "online xml escape",
+      "xml escape characters",
+      "xml escape ampersand",
+      "xml escape special characters",
+      "xml entity encoder",
+      "xml entity decoder"
+    ]
   },
   {
     "category": "Developer",
@@ -403,7 +463,12 @@
     "url": "/yaml-to-json/",
     "title": "YAML to JSON",
     "description": "Parse single or multi-document YAML into readable JSON with configurable indentation.",
-    "keywords": ["yaml to json converter", "yaml json", "yaml2json", "convert yaml to json"]
+    "keywords": [
+      "yaml to json converter",
+      "yaml json",
+      "yaml2json",
+      "convert yaml to json"
+    ]
   },
   {
     "category": "SEO",
