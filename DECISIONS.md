@@ -49,3 +49,19 @@ Use the ZTHosting MCP server as an isolated CI fallback with these constraints:
 - Mirror Chromium with the pinned project Playwright version; currently Playwright 1.55.1.
 - A server fallback PASS can unblock the next page, but it does not authorize production deployment.
 - Production still requires the final one-go verified release, rollback preservation and live checks.
+
+
+## 2026-10-05 — Page-by-page audit validation cadence
+
+Decision:
+- Audit and update exactly one public page at a time.
+- After each page, run page-scoped functionality/regression checks plus applicable static SEO/content checks.
+- Do not require the full 89-page Chromium/sitemap sweep after every single page, because unrelated-page/CDN flakiness can block an otherwise verified page.
+- Before merge/deploy, run the complete Build + SEO QA + content QA + full Chromium/sitemap sweep across the entire accumulated batch.
+- Any failure on the currently edited page remains a hard blocker. Unrelated failures discovered during optional broad checks are recorded separately and fixed before final release.
+
+Rationale:
+- preserves strict one-page scope;
+- keeps evidence tied to the page being audited;
+- avoids mixing unrelated maintenance into the current page;
+- retains a full-site release gate before production.
