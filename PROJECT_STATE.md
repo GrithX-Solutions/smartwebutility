@@ -65,26 +65,21 @@ Research record:
 
 ## Current page
 
-### Page 16 — /meta-tag-generator/
+### /uuid-validator/ — validation closure
 
-Status: REVIEWED — NO CHANGE.
+Status: PARTIALLY VERIFIED — ISOLATED CI FALLBACK PENDING.
 
-Research evidence:
-- `meta tag generator`: 260 US searches/month, SD 11, CPC $6.65.
-- Current SERP includes multiple DA 4–12 tools.
+Implementation/research are already complete on GitHub:
+- `uuid validator`: 320 US searches/month, SD 15.
+- `guid validator`: 320, SD 17.
+- parenthesized Microsoft/.NET GUID P-format support added;
+- canonical lowercase normalization retained;
+- wrapper-off rejection regression added;
+- public copy documents D/B/P/N compatibility and scope boundaries.
 
-Existing page already covers:
-- title/description/canonical/robots;
-- Open Graph and Twitter/X core tags;
-- escaped HTML output;
-- character counts and local previews;
-- no remote image fetch;
-- no obsolete meta keywords;
-- search/snippet caveats and related SEO tools.
+The immediately preceding XML Formatter & Validator page is now VERIFIED via the approved isolated ZTHosting CI fallback.
 
-Decision:
-- NO CHANGE.
-- Do not add obsolete keyword tags, AI generation, URL autofetch or low-value optional fields without new evidence.
+Meta Tag Generator has also been reviewed and intentionally left unchanged; it requires no runtime implementation gate.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
@@ -282,6 +277,17 @@ BLOCKED:
 - Continue page-by-page source work with truthful PARTIALLY VERIFIED / CI BLOCKED status.
 - Do not merge, deploy, index or claim batch completion until GitHub Actions runs normally and the final full release gate is green.
 
+XML Formatter & Validator isolated validation:
+- GitHub implementation/state commit: `41a4333d1b09fc1b16075dcd274a779ed260a66b`.
+- Isolated workspace: `/srv/smartwebutility-ci/workspaces/page16-xml-41a4333`.
+- Git blob identity for page HTML, implementation JS, browser test, tool catalog and sitemap: exact GitHub match.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- JavaScript syntax: PASS in pinned Playwright 1.55.1 container.
+- Targeted Chromium: PASS.
+- Parser location regression: PASS, reporting line 3 / column 11 from Chromium.
+- Production mutation: NONE.
+
 ## Deployment / indexing
 
 - Page 1 production deployment: NOT STARTED.
@@ -303,7 +309,7 @@ BLOCKED:
 
 ## Work in progress
 
-Pages 1–15 are complete/verified on the audit branch. Page 16 XML Formatter & Validator is implemented and awaiting CI. Production remains unchanged.
+XML Formatter & Validator is verified via the isolated fallback. UUID Validator is the next unresolved implementation gate. Meta Tag Generator is a completed no-change review. Production remains unchanged.
 
 ## Affected files — completed/current pages
 
@@ -320,7 +326,14 @@ Shared direct requirements:
 
 ## NEXT ACTION
 
-Run Build/static/Chromium CI on the final Page 16 XML Formatter & Validator head. Fix any XML/SEO/content/browser failure before researching Page 17. Do not deploy production.
+Validate `/uuid-validator/` using the approved isolated CI fallback:
+1. create a non-production workspace derived from the verified XML/current audit snapshot;
+2. stage the exact GitHub UUID Validator material files from commit `b991890ac58ae2060b9d60e52dbb473a10d03412`;
+3. verify Git blob identity;
+4. run static SEO/content QA, JavaScript syntax and targeted Chromium regression;
+5. record the result before researching the next page.
+
+Do not deploy production.
 
 ## CI infrastructure status
 
