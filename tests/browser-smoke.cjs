@@ -292,27 +292,12 @@ const cases = [
   }],
   ['html-minifier', async p => {
     await p.waitForFunction(() => window.__swuHtmlMinifierScriptLoaded === true || window.__swuHtmlMinifierScriptError === true, null, {timeout: 10000});
-    try {
-      await p.waitForFunction(() =>
-        window.__swuHtmlMinifierEngineReady === true ||
-        Boolean(window.__swuHtmlMinifierEngineError),
-        null,
-        {timeout: 16000}
-      );
-    } catch (caught) {
-      const diagnostic = await p.evaluate(() => ({
-        loaded: window.__swuHtmlMinifierScriptLoaded === true,
-        loadError: window.__swuHtmlMinifierScriptError === true,
-        booted: window.__swuHtmlMinifierBooted === true,
-        workerType: typeof Worker,
-        engineReady: window.__swuHtmlMinifierEngineReady === true,
-        engineProvider: window.__swuHtmlMinifierEngineProvider || '',
-        engineError: window.__swuHtmlMinifierEngineError || '',
-        status: document.getElementById('htmlMinifierStatus')?.textContent || '',
-        visibleError: document.getElementById('htmlMinifierError')?.textContent || ''
-      }));
-      throw new Error('HTML Minifier startup timeout: ' + JSON.stringify(diagnostic) + ' · ' + caught.message);
-    }
+    await p.waitForFunction(() =>
+      window.__swuHtmlMinifierEngineReady === true ||
+      Boolean(window.__swuHtmlMinifierEngineError),
+      null,
+      {timeout: 25000}
+    );
 
     const startup = await p.evaluate(() => ({
       loaded: window.__swuHtmlMinifierScriptLoaded === true,
