@@ -54,7 +54,14 @@
       if(!raw.trim())throw new Error('Add XML to validate or format.');
       const doc=new DOMParser().parseFromString(raw,'application/xml');
       const pe=doc.querySelector('parsererror');
-      if(pe)throw new Error('Invalid XML: '+pe.textContent.replace(/\s+/g,' ').trim().slice(0,320));
+      if(pe){
+        const detail=pe.textContent.replace(/\s+/g,' ').trim();
+        const location=detail.match(/line\s+(\d+)(?:\s*(?:,|at)?\s*column\s+(\d+))?/i);
+        const where=location
+          ? ' at line '+location[1]+(location[2]?', column '+location[2]:'')
+          : '';
+        throw new Error('Invalid XML'+where+': '+detail.slice(0,320));
+      }
       return doc;
     }
     function xmlSpacePreserve(el){
