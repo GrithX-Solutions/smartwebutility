@@ -64,27 +64,26 @@ Research record:
 
 ## Current page
 
-### Page 15 — /curl-converter/
+### Page 16 — /xml-formatter-validator/
 
-Status: VERIFIED ON BRANCH.
+Status: IMPLEMENTED ON BRANCH; CI PENDING.
 
 Research evidence:
-- `curl converter`: 720 US searches/month, SD 34, CPC $30.57.
-- `curl to python`: 590, SD 39.
-- `curl json post`: 720, SD 33.
-- `curl --json`: 140, SD 18.
-- Current SERP includes multiple DA 2–12 converter sites.
+- `xml formatter`: 27,100 US searches/month, SD 41, CPC $4.24.
+- `online xml formatter`: 4,400, SD 38, CPC $7.40.
+- `xml formatter and validator`: 50, SD 4.
+- Current SERP includes DA 5–25 utility competitors.
 
 Confirmed gap:
-- existing parser rejected curl `--json`;
-- official curl semantics and current competitor coverage justify supporting inline JSON.
+- formatting/minification/well-formedness behavior was already strong;
+- parser errors were flattened rather than surfacing parser-reported source location.
 
 Implemented:
-- inline/repeated `--json` support;
-- curl-default JSON Content-Type + Accept headers unless explicitly overridden;
-- JSON-native generation with application/json and application/*+json;
-- visible rejection of file/stdin JSON forms and ambiguous mixed body modes;
-- updated page guidance, search aliases, sitemap lastmod and Chromium regressions.
+- normalize browser XML parser line/column when available;
+- preserve original parser detail;
+- keep validation scope explicitly at XML well-formedness only;
+- update semantic copy, search aliases and sitemap lastmod;
+- add Chromium malformed multi-line XML regression.
 
 Production remains unchanged.
 
@@ -292,7 +291,7 @@ Page 15 cURL Converter validation:
 
 ## Work in progress
 
-Pages 1–15 are complete/verified on the audit branch. Production remains unchanged. Page 16 has not started.
+Pages 1–15 are complete/verified on the audit branch. Page 16 XML Formatter & Validator is implemented and awaiting CI. Production remains unchanged.
 
 ## Affected files — completed/current pages
 
@@ -309,7 +308,7 @@ Shared direct requirements:
 
 ## NEXT ACTION
 
-Research exactly one Page 16 candidate using Ubersuggest + current U.S. SERPs. Select an existing canonical page only when a real product/content gap is verified; otherwise record a no-change decision. After any Page 16 change, run the isolated Build/static/Chromium gate before Page 17. Do not deploy production.
+Run Build/static/Chromium CI on the final Page 16 XML Formatter & Validator head. Fix any XML/SEO/content/browser failure before researching Page 17. Do not deploy production.
 
 ## CI infrastructure status
 
