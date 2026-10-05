@@ -30,8 +30,10 @@
     const original = value;
 
     if (acceptWrappers.checked) {
-      if (/^\{.*\}$/.test(value)) value = value.slice(1, -1).trim();
-      value = value.replace(/^urn:uuid:/i, '');
+      value = value.replace(/^urn:uuid:/i, '').trim();
+      if ((/^\{.*\}$/.test(value) || /^\(.*\)$/.test(value))) {
+        value = value.slice(1, -1).trim();
+      }
     }
 
     if (acceptCompact.checked && /^[0-9a-f]{32}$/i.test(value)) {
