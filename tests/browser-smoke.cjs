@@ -596,6 +596,7 @@ const cases = [
       '01890f4e-7c88-7abc-8def-0123456789ab',
       '00000000-0000-0000-0000-000000000000',
       '{550E8400-E29B-41D4-A716-446655440000}',
+      '(550E8400-E29B-41D4-A716-446655440000)',
       '550e8400-e29b-41d4-c716-446655440000',
       'not-a-uuid'
     ].join('\n');
@@ -603,20 +604,23 @@ const cases = [
     await p.locator('#validateUuid').click();
 
     const normalized = (await p.locator('#uuidValidatorOutput').inputValue()).split('\n').filter(Boolean);
-    assert.equal(normalized.length, 4);
+    assert.equal(normalized.length, 5);
     assert.ok(normalized.includes('550e8400-e29b-41d4-a716-446655440000'));
     assert.ok(normalized.includes('00000000-0000-0000-0000-000000000000'));
 
     const rows = p.locator('#uuidValidatorTable tbody tr');
-    assert.equal(await rows.count(), 6);
+    assert.equal(await rows.count(), 7);
     assert.equal(await rows.nth(0).getAttribute('data-valid'), 'true');
-    assert.equal(await rows.nth(4).getAttribute('data-format-valid'), 'true');
-    assert.equal(await rows.nth(4).getAttribute('data-valid'), 'false');
-    assert.equal(await rows.nth(5).getAttribute('data-format-valid'), 'false');
+    assert.equal(await rows.nth(4).getAttribute('data-valid'), 'true');
+    assert.ok((await rows.nth(4).innerText()).includes('550e8400-e29b-41d4-a716-446655440000'));
+    assert.equal(await rows.nth(5).getAttribute('data-format-valid'), 'true');
+    assert.equal(await rows.nth(5).getAttribute('data-valid'), 'false');
+    assert.equal(await rows.nth(6).getAttribute('data-format-valid'), 'false');
     assert.ok((await rows.nth(1).innerText()).includes('v7 time:'));
 
     await p.locator('#uuidAcceptWrappers').uncheck();
     assert.equal(await p.locator('#uuidValidatorTable tbody tr').nth(3).getAttribute('data-format-valid'), 'false');
+    assert.equal(await p.locator('#uuidValidatorTable tbody tr').nth(4).getAttribute('data-format-valid'), 'false');
     assert.equal(await p.locator('#uuidValidatorError').isHidden(), true);
   }],
   ['xml-escape-unescape', async p => {
