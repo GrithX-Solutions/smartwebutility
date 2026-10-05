@@ -3087,3 +3087,105 @@ Per-page work is intentionally scoped to the current page. Before merge/deploy, 
 - production deployment guardrails.
 
 Unrelated failures found by broad checks do not invalidate a page-specific audit decision, but they must be fixed before the final batch is merged/deployed.
+
+
+---
+
+## Page 15 — /uuid-validator/
+
+Research/update date: 2026-10-05  
+Status: PARTIALLY VERIFIED — CI BLOCKED
+
+### Primary intent
+Validate UUID/GUID text, identify version/variant and normalize common textual forms.
+
+Canonical owner:
+- `https://smartwebutility.com/uuid-validator/`
+
+### Ubersuggest US evidence
+- `uuid validator`: 320 searches/month, SD 15, transactional.
+- `guid validator`: 320, SD 17.
+- `online uuid validator`: 40, SD 20.
+- `uuid version checker`: 30, SD 16.
+- `uuid v4 validator`: 10, SD 13.
+- `uuid v7 validator`: 10, SD 13.
+
+Current U.S. SERP contains many low-authority validator sites:
+- tools.namlabs.com — DA 8.
+- generateuuid.online — DA 14.
+- noobkit.cc — DA 2.
+- rapidtoolset.com — DA 12.
+- uuidfactory.com — DA 4.
+- vixtools.com — DA 4.
+- axelbase.github.io — DA 2.
+- minidevkit.com — DA 7.
+
+### Existing Smart Web Utility strengths
+Already implemented:
+- canonical UUID validation;
+- GUID validation;
+- RFC variant detection;
+- UUID versions 1–8 detection;
+- Nil and Max special UUID recognition;
+- UUID v7 timestamp inspection;
+- URN normalization;
+- braced GUID normalization;
+- compact 32-hex normalization;
+- bulk checking up to 500;
+- normalized valid output;
+- downloadable CSV report.
+
+### Confirmed compatibility gap
+The site's own UUID Generator supports Microsoft/.NET GUID D/B/P/N text formats.
+
+Before this Page 15 change, UUID Validator accepted:
+- D/canonical form;
+- B/braced form;
+- N/compact form;
+- UUID URN form.
+
+But it rejected:
+- P/parenthesized form, e.g. `(550e8400-e29b-41d4-a716-446655440000)`.
+
+That was a direct product inconsistency inside the same UUID/GUID cluster and the same validation intent.
+
+### Implementation
+`assets/uuid-validator.js` now:
+- accepts a parenthesized GUID wrapper when wrapper compatibility is enabled;
+- strips either braces or parentheses after optional `urn:uuid:` normalization;
+- continues to normalize accepted values to lowercase canonical UUID text;
+- leaves variant/version/Nil/Max/v7 timestamp logic unchanged.
+
+`uuid-validator/index.html` now:
+- labels wrapper support as URN / braces / parentheses;
+- explicitly documents .NET D/B/P/N textual compatibility;
+- states that binary COM GUID byte-order reinterpretation and .NET X format remain out of scope;
+- updates WebApplication feature metadata;
+- upgrades content-quality markers.
+
+Internal search aliases now include:
+- `online uuid validator`
+- `uuid version checker`
+
+### Regression coverage
+The browser case now verifies:
+- parenthesized P-format GUID is valid when wrapper compatibility is enabled;
+- it normalizes to canonical lowercase UUID text;
+- the same parenthesized value becomes invalid when wrapper compatibility is disabled;
+- existing v7 timestamp, reserved-variant and malformed-input checks remain.
+
+### Scope decision
+No attempt was made to turn this page into a general UUID decoder.
+
+Although `uuid decoder` has measurable demand, decoder intent is broader than validation. This page keeps one canonical primary intent: validation/normalization/version/variant checking.
+
+### Page 15 acceptance status
+- Demand / difficulty: VERIFIED.
+- Current SERP intent: VERIFIED.
+- Canonical ownership: VERIFIED.
+- Existing implementation inspected: VERIFIED.
+- Product compatibility gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Page-specific regression coverage: UPDATED.
+- Automated CI result: BLOCKED because GitHub Actions currently fails before runner assignment.
+- Production deployment: NOT STARTED.
