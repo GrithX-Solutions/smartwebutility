@@ -9,33 +9,17 @@ const workerUrl = new URL(self.location.href);
 const provider = workerUrl.searchParams.get('engine') || 'jsdelivr';
 const engineUrl = providers[provider];
 
-const postError = (error, requestId = null) => {
+const postError = error => {
   self.postMessage({
     type: 'error',
     provider,
-    requestId,
     message: error && error.message ? error.message : String(error)
   });
 };
 
-const initialize = async () => {
+try {
   if (!engineUrl) throw new Error('Unknown HTML minifier engine provider.');
-
-  const response = await fetch(engineUrl, {
-    mode: 'cors',
-    credentials: 'omit',
-    cache: 'force-cache'
-  });
-  if (!response.ok) {
-    throw new Error('HTML minifier engine request failed with HTTP ' + response.status + '.');
-  }
-
-  const source = await response.text();
-  if (!source.trim()) throw new Error('HTML minifier engine response was empty.');
-
-  // Evaluate the pinned UMD bundle inside this isolated worker global.
-  (0, eval)(source + '\n//# sourceURL=' + engineUrl);
-
+  importScripts(engineUrl);
   minifyHtml = self.HTMLMinifier && typeof self.HTMLMinifier.minify === 'function'
     ? self.HTMLMinifier.minify
     : null;
@@ -45,18 +29,13 @@ const initialize = async () => {
   }
 
   self.postMessage({ type: 'ready', provider });
-};
-
-initialize().catch(postError);
+} catch (error) {
+  postError(error);
+}
 
 self.addEventListener('message', async event => {
   const data = event.data || {};
-  if (data.type !== 'minify') return;
-
-  if (typeof minifyHtml !== 'function') {
-    postError(new Error('HTML minifier engine is not ready.'), data.requestId);
-    return;
-  }
+  if (data.type !== 'minify' || typeof minifyHtml !== 'function') return;
 
   try {
     const result = await minifyHtml(String(data.source || ''), data.options || {});
@@ -67,6 +46,11 @@ self.addEventListener('message', async event => {
       result: String(result)
     });
   } catch (error) {
-    postError(error, data.requestId);
+    self.postMessage({
+      type: 'error',
+      provider,
+      requestId: data.requestId,
+      message: error && error.message ? error.message : String(error)
+    });
   }
 });
