@@ -65,28 +65,27 @@ Research record:
 
 ## Current page
 
-### Page 16 — /xml-formatter-validator/
+### Page 13 — /html-minifier/
 
-Status: IMPLEMENTED ON BRANCH; CI PENDING.
+Status: IMPLEMENTED ON BRANCH; PAGE-SCOPED CI PENDING.
 
 Research evidence:
-- `xml formatter`: 27,100 US searches/month, SD 41, CPC $4.24.
-- `online xml formatter`: 4,400, SD 38, CPC $7.40.
-- `xml formatter and validator`: 50, SD 4.
-- Current SERP includes DA 5–25 utility competitors.
+- `html minifier`: 1,600 US searches/month, SD 32, CPC $11.24.
+- Current U.S. SERP includes lower-authority utilities down to DA 5–25.
 
 Confirmed gap:
-- formatting/minification/well-formedness behavior was already strong;
-- parser errors were flattened rather than surfacing parser-reported source location.
+- page script reported `Ready` before the Web Worker engine was proven loadable;
+- Chromium 407 and rerun attempt 3 reproduced the HTML Minifier readiness/runtime failure.
 
 Implemented:
-- normalize browser XML parser line/column when available;
-- preserve original parser detail;
-- keep validation scope explicitly at XML well-formedness only;
-- update semantic copy, search aliases and sitemap lastmod;
-- add Chromium malformed multi-line XML regression.
-
-Production remains unchanged.
+- worker-engine startup preflight;
+- real engine-ready/error state;
+- jsDelivr -> UNPKG pinned-provider fallback during preflight;
+- 10-second provider startup boundary;
+- minify action waits for preflight when needed;
+- public copy now defines Ready accurately;
+- browser test reports the actual provider/load failure instead of timing out ambiguously;
+- existing real worker/fallback/aggressive-option/cancel regressions preserved.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
