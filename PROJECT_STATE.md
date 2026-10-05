@@ -1,6 +1,6 @@
 # Smart Web Utility — Project State
 
-Last verified: 2026-10-04
+Last verified: 2026-10-05
 
 ## Objective
 
@@ -11,7 +11,7 @@ Run the remaining content/SEO re-audit page by page. Research, improve, test and
 - Current production source/artifact SHA: `04ce96286f0baaff1a175f4cae7c9491b0607688`
 - Current GitHub main state-only head before this batch: `ee460eb96606bbf93cd7a8347e51be8c851672d3`
 - Working branch: `content-reaudit-page-by-page-2026-10-03`
-- Current audit branch head before CI-fallback state sync: `89d6a59e8d675de0cd19bc4febfd5dfde8f8c65c`.
+- Page 15 implementation head before CI-result state sync: `faee67d5881be04c1df8e988a02dd7055591a867`.
 - Verified recovery content baseline: `ba595d2a3c5d09539ad62fd5995df445895df686`.
 - Recovery baseline has zero file diff versus verified/blocker checkpoint `ee5a1742b593ad5984a8bb0ba57f2f3f31110cbb`; only Git history differs.
 - Production remains unchanged during this audit batch.
@@ -66,7 +66,7 @@ Research record:
 
 ### Page 15 — /curl-converter/
 
-Status: IMPLEMENTED ON BRANCH; ZTHOSTING CI PENDING.
+Status: VERIFIED ON BRANCH.
 
 Research evidence:
 - `curl converter`: 720 US searches/month, SD 34, CPC $30.57.
@@ -256,6 +256,21 @@ Current-head ZTHosting CI fallback validation:
 - Full 89-page browser initialization sweep, navigation checks, global search and mobile layout checks: PASS.
 - Production deployment: NOT STARTED.
 
+Page 15 cURL Converter validation:
+- Implementation/content commits: VERIFIED in GitHub.
+- Material staged files matched current GitHub branch blobs exactly for page HTML, converter JS, tool catalog, browser test and sitemap.
+- ZTHosting isolated SEO QA: 89 pages, 0 errors, 0 warnings.
+- ZTHosting isolated content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- ZTHosting isolated PHP lint: PASS.
+- JavaScript syntax: PASS in pinned Playwright 1.55.1 container.
+- Chromium functional smoke: 144 passed, 0 failed.
+- cURL `--json` regressions: PASS.
+- Full 89-page browser initialization sweep: PASS.
+- Active navigation checks: PASS.
+- Global tool search/navigation: PASS.
+- Mobile navigation/layout: PASS.
+- Production deployment: NOT STARTED.
+
 ## Deployment / indexing
 
 - Page 1 production deployment: NOT STARTED.
@@ -264,73 +279,45 @@ Current-head ZTHosting CI fallback validation:
 
 ## Blockers
 
-- GitHub-hosted Actions runner allocation remains unavailable for the current branch, but this no longer blocks the audit because the approved ZTHosting isolated CI fallback has passed the equivalent current-runtime gate.
-- No production blocker exists for continuing Page 15 research/implementation on GitHub.
-- Production deployment remains intentionally blocked until the full page-by-page batch is complete and receives one final controlled release gate.
+- GitHub-hosted Actions runner allocation remains unreliable for this branch.
+- This does not currently block the audit because the approved ZTHosting isolated CI fallback has passed the equivalent Page 15 Build/static/browser gate on a non-production workspace.
+- Production deployment remains intentionally blocked until the complete page-by-page batch is finished and one final controlled release gate is approved.
 
 ## Risks
 
 - UUID v7 monotonicity is guaranteed only within the current browser page session. Independent tabs/devices/processes do not share state.
 - Ranking/traffic gains remain UNKNOWN until first-party/provider data appears.
-- Long-running audit work must not leave production and GitHub state confused; production source remains explicitly tracked separately from the working branch.
+- Long-running audit work must keep production and GitHub state explicit; production source remains `04ce96286f0baaff1a175f4cae7c9491b0607688` until the one-go release.
+- GitHub-hosted Actions instability remains an infrastructure risk; use the approved isolated fallback only when hosted runs fail before repository tests execute.
 
 ## Work in progress
 
-Pages 1–14 are complete/verified on the audit branch. Page 15 cURL Converter is implemented and awaiting the ZTHosting isolated CI gate. Production remains unchanged.
+Pages 1–15 are complete/verified on the audit branch. Production remains unchanged. Page 16 has not started.
 
 ## Affected files — completed/current pages
 
-Page 1:
-- `uuid-generator/index.html`
-- `assets/uuid.js`
-
-Page 2:
-- `favicon-generator/index.html`
-- `assets/favicon-generator.js`
-- `assets/favicon-generator.css`
-
-Page 3:
-- `chmod-calculator/index.html`
-- `assets/chmod-calculator.js`
-
-Material sitemap updates:
-- `sitemap.xml`
+Page 15:
+- `curl-converter/index.html`
+- `assets/curl-converter.js`
 
 Shared direct requirements:
 - `assets/tool-catalog.json`
 - `tests/browser-smoke.cjs`
+- `sitemap.xml`
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
 - `PROJECT_STATE.md`
 
 ## NEXT ACTION
 
-Run the ZTHosting isolated Build/static/Chromium gate for Page 15. Fix any cURL/SEO/content/browser failure before researching Page 16. Do not deploy production.
+Research exactly one Page 16 candidate using Ubersuggest + current U.S. SERPs. Select an existing canonical page only when a real product/content gap is verified; otherwise record a no-change decision. After any Page 16 change, run the isolated Build/static/Chromium gate before Page 17. Do not deploy production.
 
+## CI infrastructure status
 
-## Current CI infrastructure blocker
+Status: PARTIALLY VERIFIED.
 
-Status: BLOCKED.
-
-- Page 12 HTML-to-Markdown application/content implementation itself is VERIFIED:
-  - Build 714: SUCCESS.
-  - SEO QA: 89 pages, 0 errors, 0 warnings.
-  - Content QA: 0 errors, 2 retained advisories.
-  - Chromium 398: SUCCESS.
-- Page 12 documentation checkpoint later exposed a reproducible unrelated HTML Minifier test dependency on forced UNPKG fallback:
-  - Chromium 407 attempts 1–3 failed only on `html-minifier`; `html-to-markdown` and 143 other browser checks passed.
-- Test hardening commit `59d223ddfd98add1ac0909723ea836d04039ac91` separates:
-  - deterministic mocked provider-fallback control-flow coverage; and
-  - real minifier behavior through the normal production worker provider order.
-- CI could not execute that commit:
-  - Build 768 attempt 1: FAILED before any steps/logs.
-  - Build 768 attempt 2: FAILED before any steps/logs.
-  - Chromium 452 attempt 1: FAILED before any steps/logs.
-  - Chromium 452 attempt 2: FAILED before any steps/logs.
-- These four startup failures have no workflow steps and no job logs, so they are classified as external GitHub Actions runner/infrastructure failures, not repository test failures.
-- Fresh state-head retries confirmed the blocker:
-  - Build run 769 attempt 1: FAILED before steps.
-  - Build run 769 attempt 2: FAILED before steps.
-  - Chromium run 453 attempt 1: FAILED before steps.
-  - Chromium run 453 attempt 2: FAILED before steps.
-- GitHub public status currently reports Actions operational, so the remaining cause appears repository/account/runner-specific; the exact annotation text is not exposed by the available connector.
-- Page 13 remains blocked by the page-by-page hard gate until a real Build + Chromium execution completes on the hardened branch head. Do not create Page 13 code/content commits while this condition remains unresolved.
+- GitHub-hosted Actions remain unreliable for this long-running branch; several runs have failed before checkout/test execution with no repository-test logs.
+- The approved ZTHosting isolated fallback is VERIFIED operational and passed Page 15 on the exact staged material files.
+- Fallback isolation root: `/srv/smartwebutility-ci/`.
+- Production paths `/srv/smartwebutility/site.current`, `site.prev` and running production containers are not used as CI workspaces.
+- Pinned browser image: `mcr.microsoft.com/playwright:v1.55.1-noble`.
+- Production deployment remains NOT STARTED for this audit batch.
