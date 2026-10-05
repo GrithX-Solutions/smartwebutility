@@ -11,7 +11,7 @@
 <meta name="twitter:card" content="summary"><meta name="theme-color" content="#071426">
 <link rel="icon" href="/favicon-sw-v5.svg?v=20261001e" type="image/svg+xml">
 <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"XML Escape & Unescape Online","url":"https://smartwebutility.com/xml-escape-unescape/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Escape XML special characters or decode predefined and numeric XML entity references locally in the browser.","featureList":["XML text escaping","XML attribute escaping","Five predefined XML entities","Decimal character references","Hexadecimal character references","Unknown entity preservation","Local file input","Copy and download output"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"XML Escape & Unescape Online","url":"https://smartwebutility.com/xml-escape-unescape/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Escape XML special characters or decode predefined and numeric XML entity references locally in the browser.","featureList":["XML text escaping","XML attribute escaping","Five predefined XML entities","Decimal character references","Hexadecimal character references","XML 1.0 illegal-character detection","Unknown entity preservation","Local file input","Copy and download output"]}</script>
 </head>
 <body data-xml-escape-tool>
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
@@ -49,7 +49,7 @@
 <div id="xmlEscapeError" class="error" hidden role="alert"></div>
 <div id="xmlEscapeStats" class="json-stats" hidden></div>
 <div id="xmlEscapeWarnings" class="json-stats" hidden></div>
-<div class="trustbar"><span>Browser-side processing</span><span>No upload</span><span>XML-aware entity rules</span><span>Unknown named entities preserved</span><span>Local files up to 5 MB</span></div>
+<div class="trustbar"><span>Browser-side processing</span><span>No upload</span><span>XML-aware entity rules</span><span>XML 1.0 character guard</span><span>Unknown named entities preserved</span><span>Local files up to 5 MB</span></div>
 </section>
 
 <section class="section wrap prose">
@@ -71,6 +71,9 @@
 <h2>Numeric character references</h2>
 <p>XML can represent characters by decimal or hexadecimal Unicode code point. This decoder only converts numeric references that fall inside the XML 1.0 character ranges. Invalid references, including disallowed control-code references, stay unchanged and are counted as warnings instead of being replaced with an arbitrary character.</p>
 
+<h2>Invalid XML 1.0 characters cannot be escaped</h2>
+<p>Escaping markup delimiters does not make every Unicode code point legal in XML 1.0. XML 1.0 permits tab, line feed, carriage return, and specific Unicode ranges; it excludes NUL, most C0 control characters, surrogate code points, U+FFFE and U+FFFF. Escape mode now stops and identifies the first invalid code point instead of returning output that still cannot appear in a well-formed XML 1.0 document. Writing an illegal character as a numeric reference does not make it valid. See the <a href="https://www.w3.org/TR/xml/#charsets" rel="noopener">W3C XML 1.0 character rules</a>.</p>
+
 <h2>Escaping versus CDATA</h2>
 <p>CDATA sections are a different XML mechanism. Inside a CDATA section, ordinary ampersands and angle brackets can appear without entity escaping, but the closing sequence <code>]]&gt;</code> cannot appear as content. This tool escapes normal XML character data and attribute values; it does not create or split CDATA sections automatically.</p>
 
@@ -89,6 +92,7 @@
 <h3>Which characters must be escaped in XML?</h3><p>Ampersand and less-than signs require escaping in ordinary XML character data. Attribute delimiters also need encoding when they match the quote character surrounding the value.</p>
 <h3>Is <code>&amp;nbsp;</code> a predefined XML entity?</h3><p>No. The predefined XML entity names are amp, lt, gt, apos and quot.</p>
 <h3>Can it decode numeric XML entities?</h3><p>Yes. Valid decimal and hexadecimal character references are decoded.</p>
+<h3>Can escaping make an illegal XML 1.0 control character valid?</h3><p>No. Escape mode reports XML 1.0-illegal code points such as U+0000 instead of returning falsely XML-safe output. Numeric references must also point to characters allowed by XML 1.0.</p>
 <h3>Does it decode custom DTD entities?</h3><p>No. Unknown named entities are left unchanged because their replacement text depends on declarations outside the pasted string.</p>
 <h3>Is the input uploaded?</h3><p>No. Escape and unescape processing runs locally in browser JavaScript.</p>
 </div></section>
