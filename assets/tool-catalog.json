@@ -341,7 +341,9 @@
     "description": "Check UUID/GUID format, version, variant and UUID v7 timestamps.",
     "keywords": [
       "uuid validator",
-      "guid validator"
+      "guid validator",
+      "online uuid validator",
+      "uuid version checker"
     ]
   },
   {
