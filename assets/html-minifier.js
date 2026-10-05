@@ -20,11 +20,14 @@
     html5Cleanup: document.getElementById('minHtml5Cleanup')
   };
 
-  const WORKER_LOAD_TIMEOUT_MS = 6000;
+  const WORKER_LOAD_TIMEOUT_MS = 10000;
   const WORKER_PROVIDERS = ['jsdelivr', 'unpkg'];
   const MINIFY_TIMEOUT_MS = 8000;
   let nextRequestId = 0;
   let activeTask = null;
+  let engineReady = false;
+  let engineError = null;
+  let engineReadyPromise = null;
 
   const setStatus = (text, kind = 'neutral') => {
     status.textContent = text;
@@ -45,8 +48,76 @@
   }
 
   window.__swuHtmlMinifierBooted = true;
-  setStatus(typeof Worker === 'function' ? 'Ready' : 'Web Workers unavailable',
+  window.__swuHtmlMinifierEngineReady = false;
+  window.__swuHtmlMinifierEngineError = '';
+  setStatus(typeof Worker === 'function' ? 'Loading minifier…' : 'Web Workers unavailable',
     typeof Worker === 'function' ? 'neutral' : 'error');
+
+  const probeProvider = provider => new Promise((resolve, reject) => {
+    const worker = new Worker(
+      '/assets/html-minifier-worker.js?v=20261005-1&engine=' + encodeURIComponent(provider)
+    );
+    let settled = false;
+    const timer = setTimeout(() => {
+      if (settled) return;
+      settled = true;
+      worker.terminate();
+      reject(new Error(provider + ' engine load exceeded ' + (WORKER_LOAD_TIMEOUT_MS / 1000) + ' seconds'));
+    }, WORKER_LOAD_TIMEOUT_MS);
+
+    const finish = callback => value => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      worker.terminate();
+      callback(value);
+    };
+
+    worker.addEventListener('error', finish(reject), { once:true });
+    worker.addEventListener('message', event => {
+      const data = event.data || {};
+      if (data.type === 'ready') {
+        finish(resolve)(provider);
+      } else if (data.type === 'error' && data.requestId == null) {
+        finish(reject)(new Error(data.message || provider + ' engine failed to load'));
+      }
+    });
+  });
+
+  const initializeEngine = async () => {
+    if (typeof Worker !== 'function') {
+      engineError = new Error('Web Workers are not available in this browser.');
+      window.__swuHtmlMinifierEngineError = engineError.message;
+      return false;
+    }
+
+    const failures = [];
+    for (const provider of WORKER_PROVIDERS) {
+      try {
+        const readyProvider = await probeProvider(provider);
+        engineReady = true;
+        engineError = null;
+        window.__swuHtmlMinifierEngineReady = true;
+        window.__swuHtmlMinifierEngineProvider = readyProvider;
+        window.__swuHtmlMinifierEngineError = '';
+        setStatus('Ready', 'neutral');
+        return true;
+      } catch (caught) {
+        failures.push(provider + ': ' + (caught?.message || String(caught)));
+      }
+    }
+
+    engineReady = false;
+    engineError = new Error('HTML minifier engine could not load: ' + failures.join(' | '));
+    window.__swuHtmlMinifierEngineReady = false;
+    window.__swuHtmlMinifierEngineError = engineError.message;
+    error.textContent = engineError.message;
+    error.hidden = false;
+    setStatus('Minifier unavailable', 'error');
+    return false;
+  };
+
+  engineReadyPromise = initializeEngine();
 
   const options = () => ({
     removeComments: controls.removeComments.checked,
@@ -136,7 +207,7 @@
 
       const provider = WORKER_PROVIDERS[providerIndex];
       const worker = new Worker(
-        '/assets/html-minifier-worker.js?v=20261004-2&engine=' + encodeURIComponent(provider)
+        '/assets/html-minifier-worker.js?v=20261005-1&engine=' + encodeURIComponent(provider)
       );
       task.worker = worker;
       task.runStarted = false;
@@ -223,6 +294,12 @@
       return;
     }
 
+    if (!engineReady) {
+      setStatus('Loading minifier…', 'neutral');
+      const ready = await engineReadyPromise;
+      if (!ready) throw engineError || new Error('HTML minifier engine is unavailable.');
+    }
+
     setStatus('Minifying…', 'neutral');
     const minified = await minifyInWorker(source, options());
     output.value = minified;
@@ -262,8 +339,13 @@
     error.hidden = true;
     error.textContent = '';
     stats.hidden = true;
-    setStatus(typeof Worker === 'function' ? 'Ready' : 'Web Workers unavailable',
-      typeof Worker === 'function' ? 'neutral' : 'error');
+    if (engineReady) {
+      setStatus('Ready', 'neutral');
+    } else if (engineError) {
+      setStatus('Minifier unavailable', 'error');
+    } else {
+      setStatus('Loading minifier…', 'neutral');
+    }
     input.focus();
   });
 
