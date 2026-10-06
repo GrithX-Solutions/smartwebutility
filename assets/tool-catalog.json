@@ -336,8 +336,17 @@
     "category": "Developer",
     "url": "/regex-tester/",
     "title": "Regex Tester",
-    "description": "Test expressions, groups and replacements.",
-    "keywords": []
+    "description": "Test JavaScript regular expressions with highlighted matches, capture groups, ranges and replacement preview.",
+    "keywords": [
+      "regex tester",
+      "regular expression tester",
+      "regex tester online",
+      "online regular expression tester",
+      "regex tester javascript",
+      "javascript regular expression tester",
+      "regex tester js",
+      "free regex tester"
+    ]
   },
   {
     "category": "Developer",
