@@ -1139,6 +1139,34 @@ const cases = [
     await p.locator('#urlInput').fill('hello world');
     await p.locator('#runUrlCodec').click();
     assert.equal((await p.locator('#urlOutput').inputValue()).trim(), 'hello%20world');
+    assert.equal(await p.locator('#urlStatus').innerText(), 'Encoded · component');
+
+    await p.locator('#urlFormEncoding').check();
+    assert.equal((await p.locator('#urlOutput').inputValue()).trim(), 'hello+world');
+    assert.equal(await p.locator('#urlStatus').innerText(), 'Encoded · form value');
+
+    await p.locator('#urlInput').fill('a+b c');
+    await p.locator('#runUrlCodec').click();
+    assert.equal(await p.locator('#urlOutput').inputValue(), 'a%2Bb+c');
+
+    await p.locator('#urlMode').selectOption('decode');
+    await p.locator('#urlInput').fill('a%2Bb+c');
+    await p.locator('#runUrlCodec').click();
+    assert.equal(await p.locator('#urlOutput').inputValue(), 'a+b c');
+
+    await p.locator('#urlComponent').uncheck();
+    await p.locator('#urlMode').selectOption('encode');
+    await p.locator('#urlInput').fill('https://example.com/a b?q=x y');
+    await p.locator('#runUrlCodec').click();
+    assert.equal(await p.locator('#urlOutput').inputValue(), 'https://example.com/a%20b?q=x%20y');
+    assert.equal(await p.locator('#urlFormEncoding').isDisabled(), true);
+
+    await p.locator('#urlComponent').check();
+    await p.locator('#urlMode').selectOption('decode');
+    await p.locator('#urlInput').fill('bad%2');
+    await p.locator('#runUrlCodec').click();
+    assert.equal(await p.locator('#urlError').isHidden(), false);
+    assert.match(await p.locator('#urlError').innerText(), /index 3/i);
   }],
   ['html-entity-encoder-decoder', async p => {
     await p.locator('#htmlEntityInput').fill('<h1>Hi & bye</h1>');
