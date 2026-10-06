@@ -3560,3 +3560,155 @@ Production paths were not used as the CI workspace and production was not deploy
 - JavaScript syntax: VERIFIED.
 - Regex Escaper Chromium regression: VERIFIED.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 19 — /json-diff/
+
+Research/update date: 2026-10-06  
+Status: VERIFIED VIA ISOLATED CI FALLBACK
+
+### Primary intent
+Compare two valid JSON values semantically and identify added, removed and changed values by structured JSON path rather than raw line differences.
+
+Canonical owner:
+- `https://smartwebutility.com/json-diff/`
+
+### Ubersuggest US evidence
+- `compare json`: 9,900 searches/month, SD 29, CPC $1.84.
+- `json diff`: 6,600, SD 57, CPC $7.72.
+- `compare json objects online`: 4,400, SD 39.
+- `compare json online`: 2,900, SD 35, CPC $1.60.
+- `json diff online`: 720, SD 33.
+- `online json diff`: 590, SD 42, CPC $46.11.
+- `json diff checker`: 590, SD 45, CPC $12.49.
+- `json diff tools`: 260, SD 13.
+- `compare json file`: 170, SD 40.
+- `compare json file online`: 70, SD 31.
+- `online json diff tools`: 30, SD 5.
+- `compare json online ignore order`: 10, SD 5.
+
+### Current U.S. SERP / attainability
+The current U.S. SERP confirms strong transactional/tool intent despite the broad `json diff` head term being difficult.
+
+For `json diff`, Ubersuggest shows:
+- HyperTest — DA 28 near the top;
+- online-free-tool.appspot.com — DA 1;
+- CodeBoxTools — DA 5;
+- JSON Formatters Pro — DA 5;
+- DevCollective — DA 12;
+- AKIT — DA 4;
+- Parser JSON — DA 4;
+- several additional DA 2–11 utility domains.
+
+For the focused `json diff tools` term, low-authority utilities also rank, including DA 1, 4, 8, 12, 17 and 18 results.
+
+The canonical remains `/json-diff/`; no duplicate compare-JSON URL is justified.
+
+### Competitor review
+Current competitors establish the expected workflow:
+- HyperTest supports pasted JSON and local file inputs with structured/path-oriented difference views.
+- CodeBoxTools explains semantic comparison, path-level added/removed/changed results and practical API/configuration use cases.
+- jsondiff.com remains a dedicated semantic JSON comparison property.
+
+The verified opportunity is therefore not to create another thin comparator. Smart Web Utility needs a complete local workflow while retaining its existing semantic path model.
+
+### Existing Smart Web Utility strengths before this change
+The page already:
+- parsed both sides as JSON rather than comparing raw text;
+- ignored whitespace and object-key ordering;
+- reported added, removed and changed values by JSON path;
+- retained JSON value types;
+- supported optional array-order ignoring;
+- explained the array-order caveat;
+- ran comparison locally in browser JavaScript.
+
+### Confirmed workflow gap
+The previous tool required copy/paste for both inputs and had no portable result artifact.
+
+That limited common comparison workflows involving saved API fixtures, configuration exports and before/after JSON files. It also forced users to manually copy results if they wanted to retain or share the structured differences.
+
+### Implementation
+`json-diff/index.html` now adds:
+- local file input for the left JSON;
+- local file input for the right JSON;
+- a Swap sides action;
+- a Download report action;
+- visible privacy/file-limit guidance;
+- content explaining local-file comparison, reversible baselines and report semantics;
+- WebApplication feature metadata for the new workflow.
+
+`assets/data-advanced-tools.js` now:
+- loads each local JSON file in the browser with a 5 MB per-file limit;
+- automatically compares once both sides are available;
+- swaps the comparison direction without re-copying data;
+- invalidates stale downloadable results whenever an input or comparison option changes;
+- produces a structured `smartwebutility-json-diff-report` version 1 document;
+- records comparison mode, summary counts and path-level status;
+- uses explicit `leftPresent` / `rightPresent` flags so missing values are not confused with JSON `null`;
+- preserves the existing semantic diff algorithm and optional array-order normalization.
+
+Internal search discovery now includes:
+- `json diff tools`
+- `json diff online`
+- `online json diff`
+- `json diff checker`
+- `json diff viewer`
+
+Sitemap `lastmod` was updated to 2026-10-06.
+
+### Regression coverage
+The committed Chromium case verifies:
+- baseline path-level changed/added output;
+- local left/right JSON file loading;
+- nested path reporting from file inputs;
+- optional array-order ignoring;
+- Swap sides reversing an added value into a removed value;
+- downloadable `json-diff-report.json`;
+- report format/version/comparison mode;
+- path-level changed and removed report entries.
+
+The first isolated Chromium run exposed a test-only assertion issue after Swap sides. The product DOM correctly emitted a `data-kind="removed"` row, but CSS `text-transform: capitalize` caused `innerText` to render `Removed`, so the lowercase text assertion failed. A targeted browser probe confirmed:
+- `data-kind="removed"` count = 1;
+- underlying textContent = `removed`;
+- rendered innerText = `Removed`.
+
+The regression was corrected in commit `03db6bf791d865cbc5e41bec47c3a7b497eb956b` to assert semantic DOM state instead of presentation casing.
+
+### Isolated CI validation — 2026-10-06
+Isolated workspace:
+- `/srv/smartwebutility-ci/workspaces/json-diff-6aaddac`
+
+Exact current-branch Git blob identity was verified for the material files:
+- `json-diff/index.html` — `321baef41d6785534002624a01d7dae92b54f5f8`
+- `assets/data-advanced-tools.js` — `52829fa8acd8662f138647e7d08eaf9ed1924247`
+- `tests/browser-smoke.cjs` — `0989b8fc1728e55c4eba506c2b74271015d2d899`
+- `assets/tool-catalog.json` — `8a10d3153160f938754e4ce1f4ac9c88758e4156`
+- `sitemap.xml` — `e11147c59275477a5031a96e3bc01f59392d5921`
+
+Gate results:
+- static SEO QA: 89 pages, 0 errors, 0 warnings;
+- content QA: 89 pages, 0 errors, 2 intentionally retained advisories;
+- `assets/data-advanced-tools.js` syntax: PASS;
+- committed browser-smoke syntax: PASS;
+- Chromium explicitly reported `PASS json-diff`;
+- browser page sweep: 89 pages checked;
+- active navigation, global tool search/navigation and mobile layout checks: PASS.
+
+The final broad smoke run finished 142 passed / 2 failed because `html-minifier` and `css-minifier` timed out waiting for provider readiness. Those failures are unrelated to JSON Diff and remain final-batch release blockers.
+
+Production paths were not used as the CI workspace and production was not deployed.
+
+### Page 19 acceptance status
+- Demand / difficulty: VERIFIED.
+- Current SERP intent/attainability: VERIFIED.
+- Canonical ownership / cannibalization: VERIFIED.
+- Existing implementation inspected: VERIFIED.
+- Workflow gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Regression test correction: VERIFIED.
+- Static SEO/content QA: VERIFIED.
+- JavaScript syntax: VERIFIED.
+- JSON Diff Chromium regression: VERIFIED.
+- Production deployment: NOT STARTED.
