@@ -11,6 +11,8 @@ Run the remaining content/SEO re-audit page by page. Research, improve, test and
 - Current production source/artifact SHA: `04ce96286f0baaff1a175f4cae7c9491b0607688`
 - Current GitHub main state-only head before this batch: `ee460eb96606bbf93cd7a8347e51be8c851672d3`
 - Working branch: `content-reaudit-page-by-page-2026-10-03`
+- HTML Entity Encoder / Decoder final implementation/test head before audit-state sync: `05fffbad66fe83037c4be2cc91a8594e32683602`.
+- HTML Entity Encoder / Decoder audit evidence commit: `6ca554f0be9b0f1439290b14236484684befc2e9`.
 - URL Encoder / Decoder final implementation/test head before audit-state sync: `c09bc2a5d3311fb00cfe38253e3d5379e0d78400`.
 - URL Encoder / Decoder audit evidence commit: `7030cfcf40ef0ccb8a1e7165ac2e11a7c0f17627`.
 - Regex Tester final implementation/test head before audit-state sync: `e447fc14156ba5865ef6d9548559bdf0aa9e240b`.
@@ -82,29 +84,31 @@ Research record:
 
 ## Current page
 
-### /html-entity-encoder-decoder/ — next page research
+### /robots-txt-generator/ — next page research
 
 Status: UNKNOWN — NOT YET AUDITED UNDER THE CURRENT HARD GATE.
 
-URL Encoder / Decoder is now VERIFIED via the approved isolated ZTHosting fallback:
-- Ubersuggest U.S. demand was verified, including `url decoder` at 22,200 searches/month, `url encoder` at 14,800, `url encoder and decoder` at 1,300 with SD 40, and the lower-difficulty `url encoder javascript` at 1,300 with SD 13;
-- current U.S. SERP evidence includes low-authority utility domains for both combined and JavaScript-specific variants, and AI Overview / People Also Ask features appear on relevant queries;
-- live competitor review confirmed a recurring product distinction between component encoding, full-URL encoding and form/query serialization where spaces use `+`;
-- canonical ownership remains `/url-encoder-decoder/`; no duplicate encoder, decoder or form-query URL was created;
-- the implementation now supports explicit form/query plus-space handling while preserving `%2B` for literal plus signs;
-- malformed percent escapes are identified before decode with the exact source-string index instead of exposing only the browser's generic `URI malformed` error;
+HTML Entity Encoder / Decoder is now VERIFIED via the approved isolated ZTHosting fallback:
+- Ubersuggest U.S. demand was verified across the canonical intent, including `html decode` at 1,600 searches/month, `html encode` at 1,300 with SD 28, `html entity decoder` at 170 with SD 26 and `html escape online` at 40 with SD 7;
+- current/recent U.S. SERP evidence includes multiple low-authority specialist utilities, especially for `html escape online` and `html entity decoder`, confirming attainable long-tail intent without implying ranking success;
+- live competitor review confirmed that current tools commonly expose named, decimal and hexadecimal output plus optional non-ASCII encoding;
+- WHATWG and MDN documentation confirm named, decimal numeric and hexadecimal numeric HTML character-reference forms;
+- canonical ownership remains `/html-entity-encoder-decoder/`; no duplicate encoder/decoder/entity-format URL was created;
+- the implementation now supports Named essentials, Decimal and Hexadecimal output plus optional non-ASCII numeric escaping;
+- encoding iterates Unicode code points so emoji are emitted as one numeric reference rather than broken surrogate halves;
+- decode remains browser-native, one-pass and plain-text;
 - exact current-branch Git blob identity was verified for page HTML, implementation JS, browser test, tool catalog and sitemap;
 - static SEO QA passed 89 pages with 0 errors / 0 warnings;
 - content QA passed with 0 errors and the same 2 intentionally retained advisories;
 - implementation JavaScript and committed browser-smoke syntax passed;
-- Chromium explicitly reported `PASS url-encoder-decoder`;
+- final Chromium explicitly reported `PASS html-entity-encoder-decoder`;
 - browser sweep checked all 89 pages and navigation/search/mobile checks passed;
-- Ubersuggest rank tracking now includes `url decoder`, `url encoder` and `url encoder javascript` for U.S. English;
+- Ubersuggest rank tracking now includes `html encode`, `html entity decoder` and `html escape online` for U.S. English;
 - production was not used as the CI workspace and was not deployed.
 
-The broad smoke total remains 142/144 because HTML Minifier and CSS Minifier timed out waiting for provider readiness. Those failures are unrelated to URL Encoder / Decoder but remain final-batch release blockers.
+The broad smoke total remains 142/144 because HTML Minifier and CSS Minifier timed out waiting for provider readiness. Those failures are unrelated to HTML Entity Encoder / Decoder but remain final-batch release blockers.
 
-The next unresolved canonical in sitemap order is `/html-entity-encoder-decoder/`. No change is authorized until Ubersuggest U.S. demand, the current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
+Cron Expression Helper and Meta Tag Generator are already audited and are skipped in sitemap order. The next unresolved canonical is `/robots-txt-generator/`. No change is authorized until Ubersuggest U.S. demand, the current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
@@ -472,6 +476,31 @@ URL Encoder / Decoder isolated validation — 2026-10-06:
 - Page-specific gate: VERIFIED.
 - Production mutation: NONE.
 
+HTML Entity Encoder / Decoder isolated validation — 2026-10-06:
+- Final implementation/test head before audit-state sync: `05fffbad66fe83037c4be2cc91a8594e32683602`.
+- Audit evidence commit: `6ca554f0be9b0f1439290b14236484684befc2e9`.
+- Isolated workspace: `/srv/smartwebutility-ci/workspaces/html-entities-3a184b3`.
+- Exact current-branch material Git blobs:
+  - `html-entity-encoder-decoder/index.html`: `a6054e3520691764d48e34790892fd2f19a5d7a9`;
+  - `assets/html-entities.js`: `a7c4aa993b565e7524045ff07c24c407bd62ed22`;
+  - `tests/browser-smoke.cjs`: `d51de3c23fbecf7cadafe59ff900716646bc905b`;
+  - `assets/tool-catalog.json`: `b6a44af5bad8fcd2bffbb9aeef664c2257cae963`;
+  - `sitemap.xml`: `c1524d84174280ddbb204546fdfec6cda2fa60d4`.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- HTML entities JavaScript syntax: PASS.
+- Committed browser-smoke syntax: PASS.
+- Initial Chromium exposed only a test-sequencing issue after option changes; codec behavior itself was correct.
+- Final Chromium after commit `05fffbad66fe83037c4be2cc91a8594e32683602`: `PASS html-entity-encoder-decoder`.
+- Named essentials, decimal, hex, non-ASCII Unicode code points, named/numeric decode and one-pass decode: PASS.
+- Browser page sweep: 89 pages checked.
+- Active navigation, global tool search/navigation and mobile layout: PASS.
+- Broad smoke total: 142 passed, 2 failed; only `html-minifier` and `css-minifier` timed out waiting for provider readiness.
+- Ubersuggest U.S. rank tracking added: `html encode`, `html entity decoder`, `html escape online`.
+- Ubersuggest tracked keyword-location usage after update: 83 / 300.
+- Page-specific gate: VERIFIED.
+- Production mutation: NONE.
+
 ## CI infrastructure blocker
 
 BLOCKED:
@@ -518,13 +547,13 @@ XML Formatter & Validator isolated validation:
 
 ## Work in progress
 
-URL Encoder / Decoder is VERIFIED via the isolated fallback and its three strategic U.S. keywords are tracked in Ubersuggest. Regex Tester, Hash Generator, Unix Timestamp Converter, JSON Diff, Regex Escaper, XML Escape / Unescape and UUID Validator remain verified. The next page is `/html-entity-encoder-decoder/`, beginning with research only. Production remains unchanged.
+HTML Entity Encoder / Decoder is VERIFIED via the isolated fallback and its three strategic U.S. keywords are tracked in Ubersuggest. URL Encoder / Decoder, Regex Tester, Hash Generator, Unix Timestamp Converter, JSON Diff, Regex Escaper, XML Escape / Unescape and UUID Validator remain verified. The next page is `/robots-txt-generator/`, beginning with research only. Production remains unchanged.
 
 ## Affected files — completed/current pages
 
 Most recently verified page:
-- `url-encoder-decoder/index.html`
-- `assets/url-codec.js`
+- `html-entity-encoder-decoder/index.html`
+- `assets/html-entities.js`
 
 Shared direct requirements verified with that page:
 - `assets/tool-catalog.json`
@@ -535,10 +564,10 @@ Shared direct requirements verified with that page:
 
 ## NEXT ACTION
 
-Audit `/html-entity-encoder-decoder/` as the next and only active page:
+Audit `/robots-txt-generator/` as the next and only active page:
 1. verify Ubersuggest U.S. demand, difficulty, CPC/intent and useful semantic variants;
 2. inspect the current U.S. SERP and relevant competitors;
-3. confirm canonical ownership and no cannibalization;
+3. confirm canonical ownership and no cannibalization with `/robots-txt-tester/`;
 4. inspect current functionality/content against the verified intent;
 5. identify a concrete product/content gap or record an evidence-based NO CHANGE decision;
 6. only if a real gap exists, implement that page plus directly required tests/search metadata and validate it before moving to another page;
