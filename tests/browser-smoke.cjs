@@ -1371,6 +1371,53 @@ const cases = [
     assert.equal(await p.locator('#ogError').isHidden(), false);
     assert.match(await p.locator('#ogError').innerText(), /language_TERRITORY/i);
   }],
+  ['sitemap-checker', async p => {
+    await p.route('**/api/sitemap-check.php*', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          ok: true,
+          result: {
+            url: 'https://example.com/sitemap.xml',
+            final_url: 'https://www.example.com/sitemap.xml',
+            status: 200,
+            redirect_count: 1,
+            type: 'urlset',
+            protocol_valid: false,
+            namespace_ok: true,
+            entries: 4,
+            valid_locs: 3,
+            invalid_locs: 1,
+            duplicates: 1,
+            hosts: ['www.example.com'],
+            lastmod_count: 3,
+            invalid_lastmod: 1,
+            future_lastmod: 1,
+            issues: ['url #4 has an invalid <loc>; use an absolute HTTP(S) URL no longer than 2,048 characters.'],
+            warnings: ['Duplicate <loc>: https://www.example.com/about/'],
+            sample: ['https://www.example.com/','https://www.example.com/about/'],
+            bytes_checked: 4096,
+            truncated: false
+          }
+        })
+      });
+    });
+
+    await p.locator('#target').fill('https://example.com/sitemap.xml');
+    await p.locator('#diagForm button[type="submit"]').click();
+    await p.locator('#result').waitFor({state:'visible'});
+
+    const resultText = await p.locator('#resultBody').innerText();
+    assert.match(resultText, /Protocol status\s+Issues found/i);
+    assert.match(resultText, /Sitemap namespace\s+Valid/i);
+    assert.match(resultText, /Invalid locations\s+1/i);
+    assert.match(resultText, /Duplicate locations\s+1/i);
+    assert.match(resultText, /lastmod coverage\s+3 \/ 4/i);
+    assert.match(resultText, /url #4 has an invalid <loc>/i);
+    assert.match(resultText, /Duplicate <loc>/i);
+    assert.match(resultText, /https:\/\/www\.example\.com\/about\//i);
+  }],
   ['bulk-redirect-checker', async p => {
     await p.route('**/api/redirect-check.php*', async route => {
       const url = new URL(route.request().url()).searchParams.get('url');
