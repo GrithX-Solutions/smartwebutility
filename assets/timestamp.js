@@ -12,9 +12,7 @@
   const year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();
 
-  const NS_PER_SECOND = 1000000000n;
   const NS_PER_MILLISECOND = 1000000n;
-  const NS_PER_MICROSECOND = 1000n;
   const MAX_DATE_MS = 8640000000000000n;
   const scaleDigits = {
     seconds: 9,
@@ -86,7 +84,9 @@
   }
 
   function toDate(nanoseconds) {
-    const milliseconds = nanoseconds / NS_PER_MILLISECOND;
+    const milliseconds = nanoseconds >= 0n
+      ? nanoseconds / NS_PER_MILLISECOND
+      : -((-nanoseconds + NS_PER_MILLISECOND - 1n) / NS_PER_MILLISECOND);
     if (milliseconds > MAX_DATE_MS || milliseconds < -MAX_DATE_MS) {
       throw new Error('That timestamp is outside the JavaScript Date supported range.');
     }
