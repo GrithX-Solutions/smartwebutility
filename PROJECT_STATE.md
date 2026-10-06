@@ -12,6 +12,9 @@ Run the remaining content/SEO re-audit page by page. Research, improve, test and
 - Current GitHub main state-only head before this batch: `ee460eb96606bbf93cd7a8347e51be8c851672d3`
 - Working branch: `content-reaudit-page-by-page-2026-10-03`
 - XML Escape implementation head before audit-state sync: `c458d24629f78220115bc8dbd9af0940bf2c9b4e`.
+- JSON Diff implementation/content head before test correction: `6aaddac1f9a0e3f7a45bb94f5012d39a0cd758d3`.
+- JSON Diff regression correction commit: `03db6bf791d865cbc5e41bec47c3a7b497eb956b`.
+- JSON Diff audit evidence commit: `5b2c40de15215a6c563639c99bcc66dc19afba28`.
 - Regex Escaper implementation/content head before audit-state sync: `2c8a6298325b32e86b26c4ad75b8aa5248cd3ff9`.
 - Regex Escaper audit evidence commit: `d0822b76c1ec375aba1c78e5a70640212cf0f4d7`.
 - XML Escape audit evidence commit: `2c2201fc8acdce24917e3663184933dc5ed5b7bf`.
@@ -70,27 +73,27 @@ Research record:
 
 ## Current page
 
-### /json-diff/ — next page research
+### /unix-timestamp-converter/ — next page research
 
 Status: UNKNOWN — NOT YET AUDITED UNDER THE CURRENT HARD GATE.
 
-Regex Escaper is now VERIFIED via the approved isolated ZTHosting fallback:
-- Ubersuggest U.S. demand and difficulty were verified, including `regex escaper` at 720 searches/month with SD 18 and the broader `regex escape characters` informational cluster;
-- current U.S. SERP intent is mixed between authoritative language/API documentation, Q&A and utility pages, with low-authority utility domains still represented;
-- canonical ownership remains `/regex-escaper/`, scoped explicitly to JavaScript/ECMAScript rather than claiming cross-engine equivalence;
-- a real AEO/content gap was fixed by adding a compact character-reference section and an authoritative ECMAScript `RegExp.escape()` citation;
-- runtime escaping logic was intentionally left unchanged;
-- exact current-branch Git blob identity was verified for page HTML, implementation JS, browser test, tool catalog and sitemap;
+JSON Diff is now VERIFIED via the approved isolated ZTHosting fallback:
+- Ubersuggest U.S. demand was verified, including `compare json` at 9,900 searches/month with SD 29 and the focused `json diff tools` term at 260 with SD 13;
+- the current U.S. SERP includes numerous low-authority utility domains, confirming realistic tool intent without implying ranking;
+- canonical ownership remains `/json-diff/`; no duplicate compare-JSON canonical was created;
+- the verified workflow gap was local file comparison, reversible left/right baselines and a portable machine-readable diff report;
+- exact current-branch Git blob identity was verified for page HTML, shared implementation JS, browser test, tool catalog and sitemap;
 - static SEO QA passed 89 pages with 0 errors / 0 warnings;
 - content QA passed with 0 errors and the same 2 intentionally retained advisories;
-- JavaScript and committed browser-smoke syntax passed in the pinned Playwright 1.55.1 image;
-- Chromium explicitly reported `PASS regex-escaper`;
+- implementation JavaScript and committed browser-smoke syntax passed;
+- the first Chromium run exposed only a brittle presentation-casing assertion after Swap sides; a targeted browser probe proved the product emitted a semantic `data-kind="removed"` row, and commit `03db6bf791d865cbc5e41bec47c3a7b497eb956b` corrected the regression;
+- final Chromium explicitly reported `PASS json-diff`;
 - browser sweep checked all 89 pages and navigation/search/mobile checks passed;
 - production was not used as the CI workspace and was not deployed.
 
-The broad smoke total remains 142/144 because HTML Minifier and CSS Minifier timed out waiting for provider readiness. Those failures are unrelated to Regex Escaper but remain final-batch release blockers.
+The broad smoke total remains 142/144 because HTML Minifier and CSS Minifier timed out waiting for provider readiness. Those failures are unrelated to JSON Diff but remain final-batch release blockers.
 
-The next unresolved canonical in sitemap order after already audited pages is `/json-diff/`. No change is authorized until Ubersuggest U.S. demand, the current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
+Previously audited Base64 Encoder / Decoder is skipped in sitemap order. The next unresolved canonical is `/unix-timestamp-converter/`. No change is authorized until Ubersuggest U.S. demand, the current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
@@ -335,6 +338,30 @@ Regex Escaper isolated validation — 2026-10-06:
 - Page-specific gate: VERIFIED.
 - Production mutation: NONE.
 
+JSON Diff isolated validation — 2026-10-06:
+- Implementation/content head before test correction: `6aaddac1f9a0e3f7a45bb94f5012d39a0cd758d3`.
+- Regression correction commit: `03db6bf791d865cbc5e41bec47c3a7b497eb956b`.
+- Audit evidence commit: `5b2c40de15215a6c563639c99bcc66dc19afba28`.
+- Isolated workspace: `/srv/smartwebutility-ci/workspaces/json-diff-6aaddac`.
+- Exact current-branch material Git blobs:
+  - `json-diff/index.html`: `321baef41d6785534002624a01d7dae92b54f5f8`;
+  - `assets/data-advanced-tools.js`: `52829fa8acd8662f138647e7d08eaf9ed1924247`;
+  - `tests/browser-smoke.cjs`: `0989b8fc1728e55c4eba506c2b74271015d2d899`;
+  - `assets/tool-catalog.json`: `8a10d3153160f938754e4ce1f4ac9c88758e4156`;
+  - `sitemap.xml`: `e11147c59275477a5031a96e3bc01f59392d5921`.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- Data-advanced JavaScript syntax: PASS.
+- Committed browser-smoke syntax: PASS.
+- Initial Chromium: JSON Diff swap assertion FAILED only because rendered `innerText` capitalized the semantic status through CSS.
+- Targeted browser probe: removed row count 1; underlying textContent `removed`; rendered innerText `Removed`.
+- Final Chromium after test correction: `PASS json-diff`.
+- Browser page sweep: 89 pages checked.
+- Active navigation, global tool search/navigation and mobile layout: PASS.
+- Broad smoke total: 142 passed, 2 failed; only `html-minifier` and `css-minifier` timed out waiting for provider readiness.
+- Page-specific gate: VERIFIED.
+- Production mutation: NONE.
+
 ## CI infrastructure blocker
 
 BLOCKED:
@@ -381,15 +408,13 @@ XML Formatter & Validator isolated validation:
 
 ## Work in progress
 
-Regex Escaper is VERIFIED via the isolated fallback. XML Escape / Unescape and UUID Validator remain verified. The next page is `/json-diff/`, beginning with research only. Production remains unchanged.
+JSON Diff is VERIFIED via the isolated fallback. Regex Escaper, XML Escape / Unescape and UUID Validator remain verified. The next page is `/unix-timestamp-converter/`, beginning with research only. Production remains unchanged.
 
 ## Affected files — completed/current pages
 
 Most recently verified page:
-- `regex-escaper/index.html`
-
-Runtime inspected but unchanged:
-- `assets/regex-escaper.js`
+- `json-diff/index.html`
+- `assets/data-advanced-tools.js`
 
 Shared direct requirements verified with that page:
 - `assets/tool-catalog.json`
@@ -400,7 +425,7 @@ Shared direct requirements verified with that page:
 
 ## NEXT ACTION
 
-Audit `/json-diff/` as the next and only active page:
+Audit `/unix-timestamp-converter/` as the next and only active page:
 1. verify Ubersuggest U.S. demand, difficulty, CPC/intent and useful semantic variants;
 2. inspect the current U.S. SERP and relevant competitors;
 3. confirm canonical ownership and no cannibalization;
