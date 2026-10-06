@@ -14,7 +14,30 @@ function endpoint(v){
 }
 function render(data){
  if(tool==='sitemap'){
-  const r=data.result; title.textContent='Sitemap check'; body.innerHTML='<table class="record-table"><tbody>'+row('Status',r.status)+row('Type',r.type)+row('Entries',r.entries)+row('Response truncated',r.truncated?'Yes':'No')+'</tbody></table>'+(r.sample?.length?'<div class="result-sub"><strong>Sample entries</strong><div class="chips">'+r.sample.map(x=>'<span>'+esc(x)+'</span>').join('')+'</div></div>':'');
+  const r=data.result;
+  const bytes=Number.isFinite(Number(r.bytes_checked))?Math.round(Number(r.bytes_checked)/1024).toLocaleString()+' KB':'—';
+  const issueBlock=(r.issues?.length?'<div class="result-sub"><strong>Protocol issues ('+esc(r.issues.length)+')</strong><div class="chips">'+r.issues.map(x=>'<span>'+esc(x)+'</span>').join('')+'</div></div>':'');
+  const warningBlock=(r.warnings?.length?'<div class="result-sub"><strong>Warnings ('+esc(r.warnings.length)+')</strong><div class="chips">'+r.warnings.map(x=>'<span>'+esc(x)+'</span>').join('')+'</div></div>':'');
+  title.textContent='Sitemap check';
+  body.innerHTML='<table class="record-table"><tbody>'
+   +row('HTTP status',r.status)
+   +row('Final URL',r.final_url)
+   +row('Redirects followed',r.redirect_count)
+   +row('Type',r.type)
+   +row('Protocol status',r.protocol_valid?'Valid':'Issues found')
+   +row('Sitemap namespace',r.namespace_ok?'Valid':'Missing / incorrect')
+   +row('Entries',r.entries)
+   +row('Valid locations',r.valid_locs)
+   +row('Invalid locations',r.invalid_locs)
+   +row('Duplicate locations',r.duplicates)
+   +row('Hosts represented',(r.hosts||[]).length)
+   +row('lastmod coverage',(r.lastmod_count||0)+' / '+r.entries)
+   +row('Invalid lastmod',r.invalid_lastmod||0)
+   +row('Future lastmod',r.future_lastmod||0)
+   +row('Bytes checked',bytes)
+   +'</tbody></table>'
+   +issueBlock+warningBlock
+   +(r.sample?.length?'<div class="result-sub"><strong>Sample entries</strong><div class="chips">'+r.sample.map(x=>'<span>'+esc(x)+'</span>').join('')+'</div></div>':'');
  } else if(tool==='meta'){
   const r=data.result; title.textContent='Meta tag check'; body.innerHTML='<table class="record-table"><tbody>'+row('Status',r.status)+row('Title',r.title)+row('Description',r.description)+row('Canonical',r.canonical)+row('Meta robots',r.robots)+row('X-Robots-Tag',r.x_robots_tag)+row('H1 count',r.h1_count)+'</tbody></table>';
  } else if(tool==='og'){
