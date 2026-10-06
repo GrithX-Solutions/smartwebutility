@@ -1282,9 +1282,52 @@ const cases = [
     assert.match(await p.locator('#robotsError').innerText(), /non-negative number/i);
   }],
   ['schema-markup-generator', async p => {
-    await p.locator('#schemaName').fill('Example Business');
-    await p.locator('#schemaUrl').fill('https://example.com/');
-    assert.ok((await p.locator('#schemaOutput').inputValue()).includes('Example Business'));
+    await p.locator('#schemaType').selectOption('LocalBusiness');
+    await p.locator('#schemaName').fill('Example Books');
+    await p.locator('#schemaUrl').fill('https://example.com/locations/downtown');
+    await p.locator('#schemaStreet').fill('148 W 51st St');
+    await p.locator('#schemaLocality').fill('New York');
+    await p.locator('#schemaRegion').fill('NY');
+    await p.locator('#schemaPostalCode').fill('10019');
+    await p.locator('#schemaCountry').fill('US');
+
+    let schema = await p.locator('#schemaOutput').inputValue();
+    assert.ok(schema.includes('"@type": "LocalBusiness"'));
+    assert.ok(schema.includes('"@type": "PostalAddress"'));
+    assert.ok(schema.includes('"streetAddress": "148 W 51st St"'));
+    assert.match(await p.locator('#schemaReadiness').innerText(), /detailed PostalAddress/i);
+    assert.equal(await p.locator('#schemaError').isHidden(), true);
+
+    await p.locator('#schemaType').selectOption('SoftwareApplication');
+    await p.locator('#schemaName').fill('Example App');
+    await p.locator('#schemaApplicationCategory').selectOption('UtilitiesApplication');
+    await p.locator('#schemaOperatingSystem').fill('Web');
+    await p.locator('#schemaPrice').fill('0');
+    await p.locator('#schemaRatingValue').fill('4.8');
+    await p.locator('#schemaRatingCount').fill('125');
+
+    schema = await p.locator('#schemaOutput').inputValue();
+    assert.ok(schema.includes('"@type": "SoftwareApplication"'));
+    assert.ok(schema.includes('"price": 0'));
+    assert.ok(schema.includes('"ratingValue": 4.8'));
+    assert.ok(schema.includes('"ratingCount": 125'));
+    assert.match(await p.locator('#schemaReadiness').innerText(), /required fields covered by this form are present/i);
+
+    await p.locator('#schemaType').selectOption('Article');
+    await p.locator('#schemaName').fill('Testing Structured Data');
+    await p.locator('#schemaAuthorName').fill('Jane Doe');
+    await p.locator('#schemaAuthorUrl').fill('https://example.com/authors/jane-doe');
+    await p.locator('#schemaDatePublished').fill('2026-10-06T14:00:00+00:00');
+    schema = await p.locator('#schemaOutput').inputValue();
+    assert.ok(schema.includes('"headline": "Testing Structured Data"'));
+    assert.ok(schema.includes('"@type": "Person"'));
+    assert.ok(schema.includes('"name": "Jane Doe"'));
+    assert.ok(schema.includes('"datePublished": "2026-10-06T14:00:00+00:00"'));
+
+    await p.locator('#schemaUrl').fill('/relative');
+    assert.equal(await p.locator('#schemaError').isHidden(), false);
+    assert.match(await p.locator('#schemaError').innerText(), /fully qualified URL/i);
+    assert.equal(await p.locator('#schemaOutput').inputValue(), '');
   }],
   ['open-graph-preview', async p => {
     await p.locator('#ogTitle').fill('Example OG');
