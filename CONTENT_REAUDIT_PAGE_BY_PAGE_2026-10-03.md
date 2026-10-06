@@ -4029,3 +4029,176 @@ Production paths were not used as the CI workspace and production was not deploy
 - JavaScript syntax: VERIFIED.
 - Hash Generator Chromium regression: VERIFIED.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 22 — /regex-tester/
+
+Research/update date: 2026-10-06  
+Status: VERIFIED VIA ISOLATED CI FALLBACK
+
+### Primary intent
+Test JavaScript regular expressions against sample text, inspect matches/capture groups and preview JavaScript replacements in the browser.
+
+Canonical owner:
+- `https://smartwebutility.com/regex-tester/`
+
+Cannibalization boundary:
+- `/regex-tester/` owns testing/debugging of complete JavaScript regular expressions.
+- `/regex-escaper/` owns escaping literal text so it can be safely inserted into a JavaScript regex pattern.
+- No new regex-testing URL is justified for semantic variants such as “regular expression tester” or “regex tester online.”
+
+### Ubersuggest US evidence
+- `regex tester`: 27,100 searches/month, SD 62, CPC $4.04.
+- `regular expression tester`: 18,100, SD 58, CPC $23.70.
+- `regex tester online`: 1,300, SD 40.
+- `online regular expression tester`: 2,400, SD 5.
+- `online regex tester`: 1,600, SD 55.
+- `regex tester javascript`: 390, SD 61.
+- `regex tester js`: 320, SD 52.
+- `typescript regex tester`: 50, SD 13.
+- `free regex tester`: 10, SD 13.
+
+The head query is authority-heavy, but the low-difficulty `online regular expression tester` variant confirms an attainable long-tail route for the same canonical page.
+
+### Current U.S. SERP / attainability
+Ubersuggest’s current U.S. SERP for `regex tester` is led by regex101, RegExr and W3Schools, but a DA 5 GitHub-hosted tester ranks around position 4 and additional specialist utilities appear throughout the top results.
+
+For `online regular expression tester`, the current U.S. SERP also includes low-authority utilities such as:
+- regextester.github.io — DA 5;
+- CalcNation — DA 8;
+- FreeToolbox — DA 2;
+- Toolaroid — DA 2;
+- SeaGit tools — DA 4.
+
+That does not imply ranking success, but it confirms that the long-tail tool intent is not authority-locked.
+
+### Live competitor review
+Current live-web review on 2026-10-06 found recurring capabilities across modern JavaScript regex testers:
+- live/highlighted matches;
+- numbered and named capture groups;
+- replacement preview;
+- modern JavaScript flags;
+- match indices/ranges;
+- private browser-side processing;
+- pattern explanations or cheatsheets on more feature-rich competitors.
+
+Examples reviewed include current Regex Tester/Explainer tools from Letvr, Starlight Tools, Go Tools, FreeLabTools, PrivacyKit, RegExTest.com and other current utilities.
+
+The previous Smart Web Utility page already handled matching, captures and replacement preview, but it did not visually highlight matches, expose start/end ranges, distinguish named groups, document the current `d`/ `v` flag set, or bound the result-table size for extremely repetitive patterns.
+
+### Standards / technical scope
+The page remains intentionally JavaScript/ECMAScript-specific.
+
+Current MDN documentation lists the JavaScript RegExp flags:
+- `d` — match indices;
+- `g` — global;
+- `i` — ignore case;
+- `m` — multiline;
+- `s` — dotAll;
+- `u` — Unicode;
+- `v` — Unicode sets / upgraded Unicode mode;
+- `y` — sticky.
+
+MDN also documents that `u` and `v` are incompatible modes and cannot be combined.
+
+### Implementation
+`regex-tester/index.html` now:
+- adds a highlighted test-text result panel;
+- relabels the result table as Matches & groups;
+- explains JavaScript UTF-16 start/end indices;
+- documents current `d/g/i/m/s/u/v/y` flags;
+- explains the `u` vs `v` incompatibility;
+- explains named groups and zero-length matches;
+- clarifies the boundary with the separate Regex Escaper;
+- expands WebApplication feature metadata;
+- keeps browser-local privacy messaging.
+
+`assets/regex.js` now:
+- renders matched text in context using safe escaped HTML and native `<mark>` elements;
+- shows start → end offsets for each match;
+- shows numbered captures and named capture groups separately;
+- retains JavaScript replacement semantics;
+- supports the browser’s native modern flag set through the RegExp constructor;
+- marks zero-length matches at their actual position without consuming text;
+- caps displayed/highlighted matches at 500 while preserving normal matching behavior for typical inputs;
+- reports `500+ matches · display capped` when the display limit is reached.
+
+A post-Chromium code review found a visual cursor bug for consecutive zero-length matches: preview text could be duplicated because the highlight cursor was not advanced to the zero-length position after rendering preceding text. Commit `3f6dca7732538c967434be734e3cc6007d9ac24b` corrected the cursor update, and commit `e447fc14156ba5865ef6d9548559bdf0aa9e240b` added an exact preview regression.
+
+Internal search discovery now includes:
+- `regex tester`
+- `regular expression tester`
+- `regex tester online`
+- `online regular expression tester`
+- `regex tester javascript`
+- `javascript regular expression tester`
+- `regex tester js`
+- `free regex tester`
+
+Sitemap `lastmod` was updated to 2026-10-06.
+
+### Regression coverage
+The committed Chromium case verifies:
+- named-group matching with `(?<digits>\d+)`;
+- JavaScript `d` + `g` flags;
+- start/end range output such as `1 → 3`;
+- named-group output;
+- two highlighted matches;
+- named-group replacement preview;
+- zero-length global matches;
+- exact zero-length highlighted sequence `↧a↧a` without duplicated surrounding text;
+- exact match count for zero-length matching;
+- 500-match display cap and capped status.
+
+### Isolated CI validation — 2026-10-06
+Final implementation/test head before audit-state sync:
+- `e447fc14156ba5865ef6d9548559bdf0aa9e240b`
+
+Isolated workspace:
+- `/srv/smartwebutility-ci/workspaces/regex-tester-67549ba`
+
+Exact current-branch material Git blobs:
+- `regex-tester/index.html` — `217c651bf4f6f14b38187f9cb7f34b81b64ab736`
+- `assets/regex.js` — `48f1d0731585f6e0e780018bb0b554a151feea0c`
+- `tests/browser-smoke.cjs` — `4f28b8c93552d7f93987e3d3d382e1da079a101b`
+- `assets/tool-catalog.json` — `4b032d4a2a9d1f689e94c165322d93ed275a8e74`
+- `sitemap.xml` — `c5bbba4f0ea0577c20b54747dc846bb5dd512abf`
+
+Gate results:
+- static SEO QA: 89 pages, 0 errors, 0 warnings;
+- content QA: 89 pages, 0 errors, 2 intentionally retained advisories;
+- `assets/regex.js` syntax: PASS;
+- committed browser-smoke syntax: PASS;
+- final Chromium explicitly reported `PASS regex-tester`;
+- browser page sweep: 89 pages checked;
+- active navigation, global tool search/navigation and mobile layout checks: PASS;
+- broad smoke total: 142 passed, 2 failed.
+
+The two broad-suite failures are the existing `html-minifier` and `css-minifier` provider-readiness timeouts. They are unrelated to Regex Tester and remain mandatory final-batch release blockers.
+
+### Ubersuggest rank tracking
+After page verification, the SmartWebUtility Ubersuggest project was updated for U.S. English with:
+- `regex tester`
+- `online regular expression tester`
+- `regex tester online`
+
+Tracked keyword-location usage after update: 77 / 300.
+
+Production paths were not used as the CI workspace and production was not deployed.
+
+### Page 22 acceptance status
+- Demand / difficulty: VERIFIED.
+- Current U.S. SERP intent/attainability: VERIFIED.
+- Live competitor review: VERIFIED.
+- Canonical ownership / cannibalization: VERIFIED.
+- Existing implementation inspected: VERIFIED.
+- Modern JavaScript match-inspection gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Zero-length highlight regression: VERIFIED.
+- Static SEO/content QA: VERIFIED.
+- JavaScript syntax: VERIFIED.
+- Regex Tester Chromium regression: VERIFIED.
+- Ubersuggest rank tracking: VERIFIED.
+- Production deployment: NOT STARTED.
