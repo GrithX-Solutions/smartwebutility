@@ -24,10 +24,15 @@ function sitemap_valid_lastmod(string $value): bool {
   try {
     if (strlen($value) === 10) {
       $date = DateTimeImmutable::createFromFormat('!Y-m-d', $value);
-      return $date instanceof DateTimeImmutable && $date->format('Y-m-d') === $value;
+      $errors = DateTimeImmutable::getLastErrors();
+      return $date instanceof DateTimeImmutable
+        && ($errors === false || (($errors['warning_count'] ?? 0) === 0 && ($errors['error_count'] ?? 0) === 0))
+        && $date->format('Y-m-d') === $value;
     }
-    new DateTimeImmutable($value);
-    return true;
+    $date = new DateTimeImmutable($value);
+    $errors = DateTimeImmutable::getLastErrors();
+    return $date instanceof DateTimeImmutable
+      && ($errors === false || (($errors['warning_count'] ?? 0) === 0 && ($errors['error_count'] ?? 0) === 0));
   } catch (Throwable) {
     return false;
   }
@@ -60,8 +65,8 @@ function analyze_sitemap_xml(string $xml, string $sourceUrl): array {
 
   $issues = [];
   $warnings = [];
-  $namespaces = $doc->getDocNamespaces(true);
-  $namespaceOk = in_array(SWU_SITEMAP_NAMESPACE, array_values($namespaces), true);
+  $rootDom = dom_import_simplexml($doc);
+  $namespaceOk = $rootDom instanceof DOMElement && $rootDom->namespaceURI === SWU_SITEMAP_NAMESPACE;
   if (!$namespaceOk) {
     sitemap_add_message($issues, 'Missing or incorrect Sitemap protocol namespace on the root element.');
   }
@@ -71,6 +76,10 @@ function analyze_sitemap_xml(string $xml, string $sourceUrl): array {
   $entries = is_array($entries) ? $entries : [];
   $entryCount = count($entries);
 
+  if ($entryCount === 0) {
+    sitemap_add_message($issues, 'The '.$root.' does not contain any direct <'.$entryName.'> entries.');
+  }
+
   if ($entryCount > 50000) {
     sitemap_add_message($issues, 'This file contains more than the 50,000-entry sitemap protocol limit.');
   }
@@ -78,6 +87,7 @@ function analyze_sitemap_xml(string $xml, string $sourceUrl): array {
   $sample = [];
   $seen = [];
   $hosts = [];
+  $schemes = [];
   $validLocs = 0;
   $invalidLocs = 0;
   $duplicates = 0;
@@ -110,6 +120,7 @@ function analyze_sitemap_xml(string $xml, string $sourceUrl): array {
       } else {
         $validLocs++;
         $hosts[$host] = true;
+        $schemes[$scheme] = true;
         if (isset($seen[$loc])) {
           $duplicates++;
           sitemap_add_message($warnings, 'Duplicate <loc>: '.$loc);
@@ -159,6 +170,10 @@ function analyze_sitemap_xml(string $xml, string $sourceUrl): array {
       $warnings,
       'Multiple hosts appear in <loc> values. The Sitemap protocol generally expects one host; Google cross-site sitemaps require verified ownership/submission.'
     );
+  }
+
+  if (count($schemes) > 1) {
+    sitemap_add_message($warnings, 'Mixed HTTP and HTTPS <loc> values were found. Review canonical protocol consistency before submission.');
   }
 
   if ($root === 'urlset' && ($changefreqCount > 0 || $priorityCount > 0)) {
