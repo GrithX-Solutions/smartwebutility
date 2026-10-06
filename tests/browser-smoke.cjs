@@ -1126,6 +1126,7 @@ const cases = [
     matchesText = await p.locator('#regexMatches').innerText();
     assert.ok(matchesText.includes('0 → 0'));
     assert.equal(await p.locator('#regexHighlighted mark').count(), 2);
+    assert.equal(await p.locator('#regexHighlighted').textContent(), '↧a↧a');
     assert.equal(await p.locator('#regexStatus').innerText(), '2 matches');
 
     await p.locator('#regexPattern').fill('a');
