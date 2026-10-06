@@ -124,8 +124,17 @@
     "category": "Developer",
     "url": "/html-entity-encoder-decoder/",
     "title": "HTML Entity Encoder / Decoder",
-    "description": "Escape and decode HTML entities.",
-    "keywords": []
+    "description": "Encode HTML character references as named, decimal or hex entities and decode them back to text.",
+    "keywords": [
+      "html encode",
+      "html decode",
+      "html entity decoder",
+      "html entity encoder",
+      "html escape online",
+      "html encode online",
+      "online html decode",
+      "html entity converter"
+    ]
   },
   {
     "category": "Developer",
