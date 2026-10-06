@@ -11,6 +11,8 @@ Run the remaining content/SEO re-audit page by page. Research, improve, test and
 - Current production source/artifact SHA: `04ce96286f0baaff1a175f4cae7c9491b0607688`
 - Current GitHub main state-only head before this batch: `ee460eb96606bbf93cd7a8347e51be8c851672d3`
 - Working branch: `content-reaudit-page-by-page-2026-10-03`
+- Unix Timestamp Converter implementation/test head before audit-state sync: `f23347171a3025830bdf2bb920dfeb381fdd082e`.
+- Unix Timestamp Converter audit evidence commit: `289c3df0fc030d8edb027fcc9f470820350ff431`.
 - XML Escape implementation head before audit-state sync: `c458d24629f78220115bc8dbd9af0940bf2c9b4e`.
 - JSON Diff implementation/content head before test correction: `6aaddac1f9a0e3f7a45bb94f5012d39a0cd758d3`.
 - JSON Diff regression correction commit: `03db6bf791d865cbc5e41bec47c3a7b497eb956b`.
@@ -73,27 +75,29 @@ Research record:
 
 ## Current page
 
-### /unix-timestamp-converter/ — next page research
+### /hash-generator/ — next page research
 
 Status: UNKNOWN — NOT YET AUDITED UNDER THE CURRENT HARD GATE.
 
-JSON Diff is now VERIFIED via the approved isolated ZTHosting fallback:
-- Ubersuggest U.S. demand was verified, including `compare json` at 9,900 searches/month with SD 29 and the focused `json diff tools` term at 260 with SD 13;
-- the current U.S. SERP includes numerous low-authority utility domains, confirming realistic tool intent without implying ranking;
-- canonical ownership remains `/json-diff/`; no duplicate compare-JSON canonical was created;
-- the verified workflow gap was local file comparison, reversible left/right baselines and a portable machine-readable diff report;
-- exact current-branch Git blob identity was verified for page HTML, shared implementation JS, browser test, tool catalog and sitemap;
+Unix Timestamp Converter is now VERIFIED via the approved isolated ZTHosting fallback:
+- Ubersuggest U.S. demand was verified, including `epoch converter` at 33,100 searches/month with SD 28, `unix timestamp converter` at 33,100 with SD 48, and the focused `unix timestamp converter online` at 50 with SD 6;
+- the current U.S. SERP includes low-authority utilities for both head and long-tail variants, and the online long-tail currently exposes AI Overview and People Also Ask features;
+- a live competitor review confirmed that the current product bar includes seconds/ms/µs/ns conversion, while some competitors also add relative time, batch conversion, URL state or broader date parsing;
+- canonical ownership remains `/unix-timestamp-converter/`; no duplicate epoch/timestamp URL was created;
+- the verified product/correctness gap was high-resolution timestamp handling plus explicit local-vs-UTC date interpretation;
+- timestamp parsing now preserves high-resolution integer values with `BigInt`, while visible copy explains JavaScript Date's millisecond calendar precision;
+- a final correctness review identified and fixed negative sub-millisecond conversion so `-1` ns maps to the correct pre-epoch millisecond rather than rounding toward the Unix epoch;
+- exact current-branch Git blob identity was verified for page HTML, implementation JS, browser test, tool catalog and sitemap;
 - static SEO QA passed 89 pages with 0 errors / 0 warnings;
 - content QA passed with 0 errors and the same 2 intentionally retained advisories;
 - implementation JavaScript and committed browser-smoke syntax passed;
-- the first Chromium run exposed only a brittle presentation-casing assertion after Swap sides; a targeted browser probe proved the product emitted a semantic `data-kind="removed"` row, and commit `03db6bf791d865cbc5e41bec47c3a7b497eb956b` corrected the regression;
-- final Chromium explicitly reported `PASS json-diff`;
+- final Chromium explicitly reported `PASS unix-timestamp-converter`;
 - browser sweep checked all 89 pages and navigation/search/mobile checks passed;
 - production was not used as the CI workspace and was not deployed.
 
-The broad smoke total remains 142/144 because HTML Minifier and CSS Minifier timed out waiting for provider readiness. Those failures are unrelated to JSON Diff but remain final-batch release blockers.
+The broad smoke total remains 142/144 because HTML Minifier and CSS Minifier timed out waiting for provider readiness. Those failures are unrelated to Unix Timestamp Converter but remain final-batch release blockers.
 
-Previously audited Base64 Encoder / Decoder is skipped in sitemap order. The next unresolved canonical is `/unix-timestamp-converter/`. No change is authorized until Ubersuggest U.S. demand, the current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
+UUID Generator is already audited and is skipped in sitemap order. The next unresolved canonical is `/hash-generator/`. No change is authorized until Ubersuggest U.S. demand, the current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
@@ -362,6 +366,30 @@ JSON Diff isolated validation — 2026-10-06:
 - Page-specific gate: VERIFIED.
 - Production mutation: NONE.
 
+Unix Timestamp Converter isolated validation — 2026-10-06:
+- Implementation/test head before audit-state sync: `f23347171a3025830bdf2bb920dfeb381fdd082e`.
+- Audit evidence commit: `289c3df0fc030d8edb027fcc9f470820350ff431`.
+- Isolated workspace: `/srv/smartwebutility-ci/workspaces/unix-ts-c4a933f`.
+- Exact current-branch material Git blobs:
+  - `unix-timestamp-converter/index.html`: `6fa3e4961787f1a12801e06ecdc61a29e504bcfa`;
+  - `assets/timestamp.js`: `b51d1da63cc5cafa71f8864500ee5c88e10b5dc8`;
+  - `tests/browser-smoke.cjs`: `ccb58d01559a7de355aceb8cf378ce24f6656761`;
+  - `assets/tool-catalog.json`: `442588eca79e9ff0bef8144ac7d03b0d5fdce652`;
+  - `sitemap.xml`: `027536c6517792be3e6a4f838649927ceef957e0`.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- Timestamp JavaScript syntax: PASS.
+- Committed browser-smoke syntax: PASS.
+- Initial Chromium exposed only a Playwright native `datetime-local` fill-format limitation.
+- Targeted Chromium probe confirmed minute precision is accepted by Playwright while seconds/fractional seconds are rejected by its fill API.
+- Final Chromium after browser-compatible test input and negative-nanosecond correctness fix: `PASS unix-timestamp-converter`.
+- Negative pre-epoch regression: `-1` ns -> `1969-12-31T23:59:59.999Z`: PASS.
+- Browser page sweep: 89 pages checked.
+- Active navigation, global tool search/navigation and mobile layout: PASS.
+- Broad smoke total: 142 passed, 2 failed; only `html-minifier` and `css-minifier` timed out waiting for provider readiness.
+- Page-specific gate: VERIFIED.
+- Production mutation: NONE.
+
 ## CI infrastructure blocker
 
 BLOCKED:
@@ -408,13 +436,13 @@ XML Formatter & Validator isolated validation:
 
 ## Work in progress
 
-JSON Diff is VERIFIED via the isolated fallback. Regex Escaper, XML Escape / Unescape and UUID Validator remain verified. The next page is `/unix-timestamp-converter/`, beginning with research only. Production remains unchanged.
+Unix Timestamp Converter is VERIFIED via the isolated fallback. JSON Diff, Regex Escaper, XML Escape / Unescape and UUID Validator remain verified. The next page is `/hash-generator/`, beginning with research only. Production remains unchanged.
 
 ## Affected files — completed/current pages
 
 Most recently verified page:
-- `json-diff/index.html`
-- `assets/data-advanced-tools.js`
+- `unix-timestamp-converter/index.html`
+- `assets/timestamp.js`
 
 Shared direct requirements verified with that page:
 - `assets/tool-catalog.json`
@@ -425,7 +453,7 @@ Shared direct requirements verified with that page:
 
 ## NEXT ACTION
 
-Audit `/unix-timestamp-converter/` as the next and only active page:
+Audit `/hash-generator/` as the next and only active page:
 1. verify Ubersuggest U.S. demand, difficulty, CPC/intent and useful semantic variants;
 2. inspect the current U.S. SERP and relevant competitors;
 3. confirm canonical ownership and no cannibalization;
