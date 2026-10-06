@@ -306,7 +306,13 @@
     "description": "Escape literal text using modern JavaScript RegExp.escape semantics.",
     "keywords": [
       "regex escape",
-      "regex escaper"
+      "regex escaper",
+      "regex escape characters",
+      "regex escape special characters",
+      "regex escape forward slash",
+      "regex escape period",
+      "regex escape backslash",
+      "regex escape online"
     ]
   },
   {
