@@ -107,8 +107,18 @@
     "category": "Developer",
     "url": "/hash-generator/",
     "title": "Hash Generator",
-    "description": "Generate SHA hashes for text and files.",
-    "keywords": []
+    "description": "Generate SHA hashes for text or files and verify expected checksums locally.",
+    "keywords": [
+      "hash generator",
+      "sha256 generator",
+      "sha256 hash generator",
+      "sha 256 hash generator",
+      "sha 1 hash generator",
+      "sha 512 hash generator",
+      "file hash generator",
+      "checksum calculator",
+      "checksum verifier"
+    ]
   },
   {
     "category": "Developer",
