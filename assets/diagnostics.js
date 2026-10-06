@@ -16,11 +16,12 @@ function render(data){
  if(tool==='sitemap'){
   const r=data.result;
   const bytes=Number.isFinite(Number(r.bytes_checked))?Math.round(Number(r.bytes_checked)/1024).toLocaleString()+' KB':'—';
-  const issueBlock=(r.issues?.length?'<div class="result-sub"><strong>Protocol issues ('+esc(r.issues.length)+')</strong><div class="chips">'+r.issues.map(x=>'<span>'+esc(x)+'</span>').join('')+'</div></div>':'');
-  const warningBlock=(r.warnings?.length?'<div class="result-sub"><strong>Warnings ('+esc(r.warnings.length)+')</strong><div class="chips">'+r.warnings.map(x=>'<span>'+esc(x)+'</span>').join('')+'</div></div>':'');
+  const issueBlock=(r.issues?.length?'<div class="result-sub"><strong>Protocol issue samples</strong><div class="chips">'+r.issues.map(x=>'<span>'+esc(x)+'</span>').join('')+'</div></div>':'');
+  const warningBlock=(r.warnings?.length?'<div class="result-sub"><strong>Warning samples</strong><div class="chips">'+r.warnings.map(x=>'<span>'+esc(x)+'</span>').join('')+'</div></div>':'');
   title.textContent='Sitemap check';
   body.innerHTML='<table class="record-table"><tbody>'
    +row('HTTP status',r.status)
+   +row('Content type',r.content_type)
    +row('Final URL',r.final_url)
    +row('Redirects followed',r.redirect_count)
    +row('Type',r.type)
