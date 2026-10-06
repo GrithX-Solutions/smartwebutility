@@ -4202,3 +4202,178 @@ Production paths were not used as the CI workspace and production was not deploy
 - Regex Tester Chromium regression: VERIFIED.
 - Ubersuggest rank tracking: VERIFIED.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 23 — /url-encoder-decoder/
+
+Research/update date: 2026-10-06  
+Status: VERIFIED VIA ISOLATED CI FALLBACK
+
+### Primary intent
+Percent-encode or decode complete URLs and individual URL components, including form/query values that use plus signs for spaces.
+
+Canonical owner:
+- `https://smartwebutility.com/url-encoder-decoder/`
+
+No separate URL Encoder, URL Decoder or form-query encoder canonical is justified. Those are modes of the same transformation workflow and would create cannibalization risk.
+
+### Ubersuggest US evidence
+- `url decoder`: 22,200 searches/month, SD 60, CPC $6.26.
+- `url encoder`: 14,800, SD 57, CPC $4.21.
+- `url encoder decoder`: 1,300, SD 54, CPC $6.63.
+- `url encoder and decoder`: 1,300, SD 40, CPC $6.63.
+- `url decoder online`: 2,400, SD 57, CPC $3.62.
+- `url encoder javascript`: 1,300, SD 13.
+- `url encoder online`: 880, SD 52.
+- `url encoder and decoder online`: 110, SD 52.
+- `url encoder & decoder`: 10, SD 5.
+
+The broad head terms are competitive, while `url encoder javascript` provides a materially lower-difficulty U.S. route for the same JavaScript-native canonical.
+
+### Current U.S. SERP / attainability
+Ubersuggest refreshed current U.S. SERPs on 2026-10-06.
+
+For `url encoder and decoder`, low-authority utilities rank among the organic results, including:
+- code2night.com — DA 10;
+- app.zhrconsultants.com — DA 3;
+- staging.scriptandtools.com — DA 4.
+
+For `url decoder online`, current results include:
+- urldecoder.io — DA 14;
+- SPRL URL Encoder & Decoder — DA 10;
+- Qodex — DA 18.
+
+For `url encoder javascript`, a DA 4 client-side utility ranks around position 3.
+
+The SERP also exposes AI Overview and People Also Ask features for relevant variants. This confirms real tool intent and some low-authority attainability without implying ranking success.
+
+### Live competitor review
+Current live-web review on 2026-10-06 found that modern URL codec tools increasingly distinguish three practical behaviors:
+- component encoding via `encodeURIComponent`;
+- full-URL encoding via `encodeURI`;
+- form/query serialization where spaces use `+` and literal plus signs are percent-encoded.
+
+Examples reviewed include current tools from AnaItool, ToolQuilt, QuietUtils, Starlight Tools, CheckSEO, GenUtils, TabUtils and others.
+
+Several competitors also expose query-parameter breakdowns, recursive decoding, batch modes or URL-part analysis. Those broader features were not added in this audit because the strongest confirmed correctness/workflow gap on the current Smart Web Utility page was form-style plus-space handling.
+
+### Existing Smart Web Utility strengths before this change
+The page already:
+- encoded components with `encodeURIComponent()`;
+- encoded full URLs with `encodeURI()`;
+- decoded with the corresponding browser APIs;
+- supported Swap & Reverse;
+- copied output locally;
+- ran entirely in the browser;
+- explained component vs full-URL behavior;
+- explained RFC 3986 reserved/unreserved character context.
+
+### Confirmed workflow/correctness gap
+The previous implementation treated component encoding only as RFC-style percent encoding where a space becomes `%20`.
+
+Many real query/form workflows use `application/x-www-form-urlencoded` semantics instead:
+- spaces serialize as `+`;
+- a literal plus sign must remain distinguishable and therefore becomes `%2B`;
+- decoding a form value must turn `+` back into a space before percent-decoding.
+
+Without an explicit mode, users debugging copied query/form values could decode `+` incorrectly or manually replace characters.
+
+The previous decoder also delegated malformed percent input directly to the browser, which produced the generic `URI malformed` message rather than identifying a malformed percent escape position.
+
+### Implementation
+`url-encoder-decoder/index.html` now:
+- adds an explicit `Form/query spaces use +` option;
+- keeps component mode as the prerequisite for form/query serialization;
+- explains the difference between ordinary percent encoding and form-style plus-space behavior;
+- explains that literal `+` becomes `%2B`;
+- documents malformed percent-escape diagnostics;
+- expands WebApplication feature metadata;
+- keeps the existing full-URL/component privacy model.
+
+`assets/url-codec.js` now:
+- preserves normal component encoding as `encodeURIComponent()`;
+- preserves full-URL encoding as `encodeURI()`;
+- adds form-style component encoding by converting encoded spaces from `%20` to `+`;
+- decodes form-style values by converting `+` to a space before `decodeURIComponent()`;
+- disables and clears form mode when full-URL mode is selected;
+- detects a percent sign not followed by two hexadecimal digits before decode and reports its exact string index;
+- provides clearer fallback messaging when otherwise well-formed percent escapes decode to invalid UTF-8;
+- resets mode/options consistently on Clear;
+- preserves Swap & Reverse behavior.
+
+Internal search discovery now includes:
+- `url encoder`
+- `url decoder`
+- `url encoder decoder`
+- `url encoder and decoder`
+- `url decoder online`
+- `url encoder online`
+- `url encoder javascript`
+- `url encoder and decoder online`
+
+Sitemap `lastmod` was updated to 2026-10-06.
+
+### Regression coverage
+The committed Chromium case verifies:
+- component-mode space -> `%20`;
+- explicit component status;
+- form-style space -> `+`;
+- literal plus sign -> `%2B`;
+- form-style decode restoring literal plus and space correctly;
+- full-URL mode preserving URL structural separators while encoding spaces;
+- form-mode control disabled in full-URL mode;
+- malformed `bad%2` detection;
+- exact malformed-percent index reporting.
+
+### Isolated CI validation — 2026-10-06
+Final implementation/test head before audit-state sync:
+- `c09bc2a5d3311fb00cfe38253e3d5379e0d78400`
+
+Isolated workspace:
+- `/srv/smartwebutility-ci/workspaces/url-codec-c09bc2a`
+
+Exact current-branch material Git blobs:
+- `url-encoder-decoder/index.html` — `b7fabbecdf3767df0ec5f09e42ce9b6c0a8293a8`
+- `assets/url-codec.js` — `d525f1953ffae013332e78d7a51620715d1db84e`
+- `tests/browser-smoke.cjs` — `c2f34b69242fdf16b35a372aa74fb47f659de9c8`
+- `assets/tool-catalog.json` — `2b484a680ffe7daea7c5c1dfc6eb1434d1caaeda`
+- `sitemap.xml` — `640987210b90feccbdb7243ecb5254d70a63047d`
+
+Gate results:
+- static SEO QA: 89 pages, 0 errors, 0 warnings;
+- content QA: 89 pages, 0 errors, 2 intentionally retained advisories;
+- `assets/url-codec.js` syntax: PASS;
+- committed browser-smoke syntax: PASS;
+- Chromium explicitly reported `PASS url-encoder-decoder`;
+- browser page sweep: 89 pages checked;
+- active navigation, global tool search/navigation and mobile layout checks: PASS;
+- broad smoke total: 142 passed, 2 failed.
+
+The two broad-suite failures are the existing `html-minifier` and `css-minifier` provider-readiness timeouts. They are unrelated to URL Encoder / Decoder and remain mandatory final-batch release blockers.
+
+### Ubersuggest rank tracking
+After page verification, the SmartWebUtility Ubersuggest project was updated for U.S. English with:
+- `url decoder`
+- `url encoder`
+- `url encoder javascript`
+
+Tracked keyword-location usage after update: 80 / 300.
+
+Production paths were not used as the CI workspace and production was not deployed.
+
+### Page 23 acceptance status
+- Demand / difficulty: VERIFIED.
+- Current U.S. SERP intent/attainability: VERIFIED.
+- Live competitor review: VERIFIED.
+- Canonical ownership / cannibalization: VERIFIED.
+- Existing implementation inspected: VERIFIED.
+- Form/query plus-space workflow gap: VERIFIED.
+- Malformed percent diagnostic gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Static SEO/content QA: VERIFIED.
+- JavaScript syntax: VERIFIED.
+- URL Encoder / Decoder Chromium regression: VERIFIED.
+- Ubersuggest rank tracking: VERIFIED.
+- Production deployment: NOT STARTED.
