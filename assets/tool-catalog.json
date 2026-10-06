@@ -400,8 +400,17 @@
     "category": "Developer",
     "url": "/url-encoder-decoder/",
     "title": "URL Encoder / Decoder",
-    "description": "Encode and decode URLs and components.",
-    "keywords": []
+    "description": "Encode and decode full URLs, components and form-style query values locally.",
+    "keywords": [
+      "url encoder",
+      "url decoder",
+      "url encoder decoder",
+      "url encoder and decoder",
+      "url decoder online",
+      "url encoder online",
+      "url encoder javascript",
+      "url encoder and decoder online"
+    ]
   },
   {
     "category": "Developer",
