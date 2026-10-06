@@ -11,6 +11,8 @@ Run the remaining content/SEO re-audit page by page. Research, improve, test and
 - Current production source/artifact SHA: `04ce96286f0baaff1a175f4cae7c9491b0607688`
 - Current GitHub main state-only head before this batch: `ee460eb96606bbf93cd7a8347e51be8c851672d3`
 - Working branch: `content-reaudit-page-by-page-2026-10-03`
+- Schema Markup Generator final implementation/test head before audit-state sync: `a0c41ceae9eda01d1a98b57bb40d29558f259325`.
+- Schema Markup Generator audit evidence commit: `2f772d92045b46c6fe32430f56ec21fd48300441`.
 - Robots.txt Generator final implementation/test head before audit-state sync: `fc5a324f8396b5c71e4027b6d4cff384cd124ffd`.
 - Robots.txt Generator audit evidence commit: `53449480660993b38d0b6c8d49c15a3ecb9cd077`.
 - HTML Entity Encoder / Decoder final implementation/test head before audit-state sync: `05fffbad66fe83037c4be2cc91a8594e32683602`.
@@ -86,29 +88,30 @@ Research record:
 
 ## Current page
 
-### /schema-markup-generator/ — next page research
+### /open-graph-preview/ — next page research
 
 Status: UNKNOWN — NOT YET AUDITED UNDER THE CURRENT HARD GATE.
 
-Robots.txt Generator is now VERIFIED via the approved isolated ZTHosting fallback:
-- Ubersuggest U.S. demand was verified, including `create robots txt generator` at 1,600 searches/month with SD 39, `robots.txt generator` at 1,000 with SD 21 and `online robots txt generator` at 110 with SD 5;
-- current U.S. SERPs include both established SEO domains and low-authority specialist utilities for the create/online long-tail variants;
-- current Google documentation was rechecked before implementation: supported fields are `user-agent`, `allow`, `disallow` and `sitemap`; `crawl-delay` is not supported by Google; multiple `User-agent` lines can share one rule group; multiple fully qualified `Sitemap` lines are supported;
-- canonical ownership remains `/robots-txt-generator/`, while `/robots-txt-tester/` remains the distinct rule-evaluation/testing intent owner;
-- the generator now accepts multiple user agents and multiple sitemap URLs and validates path shape, sitemap URLs and crawl-delay input;
-- invalid drafts clear the output rather than leaving copyable malformed text;
+Schema Markup Generator is now VERIFIED via the approved isolated ZTHosting fallback:
+- Ubersuggest U.S. demand was verified, including `schema markup generator` at 1,000 searches/month with CPC $16.57, `json ld generator` at 90 with SD 26, and `json ld schema markup generator` at 30 with SD 5;
+- current U.S. SERPs include established tools but also low-authority utilities for JSON-LD and schema-generator long tails;
+- current Google documentation was rechecked for Organization, Article, LocalBusiness and SoftwareApplication before implementation;
+- the verified product gap was shallow generic modeling: all five entity types previously shared the same Name/URL/Description/Image fields;
+- the page now uses type-specific fields and nested JSON-LD for Organization, WebSite, SoftwareApplication, Article and LocalBusiness;
+- the readiness panel distinguishes Schema.org validity from Google feature readiness and surfaces missing LocalBusiness / SoftwareApplication requirements instead of claiming eligibility;
+- URL, sameAs, date, offer-price and aggregate-rating inputs now receive local validation before copy;
 - exact current-branch Git blob identity was verified for page HTML, implementation JS, browser test, tool catalog and sitemap;
 - static SEO QA passed 89 pages with 0 errors / 0 warnings;
 - content QA passed with 0 errors and the same 2 intentionally retained advisories;
 - implementation JavaScript and committed browser-smoke syntax passed;
-- Chromium explicitly reported `PASS robots-txt-generator`;
+- Chromium explicitly reported `PASS schema-markup-generator`;
 - browser sweep checked all 89 pages and navigation/search/mobile checks passed;
-- Ubersuggest rank tracking now includes `robots.txt generator`, `create robots txt generator` and `online robots txt generator` for U.S. English;
+- Ubersuggest rank tracking includes `schema markup generator`, `json ld generator` and `json ld schema markup generator` for U.S. English;
 - production was not used as the CI workspace and was not deployed.
 
-The broad smoke total remains 142/144 because HTML Minifier and CSS Minifier timed out waiting for provider readiness. Those failures are unrelated to Robots.txt Generator but remain final-batch release blockers.
+The broad smoke total remains 142/144 because HTML Minifier and CSS Minifier timed out waiting for provider readiness. Those failures are unrelated to Schema Markup Generator but remain final-batch release blockers.
 
-The next unresolved canonical in sitemap order is `/schema-markup-generator/`. No change is authorized until Ubersuggest U.S. demand, the current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
+The next unresolved canonical in sitemap order is `/open-graph-preview/`. No change is authorized until Ubersuggest U.S. demand, the current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
@@ -525,6 +528,30 @@ Robots.txt Generator isolated validation — 2026-10-06:
 - Page-specific gate: VERIFIED.
 - Production mutation: NONE.
 
+Schema Markup Generator isolated validation — 2026-10-06:
+- Final implementation/test head before audit-state sync: `a0c41ceae9eda01d1a98b57bb40d29558f259325`.
+- Audit evidence commit: `2f772d92045b46c6fe32430f56ec21fd48300441`.
+- Isolated workspace: `/srv/smartwebutility-ci/workspaces/schema-generator-a0c41ce`.
+- Exact current-branch material Git blobs:
+  - `schema-markup-generator/index.html`: `6a3fcd6fb54ed277cb15be08b2d12c7584036cb6`;
+  - `assets/schema-generator.js`: `e3e2dbf2283a405aedc1cc3c42a7a91cf3e31085`;
+  - `tests/browser-smoke.cjs`: `f4cfd9faf76c9c6308c1f2d5508a17f3b7973195`;
+  - `assets/tool-catalog.json`: `04936050df4b5b77e0a26bdf7467ec3b8aefc2cd`;
+  - `sitemap.xml`: `f5d2496c865ffce5d5e86cf625c10cb0f8e188a7`.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- Schema generator JavaScript syntax: PASS.
+- Committed browser-smoke syntax: PASS.
+- Chromium: `PASS schema-markup-generator`.
+- LocalBusiness nested PostalAddress/readiness, SoftwareApplication Offer/AggregateRating/readiness, Article headline/author/date and invalid URL rejection: PASS.
+- Browser page sweep: 89 pages checked.
+- Active navigation, global tool search/navigation and mobile layout: PASS.
+- Broad smoke total: 142 passed, 2 failed; only `html-minifier` and `css-minifier` timed out waiting for provider readiness.
+- Ubersuggest U.S. rank tracking includes: `schema markup generator`, `json ld generator`, `json ld schema markup generator`.
+- Ubersuggest tracked keyword-location usage after update: 88 / 300.
+- Page-specific gate: VERIFIED.
+- Production mutation: NONE.
+
 ## CI infrastructure blocker
 
 BLOCKED:
@@ -571,13 +598,13 @@ XML Formatter & Validator isolated validation:
 
 ## Work in progress
 
-Robots.txt Generator is VERIFIED via the isolated fallback and its three strategic U.S. keywords are tracked in Ubersuggest. HTML Entity Encoder / Decoder, URL Encoder / Decoder, Regex Tester, Hash Generator, Unix Timestamp Converter, JSON Diff, Regex Escaper, XML Escape / Unescape and UUID Validator remain verified. The next page is `/schema-markup-generator/`, beginning with research only. Production remains unchanged.
+Schema Markup Generator is VERIFIED via the isolated fallback and its three strategic U.S. keywords are tracked in Ubersuggest. Robots.txt Generator, HTML Entity Encoder / Decoder, URL Encoder / Decoder, Regex Tester, Hash Generator, Unix Timestamp Converter, JSON Diff, Regex Escaper, XML Escape / Unescape and UUID Validator remain verified. The next page is `/open-graph-preview/`, beginning with research only. Production remains unchanged.
 
 ## Affected files — completed/current pages
 
 Most recently verified page:
-- `robots-txt-generator/index.html`
-- `assets/robots-generator.js`
+- `schema-markup-generator/index.html`
+- `assets/schema-generator.js`
 
 Shared direct requirements verified with that page:
 - `assets/tool-catalog.json`
@@ -588,10 +615,10 @@ Shared direct requirements verified with that page:
 
 ## NEXT ACTION
 
-Audit `/schema-markup-generator/` as the next and only active page:
+Audit `/open-graph-preview/` as the next and only active page:
 1. verify Ubersuggest U.S. demand, difficulty, CPC/intent and useful semantic variants;
-2. inspect the current U.S. SERP, Google structured-data documentation and relevant competitors;
-3. confirm canonical ownership and no cannibalization with other SEO/meta tools;
+2. inspect the current U.S. SERP and relevant social-preview / metadata competitors;
+3. confirm canonical ownership and no cannibalization with `/meta-tag-generator/` or `/meta-tag-checker/`;
 4. inspect current functionality/content against the verified intent;
 5. identify a concrete product/content gap or record an evidence-based NO CHANGE decision;
 6. only if a real gap exists, implement that page plus directly required tests/search metadata and validate it before moving to another page;
