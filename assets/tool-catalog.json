@@ -160,7 +160,14 @@
     "description": "Compare two JSON structures by semantic path.",
     "keywords": [
       "json diff tools",
-      "json compare"
+      "json compare",
+      "json diff online",
+      "json compare online",
+      "online json diff",
+      "json diff checker",
+      "json compare tool",
+      "json diff viewer",
+      "json compare without order"
     ]
   },
   {
