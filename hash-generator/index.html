@@ -4,16 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Hash Generator — SHA-1, SHA-256, SHA-384 & SHA-512</title>
-  <meta name="description" content="Generate SHA-1, SHA-256, SHA-384 and SHA-512 hashes in your browser. Hash text locally without sending the input to a server.">
+  <meta name="description" content="Generate SHA-1, SHA-256, SHA-384 and SHA-512 hashes for text or files, then verify an expected checksum locally in your browser.">
   <link rel="canonical" href="https://smartwebutility.com/hash-generator/">
   <meta property="og:title" content="Hash Generator — SHA-1, SHA-256, SHA-384 & SHA-512">
-  <meta property="og:description" content="Generate SHA-1, SHA-256, SHA-384 and SHA-512 hashes in your browser. Hash text locally without sending the input to a server.">
+  <meta property="og:description" content="Generate SHA hashes for text or files and verify expected checksums locally in your browser.">
   <meta property="og:url" content="https://smartwebutility.com/hash-generator/">
-  <meta property="og:type" content="website"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Hash Generator — SHA-1, SHA-256, SHA-384 & SHA-512"><meta name="twitter:description" content="Generate SHA-1, SHA-256, SHA-384 and SHA-512 hashes in your browser. Hash text locally without sending the input to a server.">
+  <meta property="og:type" content="website"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Hash Generator — SHA-1, SHA-256, SHA-384 & SHA-512"><meta name="twitter:description" content="Generate SHA hashes for text or files and verify expected checksums locally in your browser.">
   <meta name="theme-color" content="#0b1120">
   <link rel="icon" href="/favicon-64.png" sizes="64x64" type="image/png"><link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Hash Generator","url":"https://smartwebutility.com/hash-generator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Generate SHA-1, SHA-256, SHA-384 and SHA-512 digests for UTF-8 text or local files using the browser Web Crypto API.","featureList":["SHA-1","SHA-256","SHA-384","SHA-512","UTF-8 text hashing","Local file hashing","Uppercase or lowercase hexadecimal output","Browser-side processing"]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Hash Generator","url":"https://smartwebutility.com/hash-generator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Generate SHA-1, SHA-256, SHA-384 and SHA-512 digests for UTF-8 text or local files using the browser Web Crypto API.","featureList":["SHA-1","SHA-256","SHA-384","SHA-512","UTF-8 text hashing","Local file hashing","Expected checksum verification","Common checksum-line parsing","Uppercase or lowercase hexadecimal output","Browser-side processing"]}</script>
 </head>
 <body>
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
@@ -23,7 +23,7 @@
     <div class="crumb"><a href="/">Home</a><span>/</span><span>Hash Generator</span></div>
     <span class="kicker">Developer tool · runs locally</span>
     <h1>Hash Generator</h1>
-    <p class="lead compact">Generate SHA-1, SHA-256, SHA-384 or SHA-512 hashes for text and files directly in your browser.</p>
+    <p class="lead compact">Generate SHA-1, SHA-256, SHA-384 or SHA-512 hashes for text and files, then compare the result with an expected checksum directly in your browser.</p>
 
     <div class="json-toolbar">
       <label class="file-btn">Algorithm
@@ -54,14 +54,19 @@
           <div class="editor-actions"><button id="copyHash" class="text-btn" type="button">Copy</button></div>
         </div>
         <textarea id="hashOutput" class="code-editor" spellcheck="false" readonly placeholder="Hash will appear here" aria-label="Hash output"></textarea>
+        <div style="padding:12px 16px 16px">
+          <label for="expectedHash"><strong>Expected checksum</strong></label>
+          <input id="expectedHash" class="code-editor" style="height:auto;min-height:52px;resize:none" type="text" spellcheck="false" autocapitalize="none" autocomplete="off" placeholder="Paste a digest or checksum line to verify" aria-describedby="hashVerifyStatus">
+          <p id="hashVerifyStatus" data-kind="neutral">Optional: paste the checksum published by your source.</p>
+        </div>
       </section>
     </div>
 
     <div id="hashError" class="error" hidden role="alert"></div>
-    <div class="trustbar"><span>Text & file hashing</span><span>Web Crypto API</span><span>No file upload</span></div>
+    <div class="trustbar"><span>Text & file hashing</span><span>Checksum verification</span><span>Web Crypto API</span><span>No file upload</span></div>
   </section>
 
-<section class="section wrap prose">
+<section class="section wrap prose" data-quality-content="v3">
   <h2>Generate SHA digests locally in your browser</h2>
   <p>The Hash Generator uses the browser Web Crypto API to calculate SHA-1, SHA-256, SHA-384 or SHA-512. It encodes text as UTF-8 before hashing, reads selected files locally and passes their bytes directly to the browser's digest function. Smart Web Utility does not upload the file contents.</p>
   <div class="info-grid">
@@ -71,8 +76,9 @@
     <article><h3>Hex output</h3><p>Copy the digest as lowercase hexadecimal or toggle uppercase when matching a tool or checksum format that expects capital letters.</p></article>
   </div>
 
-  <h2>File checksum workflow</h2>
-  <p>Select the same algorithm used by the checksum source, choose the local file and compare the generated hexadecimal digest character for character. Matching digests provide strong evidence that the bytes you hashed are identical to the bytes used to create the published checksum for that algorithm.</p>
+  <h2>Verify a file checksum against the expected hash</h2>
+  <p>Select the algorithm used by the checksum source, choose the local file and paste the expected digest. The verifier compares hexadecimal values without case sensitivity and can extract the digest from common checksum lines that also include a filename. A match means the bytes you hashed produced the same digest as the reference value.</p>
+  <p>A checksum match does not prove that a download is safe or that the publisher itself is trustworthy. Obtain the expected checksum from an authenticated source you trust; otherwise an attacker who replaces a file could also replace the checksum shown beside it.</p>
 
   <h2>Hashes are not encryption or password storage</h2>
   <p>A cryptographic hash is a one-way digest and does not make sensitive content confidential. Plain SHA algorithms are also not suitable password-storage schemes by themselves. Password systems should use a dedicated password-hashing or key-derivation design with salts and an appropriate work factor rather than storing a simple SHA digest of the password.</p>
@@ -83,6 +89,9 @@
   <h2>Large-file considerations</h2>
   <p>The current browser implementation reads the selected file into memory before calculating the digest. That is convenient for normal files, but very large files can consume significant browser memory. Streaming command-line tools are better suited to unusually large disk images, backups or archives.</p>
 
+  <h2>SHA algorithm scope</h2>
+  <p>The browser Web Crypto <code>digest()</code> API supports SHA-1, SHA-256, SHA-384 and SHA-512, which is why this page focuses on those algorithms rather than adding unrelated password-hash formats. <a href="https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest" rel="noopener">MDN documents the supported digest algorithms</a>, and <a href="https://csrc.nist.gov/pubs/fips/180-4/upd1/final" rel="noopener">NIST FIPS 180-4 defines the Secure Hash Standard</a>. SHA-1 remains available for legacy interoperability, but do not choose it for new cryptographic security designs.</p>
+
   <h2>Related developer tools</h2>
   <div class="related-tools">
     <a href="/base64-encoder-decoder/">Base64 Encoder / Decoder<span>Encode binary-safe text representations; Base64 is not hashing.</span></a>
@@ -90,7 +99,7 @@
     <a href="/json-formatter/">JSON Formatter<span>Format JSON before comparing or storing data.</span></a>
   </div>
 </section>
-<section class="section alt" data-quality-content="v2"><div class="wrap prose">
+<section class="section alt" data-quality-content="v3"><div class="wrap prose">
   <h2>Frequently asked hash questions</h2>
   <h3>Will the same file always have the same SHA-256?</h3>
   <p>Yes, when both systems hash identical file bytes with the same algorithm. Even a one-byte change will normally produce a very different digest.</p>
@@ -100,6 +109,10 @@
   <p>Researchers have demonstrated practical collision attacks against SHA-1, so modern security designs generally use stronger SHA-2 family algorithms or another currently appropriate primitive.</p>
   <h3>Does the file leave my browser?</h3>
   <p>No. The current implementation reads the selected file locally and computes the digest using Web Crypto in the browser.</p>
+  <h3>Can I paste a full checksum line instead of only the digest?</h3>
+  <p>Yes. For the selected algorithm, the verifier can extract one correctly sized hexadecimal digest from a common checksum line such as a digest followed by a filename. If the line does not contain exactly one usable digest, it asks for a valid checksum instead of guessing.</p>
+  <h3>Does a matching checksum prove a file is safe?</h3>
+  <p>No. It proves that the calculated digest matches the reference value. The reference itself must come from a trustworthy source, and a checksum does not detect whether the original publisher intentionally distributed malicious content.</p>
 </div></section></main>
 
 <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/">All tools</a><a href="/sitemap.xml">Sitemap</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></div></footer>
