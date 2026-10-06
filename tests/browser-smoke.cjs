@@ -782,7 +782,7 @@ const cases = [
     assert.equal(await p.locator('#timestampStatus').innerText(), 'Converted from microseconds');
 
     await p.locator('#dateTimeZone').selectOption('utc');
-    await p.locator('#dateInput').fill('2026-01-01T00:00:00.000');
+    await p.locator('#dateInput').fill('2026-01-01T00:00');
     await p.locator('#convertDate').click();
     const unixText = await p.locator('#unixResult').innerText();
     assert.ok(unixText.includes('1767225600'));
