@@ -1248,8 +1248,38 @@ const cases = [
     assert.equal(await p.locator('#metaSocialPreview img').count(), 0);
   }],
   ['robots-txt-generator', async p => {
+    await p.locator('#robotsUserAgent').fill('Googlebot\nGooglebot-Image');
+    await p.locator('#robotsDisallow').fill('/admin/\n/private/');
+    await p.locator('#robotsAllow').fill('/public/');
+    await p.locator('#robotsSitemap').fill('https://example.com/sitemap.xml\nhttps://cdn.example.com/images-sitemap.xml');
+
+    let robots = await p.locator('#robotsOutput').inputValue();
+    assert.ok(robots.includes('User-agent: Googlebot\nUser-agent: Googlebot-Image'));
+    assert.ok(robots.includes('Disallow: /admin/'));
+    assert.ok(robots.includes('Allow: /public/'));
+    assert.ok(robots.includes('Sitemap: https://example.com/sitemap.xml'));
+    assert.ok(robots.includes('Sitemap: https://cdn.example.com/images-sitemap.xml'));
+    assert.equal(await p.locator('#robotsError').isHidden(), true);
+
+    await p.locator('#robotsCrawlDelay').fill('10');
+    robots = await p.locator('#robotsOutput').inputValue();
+    assert.ok(robots.includes('Crawl-delay: 10'));
+    assert.match(await p.locator('#robotsStatus').innerText(), /not supported by Google/i);
+
+    await p.locator('#robotsDisallow').fill('admin/');
+    assert.equal(await p.locator('#robotsError').isHidden(), false);
+    assert.match(await p.locator('#robotsError').innerText(), /must start with/i);
+    assert.equal(await p.locator('#robotsOutput').inputValue(), '');
+
     await p.locator('#robotsDisallow').fill('/admin/');
-    assert.ok((await p.locator('#robotsOutput').inputValue()).includes('/admin/'));
+    await p.locator('#robotsSitemap').fill('/sitemap.xml');
+    assert.equal(await p.locator('#robotsError').isHidden(), false);
+    assert.match(await p.locator('#robotsError').innerText(), /fully qualified HTTP\(S\) URL/i);
+
+    await p.locator('#robotsSitemap').fill('https://example.com/sitemap.xml');
+    await p.locator('#robotsCrawlDelay').fill('slow');
+    assert.equal(await p.locator('#robotsError').isHidden(), false);
+    assert.match(await p.locator('#robotsError').innerText(), /non-negative number/i);
   }],
   ['schema-markup-generator', async p => {
     await p.locator('#schemaName').fill('Example Business');
