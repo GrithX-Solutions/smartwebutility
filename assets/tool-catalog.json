@@ -588,8 +588,17 @@
     "category": "SEO",
     "url": "/schema-markup-generator/",
     "title": "Schema Markup Generator",
-    "description": "Create starter JSON-LD for common entity types.",
-    "keywords": []
+    "description": "Generate type-specific JSON-LD with readiness checks for common Schema.org entities.",
+    "keywords": [
+      "schema markup generator",
+      "json ld generator",
+      "json ld schema markup generator",
+      "schema org json ld generator",
+      "structured data generator",
+      "schema markup generator free",
+      "schema markup generator tool",
+      "schema generator"
+    ]
   },
   {
     "category": "SEO",
