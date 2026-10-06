@@ -65,3 +65,19 @@ Rationale:
 - keeps evidence tied to the page being audited;
 - avoids mixing unrelated maintenance into the current page;
 - retains a full-site release gate before production.
+
+
+## 2026-10-06 — Ubersuggest rank tracking follows each verified page
+
+Status: ACTIVE
+
+After a search-targeted page is VERIFIED under the page-by-page audit gate:
+- add 1–3 strategic keywords for that canonical URL to the SmartWebUtility Ubersuggest project;
+- default tracking market is U.S. English;
+- preserve all existing tracked keywords when updating the project;
+- prefer the page's primary attainable term plus one or two distinct high-value secondary terms;
+- do not consume tracking slots on every semantic variant;
+- expand a keyword to UK/CA/AU only when demand, business value or country-specific evidence justifies the extra location slots;
+- record tracking as measurement, not as evidence that rankings or traffic have improved.
+
+This tracking step does not replace GSC/Bing first-party performance measurement and does not authorize production deployment.
