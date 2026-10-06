@@ -5012,3 +5012,195 @@ Production paths were not used as the CI workspace and production was not deploy
 - Schema Markup Generator Chromium regression: VERIFIED.
 - Ubersuggest rank tracking: VERIFIED.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 27 — /open-graph-preview/
+
+Research/update date: 2026-10-06  
+Status: VERIFIED VIA ISOLATED CI FALLBACK
+
+### Primary intent
+Draft Open Graph metadata before deployment and preview how the supplied title, description and image behave in common wide or square social-card crops.
+
+Canonical owner:
+- `https://smartwebutility.com/open-graph-preview/`
+
+Cannibalization boundary:
+- `/open-graph-preview/` owns manual Open Graph drafting, protocol-readiness checks and local previewing.
+- `/open-graph-checker/` owns fetching and inspecting Open Graph tags from a live public URL.
+- `/meta-tag-generator/` owns broader SEO + Open Graph + Twitter/X metadata drafting.
+- `/meta-tag-checker/` owns broader live metadata inspection.
+- No duplicate URLs are justified for “OG preview”, “Open Graph generator” or social-preview keyword variants.
+
+### Ubersuggest US evidence
+- `open graph preview`: 480 searches/month, SD 36.
+- `og preview`: 480, SD 40.
+- `open graph generator`: 50, SD 3.
+- `open graph preview tool`: 10, SD 6.
+- `open graph generator online`: 10, SD 5.
+- `open graph preview image`: 10, SD 5.
+- `facebook open graph generator`: 10, SD 5.
+
+The two higher-volume preview terms are moderately competitive, while the generator/tool variants provide very low-difficulty U.S. long-tail routes for the same canonical.
+
+### Current U.S. SERP / attainability
+Recent Ubersuggest U.S. SERP evidence shows both established Open Graph tools and low-authority utilities.
+
+For `open graph preview`:
+- OpenGraph.to — DA 8 around position 6;
+- OpenGraphPreview.com — DA 6 around position 7;
+- OGImage.info — DA 5 around position 10;
+- OpenGraphChecker.com — DA 2 around position 21 in recent results.
+
+For `open graph generator`:
+- SearchToolForge — DA 4 at position 1;
+- Kamaan — DA 5 around position 3;
+- Whiztools — DA 4 around position 6;
+- Hysen Labs — DA 3 around position 7;
+- ZeroSnippet — DA 3 around position 8;
+- Quick Embeds — DA 4 around position 9;
+- ToolBingo — DA 2 around position 10;
+- DIO Tools Hub — DA 1 around position 17.
+
+This confirms genuine tool intent and materially attainable long-tail competition without implying future ranking success.
+
+### Current Open Graph protocol requirements reviewed
+The current Open Graph protocol reference at `https://ogp.me/` was rechecked before implementation.
+
+Verified protocol points:
+- the four required properties are `og:title`, `og:type`, `og:image` and `og:url`;
+- optional common metadata includes `og:description`, `og:locale` and `og:site_name`;
+- structured image properties include `og:image:width`, `og:image:height`, `og:image:type`, `og:image:secure_url` and `og:image:alt`;
+- the protocol explicitly states that when a page specifies `og:image`, it should also specify `og:image:alt`;
+- the protocol records image width/height but does not define one universal social-card dimension.
+
+The implementation therefore treats a 1.91:1 wide crop as a practical preview diagnostic, not as an Open Graph protocol requirement.
+
+### Live competitor review
+Current live-web review on 2026-10-06 found that strong preview/generator competitors commonly provide richer image metadata and more than one preview shape.
+
+Examples:
+- OpenGraph.dev currently generates core Open Graph properties plus image width/height, locale and site name.
+- Gera Tools previews several social-card styles and explicitly exposes image/title/description behavior.
+- GigAI Tools exposes `og:image:alt`, width/height, locale, type and wide-card ratio coaching while keeping generation client-side.
+- current dedicated preview tools such as OG Preview and OpenGraphPreview focus heavily on checking image crop/preview behavior across social surfaces.
+
+The previous Smart Web Utility page generated only a fixed `og:type=website` plus title/description/URL/image/site name and showed one generic wide card. It did not validate required protocol properties or URLs and omitted image alt/dimensions and locale.
+
+### Confirmed product/content gap
+Before this audit:
+- the page allowed drafts missing required OGP properties without any readiness warning;
+- `og:type` was hard-coded to `website`;
+- `og:url` and `og:image` were not validated as absolute URLs;
+- the page did not support `og:locale`;
+- the page did not support `og:image:alt`, despite the protocol recommendation;
+- image width/height could not be emitted;
+- there was no image-ratio diagnostic;
+- only one wide crop was visible, making square-crop risk harder to inspect.
+
+### Implementation
+`open-graph-preview/index.html` now adds:
+- `og:type` selection for website, article and profile;
+- locale input;
+- image alt text;
+- image width and height;
+- a visible readiness panel;
+- an inline error panel;
+- wide 1.91:1 and square crop preview modes;
+- explicit canonical boundaries with the broader Meta Tag Generator and live Open Graph Checker;
+- current OGP guidance and protocol-source link;
+- updated WebApplication feature metadata.
+
+`assets/og-preview.js` now:
+- validates `og:url` and `og:image` as absolute HTTP(S) URLs;
+- validates image width/height as positive whole numbers;
+- validates locale shape as `language_TERRITORY` and normalizes case, e.g. `en_us` -> `en_US`;
+- emits `og:image:width`, `og:image:height`, `og:image:alt` and `og:locale` when provided;
+- checks the four required OGP properties and reports missing ones;
+- warns when an image is supplied without `og:image:alt`;
+- reports whether supplied dimensions are close to a 1.91:1 wide-card ratio;
+- supports wide and square crop previews without claiming either is an exact platform emulator;
+- renders preview text with DOM text nodes and uses a validated image URL rather than injecting untrusted markup;
+- sets image referrer policy to `no-referrer` for the local preview request;
+- clears generated output on invalid input so malformed URL/locale data is not silently copied.
+
+Internal search discovery now includes:
+- `open graph preview`
+- `og preview`
+- `open graph generator`
+- `open graph preview tool`
+- `open graph generator online`
+- `open graph preview image`
+- `facebook open graph generator`
+- `social media preview`
+
+Sitemap `lastmod` was updated to 2026-10-06.
+
+### Regression coverage
+The committed Chromium case verifies:
+- title and description output;
+- `og:type=article`;
+- locale normalization from `en_us` to `en_US`;
+- absolute object/image URLs;
+- image width and height;
+- `og:image:alt`;
+- complete four-property readiness;
+- 1.91:1 ratio guidance;
+- wide preview aspect ratio;
+- square crop switching;
+- missing-image-alt warning;
+- relative URL rejection and generated-output clearing;
+- invalid locale rejection.
+
+### Isolated CI validation — 2026-10-06
+Final implementation/test head before audit-state sync:
+- `0ac3dd07ca3a4ffe57cca9c34b697b40ce90bfa1`
+
+Isolated workspace:
+- `/srv/smartwebutility-ci/workspaces/open-graph-0ac3dd0`
+
+Exact current-branch material Git blobs:
+- `open-graph-preview/index.html` — `469484f7d2f5a04f22c7c7ac22be3cb2128606d1`
+- `assets/og-preview.js` — `13211d4bac9e8823614163616dc9e5fc2b21ef42`
+- `tests/browser-smoke.cjs` — `330c39c33830fc608bd9547fb128e5a7931c0186`
+- `assets/tool-catalog.json` — `fff1362f84c2d935767a3283db0aedfdb425a199`
+- `sitemap.xml` — `7f35774c7cd1112b9e812c0386d42fde45288332`
+
+Gate results:
+- static SEO QA: 89 pages, 0 errors, 0 warnings;
+- content QA: 89 pages, 0 errors, 2 intentionally retained advisories;
+- `assets/og-preview.js` syntax: PASS;
+- committed browser-smoke syntax: PASS;
+- Chromium explicitly reported `PASS open-graph-preview`;
+- browser page sweep: 89 pages checked;
+- active navigation, global tool search/navigation and mobile layout checks: PASS;
+- broad smoke total: 142 passed, 2 failed.
+
+The two broad-suite failures remain the existing `html-minifier` and `css-minifier` provider-readiness timeouts. They are unrelated to Open Graph Preview and remain mandatory final-batch release blockers.
+
+### Ubersuggest rank tracking
+After verification, the SmartWebUtility Ubersuggest project was updated for U.S. English with:
+- `open graph preview`
+- `og preview`
+- `open graph generator`
+
+Tracked keyword-location usage after update: 91 / 300.
+
+Production paths were not used as the CI workspace and production was not deployed.
+
+### Page 27 acceptance status
+- Demand / difficulty: VERIFIED.
+- Current U.S. SERP intent/attainability: VERIFIED.
+- Live competitor review: VERIFIED.
+- Current Open Graph protocol requirements: VERIFIED.
+- Canonical ownership / cannibalization: VERIFIED.
+- Existing implementation inspected: VERIFIED.
+- Core-readiness / image-metadata / crop-preview gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Static SEO/content QA: VERIFIED.
+- JavaScript syntax: VERIFIED.
+- Open Graph Preview Chromium regression: VERIFIED.
+- Ubersuggest rank tracking: VERIFIED.
+- Production deployment: NOT STARTED.
