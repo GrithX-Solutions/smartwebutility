@@ -1048,10 +1048,29 @@ const cases = [
     assert.equal(await p.locator('#macError').isHidden(), true);
   }],
   ['hash-generator', async p => {
+    const helloSha256 = '2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824';
+
     await p.locator('#hashInput').fill('hello');
+    await p.locator('#expectedHash').fill(helloSha256);
     await p.locator('#generateHash').click();
-    await p.waitForFunction(() => document.getElementById('hashOutput').value.trim().length >= 32);
-    assert.ok((await p.locator('#hashOutput').inputValue()).trim().length >= 32);
+    await p.waitForFunction(() => document.getElementById('hashOutput').value.trim().length === 64);
+    assert.equal(await p.locator('#hashOutput').inputValue(), helloSha256);
+    assert.match(await p.locator('#hashVerifyStatus').innerText(), /matches/i);
+
+    await p.locator('#expectedHash').fill('0'.repeat(64));
+    assert.match(await p.locator('#hashVerifyStatus').innerText(), /does not match/i);
+
+    await p.locator('#expectedHash').fill(helloSha256.toUpperCase() + '  hello.txt');
+    assert.match(await p.locator('#hashVerifyStatus').innerText(), /matches/i);
+
+    await p.locator('#hashFile').setInputFiles({
+      name: 'hello.txt',
+      mimeType: 'text/plain',
+      buffer: Buffer.from('hello')
+    });
+    await p.waitForFunction(() => document.getElementById('hashStatus')?.textContent.includes('hello.txt'));
+    assert.equal(await p.locator('#hashOutput').inputValue(), helloSha256);
+    assert.match(await p.locator('#hashVerifyStatus').innerText(), /matches/i);
   }],
   ['jwt-decoder', async p => {
     await p.locator('#exampleJwt').click();
