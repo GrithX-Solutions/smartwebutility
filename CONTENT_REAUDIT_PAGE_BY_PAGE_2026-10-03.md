@@ -4576,3 +4576,213 @@ Production paths were not used as the CI workspace and production was not deploy
 - HTML Entity Chromium regression: VERIFIED.
 - Ubersuggest rank tracking: VERIFIED.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 25 — /robots-txt-generator/
+
+Research/update date: 2026-10-06  
+Status: VERIFIED VIA ISOLATED CI FALLBACK
+
+### Primary intent
+Generate a robots.txt draft for one or more crawler user-agent tokens, Allow/Disallow rules and sitemap discovery, with basic input validation before deployment.
+
+Canonical owner:
+- `https://smartwebutility.com/robots-txt-generator/`
+
+Cannibalization boundary:
+- `/robots-txt-generator/` owns robots.txt creation/drafting.
+- `/robots-txt-tester/` owns rule evaluation against a crawler and URL plus syntax/testing behavior.
+- Do not create separate generator URLs for “Google robots.txt”, online/free variants, sitemap variants or crawler-specific keyword modifiers.
+
+### Ubersuggest US evidence
+- `create robots txt generator`: 1,600 searches/month, SD 39, CPC $7.44.
+- `robots.txt generator`: 1,000, SD 21, CPC $5.00.
+- `robots txt generator`: 1,000, SD 45, CPC $1.88.
+- `online robots txt generator`: 110, SD 5.
+- `free robots txt generator`: 90, SD 43.
+- `robots txt generator google`: 90, SD 56.
+- `robots txt generator wordpress`: 40, SD 34.
+- `sitemap robots txt generator`: 10, SD 5.
+- `website robots txt generator`: 10, SD 5.
+
+The head term has real commercial/SEO-tool value, and the low-difficulty online/sitemap variants confirm a realistic long-tail route for the same canonical.
+
+### Current U.S. SERP / attainability
+Ubersuggest refreshed relevant U.S. SERPs on 2026-10-06.
+
+For `robots.txt generator`, the top results are mostly established SEO/tool domains, but lower-authority sites also appear in the first two result pages.
+
+For `create robots txt generator`, low-authority utilities rank prominently:
+- ManiSEO — DA 7 around position 3;
+- IT EDGES / NexTools — DA 5 around position 4;
+- Toolflic — DA 5 around position 5;
+- SecTools — DA 4 around position 6;
+- EDeskCloud tools — DA 10 around position 7;
+- PromotoAI — DA 4 around position 10;
+- WebioTools — DA 5 around position 11;
+- NiceToolkit — DA 6 around position 13.
+
+For `online robots txt generator`, current results include:
+- UtiliPilot — DA 1 at position 1;
+- Free Tech Learner — DA 6 around position 3;
+- ZovaTool — DA 1 around position 6;
+- ToolzHive — DA 3 around position 9.
+
+AI Overview / People Also Ask features appear on relevant variants. This confirms genuine utility intent and long-tail attainability without implying ranking success.
+
+### Current Google robots.txt requirements reviewed
+Google's current robots.txt documentation confirms:
+- supported fields include `user-agent`, `allow`, `disallow` and `sitemap`;
+- fields not listed as supported, including `crawl-delay`, are not processed by Google;
+- multiple `User-agent` lines can be grouped so the same rules apply to several crawlers;
+- Allow/Disallow paths are rooted paths and should begin with `/`;
+- `Sitemap` values must be fully qualified absolute URLs;
+- multiple `Sitemap` fields are supported with no stated limit;
+- sitemap directives are not tied to a single user-agent group.
+
+Primary official references reviewed:
+- Google: `https://developers.google.com/crawling/docs/robots-txt/robots-txt-spec`
+- Google: `https://developers.google.com/crawling/docs/robots-txt/create-robots-txt`
+- Google useful robots rules: `https://developers.google.com/crawling/docs/robots-txt/useful-robots-txt-rules`
+
+### Live competitor review
+Current competitor review on 2026-10-06 found recurring generator capabilities such as:
+- per-bot or multiple-bot rules;
+- multiple Allow/Disallow paths;
+- sitemap directives;
+- crawl-delay options for crawlers that support it;
+- common presets / CMS templates;
+- separate tester workflows.
+
+DNSChecker currently exposes bot-specific controls, restricted directories, crawl-delay and sitemap input.
+
+SE Ranking documents generator support for paths, bots, sitemap and presets, with a separate Robots.txt Tester for deployed/URL-specific validation.
+
+Current long-tail SERPs also include generators explicitly advertising multi-user-agent and sitemap functionality.
+
+This audit intentionally does not add:
+- static “AI crawler” preset lists that can become stale;
+- CMS-specific preset files without first-party demand and maintenance evidence;
+- a second tester inside the generator page.
+
+### Existing Smart Web Utility strengths before this change
+The page already:
+- generated a single user-agent group;
+- emitted multiple Allow and Disallow path lines;
+- supported one optional `Crawl-delay`;
+- supported one sitemap URL;
+- warned that robots.txt controls crawling, not authentication or guaranteed indexing;
+- warned that Google does not support `crawl-delay`;
+- linked to the separate Robots.txt Tester;
+- explained deployment at the site root and post-release verification;
+- ran entirely in the browser.
+
+### Confirmed product/correctness gap
+The previous generator accepted only:
+- one user-agent token;
+- one sitemap URL;
+- no basic validation for path shape, sitemap absolute URLs or crawl-delay numeric input.
+
+That meant users had to edit the generated file manually for standards-supported multi-crawler groups or multiple sitemap files, and the generator could emit obviously malformed path or sitemap values without warning.
+
+### Implementation
+`robots-txt-generator/index.html` now:
+- accepts one user-agent token per line;
+- explains that consecutive user-agent lines share one rule group;
+- accepts multiple sitemap URLs, one per line;
+- labels Allow/Disallow path inputs explicitly;
+- labels Crawl-delay as optional/non-Google;
+- adds an inline error area and generation status;
+- explains exactly what inline validation covers and what still belongs in the Robots.txt Tester;
+- updates WebApplication metadata and feature coverage;
+- expands FAQ coverage for multi-crawler groups and multiple sitemaps.
+
+`assets/robots-generator.js` now:
+- emits multiple consecutive `User-agent` lines for one shared rule group;
+- defaults an empty user-agent list to `*`;
+- rejects user-agent tokens containing spaces, colons or comment markers;
+- validates non-empty Allow/Disallow entries begin with `/`;
+- validates every sitemap as a fully qualified HTTP(S) URL;
+- supports multiple `Sitemap` directives;
+- accepts only a non-negative numeric `Crawl-delay`;
+- visibly warns that Crawl-delay is not supported by Google when that line is emitted;
+- clears output on invalid input so malformed drafts are not silently copied;
+- prevents Copy from copying a currently invalid draft;
+- updates Example and Clear behavior for the expanded fields.
+
+Internal search discovery now includes:
+- `robots.txt generator`
+- `robots txt generator`
+- `create robots txt generator`
+- `online robots txt generator`
+- `robots txt generator online`
+- `free robots txt generator`
+- `sitemap robots txt generator`
+- `website robots txt generator`
+
+Sitemap `lastmod` was updated to 2026-10-06.
+
+### Regression coverage
+The committed Chromium case verifies:
+- two user-agent tokens emitted as one shared group;
+- multiple Disallow paths;
+- Allow path output;
+- two sitemap directives;
+- no validation error for the valid draft;
+- Crawl-delay output plus explicit Google unsupported warning;
+- invalid relative Disallow path rejected and generated output cleared;
+- relative sitemap URL rejected;
+- non-numeric crawl-delay rejected.
+
+### Isolated CI validation — 2026-10-06
+Final implementation/test head before audit-state sync:
+- `fc5a324f8396b5c71e4027b6d4cff384cd124ffd`
+
+Isolated workspace:
+- `/srv/smartwebutility-ci/workspaces/robots-generator-fc5a324`
+
+Exact current-branch material Git blobs:
+- `robots-txt-generator/index.html` — `076ae80305a7fda02a89b7b990b4eac8839b3eb7`
+- `assets/robots-generator.js` — `161a386cee20c017df8ce23fc622ac63850e11bf`
+- `tests/browser-smoke.cjs` — `1ac61abd530dc755e20b5aeb87d33ea6e409d1cc`
+- `assets/tool-catalog.json` — `5c0ed9f00c5ef2b9e680b01bda0a8973304d435d`
+- `sitemap.xml` — `2eaf2f4789bb0515c16284b13e21e1fe86597fed`
+
+Gate results:
+- static SEO QA: 89 pages, 0 errors, 0 warnings;
+- content QA: 89 pages, 0 errors, 2 intentionally retained advisories;
+- `assets/robots-generator.js` syntax: PASS;
+- committed browser-smoke syntax: PASS;
+- Chromium explicitly reported `PASS robots-txt-generator`;
+- browser page sweep: 89 pages checked;
+- active navigation, global tool search/navigation and mobile layout checks: PASS;
+- broad smoke total: 142 passed, 2 failed.
+
+The two broad-suite failures are the existing `html-minifier` and `css-minifier` provider-readiness timeouts. They are unrelated to Robots.txt Generator and remain mandatory final-batch release blockers.
+
+### Ubersuggest rank tracking
+After page verification, the SmartWebUtility Ubersuggest project was updated for U.S. English with:
+- `robots.txt generator`
+- `create robots txt generator`
+- `online robots txt generator`
+
+Tracked keyword-location usage after update: 86 / 300.
+
+Production paths were not used as the CI workspace and production was not deployed.
+
+### Page 25 acceptance status
+- Demand / difficulty: VERIFIED.
+- Current U.S. SERP intent/attainability: VERIFIED.
+- Live competitor review: VERIFIED.
+- Current Google robots.txt requirements: VERIFIED.
+- Canonical ownership / tester boundary: VERIFIED.
+- Existing implementation inspected: VERIFIED.
+- Multi-user-agent / multi-sitemap / validation gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Static SEO/content QA: VERIFIED.
+- JavaScript syntax: VERIFIED.
+- Robots.txt Generator Chromium regression: VERIFIED.
+- Ubersuggest rank tracking: VERIFIED.
+- Production deployment: NOT STARTED.
