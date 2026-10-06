@@ -11,6 +11,8 @@ Run the remaining content/SEO re-audit page by page. Research, improve, test and
 - Current production source/artifact SHA: `04ce96286f0baaff1a175f4cae7c9491b0607688`
 - Current GitHub main state-only head before this batch: `ee460eb96606bbf93cd7a8347e51be8c851672d3`
 - Working branch: `content-reaudit-page-by-page-2026-10-03`
+- URL Encoder / Decoder final implementation/test head before audit-state sync: `c09bc2a5d3311fb00cfe38253e3d5379e0d78400`.
+- URL Encoder / Decoder audit evidence commit: `7030cfcf40ef0ccb8a1e7165ac2e11a7c0f17627`.
 - Regex Tester final implementation/test head before audit-state sync: `e447fc14156ba5865ef6d9548559bdf0aa9e240b`.
 - Regex Tester audit evidence commit: `e2420b471f4ecce16041005abe69b76b633b5a3d`.
 - Hash Generator implementation/test head before audit-state sync: `eea7a7234c7c64cd7678983248407f6311991180`.
@@ -80,29 +82,29 @@ Research record:
 
 ## Current page
 
-### /url-encoder-decoder/ — next page research
+### /html-entity-encoder-decoder/ — next page research
 
 Status: UNKNOWN — NOT YET AUDITED UNDER THE CURRENT HARD GATE.
 
-Regex Tester is now VERIFIED via the approved isolated ZTHosting fallback:
-- Ubersuggest U.S. demand was verified, including `regex tester` at 27,100 searches/month, `regular expression tester` at 18,100 and the low-difficulty `online regular expression tester` variant at 2,400 with SD 5;
-- current U.S. SERP evidence includes both high-authority leaders and low-authority specialist utilities, confirming a realistic long-tail route without implying ranking success;
-- live competitor review confirmed the current product bar: highlighted matches, numbered/named groups, replacement preview, modern JavaScript flags, match ranges/indices and browser-local processing;
-- canonical ownership remains `/regex-tester/`; `/regex-escaper/` remains the distinct literal-escaping intent owner;
-- the implemented gap adds highlighted matches, start/end ranges, named-group output, current `d/g/i/m/s/u/v/y` flag guidance and a 500-match display cap;
-- a post-Chromium review found and fixed a zero-length highlight cursor bug, then added an exact `↧a↧a` regression;
+URL Encoder / Decoder is now VERIFIED via the approved isolated ZTHosting fallback:
+- Ubersuggest U.S. demand was verified, including `url decoder` at 22,200 searches/month, `url encoder` at 14,800, `url encoder and decoder` at 1,300 with SD 40, and the lower-difficulty `url encoder javascript` at 1,300 with SD 13;
+- current U.S. SERP evidence includes low-authority utility domains for both combined and JavaScript-specific variants, and AI Overview / People Also Ask features appear on relevant queries;
+- live competitor review confirmed a recurring product distinction between component encoding, full-URL encoding and form/query serialization where spaces use `+`;
+- canonical ownership remains `/url-encoder-decoder/`; no duplicate encoder, decoder or form-query URL was created;
+- the implementation now supports explicit form/query plus-space handling while preserving `%2B` for literal plus signs;
+- malformed percent escapes are identified before decode with the exact source-string index instead of exposing only the browser's generic `URI malformed` error;
 - exact current-branch Git blob identity was verified for page HTML, implementation JS, browser test, tool catalog and sitemap;
 - static SEO QA passed 89 pages with 0 errors / 0 warnings;
 - content QA passed with 0 errors and the same 2 intentionally retained advisories;
 - implementation JavaScript and committed browser-smoke syntax passed;
-- final Chromium explicitly reported `PASS regex-tester`;
+- Chromium explicitly reported `PASS url-encoder-decoder`;
 - browser sweep checked all 89 pages and navigation/search/mobile checks passed;
-- Ubersuggest rank tracking now includes `regex tester`, `online regular expression tester` and `regex tester online` for U.S. English;
+- Ubersuggest rank tracking now includes `url decoder`, `url encoder` and `url encoder javascript` for U.S. English;
 - production was not used as the CI workspace and was not deployed.
 
-The broad smoke total remains 142/144 because HTML Minifier and CSS Minifier timed out waiting for provider readiness. Those failures are unrelated to Regex Tester but remain final-batch release blockers.
+The broad smoke total remains 142/144 because HTML Minifier and CSS Minifier timed out waiting for provider readiness. Those failures are unrelated to URL Encoder / Decoder but remain final-batch release blockers.
 
-The next unresolved canonical in sitemap order is `/url-encoder-decoder/`. No change is authorized until Ubersuggest U.S. demand, the current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
+The next unresolved canonical in sitemap order is `/html-entity-encoder-decoder/`. No change is authorized until Ubersuggest U.S. demand, the current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
@@ -446,6 +448,30 @@ Regex Tester isolated validation — 2026-10-06:
 - Page-specific gate: VERIFIED.
 - Production mutation: NONE.
 
+URL Encoder / Decoder isolated validation — 2026-10-06:
+- Final implementation/test head before audit-state sync: `c09bc2a5d3311fb00cfe38253e3d5379e0d78400`.
+- Audit evidence commit: `7030cfcf40ef0ccb8a1e7165ac2e11a7c0f17627`.
+- Isolated workspace: `/srv/smartwebutility-ci/workspaces/url-codec-c09bc2a`.
+- Exact current-branch material Git blobs:
+  - `url-encoder-decoder/index.html`: `b7fabbecdf3767df0ec5f09e42ce9b6c0a8293a8`;
+  - `assets/url-codec.js`: `d525f1953ffae013332e78d7a51620715d1db84e`;
+  - `tests/browser-smoke.cjs`: `c2f34b69242fdf16b35a372aa74fb47f659de9c8`;
+  - `assets/tool-catalog.json`: `2b484a680ffe7daea7c5c1dfc6eb1434d1caaeda`;
+  - `sitemap.xml`: `640987210b90feccbdb7243ecb5254d70a63047d`.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- URL codec JavaScript syntax: PASS.
+- Committed browser-smoke syntax: PASS.
+- Chromium: `PASS url-encoder-decoder`.
+- Component `%20`, form `+`, literal plus `%2B`, full-URL preservation and malformed-percent index reporting: PASS.
+- Browser page sweep: 89 pages checked.
+- Active navigation, global tool search/navigation and mobile layout: PASS.
+- Broad smoke total: 142 passed, 2 failed; only `html-minifier` and `css-minifier` timed out waiting for provider readiness.
+- Ubersuggest U.S. rank tracking added: `url decoder`, `url encoder`, `url encoder javascript`.
+- Ubersuggest tracked keyword-location usage after update: 80 / 300.
+- Page-specific gate: VERIFIED.
+- Production mutation: NONE.
+
 ## CI infrastructure blocker
 
 BLOCKED:
@@ -492,13 +518,13 @@ XML Formatter & Validator isolated validation:
 
 ## Work in progress
 
-Regex Tester is VERIFIED via the isolated fallback and its three strategic U.S. keywords are tracked in Ubersuggest. Hash Generator, Unix Timestamp Converter, JSON Diff, Regex Escaper, XML Escape / Unescape and UUID Validator remain verified. The next page is `/url-encoder-decoder/`, beginning with research only. Production remains unchanged.
+URL Encoder / Decoder is VERIFIED via the isolated fallback and its three strategic U.S. keywords are tracked in Ubersuggest. Regex Tester, Hash Generator, Unix Timestamp Converter, JSON Diff, Regex Escaper, XML Escape / Unescape and UUID Validator remain verified. The next page is `/html-entity-encoder-decoder/`, beginning with research only. Production remains unchanged.
 
 ## Affected files — completed/current pages
 
 Most recently verified page:
-- `regex-tester/index.html`
-- `assets/regex.js`
+- `url-encoder-decoder/index.html`
+- `assets/url-codec.js`
 
 Shared direct requirements verified with that page:
 - `assets/tool-catalog.json`
@@ -509,7 +535,7 @@ Shared direct requirements verified with that page:
 
 ## NEXT ACTION
 
-Audit `/url-encoder-decoder/` as the next and only active page:
+Audit `/html-entity-encoder-decoder/` as the next and only active page:
 1. verify Ubersuggest U.S. demand, difficulty, CPC/intent and useful semantic variants;
 2. inspect the current U.S. SERP and relevant competitors;
 3. confirm canonical ownership and no cannibalization;
