@@ -757,7 +757,37 @@ const cases = [
   ['unix-timestamp-converter', async p => {
     await p.locator('#unixInput').fill('1767225600');
     await p.locator('#convertUnix').click();
-    assert.ok((await p.locator('#dateResult').innerText()).trim().length);
+    let dateText = await p.locator('#dateResult').innerText();
+    assert.ok(dateText.includes('2026-01-01T00:00:00.000Z'));
+    assert.ok(dateText.includes('1767225600000000000'));
+
+    await p.locator('#unixUnit').selectOption('microseconds');
+    await p.locator('#unixInput').fill('1767225600123456');
+    await p.locator('#convertUnix').click();
+    dateText = await p.locator('#dateResult').innerText();
+    assert.ok(dateText.includes('2026-01-01T00:00:00.123Z'));
+    assert.ok(dateText.includes('1767225600123456'));
+    assert.equal(await p.locator('#timestampStatus').innerText(), 'Converted from microseconds');
+
+    await p.locator('#unixUnit').selectOption('nanoseconds');
+    await p.locator('#unixInput').fill('1767225600123456789');
+    await p.locator('#convertUnix').click();
+    dateText = await p.locator('#dateResult').innerText();
+    assert.ok(dateText.includes('2026-01-01T00:00:00.123Z'));
+    assert.ok(dateText.includes('1767225600123456789'));
+
+    await p.locator('#unixUnit').selectOption('auto');
+    await p.locator('#unixInput').fill('1767225600123456');
+    await p.locator('#convertUnix').click();
+    assert.equal(await p.locator('#timestampStatus').innerText(), 'Converted from microseconds');
+
+    await p.locator('#dateTimeZone').selectOption('utc');
+    await p.locator('#dateInput').fill('2026-01-01T00:00:00.000');
+    await p.locator('#convertDate').click();
+    const unixText = await p.locator('#unixResult').innerText();
+    assert.ok(unixText.includes('1767225600'));
+    assert.ok(unixText.includes('1767225600000000000'));
+    assert.equal(await p.locator('#timestampStatus').innerText(), 'UTC date converted');
   }],
   ['uuid-generator', async p => {
     await p.locator('#uuidCount').fill('3');
