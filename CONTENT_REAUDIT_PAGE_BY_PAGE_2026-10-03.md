@@ -3307,3 +3307,135 @@ Do not expand this page merely to match competitor field counts. Revisit only wh
 - Material product/content gap: NOT FOUND.
 - Decision: NO CHANGE.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 17 — /xml-escape-unescape/
+
+Research/update date: 2026-10-06  
+Status: VERIFIED VIA ISOLATED CI FALLBACK
+
+### Primary intent
+Escape plain text for XML element/attribute contexts and decode XML entity references back to text without uploading the input.
+
+Canonical owner:
+- `https://smartwebutility.com/xml-escape-unescape/`
+
+### Ubersuggest US evidence
+- `xml escape`: 390 searches/month, SD 20.
+- `xml unescape`: 90, SD 19, CPC $11.67.
+- `xml escape character`: 260, SD 34.
+- `xml escape ampersand`: 70, SD 23.
+- `online xml escape`: 40, SD 11.
+- `xml escape &`: 40, SD 13.
+- `xml escape quote`: 30, SD 28.
+- `xml escape special characters`: 20, SD 28.
+- `online xml escape tool`: 10, SD 5.
+
+### Current U.S. SERP / attainability
+Ubersuggest's current U.S. SERP for `xml escape` includes:
+- xmltools.github.io — DA 1 near the top;
+- jsonformatter.org — DA 48;
+- codebeautify.org — DA 60;
+- Eternitech — DA 18.
+
+For `online xml escape`, multiple low-authority utility domains rank in the top ten, including DA 1, 10, 15, 18 and 23 sites.
+
+The intent is therefore established and not authority-locked. The same canonical page can satisfy both escape and unescape variants; creating a second XML escape URL would cannibalize this intent.
+
+### Existing Smart Web Utility strengths
+Before this change the page already supported:
+- browser-local escape/unescape;
+- separate element-text, double-quoted attribute, single-quoted attribute and all-five contexts;
+- all five predefined XML entities;
+- decimal and hexadecimal numeric character-reference decoding;
+- one-pass decoding;
+- unknown named-entity preservation with warnings;
+- invalid numeric-reference preservation with warnings;
+- local text/XML files up to 5 MB;
+- copy/download and swap/reverse workflows;
+- explicit distinction from full XML validation and CDATA handling.
+
+### Confirmed correctness gap
+Escaping reserved delimiters is not enough to make arbitrary text legal XML 1.0.
+
+The previous escape path could return text containing characters that XML 1.0 forbids entirely, such as U+0000 and most C0 controls. These characters cannot be made legal by converting them to numeric character references.
+
+The W3C XML 1.0 `Char` production permits only:
+- U+0009, U+000A and U+000D;
+- U+0020–U+D7FF;
+- U+E000–U+FFFD;
+- U+10000–U+10FFFF.
+
+Rejecting illegal XML 1.0 code points before claiming XML-safe output is a concrete correctness advantage over basic tools that only substitute the five predefined entities.
+
+### Implementation
+`assets/xml-escape.js` now:
+- validates every input code point before escape-mode transformation;
+- rejects XML 1.0-illegal code points rather than silently returning invalid XML text;
+- reports the first invalid code point in U+XXXX/U+XXXXXX notation;
+- explicitly explains that numeric character references cannot legalize forbidden XML 1.0 characters;
+- preserves the existing context-aware escaping and unescape behavior.
+
+`xml-escape-unescape/index.html` now:
+- documents the XML 1.0 character guard;
+- links the behavior to the W3C XML 1.0 character rules;
+- distinguishes delimiter escaping from character legality;
+- keeps the existing privacy, DTD/entity, CDATA, double-escape and validation boundaries;
+- exposes the new safety behavior in WebApplication feature metadata and FAQs.
+
+Search discovery now includes:
+- `xml escape online`
+- `online xml escape`
+- `xml escape characters`
+- `xml escape ampersand`
+- `xml escape special characters`
+
+Sitemap `lastmod` was updated for the materially changed canonical page.
+
+### Regression coverage
+The committed Chromium case verifies:
+- text-context entity escaping;
+- double-quoted attribute escaping;
+- an injected U+0000 is rejected;
+- output remains empty on the illegal-character error;
+- the visible error explicitly identifies XML 1.0;
+- valid predefined and numeric entities still decode;
+- unknown named entities and invalid numeric references remain preserved with warnings;
+- one-pass unescape behavior remains intact.
+
+### Isolated CI validation — 2026-10-06
+Exact Git blob identity was verified between the current GitHub branch and the isolated CI workspace:
+- `xml-escape-unescape/index.html` — `538d41e49fc7519240fdc2e9b6d61ddfd6699fb3`
+- `assets/xml-escape.js` — `e1571d36d48d058c9be187358a0815e9af2f3482`
+- `tests/browser-smoke.cjs` — `03ffdac5ef4c733f1e4b9d4d177e3861e132c2dc`
+- `assets/tool-catalog.json` — `e4a08bef405221daca013e3b19b657cfdda47236`
+- `sitemap.xml` — `ecce6c1a8900820f1a7c467974fc34120c9755cb`
+
+Gate results:
+- static SEO QA: 89 pages, 0 errors, 0 warnings;
+- content QA: 89 pages, 0 errors, 2 intentionally retained advisories;
+- `assets/xml-escape.js` syntax: PASS in `mcr.microsoft.com/playwright:v1.55.1-noble`;
+- committed `tests/browser-smoke.cjs` syntax: PASS;
+- Chromium smoke explicitly reported `PASS xml-escape-unescape`;
+- browser page sweep: 89 pages checked;
+- active navigation, global tool search/navigation and mobile layout checks: PASS.
+
+The broad smoke run finished 142 passed / 2 failed because `html-minifier` and `css-minifier` timed out waiting for provider readiness. Those failures are unrelated to XML Escape / Unescape, so they do not invalidate this page-specific acceptance; they remain mandatory final-batch release blockers.
+
+Production paths were not used as the CI workspace and production was not deployed.
+
+### Page 17 acceptance status
+- Demand / difficulty: VERIFIED.
+- Current SERP intent/attainability: VERIFIED.
+- Canonical ownership / cannibalization: VERIFIED.
+- Existing functionality/content inspected: VERIFIED.
+- Standards-backed correctness gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Semantic/search metadata update: COMPLETED.
+- Regression coverage: VERIFIED.
+- Static SEO/content QA: VERIFIED.
+- JavaScript syntax: VERIFIED.
+- XML Escape Chromium regression: VERIFIED.
+- Production deployment: NOT STARTED.
