@@ -768,9 +768,18 @@
   {
     "category": "Website",
     "url": "/sitemap-checker/",
-    "title": "Sitemap Checker",
-    "description": "Validate XML sitemaps and sitemap indexes.",
-    "keywords": []
+    "title": "XML Sitemap Checker & Validator",
+    "description": "Validate sitemap namespace, locations, duplicates, lastmod values and core protocol rules.",
+    "keywords": [
+      "sitemap checker",
+      "sitemap validator",
+      "xml sitemap checker",
+      "xml sitemap validator",
+      "sitemap checker tool",
+      "online sitemap checker tools",
+      "sitemap validator online",
+      "sitemap checker online"
+    ]
   },
   {
     "category": "Website",
