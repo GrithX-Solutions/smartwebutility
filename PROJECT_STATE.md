@@ -11,6 +11,8 @@ Run the remaining content/SEO re-audit page by page. Research, improve, test and
 - Current production source/artifact SHA: `04ce96286f0baaff1a175f4cae7c9491b0607688`
 - Current GitHub main state-only head before this batch: `ee460eb96606bbf93cd7a8347e51be8c851672d3`
 - Working branch: `content-reaudit-page-by-page-2026-10-03`
+- Regex Tester final implementation/test head before audit-state sync: `e447fc14156ba5865ef6d9548559bdf0aa9e240b`.
+- Regex Tester audit evidence commit: `e2420b471f4ecce16041005abe69b76b633b5a3d`.
 - Hash Generator implementation/test head before audit-state sync: `eea7a7234c7c64cd7678983248407f6311991180`.
 - Hash Generator audit evidence commit: `5235c6d805756a91ee3cedef2cf16865df02569c`.
 - Rank-tracking workflow decision commit: `6e732cd6aea150d9a940cd98db98bb61a52d53ea`.
@@ -78,30 +80,29 @@ Research record:
 
 ## Current page
 
-### /regex-tester/ — next page research
+### /url-encoder-decoder/ — next page research
 
 Status: UNKNOWN — NOT YET AUDITED UNDER THE CURRENT HARD GATE.
 
-Hash Generator is now VERIFIED via the approved isolated ZTHosting fallback:
-- Ubersuggest U.S. demand was verified, including `hash generator` at 880 searches/month, `sha 256 hash generator` at 1,000 with SD 41, `sha256 hash generator` at 480 with SD 36 and `sha 512 hash generator` at 140 with SD 28;
-- the current live search landscape repeatedly exposes local file hashing plus expected-checksum comparison as the practical product standard;
-- canonical ownership remains `/hash-generator/`; no separate SHA-256/SHA-512 pages were created;
-- the verified workflow gap was direct checksum verification rather than manual visual comparison;
-- the implementation now accepts raw expected digests or common checksum lines, compares case-insensitively and reports match/mismatch/invalid-reference states;
-- visible content explains that a matching checksum proves digest equality, not publisher trust or file safety;
-- the page links MDN Web Crypto digest documentation and the current NIST FIPS 180-4 publication;
+Regex Tester is now VERIFIED via the approved isolated ZTHosting fallback:
+- Ubersuggest U.S. demand was verified, including `regex tester` at 27,100 searches/month, `regular expression tester` at 18,100 and the low-difficulty `online regular expression tester` variant at 2,400 with SD 5;
+- current U.S. SERP evidence includes both high-authority leaders and low-authority specialist utilities, confirming a realistic long-tail route without implying ranking success;
+- live competitor review confirmed the current product bar: highlighted matches, numbered/named groups, replacement preview, modern JavaScript flags, match ranges/indices and browser-local processing;
+- canonical ownership remains `/regex-tester/`; `/regex-escaper/` remains the distinct literal-escaping intent owner;
+- the implemented gap adds highlighted matches, start/end ranges, named-group output, current `d/g/i/m/s/u/v/y` flag guidance and a 500-match display cap;
+- a post-Chromium review found and fixed a zero-length highlight cursor bug, then added an exact `↧a↧a` regression;
 - exact current-branch Git blob identity was verified for page HTML, implementation JS, browser test, tool catalog and sitemap;
 - static SEO QA passed 89 pages with 0 errors / 0 warnings;
 - content QA passed with 0 errors and the same 2 intentionally retained advisories;
 - implementation JavaScript and committed browser-smoke syntax passed;
-- Chromium explicitly reported `PASS hash-generator`;
+- final Chromium explicitly reported `PASS regex-tester`;
 - browser sweep checked all 89 pages and navigation/search/mobile checks passed;
-- Ubersuggest rank tracking now includes `hash generator`, `sha256 hash generator` and `sha 512 hash generator` for U.S. English;
+- Ubersuggest rank tracking now includes `regex tester`, `online regular expression tester` and `regex tester online` for U.S. English;
 - production was not used as the CI workspace and was not deployed.
 
-The broad smoke total remains 142/144 because HTML Minifier and CSS Minifier timed out waiting for provider readiness. Those failures are unrelated to Hash Generator but remain final-batch release blockers.
+The broad smoke total remains 142/144 because HTML Minifier and CSS Minifier timed out waiting for provider readiness. Those failures are unrelated to Regex Tester but remain final-batch release blockers.
 
-JWT Decoder is already audited and is skipped in sitemap order. The next unresolved canonical is `/regex-tester/`. No change is authorized until Ubersuggest U.S. demand, current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
+The next unresolved canonical in sitemap order is `/url-encoder-decoder/`. No change is authorized until Ubersuggest U.S. demand, the current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
@@ -421,6 +422,30 @@ Hash Generator isolated validation — 2026-10-06:
 - Page-specific gate: VERIFIED.
 - Production mutation: NONE.
 
+Regex Tester isolated validation — 2026-10-06:
+- Final implementation/test head before audit-state sync: `e447fc14156ba5865ef6d9548559bdf0aa9e240b`.
+- Audit evidence commit: `e2420b471f4ecce16041005abe69b76b633b5a3d`.
+- Isolated workspace: `/srv/smartwebutility-ci/workspaces/regex-tester-67549ba`.
+- Exact current-branch material Git blobs:
+  - `regex-tester/index.html`: `217c651bf4f6f14b38187f9cb7f34b81b64ab736`;
+  - `assets/regex.js`: `48f1d0731585f6e0e780018bb0b554a151feea0c`;
+  - `tests/browser-smoke.cjs`: `4f28b8c93552d7f93987e3d3d382e1da079a101b`;
+  - `assets/tool-catalog.json`: `4b032d4a2a9d1f689e94c165322d93ed275a8e74`;
+  - `sitemap.xml`: `c5bbba4f0ea0577c20b54747dc846bb5dd512abf`.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- Regex JavaScript syntax: PASS.
+- Committed browser-smoke syntax: PASS.
+- Chromium: `PASS regex-tester`.
+- Named groups, `d` ranges, replacement preview, zero-length matches, exact zero-length highlighting and 500-match cap: PASS.
+- Browser page sweep: 89 pages checked.
+- Active navigation, global tool search/navigation and mobile layout: PASS.
+- Broad smoke total: 142 passed, 2 failed; only `html-minifier` and `css-minifier` timed out waiting for provider readiness.
+- Ubersuggest U.S. rank tracking added: `regex tester`, `online regular expression tester`, `regex tester online`.
+- Ubersuggest tracked keyword-location usage after update: 77 / 300.
+- Page-specific gate: VERIFIED.
+- Production mutation: NONE.
+
 ## CI infrastructure blocker
 
 BLOCKED:
@@ -467,13 +492,13 @@ XML Formatter & Validator isolated validation:
 
 ## Work in progress
 
-Hash Generator is VERIFIED via the isolated fallback and its three strategic U.S. keywords are tracked in Ubersuggest. Unix Timestamp Converter, JSON Diff, Regex Escaper, XML Escape / Unescape and UUID Validator remain verified. The next page is `/regex-tester/`, beginning with research only. Production remains unchanged.
+Regex Tester is VERIFIED via the isolated fallback and its three strategic U.S. keywords are tracked in Ubersuggest. Hash Generator, Unix Timestamp Converter, JSON Diff, Regex Escaper, XML Escape / Unescape and UUID Validator remain verified. The next page is `/url-encoder-decoder/`, beginning with research only. Production remains unchanged.
 
 ## Affected files — completed/current pages
 
 Most recently verified page:
-- `hash-generator/index.html`
-- `assets/hash.js`
+- `regex-tester/index.html`
+- `assets/regex.js`
 
 Shared direct requirements verified with that page:
 - `assets/tool-catalog.json`
@@ -484,10 +509,10 @@ Shared direct requirements verified with that page:
 
 ## NEXT ACTION
 
-Audit `/regex-tester/` as the next and only active page:
+Audit `/url-encoder-decoder/` as the next and only active page:
 1. verify Ubersuggest U.S. demand, difficulty, CPC/intent and useful semantic variants;
 2. inspect the current U.S. SERP and relevant competitors;
-3. confirm canonical ownership and no cannibalization with `/regex-escaper/`;
+3. confirm canonical ownership and no cannibalization;
 4. inspect current functionality/content against the verified intent;
 5. identify a concrete product/content gap or record an evidence-based NO CHANGE decision;
 6. only if a real gap exists, implement that page plus directly required tests/search metadata and validate it before moving to another page;
