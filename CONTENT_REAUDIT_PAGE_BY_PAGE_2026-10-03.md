@@ -4377,3 +4377,202 @@ Production paths were not used as the CI workspace and production was not deploy
 - URL Encoder / Decoder Chromium regression: VERIFIED.
 - Ubersuggest rank tracking: VERIFIED.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 24 — /html-entity-encoder-decoder/
+
+Research/update date: 2026-10-06  
+Status: VERIFIED VIA ISOLATED CI FALLBACK
+
+### Primary intent
+Encode HTML-sensitive characters as HTML character references and decode named/numeric HTML character references back to plain text.
+
+Canonical owner:
+- `https://smartwebutility.com/html-entity-encoder-decoder/`
+
+Cannibalization decision:
+- keep HTML entity encode/decode, HTML escape/unescape and HTML character-reference conversion on this single canonical;
+- do not create separate encoder, decoder, named-entity or numeric-entity URLs for semantic variants of the same workflow.
+
+### Ubersuggest US evidence
+Broader canonical-intent terms:
+- `html decode`: 1,600 searches/month, SD 50, CPC $6.36.
+- `html encode`: 1,300, SD 28, CPC $9.47.
+- `online html decode`: 210, SD 23.
+- `html encode online`: 110, SD 38.
+- `html entity decoder`: 170, SD 26.
+- `html escape online`: 40, SD 7.
+- `html entity converter`: 40, SD 34.
+- `html entity encoder`: 20, SD 14.
+- `html entity encoder decoder`: 10, SD 5.
+
+The exact head phrase is modest, but the broader same-intent HTML encode/decode terms have meaningful U.S. demand. The low-difficulty `html escape online` and `html entity encoder` variants provide attainable long-tail routes without creating duplicate pages.
+
+### Current U.S. SERP / attainability
+Ubersuggest current/recent U.S. SERP evidence shows low-authority specialist utilities ranking for this intent.
+
+For `html entity decoder`:
+- Textoolz — DA 3 around position 11;
+- Compu-Tools — DA 6 around position 19;
+- BinaryConvert.dev — DA 4 around position 21.
+
+For `html escape online`:
+- Toolkit Wizard — DA 2 at position 1;
+- BrowserBench — DA 1 around position 4;
+- MaskPayload — DA 8 around position 5;
+- tools.ad — DA 1 around position 6.
+
+The SERP also exposes AI Overview / People Also Ask features for relevant variants. This confirms real tool intent and low-authority attainability without implying future ranking.
+
+### Live competitor review
+A live web review on 2026-10-06 found that current HTML entity tools commonly provide more than one fixed encoder output:
+- WebKnife supports named, decimal or hex output and optional non-ASCII conversion;
+- DesignRevision supports optional non-ASCII numeric references;
+- 712 Tools supports non-ASCII encoding and numeric decoding;
+- GenUtils presents named, decimal and hex forms and an entity-reference workflow;
+- EscapeHTML exposes named/decimal/hex styles plus optional non-ASCII handling;
+- Kordu, OnlineTextLab and similar current tools decode named, decimal and hexadecimal references in-browser.
+
+The previous Smart Web Utility page encoded only five fixed HTML-sensitive characters to one output style. Its decoder already used the browser parser and therefore handled many named and numeric references, but users could not choose numeric output or intentionally escape non-ASCII characters.
+
+### Standards / technical scope
+The current WHATWG HTML Living Standard defines three character-reference forms:
+- named character references;
+- decimal numeric character references;
+- hexadecimal numeric character references.
+
+The authoritative HTML named-character table contains the browser-recognized named reference set. MDN likewise documents named, decimal and hexadecimal character references and common examples.
+
+This audit intentionally does not bundle a duplicate full WHATWG named-entity table. Smart Web Utility:
+- provides readable names for the five HTML-sensitive essentials;
+- uses decimal numeric fallback for non-ASCII characters when Named essentials mode is selected;
+- uses code-point-safe decimal/hex numeric output for numeric modes;
+- delegates decode semantics to the browser's HTML parser.
+
+### Existing Smart Web Utility strengths before this change
+The page already:
+- encoded ampersand, less-than, greater-than, double quote and apostrophe;
+- decoded entities in the browser;
+- supported Swap & Reverse;
+- copied output locally;
+- warned against double encoding;
+- explained that entity encoding is not a universal XSS defense;
+- kept input/output local and rendered decoded output in a plain-text textarea.
+
+### Confirmed product/content gap
+The previous encoder had one fixed output style:
+- `&amp;`
+- `&lt;`
+- `&gt;`
+- `&quot;`
+- `&#39;`
+
+It did not support:
+- decimal numeric output such as `&#60;`;
+- hexadecimal output such as `&#x3C;`;
+- optional numeric encoding of non-ASCII characters such as `é` or emoji;
+- explicit one-pass decode semantics.
+
+That limited compatibility/debugging workflows where developers need to compare named versus numeric references or inspect multilingual/emoji text as code points.
+
+### Implementation
+`html-entity-encoder-decoder/index.html` now:
+- adds `Named essentials`, `Decimal` and `Hexadecimal` encoding formats;
+- adds an optional `Encode non-ASCII` control;
+- explains named, decimal and hexadecimal character-reference forms;
+- links the current WHATWG HTML character-reference specification and MDN reference;
+- explains that non-ASCII characters in Named essentials mode use decimal fallback rather than a bundled name table;
+- explains one-pass browser-native decode behavior;
+- clarifies that decoded output remains plain text and is not rendered as HTML;
+- strengthens the destination-context/XSS boundary;
+- updates WebApplication feature metadata.
+
+`assets/html-entities.js` now:
+- iterates input by Unicode code point rather than UTF-16 code unit;
+- preserves readable named forms for the HTML-sensitive essentials;
+- emits decimal or uppercase hexadecimal numeric references on request;
+- optionally encodes all non-ASCII code points numerically;
+- correctly treats astral characters such as emoji as one code point;
+- uses the browser HTML parser for one-pass decode;
+- disables encode-only controls in Decode mode;
+- resets mode/format/options consistently on Clear;
+- preserves Swap & Reverse and copy behavior.
+
+Internal search discovery now includes:
+- `html encode`
+- `html decode`
+- `html entity decoder`
+- `html entity encoder`
+- `html escape online`
+- `html encode online`
+- `online html decode`
+- `html entity converter`
+
+Sitemap `lastmod` was updated to 2026-10-06.
+
+### Regression coverage
+The committed Chromium case verifies:
+- default named-essential encoding for HTML markup, ampersand, quotes and apostrophe;
+- non-ASCII text remains literal by default;
+- decimal encoding of `é`, emoji, ampersand and less-than;
+- hexadecimal encoding of the same values using full Unicode code points;
+- encode-only controls disabled in Decode mode;
+- named `&eacute;`, hexadecimal and decimal numeric references decoding together;
+- decoded markup staying as plain textarea text;
+- explicit one-pass behavior where `&amp;lt;` becomes `&lt;` rather than `<`.
+
+The first isolated Chromium run failed only because the test changed encode options and then filled new text without pressing the page's explicit Process button. The output demonstrated that the codec itself had correctly encoded the previous input. Commit `05fffbad66fe83037c4be2cc91a8594e32683602` corrected the regression sequence to use the actual UI workflow.
+
+### Isolated CI validation — 2026-10-06
+Final implementation/test head before audit-state sync:
+- `05fffbad66fe83037c4be2cc91a8594e32683602`
+
+Isolated workspace:
+- `/srv/smartwebutility-ci/workspaces/html-entities-3a184b3`
+
+Exact current-branch material Git blobs:
+- `html-entity-encoder-decoder/index.html` — `a6054e3520691764d48e34790892fd2f19a5d7a9`
+- `assets/html-entities.js` — `a7c4aa993b565e7524045ff07c24c407bd62ed22`
+- `tests/browser-smoke.cjs` — `d51de3c23fbecf7cadafe59ff900716646bc905b`
+- `assets/tool-catalog.json` — `b6a44af5bad8fcd2bffbb9aeef664c2257cae963`
+- `sitemap.xml` — `c1524d84174280ddbb204546fdfec6cda2fa60d4`
+
+Final gate results:
+- static SEO QA: 89 pages, 0 errors, 0 warnings;
+- content QA: 89 pages, 0 errors, 2 intentionally retained advisories;
+- `assets/html-entities.js` syntax: PASS;
+- committed browser-smoke syntax: PASS;
+- final Chromium explicitly reported `PASS html-entity-encoder-decoder`;
+- browser page sweep: 89 pages checked;
+- active navigation, global tool search/navigation and mobile layout checks: PASS;
+- broad smoke total: 142 passed, 2 failed.
+
+The two broad-suite failures are the existing `html-minifier` and `css-minifier` provider-readiness timeouts. They are unrelated to HTML Entity Encoder / Decoder and remain mandatory final-batch release blockers.
+
+### Ubersuggest rank tracking
+After page verification, the SmartWebUtility Ubersuggest project was updated for U.S. English with:
+- `html encode`
+- `html entity decoder`
+- `html escape online`
+
+Tracked keyword-location usage after update: 83 / 300.
+
+Production paths were not used as the CI workspace and production was not deployed.
+
+### Page 24 acceptance status
+- Demand / difficulty: VERIFIED.
+- Current U.S. SERP intent/attainability: VERIFIED.
+- Live competitor review: VERIFIED.
+- Standards basis: VERIFIED.
+- Canonical ownership / cannibalization: VERIFIED.
+- Existing implementation inspected: VERIFIED.
+- Multi-format/non-ASCII encoding gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Regression sequencing correction: VERIFIED.
+- Static SEO/content QA: VERIFIED.
+- JavaScript syntax: VERIFIED.
+- HTML Entity Chromium regression: VERIFIED.
+- Ubersuggest rank tracking: VERIFIED.
+- Production deployment: NOT STARTED.
