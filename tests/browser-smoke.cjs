@@ -776,6 +776,12 @@ const cases = [
     assert.ok(dateText.includes('2026-01-01T00:00:00.123Z'));
     assert.ok(dateText.includes('1767225600123456789'));
 
+    await p.locator('#unixInput').fill('-1');
+    await p.locator('#convertUnix').click();
+    dateText = await p.locator('#dateResult').innerText();
+    assert.ok(dateText.includes('1969-12-31T23:59:59.999Z'));
+    assert.ok(dateText.includes('-1'));
+
     await p.locator('#unixUnit').selectOption('auto');
     await p.locator('#unixInput').fill('1767225600123456');
     await p.locator('#convertUnix').click();
