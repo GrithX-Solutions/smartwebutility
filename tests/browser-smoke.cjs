@@ -1169,9 +1169,39 @@ const cases = [
     assert.match(await p.locator('#urlError').innerText(), /index 3/i);
   }],
   ['html-entity-encoder-decoder', async p => {
-    await p.locator('#htmlEntityInput').fill('<h1>Hi & bye</h1>');
+    await p.locator('#htmlEntityInput').fill('<p title="café">Tom & Jerry\'s 😀</p>');
     await p.locator('#runHtmlEntity').click();
-    assert.ok((await p.locator('#htmlEntityOutput').inputValue()).includes('&lt;h1&gt;'));
+    assert.equal(
+      await p.locator('#htmlEntityOutput').inputValue(),
+      '&lt;p title=&quot;café&quot;&gt;Tom &amp; Jerry&#39;s 😀&lt;/p&gt;'
+    );
+    assert.equal(await p.locator('#htmlEntityStatus').innerText(), 'Encoded · named essentials');
+
+    await p.locator('#htmlEntityFormat').selectOption('decimal');
+    await p.locator('#htmlEntityNonAscii').check();
+    await p.locator('#htmlEntityInput').fill('é 😀 & <');
+    assert.equal(
+      await p.locator('#htmlEntityOutput').inputValue(),
+      '&#233; &#128512; &#38; &#60;'
+    );
+
+    await p.locator('#htmlEntityFormat').selectOption('hex');
+    assert.equal(
+      await p.locator('#htmlEntityOutput').inputValue(),
+      '&#xE9; &#x1F600; &#x26; &#x3C;'
+    );
+
+    await p.locator('#htmlEntityMode').selectOption('decode');
+    assert.equal(await p.locator('#htmlEntityFormat').isDisabled(), true);
+    assert.equal(await p.locator('#htmlEntityNonAscii').isDisabled(), true);
+    await p.locator('#htmlEntityInput').fill('&lt;b&gt;caf&eacute; &#x1F600; &#128512;&lt;/b&gt;');
+    await p.locator('#runHtmlEntity').click();
+    assert.equal(await p.locator('#htmlEntityOutput').inputValue(), '<b>café 😀 😀</b>');
+    assert.equal(await p.locator('#htmlEntityStatus').innerText(), 'Decoded · one pass');
+
+    await p.locator('#htmlEntityInput').fill('&amp;lt;');
+    await p.locator('#runHtmlEntity').click();
+    assert.equal(await p.locator('#htmlEntityOutput').inputValue(), '&lt;');
   }],
   ['cron-expression-helper', async p => {
     await p.locator('#cronMinute').fill('*/15');
