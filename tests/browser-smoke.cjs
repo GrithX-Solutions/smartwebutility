@@ -1180,6 +1180,7 @@ const cases = [
     await p.locator('#htmlEntityFormat').selectOption('decimal');
     await p.locator('#htmlEntityNonAscii').check();
     await p.locator('#htmlEntityInput').fill('é 😀 & <');
+    await p.locator('#runHtmlEntity').click();
     assert.equal(
       await p.locator('#htmlEntityOutput').inputValue(),
       '&#233; &#128512; &#38; &#60;'
