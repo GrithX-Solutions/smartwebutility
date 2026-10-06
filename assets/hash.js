@@ -6,15 +6,29 @@
   const uppercase = document.getElementById('hashUppercase');
   const output = document.getElementById('hashOutput');
   const fileInput = document.getElementById('hashFile');
+  const expectedInput = document.getElementById('expectedHash');
+  const verifyStatus = document.getElementById('hashVerifyStatus');
   const status = document.getElementById('hashStatus');
   const error = document.getElementById('hashError');
   const copyBtn = document.getElementById('copyHash');
   const year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();
 
+  const digestLengths = {
+    'SHA-1': 40,
+    'SHA-256': 64,
+    'SHA-384': 96,
+    'SHA-512': 128
+  };
+  let currentDigest = '';
+
   const setStatus = (msg, kind='neutral') => {
     status.textContent = msg;
     status.dataset.kind = kind;
+  };
+  const setVerifyStatus = (msg, kind='neutral') => {
+    verifyStatus.textContent = msg;
+    verifyStatus.dataset.kind = kind;
   };
   const showError = (msg) => {
     error.textContent = msg;
@@ -25,28 +39,88 @@
     error.hidden = true;
     error.textContent = '';
   };
-  const hex = (buffer) => {
-    let value = [...new Uint8Array(buffer)].map(b => b.toString(16).padStart(2, '0')).join('');
-    return uppercase.checked ? value.toUpperCase() : value;
-  };
+  const toHex = (buffer) => [...new Uint8Array(buffer)]
+    .map(byte => byte.toString(16).padStart(2, '0'))
+    .join('');
+
+  function renderDigest() {
+    output.value = uppercase.checked ? currentDigest.toUpperCase() : currentDigest;
+  }
+
+  function extractExpectedDigest(raw) {
+    const length = digestLengths[algo.value];
+    const trimmed = raw.trim();
+    if (!trimmed) return { digest: '', error: '' };
+
+    if (new RegExp('^[0-9a-fA-F]{' + length + '}$').test(trimmed)) {
+      return { digest: trimmed.toLowerCase(), error: '' };
+    }
+
+    const pattern = new RegExp('(?:^|[^0-9a-fA-F])([0-9a-fA-F]{' + length + '})(?=$|[^0-9a-fA-F])', 'g');
+    const matches = [];
+    let match;
+    while ((match = pattern.exec(trimmed)) !== null) {
+      matches.push(match[1].toLowerCase());
+    }
+
+    if (matches.length === 1) {
+      return { digest: matches[0], error: '' };
+    }
+
+    return {
+      digest: '',
+      error: 'Expected ' + algo.value + ' checksum must contain exactly one ' + length + '-character hexadecimal digest.'
+    };
+  }
+
+  function verifyExpected() {
+    const raw = expectedInput.value;
+    if (!raw.trim()) {
+      setVerifyStatus('Optional: paste the checksum published by your source.');
+      return;
+    }
+
+    const parsed = extractExpectedDigest(raw);
+    if (parsed.error) {
+      setVerifyStatus(parsed.error, 'error');
+      return;
+    }
+
+    if (!currentDigest) {
+      setVerifyStatus('Generate a hash to verify this checksum.');
+      return;
+    }
+
+    if (parsed.digest === currentDigest) {
+      setVerifyStatus('Checksum matches the generated ' + algo.value + '.', 'success');
+    } else {
+      setVerifyStatus('Checksum does not match the generated ' + algo.value + '.', 'error');
+    }
+  }
 
   async function digest(data) {
     const result = await crypto.subtle.digest(algo.value, data);
-    output.value = hex(result);
+    currentDigest = toHex(result);
+    renderDigest();
+    verifyExpected();
     setStatus(`${algo.value} generated`, 'success');
   }
 
   async function hashText() {
     clearError();
     if (!input.value) {
+      currentDigest = '';
       output.value = '';
+      verifyExpected();
       return showError('Enter text to hash.');
     }
     try {
       const bytes = new TextEncoder().encode(input.value);
       await digest(bytes);
     } catch (err) {
+      currentDigest = '';
       output.value = '';
+      verifyExpected();
       showError(err.message || 'Could not generate the hash.');
     }
   }
@@ -61,7 +135,9 @@
       await digest(buffer);
       setStatus(`${algo.value} generated for ${file.name}`, 'success');
     } catch (err) {
+      currentDigest = '';
       output.value = '';
+      verifyExpected();
       showError(err.message || 'Could not hash this file.');
     }
   });
@@ -70,9 +146,12 @@
   document.getElementById('clearHash').addEventListener('click', () => {
     input.value = '';
     output.value = '';
+    expectedInput.value = '';
     fileInput.value = '';
+    currentDigest = '';
     clearError();
     setStatus('Ready');
+    setVerifyStatus('Optional: paste the checksum published by your source.');
     input.focus();
   });
 
@@ -82,6 +161,10 @@
   });
 
   algo.addEventListener('change', () => {
+    currentDigest = '';
+    output.value = '';
+    verifyExpected();
+
     if (fileInput.files && fileInput.files[0]) {
       fileInput.dispatchEvent(new Event('change'));
     } else if (input.value) {
@@ -92,10 +175,10 @@
   });
 
   uppercase.addEventListener('change', () => {
-    if (output.value) {
-      output.value = uppercase.checked ? output.value.toUpperCase() : output.value.toLowerCase();
-    }
+    if (currentDigest) renderDigest();
   });
+
+  expectedInput.addEventListener('input', verifyExpected);
 
   copyBtn.addEventListener('click', async () => {
     if (!output.value) return;
