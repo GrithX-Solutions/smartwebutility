@@ -4786,3 +4786,229 @@ Production paths were not used as the CI workspace and production was not deploy
 - Robots.txt Generator Chromium regression: VERIFIED.
 - Ubersuggest rank tracking: VERIFIED.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 26 — /schema-markup-generator/
+
+Research/update date: 2026-10-06  
+Status: VERIFIED VIA ISOLATED CI FALLBACK
+
+### Primary intent
+Generate usable JSON-LD structured data for common Schema.org entity types without forcing every entity into one generic field set, while showing conservative Google-facing readiness guidance.
+
+Canonical owner:
+- `https://smartwebutility.com/schema-markup-generator/`
+
+Cannibalization decision:
+- keep Schema.org / JSON-LD / structured-data generator variants on this one canonical;
+- do not create separate URLs for “schema generator”, “JSON-LD generator” or type-specific Article/LocalBusiness/SoftwareApplication variants unless future first-party demand proves a distinct workflow.
+
+### Ubersuggest US evidence
+- `schema markup generator`: 1,000 searches/month, SD 63, CPC $16.57.
+- `json ld generator`: 90, SD 26.
+- `structured data generator`: 40, SD 63, CPC $6.62.
+- `json ld schema markup generator`: 30, SD 5.
+- `schema org json ld generator`: 20, SD 5.
+- `product schema markup generator`: 20, SD 8.
+- `schema markup generator free`: 10, SD 6.
+- `schema markup generator service`: 10, SD 5.
+
+The head term is competitive, but JSON-LD long-tails provide materially lower-difficulty routes for the same canonical.
+
+### Current U.S. SERP / attainability
+Ubersuggest refreshed the U.S. SERPs on 2026-10-06.
+
+For `schema markup generator`, established SEO tools lead, but lower-authority utilities also rank:
+- GSCPilot — DA 9 around position 14;
+- 100 SEO Tools — DA 9 around position 18;
+- Tonaily — DA 6 around position 20;
+- MSangeetha — DA 7 around position 22;
+- HyperAutomationLabs — DA 4 around position 24.
+
+For `json ld generator`, the SERP is substantially more attainable:
+- Fonzy.ai — DA 10 at position 1;
+- Induwara — DA 12 around position 3;
+- FastMinify — DA 7 around position 7;
+- Calculators4all — DA 2 around position 9;
+- GetVeritas — DA 2 around position 18;
+- Scanverra — DA 3 around position 20.
+
+For `json ld schema markup generator`, low-authority utilities also appear, including DA 8–15 domains.
+
+AI Overview and People Also Ask features appear on relevant variants. This confirms genuine tool intent and a realistic long-tail path without implying ranking success.
+
+### Current Google structured-data documentation reviewed
+Current Google Search Central documentation was rechecked before implementation.
+
+Key verified points:
+- Organization structured data currently has no required properties in Google's Organization documentation; Google recommends including applicable identity properties such as name, URL, logo, telephone and sameAs.
+- Article structured data currently has no required properties; Google recommends adding applicable properties such as headline, author, image, datePublished and dateModified.
+- LocalBusiness rich-result documentation requires at least `name` and `address`, with a detailed `PostalAddress` strongly recommended.
+- SoftwareApplication rich-result documentation requires `name`, `offers.price`, and either an `aggregateRating` or `review`; applicationCategory and operatingSystem are recommended.
+- Passing Schema.org validation or Google's Rich Results Test does not guarantee that a rich result will appear.
+
+Primary official references reviewed:
+- Google Organization structured data documentation;
+- Google Article structured data documentation;
+- Google LocalBusiness structured data documentation;
+- Google SoftwareApplication structured data documentation;
+- Google general structured-data documentation.
+
+### Live competitor review
+Live 2026-10-06 review found that stronger current generators use type-specific forms rather than one generic field set.
+
+Examples:
+- Baseline Labs exposes 20+ schema types and derives type-specific markup.
+- PublicSoftTools provides type-specific fields for Article, Product, FAQPage, LocalBusiness, Organization, WebSite, Event and BreadcrumbList.
+- MediaSpearhead provides type-specific LocalBusiness, Article, Organization, Service, FAQ and Breadcrumb forms with live JSON-LD.
+- Pine & Birch provides detailed fields such as LocalBusiness address, telephone, opening hours and price range.
+- Current smaller tools such as SEO ProCheck and Induwara likewise nest type-specific objects such as Article authors, Product offers and LocalBusiness addresses.
+
+The previous Smart Web Utility generator offered five useful types but used the same generic Name / URL / Description / Image fields for every type. That meant a LocalBusiness could be generated with no address and a SoftwareApplication with no offer or rating/review context, while the UI provided no type-specific readiness warning.
+
+### Confirmed product/content gap
+The verified gap was not simply “more schema types.” It was shallow modeling of the five existing types.
+
+Before this audit:
+- Organization, WebSite, SoftwareApplication, Article and LocalBusiness all shared identical generic fields;
+- LocalBusiness could omit the required Google-facing address structure with no warning;
+- SoftwareApplication could omit the documented Google rich-result offer/rating requirements with no warning;
+- Article could not add author or publication dates;
+- Organization could not add logo, telephone or sameAs profiles;
+- WebSite could not add an alternate name;
+- URL input was not validated before copy;
+- the page could not distinguish Schema.org-valid starter markup from Google feature readiness.
+
+### Implementation
+`schema-markup-generator/index.html` now provides type-specific controls:
+
+Organization:
+- name, URL, description and image;
+- logo URL;
+- telephone;
+- multiple sameAs URLs.
+
+WebSite:
+- name, URL, description/image where applicable;
+- alternate site name.
+
+SoftwareApplication:
+- application category limited to Google-documented supported values offered by the form;
+- operating system;
+- Offer price and optional currency;
+- real aggregate rating value/count fields;
+- explicit warning never to invent ratings.
+
+Article:
+- headline;
+- URL, description and image;
+- author name and author URL;
+- datePublished and dateModified.
+
+LocalBusiness:
+- business name and URL;
+- image/description;
+- telephone;
+- nested PostalAddress fields;
+- price range.
+
+The page also adds:
+- a visible readiness panel;
+- an error panel;
+- explicit distinction between Schema.org vocabulary validity and Google feature readiness;
+- current Google-specific guidance for Organization, Article, LocalBusiness and SoftwareApplication;
+- type-specific WebApplication feature metadata.
+
+`assets/schema-generator.js` now:
+- switches the visible field set by selected schema type;
+- emits type-specific nested JSON-LD objects;
+- uses `headline` rather than generic `name` for Article;
+- nests Article author as a Person;
+- nests LocalBusiness address as PostalAddress;
+- nests SoftwareApplication Offer and AggregateRating;
+- validates all entered HTTP(S) URLs;
+- validates sameAs URLs line-by-line;
+- validates software price, ISO-style dates, 1–5 rating values and positive rating counts;
+- outputs conservative readiness messages rather than claiming rich-result eligibility;
+- clears output on invalid values so malformed markup is not silently copied;
+- preserves browser-local generation and copy behavior.
+
+Internal search discovery now includes:
+- `schema markup generator`
+- `json ld generator`
+- `json ld schema markup generator`
+- `schema org json ld generator`
+- `structured data generator`
+- `schema markup generator free`
+- `schema markup generator tool`
+- `schema generator`
+
+Sitemap `lastmod` was updated to 2026-10-06.
+
+### Regression coverage
+The committed Chromium case verifies:
+- LocalBusiness selection;
+- nested PostalAddress output;
+- detailed LocalBusiness readiness;
+- SoftwareApplication output with Offer price;
+- aggregateRating value/count;
+- SoftwareApplication readiness after documented required fields represented by the form are supplied;
+- Article headline instead of generic name;
+- nested Person author;
+- author URL;
+- datePublished;
+- invalid relative URL rejection;
+- invalid markup output cleared when URL validation fails.
+
+### Isolated CI validation — 2026-10-06
+Final implementation/test head before audit-state sync:
+- `a0c41ceae9eda01d1a98b57bb40d29558f259325`
+
+Isolated workspace:
+- `/srv/smartwebutility-ci/workspaces/schema-generator-a0c41ce`
+
+Exact current-branch material Git blobs:
+- `schema-markup-generator/index.html` — `6a3fcd6fb54ed277cb15be08b2d12c7584036cb6`
+- `assets/schema-generator.js` — `e3e2dbf2283a405aedc1cc3c42a7a91cf3e31085`
+- `tests/browser-smoke.cjs` — `f4cfd9faf76c9c6308c1f2d5508a17f3b7973195`
+- `assets/tool-catalog.json` — `04936050df4b5b77e0a26bdf7467ec3b8aefc2cd`
+- `sitemap.xml` — `f5d2496c865ffce5d5e86cf625c10cb0f8e188a7`
+
+Gate results:
+- static SEO QA: 89 pages, 0 errors, 0 warnings;
+- content QA: 89 pages, 0 errors, 2 intentionally retained advisories;
+- `assets/schema-generator.js` syntax: PASS;
+- committed browser-smoke syntax: PASS;
+- Chromium explicitly reported `PASS schema-markup-generator`;
+- browser page sweep: 89 pages checked;
+- active navigation, global tool search/navigation and mobile layout checks: PASS;
+- broad smoke total: 142 passed, 2 failed.
+
+The two broad-suite failures remain the existing `html-minifier` and `css-minifier` provider-readiness timeouts. They are unrelated to Schema Markup Generator and remain mandatory final-batch release blockers.
+
+### Ubersuggest rank tracking
+After verification, the SmartWebUtility Ubersuggest project was updated for U.S. English with:
+- `schema markup generator`
+- `json ld generator`
+- `json ld schema markup generator`
+
+Tracked keyword-location usage after update: 88 / 300.
+
+Production paths were not used as the CI workspace and production was not deployed.
+
+### Page 26 acceptance status
+- Demand / difficulty: VERIFIED.
+- Current U.S. SERP intent/attainability: VERIFIED.
+- Live competitor review: VERIFIED.
+- Current Google structured-data documentation: VERIFIED.
+- Canonical ownership / cannibalization: VERIFIED.
+- Existing implementation inspected: VERIFIED.
+- Type-specific modeling/readiness gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Static SEO/content QA: VERIFIED.
+- JavaScript syntax: VERIFIED.
+- Schema Markup Generator Chromium regression: VERIFIED.
+- Ubersuggest rank tracking: VERIFIED.
+- Production deployment: NOT STARTED.
