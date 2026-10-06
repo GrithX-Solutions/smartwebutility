@@ -365,8 +365,17 @@
     "category": "Developer",
     "url": "/unix-timestamp-converter/",
     "title": "Unix Timestamp Converter",
-    "description": "Convert epoch timestamps and dates.",
-    "keywords": []
+    "description": "Convert Unix/epoch timestamps in seconds, milliseconds, microseconds or nanoseconds and convert local or UTC dates back to epoch values.",
+    "keywords": [
+      "epoch converter",
+      "timestamp converter",
+      "unix timestamp converter online",
+      "epoch timestamp converter",
+      "date to unix timestamp converter",
+      "timestamp to epoch converter",
+      "utc timestamp converter",
+      "epoch to timestamp converter"
+    ]
   },
   {
     "category": "Developer",
