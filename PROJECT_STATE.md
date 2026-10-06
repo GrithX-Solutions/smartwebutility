@@ -11,6 +11,8 @@ Run the remaining content/SEO re-audit page by page. Research, improve, test and
 - Current production source/artifact SHA: `04ce96286f0baaff1a175f4cae7c9491b0607688`
 - Current GitHub main state-only head before this batch: `ee460eb96606bbf93cd7a8347e51be8c851672d3`
 - Working branch: `content-reaudit-page-by-page-2026-10-03`
+- Robots.txt Generator final implementation/test head before audit-state sync: `fc5a324f8396b5c71e4027b6d4cff384cd124ffd`.
+- Robots.txt Generator audit evidence commit: `53449480660993b38d0b6c8d49c15a3ecb9cd077`.
 - HTML Entity Encoder / Decoder final implementation/test head before audit-state sync: `05fffbad66fe83037c4be2cc91a8594e32683602`.
 - HTML Entity Encoder / Decoder audit evidence commit: `6ca554f0be9b0f1439290b14236484684befc2e9`.
 - URL Encoder / Decoder final implementation/test head before audit-state sync: `c09bc2a5d3311fb00cfe38253e3d5379e0d78400`.
@@ -84,31 +86,29 @@ Research record:
 
 ## Current page
 
-### /robots-txt-generator/ — next page research
+### /schema-markup-generator/ — next page research
 
 Status: UNKNOWN — NOT YET AUDITED UNDER THE CURRENT HARD GATE.
 
-HTML Entity Encoder / Decoder is now VERIFIED via the approved isolated ZTHosting fallback:
-- Ubersuggest U.S. demand was verified across the canonical intent, including `html decode` at 1,600 searches/month, `html encode` at 1,300 with SD 28, `html entity decoder` at 170 with SD 26 and `html escape online` at 40 with SD 7;
-- current/recent U.S. SERP evidence includes multiple low-authority specialist utilities, especially for `html escape online` and `html entity decoder`, confirming attainable long-tail intent without implying ranking success;
-- live competitor review confirmed that current tools commonly expose named, decimal and hexadecimal output plus optional non-ASCII encoding;
-- WHATWG and MDN documentation confirm named, decimal numeric and hexadecimal numeric HTML character-reference forms;
-- canonical ownership remains `/html-entity-encoder-decoder/`; no duplicate encoder/decoder/entity-format URL was created;
-- the implementation now supports Named essentials, Decimal and Hexadecimal output plus optional non-ASCII numeric escaping;
-- encoding iterates Unicode code points so emoji are emitted as one numeric reference rather than broken surrogate halves;
-- decode remains browser-native, one-pass and plain-text;
+Robots.txt Generator is now VERIFIED via the approved isolated ZTHosting fallback:
+- Ubersuggest U.S. demand was verified, including `create robots txt generator` at 1,600 searches/month with SD 39, `robots.txt generator` at 1,000 with SD 21 and `online robots txt generator` at 110 with SD 5;
+- current U.S. SERPs include both established SEO domains and low-authority specialist utilities for the create/online long-tail variants;
+- current Google documentation was rechecked before implementation: supported fields are `user-agent`, `allow`, `disallow` and `sitemap`; `crawl-delay` is not supported by Google; multiple `User-agent` lines can share one rule group; multiple fully qualified `Sitemap` lines are supported;
+- canonical ownership remains `/robots-txt-generator/`, while `/robots-txt-tester/` remains the distinct rule-evaluation/testing intent owner;
+- the generator now accepts multiple user agents and multiple sitemap URLs and validates path shape, sitemap URLs and crawl-delay input;
+- invalid drafts clear the output rather than leaving copyable malformed text;
 - exact current-branch Git blob identity was verified for page HTML, implementation JS, browser test, tool catalog and sitemap;
 - static SEO QA passed 89 pages with 0 errors / 0 warnings;
 - content QA passed with 0 errors and the same 2 intentionally retained advisories;
 - implementation JavaScript and committed browser-smoke syntax passed;
-- final Chromium explicitly reported `PASS html-entity-encoder-decoder`;
+- Chromium explicitly reported `PASS robots-txt-generator`;
 - browser sweep checked all 89 pages and navigation/search/mobile checks passed;
-- Ubersuggest rank tracking now includes `html encode`, `html entity decoder` and `html escape online` for U.S. English;
+- Ubersuggest rank tracking now includes `robots.txt generator`, `create robots txt generator` and `online robots txt generator` for U.S. English;
 - production was not used as the CI workspace and was not deployed.
 
-The broad smoke total remains 142/144 because HTML Minifier and CSS Minifier timed out waiting for provider readiness. Those failures are unrelated to HTML Entity Encoder / Decoder but remain final-batch release blockers.
+The broad smoke total remains 142/144 because HTML Minifier and CSS Minifier timed out waiting for provider readiness. Those failures are unrelated to Robots.txt Generator but remain final-batch release blockers.
 
-Cron Expression Helper and Meta Tag Generator are already audited and are skipped in sitemap order. The next unresolved canonical is `/robots-txt-generator/`. No change is authorized until Ubersuggest U.S. demand, the current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
+The next unresolved canonical in sitemap order is `/schema-markup-generator/`. No change is authorized until Ubersuggest U.S. demand, the current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
@@ -501,6 +501,30 @@ HTML Entity Encoder / Decoder isolated validation — 2026-10-06:
 - Page-specific gate: VERIFIED.
 - Production mutation: NONE.
 
+Robots.txt Generator isolated validation — 2026-10-06:
+- Final implementation/test head before audit-state sync: `fc5a324f8396b5c71e4027b6d4cff384cd124ffd`.
+- Audit evidence commit: `53449480660993b38d0b6c8d49c15a3ecb9cd077`.
+- Isolated workspace: `/srv/smartwebutility-ci/workspaces/robots-generator-fc5a324`.
+- Exact current-branch material Git blobs:
+  - `robots-txt-generator/index.html`: `076ae80305a7fda02a89b7b990b4eac8839b3eb7`;
+  - `assets/robots-generator.js`: `161a386cee20c017df8ce23fc622ac63850e11bf`;
+  - `tests/browser-smoke.cjs`: `1ac61abd530dc755e20b5aeb87d33ea6e409d1cc`;
+  - `assets/tool-catalog.json`: `5c0ed9f00c5ef2b9e680b01bda0a8973304d435d`;
+  - `sitemap.xml`: `2eaf2f4789bb0515c16284b13e21e1fe86597fed`.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- Robots generator JavaScript syntax: PASS.
+- Committed browser-smoke syntax: PASS.
+- Chromium: `PASS robots-txt-generator`.
+- Multiple user-agent grouping, multiple sitemaps, valid Allow/Disallow paths, Crawl-delay warning and invalid-input rejection: PASS.
+- Browser page sweep: 89 pages checked.
+- Active navigation, global tool search/navigation and mobile layout: PASS.
+- Broad smoke total: 142 passed, 2 failed; only `html-minifier` and `css-minifier` timed out waiting for provider readiness.
+- Ubersuggest U.S. rank tracking added: `robots.txt generator`, `create robots txt generator`, `online robots txt generator`.
+- Ubersuggest tracked keyword-location usage after update: 86 / 300.
+- Page-specific gate: VERIFIED.
+- Production mutation: NONE.
+
 ## CI infrastructure blocker
 
 BLOCKED:
@@ -547,13 +571,13 @@ XML Formatter & Validator isolated validation:
 
 ## Work in progress
 
-HTML Entity Encoder / Decoder is VERIFIED via the isolated fallback and its three strategic U.S. keywords are tracked in Ubersuggest. URL Encoder / Decoder, Regex Tester, Hash Generator, Unix Timestamp Converter, JSON Diff, Regex Escaper, XML Escape / Unescape and UUID Validator remain verified. The next page is `/robots-txt-generator/`, beginning with research only. Production remains unchanged.
+Robots.txt Generator is VERIFIED via the isolated fallback and its three strategic U.S. keywords are tracked in Ubersuggest. HTML Entity Encoder / Decoder, URL Encoder / Decoder, Regex Tester, Hash Generator, Unix Timestamp Converter, JSON Diff, Regex Escaper, XML Escape / Unescape and UUID Validator remain verified. The next page is `/schema-markup-generator/`, beginning with research only. Production remains unchanged.
 
 ## Affected files — completed/current pages
 
 Most recently verified page:
-- `html-entity-encoder-decoder/index.html`
-- `assets/html-entities.js`
+- `robots-txt-generator/index.html`
+- `assets/robots-generator.js`
 
 Shared direct requirements verified with that page:
 - `assets/tool-catalog.json`
@@ -564,10 +588,10 @@ Shared direct requirements verified with that page:
 
 ## NEXT ACTION
 
-Audit `/robots-txt-generator/` as the next and only active page:
+Audit `/schema-markup-generator/` as the next and only active page:
 1. verify Ubersuggest U.S. demand, difficulty, CPC/intent and useful semantic variants;
-2. inspect the current U.S. SERP and relevant competitors;
-3. confirm canonical ownership and no cannibalization with `/robots-txt-tester/`;
+2. inspect the current U.S. SERP, Google structured-data documentation and relevant competitors;
+3. confirm canonical ownership and no cannibalization with other SEO/meta tools;
 4. inspect current functionality/content against the verified intent;
 5. identify a concrete product/content gap or record an evidence-based NO CHANGE decision;
 6. only if a real gap exists, implement that page plus directly required tests/search metadata and validate it before moving to another page;
