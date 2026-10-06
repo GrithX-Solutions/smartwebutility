@@ -3712,3 +3712,170 @@ Production paths were not used as the CI workspace and production was not deploy
 - JavaScript syntax: VERIFIED.
 - JSON Diff Chromium regression: VERIFIED.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 20 — /unix-timestamp-converter/
+
+Research/update date: 2026-10-06  
+Status: VERIFIED VIA ISOLATED CI FALLBACK
+
+### Primary intent
+Convert Unix/epoch timestamps to human-readable date/time representations and convert a local or UTC calendar date back to Unix values.
+
+Canonical owner:
+- `https://smartwebutility.com/unix-timestamp-converter/`
+
+### Ubersuggest US evidence
+- `epoch timestamp converter`: 40,500 searches/month, SD 37, CPC $0.36.
+- `epoch converter`: 33,100, SD 28, CPC $0.02.
+- `unix timestamp converter`: 33,100, SD 48, CPC $0.02.
+- `timestamp converter`: 6,600, SD 38, CPC $0.02.
+- `time to epoch converter`: 4,400, SD 23.
+- `online epoch converter`: 720, SD 29.
+- `utc timestamp converter`: 590, SD 32.
+- `date to unix timestamp converter`: 390, SD 21, CPC $1.70.
+- `unix timestamp converter online`: 50, SD 6.
+- `date to timestamp converter online`: 50, SD 6.
+- `epoch to timestamp converter`: 50, SD 2.
+- `nanosecond timestamp converter`: 10, SD 13.
+- `epoch converter microseconds`: 10, SD 13.
+
+### Current U.S. SERP / attainability
+Ubersuggest confirms a competitive head term but a realistic long-tail path.
+
+For `epoch converter`, ranking utilities include:
+- epochtimestamp.com — DA 7 at position 3;
+- epochutils.com — DA 5 at position 6;
+- solutiontoolkit.com — DA 11 around position 12;
+- epochconvert.com — DA 10 around position 17.
+
+For `unix timestamp converter`, ranking utilities include:
+- epochutils.com — DA 5 near the top;
+- timestamp-converter.com — DA 19;
+- unixtime.org — DA 18;
+- epochtimestamp.com — DA 7.
+
+For `unix timestamp converter online`, Ubersuggest shows an AI Overview and People Also Ask plus several low-authority utility domains in the organic results, including DA 1, 3, 4, 10 and 11 sites.
+
+The canonical remains `/unix-timestamp-converter/`. No separate epoch-converter or timestamp-converter URL is justified because those intents are the same conversion workflow and would cannibalize one another.
+
+### Live competitor review
+A current live-web review on 2026-10-06 confirms:
+- EpochConverter.com supports seconds, milliseconds, microseconds and nanoseconds plus date-to-timestamp conversion;
+- epoch.to supports multi-precision conversion and flexible date/timestamp input;
+- epochconverter.dev supports seconds/ms/µs/ns, local/UTC output and relative time;
+- Polyatic adds batch conversion;
+- EpochUtils remains a simpler seconds/milliseconds converter.
+
+The competitive bar is therefore higher than a basic seconds/milliseconds form.
+
+This page intentionally does not add batch conversion, named-IANA-timezone databases, relative-time widgets, URL state or CLI integration in this audit. Those would broaden scope and maintenance cost without first-party evidence that they are needed.
+
+### Verified product/correctness gap
+Before this audit, Smart Web Utility:
+- supported only seconds and milliseconds;
+- converted date input only as browser-local time;
+- used ordinary JavaScript Number parsing for timestamp input;
+- did not preserve exact 16-digit microsecond or 19-digit nanosecond integers;
+- did not explain JavaScript Date's millisecond calendar precision.
+
+The upgraded page now provides a focused high-resolution developer workflow while remaining browser-only.
+
+MDN currently documents that JavaScript `Date` stores an integral millisecond timestamp and exposes both local and UTC component interpretations. That matches the product boundary: high-resolution epoch integers can be preserved exactly with `BigInt`, while human-readable Date output is limited to millisecond resolution.
+
+### Implementation
+`unix-timestamp-converter/index.html` now:
+- exposes Seconds, Milliseconds, Microseconds and Nanoseconds unit choices;
+- retains Auto detect with documented magnitude thresholds;
+- adds a Browser local time vs UTC selector for Date → Unix conversion;
+- changes the date control to millisecond step precision;
+- explains high-resolution input preservation versus Date's millisecond rendering;
+- documents local/UTC interpretation rather than implying the input is always local;
+- expands FAQs for 19-digit nanosecond values and UTC date conversion;
+- updates WebApplication feature metadata;
+- keeps the browser-local/no-upload privacy model.
+
+`assets/timestamp.js` now:
+- parses timestamp text without converting the original high-resolution integer through Number;
+- uses `BigInt` internally at nanosecond scale;
+- supports fractional seconds/milliseconds/microseconds up to nanosecond precision;
+- rejects fractional nanoseconds;
+- auto-detects common modern seconds/ms/µs/ns magnitudes;
+- renders equivalent Unix seconds, milliseconds, microseconds and nanoseconds;
+- enforces the JavaScript Date supported range before calendar rendering;
+- uses floor semantics for negative sub-millisecond instants so values such as -1 ns render on the correct pre-epoch millisecond rather than incorrectly rounding to the Unix epoch;
+- converts Date → Unix using either browser-local or explicit UTC interpretation;
+- keeps Use Current Time and Clear behavior consistent with the selected mode.
+
+Internal search discovery now includes:
+- `epoch converter`
+- `timestamp converter`
+- `unix timestamp converter online`
+- `epoch timestamp converter`
+- `date to unix timestamp converter`
+- `timestamp to epoch converter`
+- `utc timestamp converter`
+- `epoch to timestamp converter`
+
+Sitemap `lastmod` was updated to 2026-10-06.
+
+### Regression coverage
+The committed Chromium case now verifies:
+- second-based timestamp conversion;
+- exact nanosecond-equivalent output for a second timestamp;
+- microsecond input with millisecond calendar rendering and exact microsecond numeric preservation;
+- nanosecond input with exact 19-digit numeric preservation;
+- automatic detection of a modern microsecond value;
+- explicit UTC Date → Unix conversion;
+- exact Unix second/nanosecond values for the UTC date;
+- negative nanosecond input `-1` rendering as `1969-12-31T23:59:59.999Z`, proving correct pre-epoch floor behavior.
+
+An initial Chromium run exposed a test-only limitation: Playwright 1.55.1 rejects seconds/fractional-seconds strings when filling a native `datetime-local` input even though the control itself permits sub-minute precision through its `step` value. A targeted Chromium probe confirmed:
+- `2026-01-01T00:00` is accepted by Playwright `fill()`;
+- `2026-01-01T00:00:00` and `2026-01-01T00:00:00.000` are rejected by Playwright as malformed values.
+
+The committed regression therefore uses the equivalent minute-precision UTC test input; product functionality remains unchanged.
+
+### Isolated CI validation — 2026-10-06
+Implementation/test head before audit-state sync:
+- `f23347171a3025830bdf2bb920dfeb381fdd082e`
+
+Isolated workspace:
+- `/srv/smartwebutility-ci/workspaces/unix-ts-c4a933f`
+
+Exact current-branch material Git blobs:
+- `unix-timestamp-converter/index.html` — `6fa3e4961787f1a12801e06ecdc61a29e504bcfa`
+- `assets/timestamp.js` — `b51d1da63cc5cafa71f8864500ee5c88e10b5dc8`
+- `tests/browser-smoke.cjs` — `ccb58d01559a7de355aceb8cf378ce24f6656761`
+- `assets/tool-catalog.json` — `442588eca79e9ff0bef8144ac7d03b0d5fdce652`
+- `sitemap.xml` — `027536c6517792be3e6a4f838649927ceef957e0`
+
+Gate results:
+- static SEO QA: 89 pages, 0 errors, 0 warnings;
+- content QA: 89 pages, 0 errors, 2 intentionally retained advisories;
+- `assets/timestamp.js` syntax: PASS;
+- committed browser-smoke syntax: PASS;
+- final Chromium explicitly reported `PASS unix-timestamp-converter`;
+- browser page sweep: 89 pages checked;
+- active navigation, global tool search/navigation and mobile layout checks: PASS;
+- broad smoke total: 142 passed, 2 failed.
+
+The two remaining broad-suite failures are the existing `html-minifier` and `css-minifier` provider-readiness timeouts. They are unrelated to Unix Timestamp Converter and remain mandatory final-batch release blockers.
+
+Production paths were not used as the CI workspace and production was not deployed.
+
+### Page 20 acceptance status
+- Demand / difficulty: VERIFIED.
+- Current U.S. SERP intent/attainability: VERIFIED.
+- Live competitor review: VERIFIED.
+- Canonical ownership / cannibalization: VERIFIED.
+- Existing functionality/content inspected: VERIFIED.
+- High-resolution product/correctness gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Negative pre-epoch precision regression: VERIFIED.
+- Static SEO/content QA: VERIFIED.
+- JavaScript syntax: VERIFIED.
+- Unix Timestamp Converter Chromium regression: VERIFIED.
+- Production deployment: NOT STARTED.
