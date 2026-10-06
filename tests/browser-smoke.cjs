@@ -1331,7 +1331,45 @@ const cases = [
   }],
   ['open-graph-preview', async p => {
     await p.locator('#ogTitle').fill('Example OG');
-    assert.ok((await p.locator('#ogOutput').inputValue()).includes('Example OG'));
+    await p.locator('#ogDescription').fill('Preview description');
+    await p.locator('#ogType').selectOption('article');
+    await p.locator('#ogLocale').fill('en_us');
+    await p.locator('#ogUrl').fill('https://example.com/article');
+    await p.locator('#ogImage').fill('http://127.0.0.1:8765/favicon-64.png');
+    await p.locator('#ogImageAlt').fill('Example preview image');
+    await p.locator('#ogImageWidth').fill('1200');
+    await p.locator('#ogImageHeight').fill('630');
+    await p.locator('#ogSite').fill('Example Site');
+
+    let meta = await p.locator('#ogOutput').inputValue();
+    assert.ok(meta.includes('property="og:title" content="Example OG"'));
+    assert.ok(meta.includes('property="og:type" content="article"'));
+    assert.ok(meta.includes('property="og:locale" content="en_US"'));
+    assert.ok(meta.includes('property="og:image:width" content="1200"'));
+    assert.ok(meta.includes('property="og:image:height" content="630"'));
+    assert.ok(meta.includes('property="og:image:alt" content="Example preview image"'));
+    assert.match(await p.locator('#ogReadiness').innerText(), /All four Open Graph core properties are present/i);
+    assert.match(await p.locator('#ogReadiness').innerText(), /1\.91:1 wide-card ratio/i);
+    assert.equal(await p.locator('#ogError').isHidden(), true);
+    assert.equal(await p.locator('#ogStatus').innerText(), 'Ready · core properties complete');
+
+    const media = p.locator('#ogCard > div').first();
+    assert.equal(await media.evaluate(el => el.style.aspectRatio), '1.91 / 1');
+    await p.locator('#ogPreviewCrop').selectOption('square');
+    assert.equal(await media.evaluate(el => el.style.aspectRatio), '1 / 1');
+
+    await p.locator('#ogImageAlt').fill('');
+    assert.match(await p.locator('#ogReadiness').innerText(), /Add og:image:alt/i);
+
+    await p.locator('#ogUrl').fill('/relative');
+    assert.equal(await p.locator('#ogError').isHidden(), false);
+    assert.match(await p.locator('#ogError').innerText(), /fully qualified URL/i);
+    assert.equal(await p.locator('#ogOutput').inputValue(), '');
+
+    await p.locator('#ogUrl').fill('https://example.com/article');
+    await p.locator('#ogLocale').fill('english_USA');
+    assert.equal(await p.locator('#ogError').isHidden(), false);
+    assert.match(await p.locator('#ogError').innerText(), /language_TERRITORY/i);
   }],
   ['bulk-redirect-checker', async p => {
     await p.route('**/api/redirect-check.php*', async route => {
