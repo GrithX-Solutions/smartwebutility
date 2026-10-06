@@ -695,9 +695,47 @@ const cases = [
     await p.locator('#jsonDiffLeft').fill('{"port":8080,"enabled":false}');
     await p.locator('#jsonDiffRight').fill('{"port":8443,"enabled":true,"region":"us"}');
     await p.locator('#compareJson').click();
-    const text = await p.locator('#jsonDiffResult').innerText();
+    let text = await p.locator('#jsonDiffResult').innerText();
     assert.ok(text.includes('$.port'));
     assert.ok(text.includes('$.region'));
+    assert.equal(await p.locator('#downloadJsonDiff').isDisabled(), false);
+
+    await p.locator('#jsonDiffLeftFile').setInputFiles({
+      name: 'left.json',
+      mimeType: 'application/json',
+      buffer: Buffer.from('{"service":{"port":8080},"regions":["us","eu"]}')
+    });
+    await p.locator('#jsonDiffRightFile').setInputFiles({
+      name: 'right.json',
+      mimeType: 'application/json',
+      buffer: Buffer.from('{"service":{"port":8443},"regions":["eu","us"],"enabled":true}')
+    });
+    await p.waitForFunction(() => document.getElementById('jsonDiffResult')?.textContent.includes('$.service.port'));
+    text = await p.locator('#jsonDiffResult').innerText();
+    assert.ok(text.includes('$.service.port'));
+    assert.ok(text.includes('$.enabled'));
+
+    await p.locator('#jsonDiffIgnoreOrder').check();
+    text = await p.locator('#jsonDiffResult').innerText();
+    assert.ok(text.includes('$.service.port'));
+    assert.equal(text.includes('$.regions'), false);
+
+    await p.locator('#swapJsonDiff').click();
+    text = await p.locator('#jsonDiffResult').innerText();
+    assert.ok(text.includes('removed'));
+
+    const downloadPromise = p.waitForEvent('download');
+    await p.locator('#downloadJsonDiff').click();
+    const reportDownload = await downloadPromise;
+    assert.equal(reportDownload.suggestedFilename(), 'json-diff-report.json');
+    const reportPath = await reportDownload.path();
+    const report = JSON.parse(readFileSync(reportPath, 'utf8'));
+    assert.equal(report.format, 'smartwebutility-json-diff-report');
+    assert.equal(report.version, 1);
+    assert.equal(report.ignoreArrayOrder, true);
+    assert.ok(report.summary.differences >= 2);
+    assert.ok(report.differences.some(row => row.path === '$.service.port' && row.status === 'changed'));
+    assert.ok(report.differences.some(row => row.path === '$.enabled' && row.status === 'removed'));
   }],
   ['base64-encoder-decoder', async p => {
     await p.locator('#base64Input').fill('hello');
