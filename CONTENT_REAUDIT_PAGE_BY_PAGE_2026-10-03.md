@@ -3439,3 +3439,124 @@ Production paths were not used as the CI workspace and production was not deploy
 - JavaScript syntax: VERIFIED.
 - XML Escape Chromium regression: VERIFIED.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 18 — /regex-escaper/
+
+Research/update date: 2026-10-06  
+Status: VERIFIED VIA ISOLATED CI FALLBACK
+
+### Primary intent
+Escape arbitrary literal text so JavaScript regular expressions match it as data rather than interpreting it as regex syntax.
+
+Canonical owner:
+- `https://smartwebutility.com/regex-escaper/`
+
+### Ubersuggest US evidence
+- `regex escape characters`: 1,900 searches/month, SD 42.
+- `regex escape`: 720, SD 42.
+- `regex escaper`: 720, SD 18.
+- `python regex escape`: 110, SD 41.
+- `regex escape forward slash`: 40, SD 27.
+- `regex escape period`: 40, SD 24.
+- `regex escape backslash`: 30, SD 25.
+- `regex escape bracket`: 30, SD 28.
+- `regex escape special characters`: 30, SD 32.
+- `regex escape online`: 10, SD 13.
+
+### Current U.S. SERP / competitor review
+For `regex escaper`, the current U.S. SERP is mixed between authoritative language/API documentation, Q&A and utility pages. Ubersuggest shows:
+- Beautify Code — DA 16 in the top ten;
+- The Text Tool — DA 8 further down;
+- MDN, Microsoft Learn, Python docs and Stack Overflow for engine-specific informational intent.
+
+For `regex escape characters`, the SERP is primarily explanatory/Q&A, with an AI Overview and People Also Ask.
+
+Current competitor review also found:
+- Beautify Code bases its output on .NET 6 `Regex.Escape`;
+- several utilities only prepend backslashes to traditional metacharacters;
+- newer multi-engine tools exist, but the measurable Python/Java language variants are materially harder than the low-difficulty `regex escaper` head term.
+
+The current Smart Web Utility canonical therefore stays focused on ECMAScript/JavaScript rather than claiming cross-engine equivalence.
+
+### Existing Smart Web Utility strengths
+Before this audit update the page already:
+- used native `RegExp.escape()` where available;
+- provided an ECMAScript-compatible fallback for older browsers;
+- handled leading ASCII alphanumeric protection;
+- handled regex syntax characters, slash delimiters, punctuator hex escapes, whitespace and lone surrogates;
+- produced raw pattern, `new RegExp()` and regex-literal output;
+- validated regular-expression flags;
+- accepted local text files up to 5 MB;
+- explained JavaScript string escaping versus regex-source escaping;
+- warned that other regex engines can produce different escaped text.
+
+The existing Chromium regression already covered literal matching, constructor/literal output, leading-digit escaping and invalid duplicate flags.
+
+### Confirmed content/AEO gap
+The page explained the rules correctly but did not provide a compact, extractable reference for the high-volume `regex escape characters` intent.
+
+Current competing pages commonly expose a quick character reference. A concise reference improves skimmability and direct-answer extraction without padding the page or changing its canonical intent.
+
+The page also described `RegExp.escape()` semantics without linking the authoritative ECMAScript specification even though those exact edge-case rules drive the product behavior.
+
+### Implementation
+`regex-escaper/index.html` now adds a concise JavaScript regex escaping reference covering:
+- period `.` → `\.`;
+- slash `/` → `\/`;
+- literal backslash → escaped backslash;
+- parentheses, brackets and braces;
+- hyphen → `\x2d`;
+- initial ASCII letter/digit → `\xNN`.
+
+The explanatory section now links directly to the current ECMAScript `RegExp.escape()` specification and notes current browser availability context.
+
+WebApplication feature metadata now includes the quick-reference capability.
+
+Internal search aliases now include:
+- `regex escape characters`
+- `regex escape special characters`
+- `regex escape forward slash`
+- `regex escape period`
+- `regex escape backslash`
+- `regex escape online`
+
+Sitemap `lastmod` was updated to 2026-10-06.
+
+No runtime escaping algorithm was changed.
+
+### Isolated CI validation — 2026-10-06
+Exact Git blob identity was verified between the current GitHub branch and isolated CI workspace:
+- `regex-escaper/index.html` — `04e717b3c6c8cb522d09422ed830acaf1aab56c3`
+- `assets/regex-escaper.js` — `7ec52f6150accacc9a8b558f32fa89dcb691e94b`
+- `tests/browser-smoke.cjs` — `03ffdac5ef4c733f1e4b9d4d177e3861e132c2dc`
+- `assets/tool-catalog.json` — `d203433c4944561a10e56914068878755ebab564`
+- `sitemap.xml` — `f69e98882a987020a6faf5002b3e15294a1fd5bb`
+
+Gate results:
+- static SEO QA: 89 pages, 0 errors, 0 warnings;
+- content QA: 89 pages, 0 errors, 2 intentionally retained advisories;
+- `assets/regex-escaper.js` syntax: PASS;
+- committed browser-smoke syntax: PASS;
+- Chromium explicitly reported `PASS regex-escaper`;
+- browser page sweep: 89 pages checked;
+- active navigation, global tool search/navigation and mobile layout checks: PASS.
+
+The broad smoke run finished 142 passed / 2 failed because `html-minifier` and `css-minifier` timed out waiting for provider readiness. Those failures are unrelated to Regex Escaper and remain final-batch release blockers.
+
+Production paths were not used as the CI workspace and production was not deployed.
+
+### Page 18 acceptance status
+- Demand / difficulty: VERIFIED.
+- Current SERP intent/attainability: VERIFIED.
+- Canonical ownership / engine scope: VERIFIED.
+- Existing functionality/content inspected: VERIFIED.
+- Content/AEO gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Runtime algorithm change: NONE.
+- Static SEO/content QA: VERIFIED.
+- JavaScript syntax: VERIFIED.
+- Regex Escaper Chromium regression: VERIFIED.
+- Production deployment: NOT STARTED.
