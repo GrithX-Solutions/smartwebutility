@@ -11,6 +11,9 @@ Run the remaining content/SEO re-audit page by page. Research, improve, test and
 - Current production source/artifact SHA: `04ce96286f0baaff1a175f4cae7c9491b0607688`
 - Current GitHub main state-only head before this batch: `ee460eb96606bbf93cd7a8347e51be8c851672d3`
 - Working branch: `content-reaudit-page-by-page-2026-10-03`
+- Hash Generator implementation/test head before audit-state sync: `eea7a7234c7c64cd7678983248407f6311991180`.
+- Hash Generator audit evidence commit: `5235c6d805756a91ee3cedef2cf16865df02569c`.
+- Rank-tracking workflow decision commit: `6e732cd6aea150d9a940cd98db98bb61a52d53ea`.
 - Unix Timestamp Converter implementation/test head before audit-state sync: `f23347171a3025830bdf2bb920dfeb381fdd082e`.
 - Unix Timestamp Converter audit evidence commit: `289c3df0fc030d8edb027fcc9f470820350ff431`.
 - XML Escape implementation head before audit-state sync: `c458d24629f78220115bc8dbd9af0940bf2c9b4e`.
@@ -75,29 +78,30 @@ Research record:
 
 ## Current page
 
-### /hash-generator/ — next page research
+### /regex-tester/ — next page research
 
 Status: UNKNOWN — NOT YET AUDITED UNDER THE CURRENT HARD GATE.
 
-Unix Timestamp Converter is now VERIFIED via the approved isolated ZTHosting fallback:
-- Ubersuggest U.S. demand was verified, including `epoch converter` at 33,100 searches/month with SD 28, `unix timestamp converter` at 33,100 with SD 48, and the focused `unix timestamp converter online` at 50 with SD 6;
-- the current U.S. SERP includes low-authority utilities for both head and long-tail variants, and the online long-tail currently exposes AI Overview and People Also Ask features;
-- a live competitor review confirmed that the current product bar includes seconds/ms/µs/ns conversion, while some competitors also add relative time, batch conversion, URL state or broader date parsing;
-- canonical ownership remains `/unix-timestamp-converter/`; no duplicate epoch/timestamp URL was created;
-- the verified product/correctness gap was high-resolution timestamp handling plus explicit local-vs-UTC date interpretation;
-- timestamp parsing now preserves high-resolution integer values with `BigInt`, while visible copy explains JavaScript Date's millisecond calendar precision;
-- a final correctness review identified and fixed negative sub-millisecond conversion so `-1` ns maps to the correct pre-epoch millisecond rather than rounding toward the Unix epoch;
+Hash Generator is now VERIFIED via the approved isolated ZTHosting fallback:
+- Ubersuggest U.S. demand was verified, including `hash generator` at 880 searches/month, `sha 256 hash generator` at 1,000 with SD 41, `sha256 hash generator` at 480 with SD 36 and `sha 512 hash generator` at 140 with SD 28;
+- the current live search landscape repeatedly exposes local file hashing plus expected-checksum comparison as the practical product standard;
+- canonical ownership remains `/hash-generator/`; no separate SHA-256/SHA-512 pages were created;
+- the verified workflow gap was direct checksum verification rather than manual visual comparison;
+- the implementation now accepts raw expected digests or common checksum lines, compares case-insensitively and reports match/mismatch/invalid-reference states;
+- visible content explains that a matching checksum proves digest equality, not publisher trust or file safety;
+- the page links MDN Web Crypto digest documentation and the current NIST FIPS 180-4 publication;
 - exact current-branch Git blob identity was verified for page HTML, implementation JS, browser test, tool catalog and sitemap;
 - static SEO QA passed 89 pages with 0 errors / 0 warnings;
 - content QA passed with 0 errors and the same 2 intentionally retained advisories;
 - implementation JavaScript and committed browser-smoke syntax passed;
-- final Chromium explicitly reported `PASS unix-timestamp-converter`;
+- Chromium explicitly reported `PASS hash-generator`;
 - browser sweep checked all 89 pages and navigation/search/mobile checks passed;
+- Ubersuggest rank tracking now includes `hash generator`, `sha256 hash generator` and `sha 512 hash generator` for U.S. English;
 - production was not used as the CI workspace and was not deployed.
 
-The broad smoke total remains 142/144 because HTML Minifier and CSS Minifier timed out waiting for provider readiness. Those failures are unrelated to Unix Timestamp Converter but remain final-batch release blockers.
+The broad smoke total remains 142/144 because HTML Minifier and CSS Minifier timed out waiting for provider readiness. Those failures are unrelated to Hash Generator but remain final-batch release blockers.
 
-UUID Generator is already audited and is skipped in sitemap order. The next unresolved canonical is `/hash-generator/`. No change is authorized until Ubersuggest U.S. demand, the current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
+JWT Decoder is already audited and is skipped in sitemap order. The next unresolved canonical is `/regex-tester/`. No change is authorized until Ubersuggest U.S. demand, current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
@@ -390,6 +394,33 @@ Unix Timestamp Converter isolated validation — 2026-10-06:
 - Page-specific gate: VERIFIED.
 - Production mutation: NONE.
 
+Hash Generator isolated validation — 2026-10-06:
+- Implementation/test head before audit-state sync: `eea7a7234c7c64cd7678983248407f6311991180`.
+- Audit evidence commit: `5235c6d805756a91ee3cedef2cf16865df02569c`.
+- Isolated workspace: `/srv/smartwebutility-ci/workspaces/hash-generator-eea7a72`.
+- Exact current-branch material Git blobs:
+  - `hash-generator/index.html`: `772e31e7203b4d6f293207fc27161367f11ee206`;
+  - `assets/hash.js`: `7c832e12716c59f8c32dbe2aa99ab8965663580c`;
+  - `tests/browser-smoke.cjs`: `360b4f8f96c0ce018eb934605c7dae9aa75375b1`;
+  - `assets/tool-catalog.json`: `9fbf1881e084fb8bfda898d2b8588e4414c919f6`;
+  - `sitemap.xml`: `c91b68987e7c82783c9414df1c8561daf3b7d31f`.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- Hash JavaScript syntax: PASS.
+- Committed browser-smoke syntax: PASS.
+- Chromium: `PASS hash-generator`.
+- Known SHA-256 `hello` vector: PASS.
+- Raw expected checksum match/mismatch: PASS.
+- Case-insensitive checksum line extraction: PASS.
+- Local `hello.txt` file hashing and checksum verification: PASS.
+- Browser page sweep: 89 pages checked.
+- Active navigation, global tool search/navigation and mobile layout: PASS.
+- Broad smoke total: 142 passed, 2 failed; only `html-minifier` and `css-minifier` timed out waiting for provider readiness.
+- Ubersuggest U.S. rank tracking added: `hash generator`, `sha256 hash generator`, `sha 512 hash generator`.
+- Ubersuggest tracked keyword-location usage after update: 74 / 300.
+- Page-specific gate: VERIFIED.
+- Production mutation: NONE.
+
 ## CI infrastructure blocker
 
 BLOCKED:
@@ -436,13 +467,13 @@ XML Formatter & Validator isolated validation:
 
 ## Work in progress
 
-Unix Timestamp Converter is VERIFIED via the isolated fallback. JSON Diff, Regex Escaper, XML Escape / Unescape and UUID Validator remain verified. The next page is `/hash-generator/`, beginning with research only. Production remains unchanged.
+Hash Generator is VERIFIED via the isolated fallback and its three strategic U.S. keywords are tracked in Ubersuggest. Unix Timestamp Converter, JSON Diff, Regex Escaper, XML Escape / Unescape and UUID Validator remain verified. The next page is `/regex-tester/`, beginning with research only. Production remains unchanged.
 
 ## Affected files — completed/current pages
 
 Most recently verified page:
-- `unix-timestamp-converter/index.html`
-- `assets/timestamp.js`
+- `hash-generator/index.html`
+- `assets/hash.js`
 
 Shared direct requirements verified with that page:
 - `assets/tool-catalog.json`
@@ -453,13 +484,14 @@ Shared direct requirements verified with that page:
 
 ## NEXT ACTION
 
-Audit `/hash-generator/` as the next and only active page:
+Audit `/regex-tester/` as the next and only active page:
 1. verify Ubersuggest U.S. demand, difficulty, CPC/intent and useful semantic variants;
 2. inspect the current U.S. SERP and relevant competitors;
-3. confirm canonical ownership and no cannibalization;
+3. confirm canonical ownership and no cannibalization with `/regex-escaper/`;
 4. inspect current functionality/content against the verified intent;
 5. identify a concrete product/content gap or record an evidence-based NO CHANGE decision;
-6. only if a real gap exists, implement that page plus directly required tests/search metadata and validate it before moving to another page.
+6. only if a real gap exists, implement that page plus directly required tests/search metadata and validate it before moving to another page;
+7. after the page is VERIFIED, add 1–3 strategic U.S. keywords to Ubersuggest rank tracking while preserving the existing project keyword map.
 
 Do not deploy production.
 
