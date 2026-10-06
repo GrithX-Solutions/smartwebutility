@@ -722,7 +722,7 @@ const cases = [
 
     await p.locator('#swapJsonDiff').click();
     text = await p.locator('#jsonDiffResult').innerText();
-    assert.ok(text.includes('removed'));
+    assert.equal(await p.locator('#jsonDiffResult tr[data-kind="removed"]').count(), 1);
 
     const downloadPromise = p.waitForEvent('download');
     await p.locator('#downloadJsonDiff').click();
