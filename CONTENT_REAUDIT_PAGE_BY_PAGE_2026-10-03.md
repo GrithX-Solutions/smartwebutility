@@ -3879,3 +3879,153 @@ Production paths were not used as the CI workspace and production was not deploy
 - JavaScript syntax: VERIFIED.
 - Unix Timestamp Converter Chromium regression: VERIFIED.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 21 — /hash-generator/
+
+Research/update date: 2026-10-06  
+Status: VERIFIED VIA ISOLATED CI FALLBACK
+
+### Primary intent
+Generate SHA-family hashes for text or local files and verify a generated digest against an expected checksum without uploading the input.
+
+Canonical owner:
+- `https://smartwebutility.com/hash-generator/`
+
+### Ubersuggest US evidence
+- `hash generator`: 880 searches/month, SD 55.
+- `sha 256 hash generator`: 1,000, SD 41, transactional.
+- `sha256 hash generator`: 480, SD 36.
+- `sha 1 hash generator`: 390, SD 33.
+- `sha 512 hash generator`: 140, SD 28.
+- `hash generator online`: 140, SD 56.
+- `file hash generator`: 30, SD 56.
+- `online sha1 hash generator`: 20, SD 5.
+- `hash generator sha 256`: 10, SD 5.
+- `online hash generator sha 256`: 10, SD 5.
+
+MD5-related queries have measurable demand, but the page intentionally does not add MD5. The browser-native Web Crypto digest API supports SHA-1, SHA-256, SHA-384 and SHA-512, and the page stays aligned with that standards-backed scope instead of adding a separate legacy implementation solely for keyword coverage.
+
+### Current U.S. SERP / competitor review
+Live U.S.-oriented search review on 2026-10-06 found that strong current hash/checksum tools commonly combine:
+- text hashing;
+- local file hashing;
+- multiple SHA algorithms;
+- expected-checksum comparison;
+- local/browser-side processing;
+- warnings about legacy SHA-1 or MD5.
+
+Representative current competitors include Go Tools, PiliApp, SourceMirrors, HashGenerator.co, Don's Tools, Tools in a Tab, Starlight Tools, Talha Aslan, LiveParse and others.
+
+A repeated practical gap versus the previous Smart Web Utility implementation was checksum verification: the page could generate a digest for a file but users had to compare it manually against a published checksum.
+
+The canonical remains `/hash-generator/`; separate SHA-256/SHA-512 generator URLs would cannibalize the same workflow.
+
+### Standards / technical scope
+The page uses the browser `SubtleCrypto.digest()` API. MDN currently documents SHA-1, SHA-256, SHA-384 and SHA-512 as supported digest algorithms and warns against SHA-1 for cryptographic applications.
+
+NIST FIPS 180-4 defines the Secure Hash Standard family used here. NIST has announced that FIPS 180-4 is planned for revision, so the page links the current NIST publication rather than claiming the standard will never change.
+
+### Existing Smart Web Utility strengths before this change
+The page already:
+- hashed UTF-8 text;
+- hashed exact local file bytes;
+- supported SHA-1, SHA-256, SHA-384 and SHA-512;
+- supported lowercase/uppercase hexadecimal output;
+- used Web Crypto locally;
+- explained UTF-8 and line-ending sensitivity;
+- warned that SHA hashes are not password-storage schemes;
+- warned about SHA-1 legacy/security limitations;
+- explained large-file memory limitations.
+
+### Confirmed workflow gap
+The previous page generated hashes but did not verify them against a supplied reference checksum.
+
+For download verification and file-transfer workflows, users commonly have a published checksum from a release page, README, package manifest or vendor site. Requiring manual visual comparison is slower and more error-prone than a direct match/mismatch result.
+
+### Implementation
+`hash-generator/index.html` now:
+- adds an Expected checksum field beside the generated digest;
+- explains that the verifier can accept a raw digest or common checksum line containing a filename;
+- adds direct match/mismatch guidance;
+- explains that a matching checksum proves digest equality, not file safety or publisher trust;
+- adds MDN Web Crypto and NIST FIPS 180-4 references;
+- expands WebApplication metadata to include checksum verification.
+
+`assets/hash.js` now:
+- retains the generated digest internally in lowercase canonical form;
+- renders uppercase/lowercase output independently from comparison logic;
+- accepts a raw hexadecimal digest of the exact selected-algorithm length;
+- can extract exactly one correctly sized hexadecimal digest from a common checksum line;
+- compares expected/generated values case-insensitively;
+- reports explicit match, mismatch or invalid-reference states;
+- re-verifies when the expected checksum changes;
+- re-hashes when the selected algorithm changes;
+- resets verification state on Clear.
+
+Internal search discovery now includes:
+- `hash generator`
+- `sha256 generator`
+- `sha256 hash generator`
+- `sha 256 hash generator`
+- `sha 1 hash generator`
+- `sha 512 hash generator`
+- `file hash generator`
+- `checksum calculator`
+- `checksum verifier`
+
+Sitemap `lastmod` was updated to 2026-10-06.
+
+### Regression coverage
+The committed Chromium case verifies:
+- known SHA-256 output for `hello`;
+- exact expected-checksum match;
+- mismatch detection;
+- case-insensitive checksum comparison;
+- extraction from a common `DIGEST  filename` checksum line;
+- local file hashing using `hello.txt`;
+- file digest equality with the known SHA-256;
+- checksum verification remaining matched for the local file.
+
+### Isolated CI validation — 2026-10-06
+Implementation/test head before audit-state sync:
+- `eea7a7234c7c64cd7678983248407f6311991180`
+
+Isolated workspace:
+- `/srv/smartwebutility-ci/workspaces/hash-generator-eea7a72`
+
+Exact current-branch material Git blobs:
+- `hash-generator/index.html` — `772e31e7203b4d6f293207fc27161367f11ee206`
+- `assets/hash.js` — `7c832e12716c59f8c32dbe2aa99ab8965663580c`
+- `tests/browser-smoke.cjs` — `360b4f8f96c0ce018eb934605c7dae9aa75375b1`
+- `assets/tool-catalog.json` — `9fbf1881e084fb8bfda898d2b8588e4414c919f6`
+- `sitemap.xml` — `c91b68987e7c82783c9414df1c8561daf3b7d31f`
+
+Gate results:
+- static SEO QA: 89 pages, 0 errors, 0 warnings;
+- content QA: 89 pages, 0 errors, 2 intentionally retained advisories;
+- `assets/hash.js` syntax: PASS;
+- committed browser-smoke syntax: PASS;
+- Chromium explicitly reported `PASS hash-generator`;
+- browser page sweep: 89 pages checked;
+- active navigation, global tool search/navigation and mobile layout checks: PASS;
+- broad smoke total: 142 passed, 2 failed.
+
+The two broad-suite failures are the existing `html-minifier` and `css-minifier` provider-readiness timeouts. They are unrelated to Hash Generator and remain mandatory final-batch release blockers.
+
+Production paths were not used as the CI workspace and production was not deployed.
+
+### Page 21 acceptance status
+- Demand / difficulty: VERIFIED.
+- Current U.S. SERP intent: VERIFIED.
+- Live competitor review: VERIFIED.
+- Canonical ownership / cannibalization: VERIFIED.
+- Existing implementation inspected: VERIFIED.
+- Checksum-verification workflow gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Static SEO/content QA: VERIFIED.
+- JavaScript syntax: VERIFIED.
+- Hash Generator Chromium regression: VERIFIED.
+- Production deployment: NOT STARTED.
