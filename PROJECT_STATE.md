@@ -11,6 +11,8 @@ Run the remaining content/SEO re-audit page by page. Research, improve, test and
 - Current production source/artifact SHA: `04ce96286f0baaff1a175f4cae7c9491b0607688`
 - Current GitHub main state-only head before this batch: `ee460eb96606bbf93cd7a8347e51be8c851672d3`
 - Working branch: `content-reaudit-page-by-page-2026-10-03`
+- Open Graph Preview final implementation/test head before audit-state sync: `0ac3dd07ca3a4ffe57cca9c34b697b40ce90bfa1`.
+- Open Graph Preview audit evidence commit: `47b22fe6c38ca603fcb03b11f8bb88e45d2ee1ec`.
 - Schema Markup Generator final implementation/test head before audit-state sync: `a0c41ceae9eda01d1a98b57bb40d29558f259325`.
 - Schema Markup Generator audit evidence commit: `2f772d92045b46c6fe32430f56ec21fd48300441`.
 - Robots.txt Generator final implementation/test head before audit-state sync: `fc5a324f8396b5c71e4027b6d4cff384cd124ffd`.
@@ -88,30 +90,29 @@ Research record:
 
 ## Current page
 
-### /open-graph-preview/ — next page research
+### /sitemap-checker/ — next page research
 
 Status: UNKNOWN — NOT YET AUDITED UNDER THE CURRENT HARD GATE.
 
-Schema Markup Generator is now VERIFIED via the approved isolated ZTHosting fallback:
-- Ubersuggest U.S. demand was verified, including `schema markup generator` at 1,000 searches/month with CPC $16.57, `json ld generator` at 90 with SD 26, and `json ld schema markup generator` at 30 with SD 5;
-- current U.S. SERPs include established tools but also low-authority utilities for JSON-LD and schema-generator long tails;
-- current Google documentation was rechecked for Organization, Article, LocalBusiness and SoftwareApplication before implementation;
-- the verified product gap was shallow generic modeling: all five entity types previously shared the same Name/URL/Description/Image fields;
-- the page now uses type-specific fields and nested JSON-LD for Organization, WebSite, SoftwareApplication, Article and LocalBusiness;
-- the readiness panel distinguishes Schema.org validity from Google feature readiness and surfaces missing LocalBusiness / SoftwareApplication requirements instead of claiming eligibility;
-- URL, sameAs, date, offer-price and aggregate-rating inputs now receive local validation before copy;
+Open Graph Preview is now VERIFIED via the approved isolated ZTHosting fallback:
+- Ubersuggest U.S. demand was verified, including `open graph preview` at 480 searches/month with SD 36, `og preview` at 480 with SD 40 and the low-difficulty `open graph generator` at 50 with SD 3;
+- recent U.S. SERPs include several low-authority Open Graph preview/generator utilities, especially for the generator long tail;
+- the current Open Graph protocol was rechecked before implementation: `og:title`, `og:type`, `og:image` and `og:url` are the four required properties; structured image metadata includes width, height and alt; the protocol states that an image should have `og:image:alt`;
+- live competitor review confirmed the current product bar includes richer image metadata, type/locale controls and multiple preview crops/styles;
+- canonical ownership remains `/open-graph-preview/`; broader metadata generation stays with `/meta-tag-generator/` and live tag inspection stays with `/open-graph-checker/`;
+- the page now supports type, locale, image alt/width/height, core-property readiness, URL/locale/dimension validation and wide/square crop previews;
 - exact current-branch Git blob identity was verified for page HTML, implementation JS, browser test, tool catalog and sitemap;
 - static SEO QA passed 89 pages with 0 errors / 0 warnings;
 - content QA passed with 0 errors and the same 2 intentionally retained advisories;
 - implementation JavaScript and committed browser-smoke syntax passed;
-- Chromium explicitly reported `PASS schema-markup-generator`;
+- Chromium explicitly reported `PASS open-graph-preview`;
 - browser sweep checked all 89 pages and navigation/search/mobile checks passed;
-- Ubersuggest rank tracking includes `schema markup generator`, `json ld generator` and `json ld schema markup generator` for U.S. English;
+- Ubersuggest rank tracking includes `open graph preview`, `og preview` and `open graph generator` for U.S. English;
 - production was not used as the CI workspace and was not deployed.
 
-The broad smoke total remains 142/144 because HTML Minifier and CSS Minifier timed out waiting for provider readiness. Those failures are unrelated to Schema Markup Generator but remain final-batch release blockers.
+The broad smoke total remains 142/144 because HTML Minifier and CSS Minifier timed out waiting for provider readiness. Those failures are unrelated to Open Graph Preview but remain final-batch release blockers.
 
-The next unresolved canonical in sitemap order is `/open-graph-preview/`. No change is authorized until Ubersuggest U.S. demand, the current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
+The next unresolved canonical in sitemap order is `/sitemap-checker/`. No change is authorized until Ubersuggest U.S. demand, the current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
@@ -552,6 +553,30 @@ Schema Markup Generator isolated validation — 2026-10-06:
 - Page-specific gate: VERIFIED.
 - Production mutation: NONE.
 
+Open Graph Preview isolated validation — 2026-10-06:
+- Final implementation/test head before audit-state sync: `0ac3dd07ca3a4ffe57cca9c34b697b40ce90bfa1`.
+- Audit evidence commit: `47b22fe6c38ca603fcb03b11f8bb88e45d2ee1ec`.
+- Isolated workspace: `/srv/smartwebutility-ci/workspaces/open-graph-0ac3dd0`.
+- Exact current-branch material Git blobs:
+  - `open-graph-preview/index.html`: `469484f7d2f5a04f22c7c7ac22be3cb2128606d1`;
+  - `assets/og-preview.js`: `13211d4bac9e8823614163616dc9e5fc2b21ef42`;
+  - `tests/browser-smoke.cjs`: `330c39c33830fc608bd9547fb128e5a7931c0186`;
+  - `assets/tool-catalog.json`: `fff1362f84c2d935767a3283db0aedfdb425a199`;
+  - `sitemap.xml`: `7f35774c7cd1112b9e812c0386d42fde45288332`.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- Open Graph JavaScript syntax: PASS.
+- Committed browser-smoke syntax: PASS.
+- Chromium: `PASS open-graph-preview`.
+- Core OGP readiness, image alt/width/height, locale normalization, type output, wide/square crop switching and invalid URL/locale rejection: PASS.
+- Browser page sweep: 89 pages checked.
+- Active navigation, global tool search/navigation and mobile layout: PASS.
+- Broad smoke total: 142 passed, 2 failed; only `html-minifier` and `css-minifier` timed out waiting for provider readiness.
+- Ubersuggest U.S. rank tracking includes: `open graph preview`, `og preview`, `open graph generator`.
+- Ubersuggest tracked keyword-location usage after update: 91 / 300.
+- Page-specific gate: VERIFIED.
+- Production mutation: NONE.
+
 ## CI infrastructure blocker
 
 BLOCKED:
@@ -598,13 +623,13 @@ XML Formatter & Validator isolated validation:
 
 ## Work in progress
 
-Schema Markup Generator is VERIFIED via the isolated fallback and its three strategic U.S. keywords are tracked in Ubersuggest. Robots.txt Generator, HTML Entity Encoder / Decoder, URL Encoder / Decoder, Regex Tester, Hash Generator, Unix Timestamp Converter, JSON Diff, Regex Escaper, XML Escape / Unescape and UUID Validator remain verified. The next page is `/open-graph-preview/`, beginning with research only. Production remains unchanged.
+Open Graph Preview is VERIFIED via the isolated fallback and its three strategic U.S. keywords are tracked in Ubersuggest. Schema Markup Generator, Robots.txt Generator, HTML Entity Encoder / Decoder, URL Encoder / Decoder, Regex Tester, Hash Generator, Unix Timestamp Converter, JSON Diff, Regex Escaper, XML Escape / Unescape and UUID Validator remain verified. The next page is `/sitemap-checker/`, beginning with research only. Production remains unchanged.
 
 ## Affected files — completed/current pages
 
 Most recently verified page:
-- `schema-markup-generator/index.html`
-- `assets/schema-generator.js`
+- `open-graph-preview/index.html`
+- `assets/og-preview.js`
 
 Shared direct requirements verified with that page:
 - `assets/tool-catalog.json`
@@ -615,10 +640,10 @@ Shared direct requirements verified with that page:
 
 ## NEXT ACTION
 
-Audit `/open-graph-preview/` as the next and only active page:
+Audit `/sitemap-checker/` as the next and only active page:
 1. verify Ubersuggest U.S. demand, difficulty, CPC/intent and useful semantic variants;
-2. inspect the current U.S. SERP and relevant social-preview / metadata competitors;
-3. confirm canonical ownership and no cannibalization with `/meta-tag-generator/` or `/meta-tag-checker/`;
+2. inspect the current U.S. SERP, sitemap validation expectations and relevant competitors;
+3. confirm canonical ownership and no cannibalization with other sitemap / crawlability tools;
 4. inspect current functionality/content against the verified intent;
 5. identify a concrete product/content gap or record an evidence-based NO CHANGE decision;
 6. only if a real gap exists, implement that page plus directly required tests/search metadata and validate it before moving to another page;
