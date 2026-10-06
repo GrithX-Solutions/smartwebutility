@@ -12,6 +12,8 @@ Run the remaining content/SEO re-audit page by page. Research, improve, test and
 - Current GitHub main state-only head before this batch: `ee460eb96606bbf93cd7a8347e51be8c851672d3`
 - Working branch: `content-reaudit-page-by-page-2026-10-03`
 - XML Escape implementation head before audit-state sync: `c458d24629f78220115bc8dbd9af0940bf2c9b4e`.
+- Regex Escaper implementation/content head before audit-state sync: `2c8a6298325b32e86b26c4ad75b8aa5248cd3ff9`.
+- Regex Escaper audit evidence commit: `d0822b76c1ec375aba1c78e5a70640212cf0f4d7`.
 - XML Escape audit evidence commit: `2c2201fc8acdce24917e3663184933dc5ed5b7bf`.
 - UUID Validator audit evidence commit before state sync: `ac43beb102cac6a4a940f266e74cec721061a0b1`.
 - Page 15 implementation head before CI-result state sync: `faee67d5881be04c1df8e988a02dd7055591a867`.
@@ -68,28 +70,27 @@ Research record:
 
 ## Current page
 
-### /regex-escaper/ — next page research
+### /json-diff/ — next page research
 
 Status: UNKNOWN — NOT YET AUDITED UNDER THE CURRENT HARD GATE.
 
-XML Escape / Unescape is now VERIFIED via the approved isolated ZTHosting fallback:
-- Ubersuggest U.S. demand and difficulty were verified for `xml escape`, `xml unescape` and semantic long-tail variants;
-- the current U.S. SERP contains multiple low-authority utility domains, confirming realistic attainability without implying ranking;
-- canonical ownership remains `/xml-escape-unescape/`; no duplicate escape/unescape URL was created;
-- the standards-backed gap was illegal XML 1.0 code points surviving escape mode even though XML 1.0 cannot represent them;
+Regex Escaper is now VERIFIED via the approved isolated ZTHosting fallback:
+- Ubersuggest U.S. demand and difficulty were verified, including `regex escaper` at 720 searches/month with SD 18 and the broader `regex escape characters` informational cluster;
+- current U.S. SERP intent is mixed between authoritative language/API documentation, Q&A and utility pages, with low-authority utility domains still represented;
+- canonical ownership remains `/regex-escaper/`, scoped explicitly to JavaScript/ECMAScript rather than claiming cross-engine equivalence;
+- a real AEO/content gap was fixed by adding a compact character-reference section and an authoritative ECMAScript `RegExp.escape()` citation;
+- runtime escaping logic was intentionally left unchanged;
 - exact current-branch Git blob identity was verified for page HTML, implementation JS, browser test, tool catalog and sitemap;
 - static SEO QA passed 89 pages with 0 errors / 0 warnings;
 - content QA passed with 0 errors and the same 2 intentionally retained advisories;
 - JavaScript and committed browser-smoke syntax passed in the pinned Playwright 1.55.1 image;
-- Chromium explicitly reported `PASS xml-escape-unescape`;
+- Chromium explicitly reported `PASS regex-escaper`;
 - browser sweep checked all 89 pages and navigation/search/mobile checks passed;
 - production was not used as the CI workspace and was not deployed.
 
-The broad smoke total remains 142/144 because HTML Minifier and CSS Minifier timed out waiting for provider readiness. Those failures are unrelated to XML Escape / Unescape but remain final-batch release blockers.
+The broad smoke total remains 142/144 because HTML Minifier and CSS Minifier timed out waiting for provider readiness. Those failures are unrelated to Regex Escaper but remain final-batch release blockers.
 
-Meta Tag Generator remains a completed evidence-based no-change review.
-
-The next unresolved canonical in the page-by-page queue is `/regex-escaper/`. No change is authorized until Ubersuggest U.S. demand, the current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
+The next unresolved canonical in sitemap order after already audited pages is `/json-diff/`. No change is authorized until Ubersuggest U.S. demand, the current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
@@ -313,6 +314,27 @@ XML Escape / Unescape isolated validation — 2026-10-06:
 - Page-specific gate: VERIFIED.
 - Production mutation: NONE.
 
+Regex Escaper isolated validation — 2026-10-06:
+- Implementation/content head before audit-state sync: `2c8a6298325b32e86b26c4ad75b8aa5248cd3ff9`.
+- Audit evidence commit: `d0822b76c1ec375aba1c78e5a70640212cf0f4d7`.
+- Isolated workspace: `/srv/smartwebutility-ci/workspaces/regex-escaper-2c8a629`.
+- Current-branch material Git blobs matched exactly:
+  - `regex-escaper/index.html`: `04e717b3c6c8cb522d09422ed830acaf1aab56c3`;
+  - `assets/regex-escaper.js`: `7ec52f6150accacc9a8b558f32fa89dcb691e94b`;
+  - `tests/browser-smoke.cjs`: `03ffdac5ef4c733f1e4b9d4d177e3861e132c2dc`;
+  - `assets/tool-catalog.json`: `d203433c4944561a10e56914068878755ebab564`;
+  - `sitemap.xml`: `f69e98882a987020a6faf5002b3e15294a1fd5bb`.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- Regex Escaper JavaScript syntax: PASS.
+- Committed browser-smoke syntax: PASS.
+- Chromium: `PASS regex-escaper`.
+- Browser page sweep: 89 pages checked.
+- Active navigation, global tool search/navigation and mobile layout: PASS.
+- Broad smoke total: 142 passed, 2 failed; only `html-minifier` and `css-minifier` timed out waiting for provider readiness.
+- Page-specific gate: VERIFIED.
+- Production mutation: NONE.
+
 ## CI infrastructure blocker
 
 BLOCKED:
@@ -359,13 +381,15 @@ XML Formatter & Validator isolated validation:
 
 ## Work in progress
 
-XML Escape / Unescape is VERIFIED via the isolated fallback. Meta Tag Generator remains a completed no-change review. The next page is `/regex-escaper/`, beginning with research only. Production remains unchanged.
+Regex Escaper is VERIFIED via the isolated fallback. XML Escape / Unescape and UUID Validator remain verified. The next page is `/json-diff/`, beginning with research only. Production remains unchanged.
 
 ## Affected files — completed/current pages
 
 Most recently verified page:
-- `xml-escape-unescape/index.html`
-- `assets/xml-escape.js`
+- `regex-escaper/index.html`
+
+Runtime inspected but unchanged:
+- `assets/regex-escaper.js`
 
 Shared direct requirements verified with that page:
 - `assets/tool-catalog.json`
@@ -376,7 +400,7 @@ Shared direct requirements verified with that page:
 
 ## NEXT ACTION
 
-Audit `/regex-escaper/` as the next and only active page:
+Audit `/json-diff/` as the next and only active page:
 1. verify Ubersuggest U.S. demand, difficulty, CPC/intent and useful semantic variants;
 2. inspect the current U.S. SERP and relevant competitors;
 3. confirm canonical ownership and no cannibalization;
