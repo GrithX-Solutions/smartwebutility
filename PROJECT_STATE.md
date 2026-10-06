@@ -11,6 +11,8 @@ Run the remaining content/SEO re-audit page by page. Research, improve, test and
 - Current production source/artifact SHA: `04ce96286f0baaff1a175f4cae7c9491b0607688`
 - Current GitHub main state-only head before this batch: `ee460eb96606bbf93cd7a8347e51be8c851672d3`
 - Working branch: `content-reaudit-page-by-page-2026-10-03`
+- XML Escape implementation head before audit-state sync: `c458d24629f78220115bc8dbd9af0940bf2c9b4e`.
+- XML Escape audit evidence commit: `2c2201fc8acdce24917e3663184933dc5ed5b7bf`.
 - UUID Validator audit evidence commit before state sync: `ac43beb102cac6a4a940f266e74cec721061a0b1`.
 - Page 15 implementation head before CI-result state sync: `faee67d5881be04c1df8e988a02dd7055591a867`.
 - Verified recovery content baseline: `ba595d2a3c5d09539ad62fd5995df445895df686`.
@@ -66,21 +68,28 @@ Research record:
 
 ## Current page
 
-### /xml-escape-unescape/ — next page research
+### /regex-escaper/ — next page research
 
 Status: UNKNOWN — NOT YET AUDITED UNDER THE CURRENT HARD GATE.
 
-UUID Validator is now VERIFIED via the approved isolated ZTHosting fallback:
-- exact current-branch Git blob identity was verified for the page HTML, implementation JS, browser test, tool catalog and sitemap;
+XML Escape / Unescape is now VERIFIED via the approved isolated ZTHosting fallback:
+- Ubersuggest U.S. demand and difficulty were verified for `xml escape`, `xml unescape` and semantic long-tail variants;
+- the current U.S. SERP contains multiple low-authority utility domains, confirming realistic attainability without implying ranking;
+- canonical ownership remains `/xml-escape-unescape/`; no duplicate escape/unescape URL was created;
+- the standards-backed gap was illegal XML 1.0 code points surviving escape mode even though XML 1.0 cannot represent them;
+- exact current-branch Git blob identity was verified for page HTML, implementation JS, browser test, tool catalog and sitemap;
 - static SEO QA passed 89 pages with 0 errors / 0 warnings;
 - content QA passed with 0 errors and the same 2 intentionally retained advisories;
-- JavaScript syntax passed in the pinned Playwright 1.55.1 image;
-- committed Chromium smoke explicitly reported `PASS uuid-validator`;
+- JavaScript and committed browser-smoke syntax passed in the pinned Playwright 1.55.1 image;
+- Chromium explicitly reported `PASS xml-escape-unescape`;
+- browser sweep checked all 89 pages and navigation/search/mobile checks passed;
 - production was not used as the CI workspace and was not deployed.
+
+The broad smoke total remains 142/144 because HTML Minifier and CSS Minifier timed out waiting for provider readiness. Those failures are unrelated to XML Escape / Unescape but remain final-batch release blockers.
 
 Meta Tag Generator remains a completed evidence-based no-change review.
 
-The next unresolved canonical in the page-by-page queue is `/xml-escape-unescape/`. No change is authorized until Ubersuggest US demand, the current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
+The next unresolved canonical in the page-by-page queue is `/regex-escaper/`. No change is authorized until Ubersuggest U.S. demand, the current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
@@ -283,6 +292,27 @@ UUID Validator isolated validation — 2026-10-06:
 - Those two broad-suite failures are unrelated to UUID Validator, so the page-specific gate is VERIFIED; they must still be green before the final batch merge/deploy.
 - Production mutation: NONE.
 
+XML Escape / Unescape isolated validation — 2026-10-06:
+- Implementation head before audit-state sync: `c458d24629f78220115bc8dbd9af0940bf2c9b4e`.
+- Audit evidence commit: `2c2201fc8acdce24917e3663184933dc5ed5b7bf`.
+- Isolated workspace: `/srv/smartwebutility-ci/workspaces/xml-escape-c458d24`.
+- Current-branch material Git blobs matched exactly:
+  - `xml-escape-unescape/index.html`: `538d41e49fc7519240fdc2e9b6d61ddfd6699fb3`;
+  - `assets/xml-escape.js`: `e1571d36d48d058c9be187358a0815e9af2f3482`;
+  - `tests/browser-smoke.cjs`: `03ffdac5ef4c733f1e4b9d4d177e3861e132c2dc`;
+  - `assets/tool-catalog.json`: `e4a08bef405221daca013e3b19b657cfdda47236`;
+  - `sitemap.xml`: `ecce6c1a8900820f1a7c467974fc34120c9755cb`.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- XML Escape JavaScript syntax: PASS.
+- Committed browser-smoke syntax: PASS.
+- Chromium: `PASS xml-escape-unescape`.
+- Browser page sweep: 89 pages checked.
+- Active navigation, global tool search/navigation and mobile layout: PASS.
+- Broad smoke total: 142 passed, 2 failed; only `html-minifier` and `css-minifier` timed out waiting for provider readiness.
+- Page-specific gate: VERIFIED.
+- Production mutation: NONE.
+
 ## CI infrastructure blocker
 
 BLOCKED:
@@ -329,13 +359,13 @@ XML Formatter & Validator isolated validation:
 
 ## Work in progress
 
-UUID Validator is VERIFIED via the isolated fallback. Meta Tag Generator remains a completed no-change review. The next page is `/xml-escape-unescape/`, beginning with research only. Production remains unchanged.
+XML Escape / Unescape is VERIFIED via the isolated fallback. Meta Tag Generator remains a completed no-change review. The next page is `/regex-escaper/`, beginning with research only. Production remains unchanged.
 
 ## Affected files — completed/current pages
 
 Most recently verified page:
-- `uuid-validator/index.html`
-- `assets/uuid-validator.js`
+- `xml-escape-unescape/index.html`
+- `assets/xml-escape.js`
 
 Shared direct requirements verified with that page:
 - `assets/tool-catalog.json`
@@ -346,7 +376,7 @@ Shared direct requirements verified with that page:
 
 ## NEXT ACTION
 
-Audit `/xml-escape-unescape/` as the next and only active page:
+Audit `/regex-escaper/` as the next and only active page:
 1. verify Ubersuggest U.S. demand, difficulty, CPC/intent and useful semantic variants;
 2. inspect the current U.S. SERP and relevant competitors;
 3. confirm canonical ownership and no cannibalization;
