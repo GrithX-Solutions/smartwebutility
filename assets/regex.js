@@ -72,6 +72,7 @@
 
       if (start > cursor) {
         html += esc(text.slice(cursor, start));
+        cursor = start;
       }
 
       if (match[0].length === 0) {
