@@ -4,16 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Unix Timestamp Converter — Epoch to Date & Back</title>
-  <meta name="description" content="Convert Unix timestamps to readable dates and dates back to epoch time. Inspect UTC and local time quickly in your browser.">
+  <meta name="description" content="Convert Unix timestamps in seconds, milliseconds, microseconds or nanoseconds to dates and back. Choose local or UTC date interpretation in your browser.">
   <link rel="canonical" href="https://smartwebutility.com/unix-timestamp-converter/">
   <meta property="og:title" content="Unix Timestamp Converter — Epoch to Date & Back">
-  <meta property="og:description" content="Convert Unix timestamps to readable dates and dates back to epoch time. Inspect UTC and local time quickly in your browser.">
+  <meta property="og:description" content="Convert Unix timestamps in seconds, milliseconds, microseconds or nanoseconds to dates and back, locally in your browser.">
   <meta property="og:url" content="https://smartwebutility.com/unix-timestamp-converter/">
-  <meta property="og:type" content="website"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Unix Timestamp Converter — Epoch to Date & Back"><meta name="twitter:description" content="Convert Unix timestamps to readable dates and dates back to epoch time. Inspect UTC and local time quickly in your browser.">
+  <meta property="og:type" content="website"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Unix Timestamp Converter — Epoch to Date & Back"><meta name="twitter:description" content="Convert Unix timestamps in seconds, milliseconds, microseconds or nanoseconds to dates and back, with local or UTC date input.">
   <meta name="theme-color" content="#07101b">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Unix Timestamp Converter","url":"https://smartwebutility.com/unix-timestamp-converter/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Unix seconds to date","Unix milliseconds to date","Date to Unix timestamp","UTC output","ISO 8601 output"]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Unix Timestamp Converter","url":"https://smartwebutility.com/unix-timestamp-converter/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Unix seconds to date","Unix milliseconds to date","Unix microseconds to date","Unix nanoseconds to date","Date to Unix timestamp","Local or UTC date interpretation","UTC output","ISO 8601 output","Browser-side conversion"]}</script>
 </head>
 <body>
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
@@ -23,7 +23,7 @@
     <div class="crumb"><a href="/">Home</a><span>/</span><span>Unix Timestamp Converter</span></div>
     <span class="kicker">Developer tool · runs locally</span>
     <h1>Unix Timestamp Converter</h1>
-    <p class="lead compact">Convert Unix epoch seconds or milliseconds to readable dates, or convert a date and time back to Unix timestamps.</p>
+    <p class="lead compact">Convert Unix epoch seconds, milliseconds, microseconds or nanoseconds to readable dates, or convert a local/UTC date and time back to Unix timestamps.</p>
 
     <div class="json-toolbar">
       <button class="btn primary" id="timestampNow" type="button">Use Current Time</button>
@@ -43,6 +43,8 @@
                 <option value="auto">Auto detect</option>
                 <option value="seconds">Seconds</option>
                 <option value="milliseconds">Milliseconds</option>
+                <option value="microseconds">Microseconds</option>
+                <option value="nanoseconds">Nanoseconds</option>
               </select>
             </label>
             <button class="btn primary" id="convertUnix" type="button">Convert to Date</button>
@@ -58,8 +60,14 @@
         <div class="editor-head"><div><strong>Date → Unix</strong><span>Uses your browser's local timezone</span></div></div>
         <div style="padding:16px">
           <label class="sr-only" for="dateInput">Date and time</label>
-          <input id="dateInput" class="code-editor" style="height:auto;min-height:58px;resize:none" type="datetime-local" step="1">
+          <input id="dateInput" class="code-editor" style="height:auto;min-height:58px;resize:none" type="datetime-local" step="0.001">
           <div class="json-toolbar">
+            <label class="file-btn">Interpret as
+              <select id="dateTimeZone">
+                <option value="local" selected>Browser local time</option>
+                <option value="utc">UTC</option>
+              </select>
+            </label>
             <button class="btn primary" id="convertDate" type="button">Convert to Unix</button>
           </div>
         </div>
@@ -71,25 +79,29 @@
     </div>
 
     <div id="timestampError" class="error" hidden role="alert"></div>
-    <div class="trustbar"><span>Seconds & milliseconds</span><span>UTC & local time</span><span>No server upload</span></div>
+    <div class="trustbar"><span>Seconds · ms · µs · ns</span><span>Local or UTC date input</span><span>UTC & local output</span><span>No server upload</span></div>
   </section>
 
-  <section class="section wrap prose" data-quality-content="v5">
-    <h2>Convert Unix timestamps in seconds or milliseconds</h2>
-    <p>A Unix timestamp identifies one instant as elapsed time from 00:00:00 UTC on January 1, 1970. Traditional Unix time uses seconds, while JavaScript and many APIs commonly use milliseconds. This converter accepts either unit and shows ISO 8601, UTC, browser-local time, Unix seconds and Unix milliseconds for the same instant.</p>
+  <section class="section wrap prose" data-quality-content="v6">
+    <h2>Convert Unix timestamps in seconds, milliseconds, microseconds or nanoseconds</h2>
+    <p>A Unix timestamp identifies one instant as elapsed time from 00:00:00 UTC on January 1, 1970. Traditional Unix time uses seconds, while APIs, databases and runtimes may store milliseconds, microseconds or nanoseconds. This converter accepts all four units and shows ISO 8601, UTC, browser-local time and the equivalent epoch values for the same instant.</p>
 
     <div class="info-grid">
       <article><h3>Seconds</h3><p>Select Seconds when your source stores classic epoch seconds, such as <code>1769438400</code>.</p></article>
       <article><h3>Milliseconds</h3><p>Select Milliseconds for JavaScript-style epoch values, which are typically much larger than second-based timestamps.</p></article>
+      <article><h3>Microseconds and nanoseconds</h3><p>High-resolution logs and databases can use µs or ns. The converter preserves the integer timestamp with <code>BigInt</code>; calendar output is limited to JavaScript Date's millisecond precision.</p></article>
       <article><h3>UTC and ISO 8601</h3><p>Use the UTC and ISO outputs when you need a timezone-independent representation for logs, APIs or debugging.</p></article>
       <article><h3>Browser-local time</h3><p>The local output uses the timezone configured in your browser, so the displayed clock time can differ between users.</p></article>
     </div>
 
-    <h2>How automatic seconds vs milliseconds detection works</h2>
-    <p>Auto detect uses a simple numeric rule: an absolute value of <code>1,000,000,000,000</code> or more is treated as milliseconds; smaller values are treated as seconds. That rule handles most modern timestamps, but no bare number carries its unit. A millisecond value for an early date can therefore look like seconds. Choose Seconds or Milliseconds explicitly whenever the source API, database or log format documents the unit.</p>
+    <h2>How automatic timestamp-unit detection works</h2>
+    <p>Auto detect uses magnitude thresholds that fit common modern epoch values: <code>10^18</code> and above is treated as nanoseconds, <code>10^15</code> and above as microseconds, <code>10^12</code> and above as milliseconds, and smaller values as seconds. No bare number carries its unit, so early dates or unusual data can be ambiguous. Choose the documented unit explicitly whenever you know it.</p>
 
-    <h2>Date to Unix conversion uses your local timezone</h2>
-    <p>The Date → Unix field uses your browser's local timezone because the input does not include a timezone offset. For example, entering 09:00 means 09:00 in the timezone configured on your device. The resulting Unix value still represents an absolute instant. If you need to convert a time stated in another timezone, convert that source time to your local equivalent first or use a timezone-aware workflow.</p>
+    <h2>Microsecond and nanosecond precision</h2>
+    <p>The converter parses high-resolution integer timestamps with JavaScript <code>BigInt</code>, so a 16-digit microsecond or 19-digit nanosecond value is not rounded merely because it exceeds ordinary integer precision. JavaScript <code>Date</code>, however, represents time in milliseconds, so ISO, UTC and local calendar output is truncated to millisecond precision. The original epoch precision remains visible in the numeric outputs.</p>
+
+    <h2>Interpret a date as browser-local time or UTC</h2>
+    <p>A <code>datetime-local</code> field carries a wall-clock date and time but no timezone. Use <strong>Browser local time</strong> when the entered clock time belongs to your device timezone, or choose <strong>UTC</strong> when the same fields represent UTC. The converter does not guess named timezones such as America/New_York or Europe/London. This avoids silently applying the wrong daylight-saving rule. JavaScript date components without an offset are local by default, while an explicit UTC interpretation represents a different instant when your local offset is not zero. <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" rel="noopener">MDN documents this local-versus-UTC behavior</a>.</p>
 
     <h2>UTC, local time and Unix time describe the same instant differently</h2>
     <p>A Unix timestamp itself has no display timezone. The timestamp <code>0</code> represents the Unix epoch at 1970-01-01 00:00:00 UTC. Local rendering applies your browser's timezone offset to that instant, while ISO 8601 output uses a UTC <code>Z</code> suffix. Different local clock readings can therefore correspond to exactly the same Unix timestamp.</p>
@@ -117,10 +129,12 @@
     </div>
   </section>
 
-  <section class="section alt" data-quality-content="v5"><div class="wrap prose">
+  <section class="section alt" data-quality-content="v6"><div class="wrap prose">
     <h2>Frequently asked questions</h2>
     <h3>Does the converter send timestamps to a server?</h3><p>No. Timestamp parsing and formatting run in browser JavaScript on this page.</p>
-    <h3>Should I use seconds or milliseconds?</h3><p>Use the unit documented by the system that produced the value. Auto detection is convenient for common modern timestamps, but an explicit unit is more reliable when you know it.</p>
+    <h3>Should I use seconds, milliseconds, microseconds or nanoseconds?</h3><p>Use the unit documented by the system that produced the value. Auto detection is convenient for common modern timestamps, but an explicit unit is more reliable when you know it.</p>
+    <h3>Can this preserve a 19-digit nanosecond timestamp?</h3><p>Yes for the numeric timestamp. High-resolution integer parsing uses BigInt. Calendar dates still display millisecond precision because that is the precision of JavaScript Date.</p>
+    <h3>Can I convert a UTC date without changing my device timezone?</h3><p>Yes. Set <strong>Interpret as</strong> to UTC before converting the date. Named IANA timezone conversion is intentionally outside this lightweight browser-only tool.</p>
     <h3>Why does local time differ from UTC?</h3><p>They display the same instant using different timezone rules. UTC has no local offset; the local result uses your browser's configured timezone.</p>
     <h3>Why did a timestamp produce the wrong year?</h3><p>The most common cause is interpreting seconds as milliseconds or milliseconds as seconds. Select the correct unit manually and run the conversion again.</p>
   </div></section>
