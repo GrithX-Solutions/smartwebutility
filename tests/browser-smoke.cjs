@@ -1105,10 +1105,34 @@ const cases = [
     assert.match(await p.locator('#jwtError').innerText(), /three dot-separated parts/i);
   }],
   ['regex-tester', async p => {
-    await p.locator('#regexPattern').fill('\\d+');
+    await p.locator('#regexPattern').fill('(?<digits>\\d+)');
+    await p.locator('#regexFlags').fill('gd');
     await p.locator('#regexInput').fill('A12 B34');
+    await p.locator('#regexReplace').fill('[$<digits>]');
     await p.locator('#runRegex').click();
-    assert.ok((await p.locator('#regexMatches').innerText()).includes('12'));
+
+    let matchesText = await p.locator('#regexMatches').innerText();
+    assert.ok(matchesText.includes('12'));
+    assert.ok(matchesText.includes('1 → 3'));
+    assert.ok(matchesText.includes('Named: {"digits":"12"}'));
+    assert.equal(await p.locator('#regexHighlighted mark').count(), 2);
+    assert.equal(await p.locator('#regexOutput').inputValue(), 'A[12] B[34]');
+
+    await p.locator('#regexPattern').fill('(?=a)');
+    await p.locator('#regexFlags').fill('g');
+    await p.locator('#regexInput').fill('aa');
+    await p.locator('#regexReplace').fill('');
+    await p.locator('#runRegex').click();
+    matchesText = await p.locator('#regexMatches').innerText();
+    assert.ok(matchesText.includes('0 → 0'));
+    assert.equal(await p.locator('#regexHighlighted mark').count(), 2);
+    assert.equal(await p.locator('#regexStatus').innerText(), '2 matches');
+
+    await p.locator('#regexPattern').fill('a');
+    await p.locator('#regexInput').fill('a'.repeat(501));
+    await p.locator('#runRegex').click();
+    assert.equal(await p.locator('#regexStatus').innerText(), '500+ matches · display capped');
+    assert.equal(await p.locator('#regexMatches tbody tr').count(), 500);
   }],
   ['url-encoder-decoder', async p => {
     await p.locator('#urlInput').fill('hello world');
