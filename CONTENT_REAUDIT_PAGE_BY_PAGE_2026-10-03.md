@@ -5204,3 +5204,246 @@ Production paths were not used as the CI workspace and production was not deploy
 - Open Graph Preview Chromium regression: VERIFIED.
 - Ubersuggest rank tracking: VERIFIED.
 - Production deployment: NOT STARTED.
+
+
+---
+
+## Page 28 — /sitemap-checker/
+
+Research/update date: 2026-10-06  
+Status: VERIFIED VIA ISOLATED CI FALLBACK
+
+### Primary intent
+Fetch a public XML sitemap or sitemap index safely, validate core Sitemap protocol structure and direct-entry quality, and explain actionable issues without pretending to crawl every listed URL.
+
+Canonical owner:
+- `https://smartwebutility.com/sitemap-checker/`
+
+Cannibalization boundary:
+- `/sitemap-checker/` owns sitemap XML/protocol validation.
+- page-level canonical/noindex/status checks remain separate website-diagnostic intents.
+- no duplicate page is justified for `sitemap validator`, `xml sitemap checker`, `xml sitemap validator` or online/free modifiers.
+
+### Ubersuggest U.S. demand
+- `sitemap checker`: 880 searches/month, SD 32, CPC $8.58.
+- `sitemap validator`: 480, SD 30, CPC $5.56.
+- `xml sitemap checker`: 260, SD 24, CPC $3.45.
+- `xml sitemap validator`: 210, SD 24, CPC $6.91.
+- `sitemap checker tool`: 140, SD 30, CPC $6.02.
+- `online sitemap checker tools`: 70, SD 6, CPC $5.775.
+- `sitemap validator online`: 30, SD 16, CPC $7.63.
+- `xml sitemap checker tool`: 10, SD 5.
+
+The canonical has meaningful U.S. demand and a low-difficulty online-tool long tail without requiring a separate doorway URL.
+
+### Ubersuggest U.S. SERP evidence
+Current/recent SERP evidence includes multiple low-authority utilities.
+
+For `sitemap checker`:
+- beyondspace.studio — DA 19 around position 4;
+- nuxtseo.com — DA 19 around position 12;
+- tryvizup.com — DA 15 around position 13;
+- citedy.com — DA 15 around position 20.
+
+For `sitemap validator` on 2026-10-06:
+- scaleupbox.com — DA 6 around position 4;
+- zirasoftware.com — DA 4 around positions 8/12;
+- edesy.in — DA 15 around position 10;
+- seoladders.com — DA 7 around position 13;
+- stratecode.tools — DA 2 around position 14;
+- zeriflow.com — DA 6 around position 18.
+
+For `online sitemap checker tools`:
+- holp.ai — DA 14 around position 13;
+- tryvizup.com — DA 15 around position 19.
+
+This confirms realistic long-tail attainability without implying future rankings.
+
+### Current Google and Sitemap protocol evidence
+Current Google Search Central and sitemaps.org documentation were rechecked before implementation.
+
+Verified requirements/guidance:
+- one sitemap is limited to 50,000 URLs or 50 MB uncompressed;
+- sitemap URLs should be fully qualified absolute URLs;
+- XML sitemaps use the Sitemap protocol namespace;
+- `loc` is required for each direct sitemap entry;
+- sitemaps.org limits `loc` values to 2,048 characters;
+- Sitemap protocol `lastmod` uses W3C date/date-time values;
+- `changefreq` accepts the protocol-defined values and `priority` is 0.0–1.0;
+- Google ignores `changefreq` and `priority`;
+- Google can use `lastmod` when it is consistently accurate.
+
+Primary references:
+- Google Search Central: Build and submit a sitemap.
+- sitemaps.org: Sitemap protocol.
+
+### Live competitor review
+Live web review on 2026-10-06 showed the current product bar is materially deeper than simple XML parsing.
+
+Current validators such as SitemapKit, Sitemap Watch, Seobase, CheckSitemap and Crawl Cove commonly report combinations of:
+- required sitemap namespace;
+- absolute `loc` validation;
+- duplicate URLs;
+- `lastmod` quality / future dates;
+- `changefreq` and `priority` syntax;
+- protocol entry/size limits;
+- mixed hosts;
+- optional live URL/status or indexability spot checks.
+
+Smart Web Utility intentionally stays a bounded structure/protocol checker on this page. Deeper URL crawling remains out of scope because it materially increases latency, abuse surface and SSRF/network cost.
+
+### Existing implementation before this audit
+The previous checker:
+- fetched a public sitemap through the shared SSRF-hardened API layer;
+- parsed XML;
+- accepted `urlset` or `sitemapindex`;
+- counted direct entries;
+- previewed up to 20 `loc` values;
+- used a 2 MB response cap.
+
+However, parseable XML could be reported as effectively healthy even when it had a missing namespace, invalid/relative locations, duplicates, invalid dates or other protocol problems.
+
+The previous 2 MB truncation path could also present incomplete XML as a parse failure rather than clearly distinguishing the tool's own resource-safety ceiling from Google's much larger sitemap limit.
+
+### Implementation
+`api/sitemap-check.php` now:
+- preserves the shared input validation / private-reserved destination blocking;
+- follows at most three redirects manually and re-runs `normalize_url()` for every redirect target;
+- keeps the 2 MB server fetch ceiling;
+- reports a clear HTTP 413-style bounded-checker error when the response exceeds that local safety limit instead of parsing truncated XML;
+- validates the root as `urlset` or `sitemapindex`;
+- validates the Sitemap protocol namespace;
+- validates exactly one non-empty `loc` per direct entry;
+- validates absolute HTTP(S) locations and the 2,048-character protocol limit;
+- checks the 50,000-entry protocol limit;
+- detects duplicate locations;
+- counts hosts and warns about multi-host files while acknowledging Google's verified cross-site sitemap workflow;
+- validates `lastmod` date/date-time shape and warns about clearly future-dated values;
+- validates `changefreq` values and `priority` range for URL sitemaps;
+- warns that Google ignores `changefreq` and `priority`;
+- returns structured issues, warnings, coverage counts, final URL, redirect count and bytes checked.
+
+`assets/diagnostics.js` now renders:
+- HTTP status and final URL;
+- redirect count;
+- sitemap type;
+- protocol-valid / issues-found state;
+- namespace state;
+- entry / valid-location / invalid-location counts;
+- duplicate count;
+- host count;
+- `lastmod` coverage and invalid/future counts;
+- bytes checked;
+- protocol issues and warnings;
+- sample locations.
+
+`sitemap-checker/index.html` now:
+- targets the combined XML sitemap checker/validator intent;
+- explains exactly what the checker validates;
+- distinguishes the local 2 MB resource-safety ceiling from Google's 50 MB / 50,000 URL limit;
+- explains Google treatment of `lastmod`, `changefreq` and `priority`;
+- explicitly states that the tool does not recursively crawl child sitemaps or every listed URL;
+- links current Google Search Central and sitemaps.org guidance.
+
+Internal search aliases now include:
+- `sitemap checker`
+- `sitemap validator`
+- `xml sitemap checker`
+- `xml sitemap validator`
+- `sitemap checker tool`
+- `online sitemap checker tools`
+- `sitemap validator online`
+- `sitemap checker online`
+
+Sitemap `lastmod` was updated to 2026-10-06.
+
+### Security / architecture
+No SSRF protection was weakened.
+
+The new redirect path:
+- keeps redirects bounded to three hops;
+- does not enable blind cURL redirect following;
+- converts each Location header to an absolute URL;
+- passes each redirect destination through the existing `normalize_url()` public-target validation before fetching it.
+
+The checker remains rate-limited through the existing endpoint limit and keeps the existing 2 MB response-size ceiling.
+
+### Regression coverage
+Committed browser regression verifies rendering for:
+- protocol issues found;
+- valid namespace;
+- invalid location count;
+- duplicate location count;
+- `lastmod` coverage;
+- issue and warning messages;
+- sample URLs.
+
+Committed backend fixture `tests/sitemap-check-fixture.php` verifies:
+- valid `urlset` with namespace and valid `lastmod`;
+- malformed protocol fixture with missing namespace;
+- duplicate `loc`;
+- relative `loc`;
+- invalid `lastmod`;
+- invalid `changefreq`;
+- invalid `priority`;
+- valid `sitemapindex`.
+
+### Isolated CI validation — 2026-10-06
+Final implementation/test head before audit-state sync:
+- `5da73adaaf3146caa05f97df06f99242c19e53b0`
+
+Isolated workspace:
+- `/srv/smartwebutility-ci/workspaces/sitemap-checker-512e2d0`
+
+Exact current-branch material Git blobs:
+- `sitemap-checker/index.html` — `590f395784d201738ed80e18095b1efb8bfef03a`
+- `api/sitemap-check.php` — `c6b3b44ba2b4c931e4937438679ff92febf443d9`
+- `assets/diagnostics.js` — `9b50a8817a4b4d21af3889190990523c6d8b86bf`
+- `tests/browser-smoke.cjs` — `2a409fb3eb01ed6abdf61abee1038bd18807805f`
+- `tests/sitemap-check-fixture.php` — `d490f96a485c2c4a5aac6adebed2b3a5f2a03dca`
+- `assets/tool-catalog.json` — `dd6a12d8620842bf341a1e688e7bba615b22bf5e`
+- `sitemap.xml` — `73bf5a5d590a27c909e6629911f32a20a1127751`
+
+Gate results:
+- static SEO QA: 89 pages, 0 errors, 0 warnings;
+- content QA: 89 pages, 0 errors, 2 intentionally retained advisories;
+- `api/sitemap-check.php` syntax: PASS;
+- `assets/diagnostics.js` syntax: PASS;
+- committed browser-smoke syntax: PASS;
+- host CLI PHP has `libxml` but not `SimpleXML`, so it is not suitable for executing this parser;
+- cached `smartwebutility-php:latest` application image includes SimpleXML and the committed backend fixture passed there;
+- read-only API exercise against `https://smartwebutility.com/sitemap.xml`: HTTP 200, `urlset`, 89 direct entries, protocol-valid, 0 redirects, 9,043 bytes checked;
+- Chromium explicitly reported `PASS sitemap-checker`;
+- browser page sweep: 89 pages checked;
+- active navigation, global tool search/navigation and mobile layout: PASS;
+- broad smoke total: 143 passed, 2 failed.
+
+The two broad-suite failures remain the existing `html-minifier` and `css-minifier` provider-readiness timeouts. They are unrelated to Sitemap Checker and remain mandatory final-batch release blockers.
+
+### Ubersuggest rank tracking
+After verification, the SmartWebUtility Ubersuggest project was updated for U.S. English with:
+- `sitemap checker`
+- `sitemap validator`
+- `online sitemap checker tools`
+
+Tracked keyword-location usage after update: 94 / 300.
+
+Production paths were not used as the CI workspace and production was not deployed.
+
+### Page 28 acceptance status
+- Demand / difficulty: VERIFIED.
+- Ubersuggest SERP competitiveness: VERIFIED.
+- Live competitor review: VERIFIED.
+- Current Google / Sitemap protocol requirements: VERIFIED.
+- Canonical ownership / cannibalization: VERIFIED.
+- Existing implementation inspected: VERIFIED.
+- Protocol validation gap: VERIFIED.
+- SSRF / redirect / response-size safety: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- Static SEO/content QA: VERIFIED.
+- PHP / JavaScript syntax: VERIFIED.
+- Backend protocol fixture: VERIFIED.
+- Read-only live API exercise: VERIFIED.
+- Sitemap Checker Chromium regression: VERIFIED.
+- Ubersuggest rank tracking: VERIFIED.
+- Production deployment: NOT STARTED.
