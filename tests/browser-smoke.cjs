@@ -1371,6 +1371,61 @@ const cases = [
     assert.equal(await p.locator('#ogError').isHidden(), false);
     assert.match(await p.locator('#ogError').innerText(), /language_TERRITORY/i);
   }],
+  ['meta-tag-checker', async p => {
+    await p.route('**/api/page-inspect.php?mode=meta**', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          ok: true,
+          result: {
+            url: 'https://example.com/old',
+            final_url: 'https://www.example.com/page',
+            redirect_count: 1,
+            redirects: [{status:301,from:'https://example.com/old',to:'https://www.example.com/page'}],
+            status: 200,
+            content_type: 'text/html; charset=UTF-8',
+            title: 'Example page',
+            title_length: 12,
+            title_count: 1,
+            description: 'A useful example description.',
+            description_length: 29,
+            description_count: 1,
+            canonical: 'https://www.example.com/page',
+            canonical_count: 1,
+            canonical_head_count: 1,
+            robots: 'index,follow',
+            robots_count: 1,
+            googlebot: 'noindex,follow',
+            googlebot_count: 1,
+            x_robots_tag: null,
+            noindex_detected: true,
+            html_lang: 'en',
+            viewport: 'width=device-width,initial-scale=1',
+            h1_count: 1,
+            first_h1: 'Example heading',
+            findings: [
+              'A direct noindex directive was detected in robots, Googlebot or X-Robots-Tag metadata.',
+              'The requested URL redirected 1 time(s) before metadata was parsed.'
+            ]
+          }
+        })
+      });
+    });
+    await p.locator('#target').fill('https://example.com/old');
+    await p.locator('#diagForm button[type="submit"]').click();
+    await p.locator('#result').waitFor({state:'visible'});
+    const resultText = await p.locator('#resultBody').innerText();
+    assert.match(resultText, /Final URL\s+https:\/\/www\.example\.com\/page/i);
+    assert.match(resultText, /Redirects followed\s+1/i);
+    assert.match(resultText, /Googlebot\s+noindex,follow/i);
+    assert.match(resultText, /Direct noindex detected\s+Yes/i);
+    assert.match(resultText, /HTML lang\s+en/i);
+    assert.match(resultText, /Title elements\s+1/i);
+    assert.match(resultText, /Description tags\s+1/i);
+    assert.match(resultText, /A direct noindex directive was detected/i);
+    assert.match(resultText, /301 https:\/\/example\.com\/old → https:\/\/www\.example\.com\/page/i);
+  }],
   ['sitemap-checker', async p => {
     await p.route('**/api/sitemap-check.php*', async route => {
       await route.fulfill({
