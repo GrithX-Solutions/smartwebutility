@@ -132,6 +132,7 @@ Current verification:
 - committed browser-smoke syntax: PASS;
 - PHP syntax on the exact endpoint Git blob: PASS;
 - GitHub Build 927 and Browser 611 failed before repository execution with `runner_id: 0` and `steps: []`;
+- current branch checkpoint `619b8fe65b9730ee6bacaf5e017a276c6ace4919` was explicitly rerun on 2026-10-07: Build run 929 attempt 2 and Browser run 613 attempt 2 both again failed before repository execution with `runner_id: 0` and `steps: []`;
 - both connected ZTHosting agents currently advertise no developer-workspace capabilities, so the approved isolated fallback cannot execute this checkpoint right now;
 - local CLI PHP lacks DOMDocument, so it cannot substitute for the application/runtime parser test.
 
@@ -683,7 +684,9 @@ XML Formatter & Validator isolated validation:
 ## Blockers
 
 - GitHub-hosted Actions runner allocation remains unreliable for this long-running branch.
+- Reverification on current checkpoint `619b8fe65b9730ee6bacaf5e017a276c6ace4919` confirmed the same allocation failure: Build 929 attempt 2 and Browser 613 attempt 2 completed with no assigned runner and no executed steps.
 - The approved isolated ZTHosting fallback previously verified multiple pages without using production as a CI workspace, but both currently connected agents advertise no developer-workspace capability; fallback execution is therefore temporarily BLOCKED.
+- Both connected ZTHosting hosts were rechecked and are healthy at host level, so the blocker is specifically missing advertised developer-workspace capability rather than host unavailability.
 - The latest broad Chromium smoke on the UUID Validator snapshot was 142/144 because HTML Minifier and CSS Minifier each timed out on provider readiness. This is not a UUID Validator failure, but final merge/deploy remains blocked until the accumulated branch is fully green.
 - Production deployment remains intentionally blocked until the complete page-by-page batch is finished and one final controlled release gate is approved.
 
