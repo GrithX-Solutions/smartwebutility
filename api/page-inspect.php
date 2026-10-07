@@ -91,7 +91,10 @@ if($mode==='meta'){
   $h1Count=$xpath->query('//h1')->length;
   $firstH1=first_text($xpath,'//h1');
 
-  $noindex=directive_has_noindex($robots) || directive_has_noindex($googlebot) || directive_has_noindex($xRobots);
+  $noindex=directive_has_noindex($xRobots);
+  foreach(array_merge($robotsValues,$googlebotValues) as $directive){
+    if(directive_has_noindex($directive)){ $noindex=true; break; }
+  }
   $findings=[];
 
   if(count($titles)===0) $findings[]='No document title was found in the HTML head.';
