@@ -40,7 +40,37 @@ function render(data){
    +issueBlock+warningBlock
    +(r.sample?.length?'<div class="result-sub"><strong>Sample entries</strong><div class="chips">'+r.sample.map(x=>'<span>'+esc(x)+'</span>').join('')+'</div></div>':'');
  } else if(tool==='meta'){
-  const r=data.result; title.textContent='Meta tag check'; body.innerHTML='<table class="record-table"><tbody>'+row('Status',r.status)+row('Title',r.title)+row('Description',r.description)+row('Canonical',r.canonical)+row('Meta robots',r.robots)+row('X-Robots-Tag',r.x_robots_tag)+row('H1 count',r.h1_count)+'</tbody></table>';
+  const r=data.result;
+  const findings=(r.findings||[]).length
+   ? '<div class="result-sub"><strong>Review findings</strong><div class="chips">'+r.findings.map(x=>'<span>'+esc(x)+'</span>').join('')+'</div></div>'
+   : '<div class="result-sub"><strong>Review findings</strong><p>No basic metadata conflicts were detected in the fetched HTML.</p></div>';
+  const redirects=(r.redirects||[]).length
+   ? '<div class="result-sub"><strong>Redirect path</strong><div class="chips">'+r.redirects.map(x=>'<span>'+esc(x.status+' '+x.from+' → '+x.to)+'</span>').join('')+'</div></div>'
+   : '';
+  title.textContent='Meta tag check';
+  body.innerHTML='<table class="record-table"><tbody>'
+   +row('Requested URL',r.url)
+   +row('Final URL',r.final_url||r.url)
+   +row('Redirects followed',r.redirect_count||0)
+   +row('HTTP status',r.status)
+   +row('Content type',r.content_type)
+   +row('Title',r.title)
+   +row('Title characters',r.title_length)
+   +row('Title elements',r.title_count)
+   +row('Meta description',r.description)
+   +row('Description characters',r.description_length)
+   +row('Description tags',r.description_count)
+   +row('Canonical',r.canonical)
+   +row('Canonical links',r.canonical_count)
+   +row('Meta robots',r.robots)
+   +row('Googlebot',r.googlebot)
+   +row('X-Robots-Tag',r.x_robots_tag)
+   +row('Direct noindex detected',r.noindex_detected?'Yes':'No')
+   +row('HTML lang',r.html_lang)
+   +row('Viewport',r.viewport)
+   +row('H1 count',r.h1_count)
+   +row('First H1',r.first_h1)
+   +'</tbody></table>'+findings+redirects;
  } else if(tool==='og'){
   const r=data.result.open_graph; title.textContent='Open Graph check'; body.innerHTML='<table class="record-table"><tbody>'+Object.entries(r).map(([k,v])=>row(k,v)).join('')+'</tbody></table>';
  } else if(tool==='headers'){
