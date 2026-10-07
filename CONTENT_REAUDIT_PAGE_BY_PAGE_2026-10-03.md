@@ -5447,3 +5447,146 @@ Production paths were not used as the CI workspace and production was not deploy
 - Sitemap Checker Chromium regression: VERIFIED.
 - Ubersuggest rank tracking: VERIFIED.
 - Production deployment: NOT STARTED.
+
+
+## Page 29 — Meta Tag Checker — 2026-10-07
+
+URL: `/meta-tag-checker/`
+
+### Research evidence
+
+Ubersuggest U.S. English:
+- `meta tag checker`: 590 monthly searches, CPC $9.90, SD 39, informational;
+- `check meta tags`: 590, CPC $9.90, SD 40, informational;
+- `meta tag analyzer`: 110, CPC $11.64, SD 27, commercial;
+- `seo meta tag checker`: 50, CPC $7.84, SD 20, commercial;
+- `website meta tag checker`: 40, CPC $7.81, SD 29, informational;
+- `site meta tag checker`: 40, SD 16.
+
+The page currently has no Ubersuggest U.S. ranking-keyword data, so ranking success remains UNKNOWN.
+
+Fresh Ubersuggest U.S. SERP analysis dated 2026-10-07 is mixed and includes an AI Overview and People Also Ask. It also exposes low-authority utility results, including Sequel (DA 15), Lection (DA 12), Curious.page (DA 26), BestSEOTools (DA 29), ForumSeo (DA 7) and Eazy SEO Tools (DA 9). This supports a credible utility-page opportunity but does not guarantee first-page ranking.
+
+### Competitor / intent review
+
+Relevant live metadata tools reviewed included URLCompass, Tiny File Tools, Veritas, CrawlRaven, RankLatch, RankParse, WSW Web Lab, ToolsHub, Toolmera, RankVitals and Technovier.
+
+Recurring capabilities across the stronger tools:
+- live page fetch rather than static text only;
+- final URL / redirect context;
+- title and meta-description inspection;
+- robots / Googlebot / X-Robots directives;
+- duplicate or conflicting metadata visibility;
+- HTML language and viewport context;
+- canonical declaration;
+- H1 context.
+
+Canonical ownership remains `/meta-tag-checker/` for broad live search-metadata inspection. Deep canonical-target health, placement, redirect/noindex conflicts and canonical chains remain owned by `/canonical-tag-checker/`. Open Graph/social metadata remains owned by `/open-graph-checker/`. No new canonical URL was created.
+
+### Confirmed gap
+
+The existing page returned only status, title, description, canonical, meta robots, X-Robots-Tag and H1 count. It did not:
+- follow a bounded redirect path to the final page before analysis;
+- expose requested vs final URL;
+- inspect Googlebot-specific directives;
+- show duplicate title/description/canonical/robots counts;
+- report HTML `lang` or viewport context;
+- provide title/description character counts as non-scoring editing context;
+- flag directly observed `noindex` across robots, Googlebot or X-Robots-Tag;
+- surface practical findings without inventing an SEO score.
+
+### Implementation
+
+Implementation/test head before state sync:
+- `8dead313ae83277d68a3efd50d075f19989fd8a1`.
+
+Changed only the active page and directly required shared files:
+- `meta-tag-checker/index.html`;
+- `api/page-inspect.php`;
+- `assets/diagnostics.js`;
+- `assets/tool-catalog.json`;
+- `tests/browser-smoke.cjs`;
+- `sitemap.xml`.
+
+The endpoint now:
+- follows at most three redirects for meta mode only;
+- keeps cURL blind redirect following disabled;
+- converts each Location value to an absolute URL and sends every hop through the existing `normalize_url()` / public-target SSRF validation before fetching;
+- preserves the existing 1 MB response ceiling, rate limit, timeouts and TLS verification;
+- reports requested URL, final URL, redirect count/path, status and content type;
+- reports title/description values, character counts and tag counts;
+- reports canonical declaration/count without duplicating deep canonical-target analysis;
+- reports robots, Googlebot and X-Robots-Tag;
+- detects direct `noindex` across all returned robots / Googlebot values plus X-Robots-Tag;
+- reports HTML language, viewport, H1 count and first H1;
+- reports concrete findings without assigning an artificial SEO score.
+
+Visible content now explicitly avoids fixed title/description character-limit claims, explains that Google can generate title links/snippets from other signals, and links to current Google Search Central title-link, snippet, robots/X-Robots and canonicalization documentation.
+
+Tool search aliases were expanded with the researched meta-tag intent cluster while keeping `og meta tag checker` out of this page's keyword ownership.
+
+Sitemap `lastmod` for this URL is now 2026-10-07.
+
+### Current verification
+
+Exact current Git blobs:
+- `meta-tag-checker/index.html` — `29cb676a720d68f9b6e9527ce0ea9fa64b2e8956`;
+- `api/page-inspect.php` — `d4617ecc305cd738447215a3191a751e31ca27e9`;
+- `assets/diagnostics.js` — `64d28aa0d089765787e843098f80e3b7b1207ceb`;
+- `assets/tool-catalog.json` — `a34b24ab5e42df5519fdd5abd9e9220c82aa8912`;
+- `tests/browser-smoke.cjs` — `4110980f02f9693b679db9b37707bbc49487fb75`;
+- `sitemap.xml` — `4f9f4f5f9eaec513dcc2585039b1f30b2ac53588`.
+
+Verified checks available in the current session:
+- implementation diff is exactly six scoped files, 7 commits ahead of the prior Sitemap Checker state checkpoint;
+- page has exactly one H1 and one self-canonical;
+- page title is 48 characters;
+- meta description is 144 characters;
+- longest visible paragraph in the updated page is 75 words;
+- shared diagnostics JavaScript parses successfully;
+- committed browser-smoke JavaScript parses successfully;
+- tool catalog remains valid JSON;
+- sitemap contains 89 URLs and all 89 are unique;
+- Meta Tag Checker sitemap `lastmod` is 2026-10-07;
+- page-specific Chromium regression case is present exactly once;
+- local PHP 8.4 syntax check of the exact Git blob `d4617ecc...`: PASS.
+
+Runtime caveat:
+- the local host CLI PHP lacks `DOMDocument`, so it cannot execute the DOM parsing fixture. This is not evidence of a production regression because the existing production endpoint already depends on DOMDocument, but it prevents local parser-runtime execution in this environment.
+
+GitHub-hosted CI remains infrastructure-blocked on the exact current implementation head:
+- Build run 927: FAILED before repository steps, `runner_id: 0`, `steps: []`;
+- Browser run 611: FAILED before repository steps, `runner_id: 0`, `steps: []`.
+
+The approved ZTHosting fallback is also unavailable in this session because both connected agents currently advertise no developer-workspace capabilities. Therefore full page-scoped Chromium/API execution and repository static/content QA have not run on this head.
+
+### Ubersuggest rank tracking
+
+The SmartWebUtility project currently uses 94 / 300 tracked keyword-location slots. Existing U.S. tracking already includes:
+- `meta tag checker`;
+- `x robots tag checker`.
+
+No new keywords were added yet because the hard rule requires the page to reach VERIFIED status first. After CI/runtime verification, the leading candidates are `meta tag analyzer` and `seo meta tag checker`, subject to preserving the full existing keyword map.
+
+### Page 29 acceptance status
+
+- Demand / difficulty / CPC / intent: VERIFIED.
+- Fresh Ubersuggest U.S. SERP: VERIFIED.
+- Live competitor review: VERIFIED.
+- Canonical ownership / cannibalization: VERIFIED.
+- Current Google guidance: VERIFIED.
+- Existing implementation inspected: VERIFIED.
+- Product/content gap: VERIFIED.
+- Implementation: COMPLETED on working branch.
+- SSRF / redirect / response-size safety by code path: VERIFIED.
+- Exact Git blob identity: VERIFIED.
+- HTML/search-metadata structural checks: VERIFIED.
+- PHP syntax: VERIFIED.
+- JavaScript syntax: VERIFIED.
+- Repository static SEO/content QA on current head: BLOCKED by CI infrastructure.
+- Backend parser-runtime execution on current head: BLOCKED by available runtime/capability.
+- Chromium regression on current head: BLOCKED by CI infrastructure.
+- Ubersuggest new rank-tracking additions: DEFERRED until full page verification.
+- Production deployment: NOT STARTED.
+
+Page 29 remains PARTIALLY VERIFIED / CI BLOCKED. Do not start Page 30 until the missing runtime/Chromium/static-content gates execute and pass.
