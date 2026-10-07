@@ -1,6 +1,6 @@
 # Smart Web Utility — Project State
 
-Last verified: 2026-10-06
+Last verified: 2026-10-07
 
 ## Objective
 
@@ -11,6 +11,8 @@ Run the remaining content/SEO re-audit page by page. Research, improve, test and
 - Current production source/artifact SHA: `04ce96286f0baaff1a175f4cae7c9491b0607688`
 - Current GitHub main state-only head before this batch: `ee460eb96606bbf93cd7a8347e51be8c851672d3`
 - Working branch: `content-reaudit-page-by-page-2026-10-03`
+- Sitemap Checker final implementation/test head before audit-state sync: `5da73adaaf3146caa05f97df06f99242c19e53b0`.
+- Sitemap Checker audit evidence commit: `27a0c1fce04aea61a8763d982de9fa818c96c0e0`.
 - Open Graph Preview final implementation/test head before audit-state sync: `0ac3dd07ca3a4ffe57cca9c34b697b40ce90bfa1`.
 - Open Graph Preview audit evidence commit: `47b22fe6c38ca603fcb03b11f8bb88e45d2ee1ec`.
 - Schema Markup Generator final implementation/test head before audit-state sync: `a0c41ceae9eda01d1a98b57bb40d29558f259325`.
@@ -90,29 +92,33 @@ Research record:
 
 ## Current page
 
-### /sitemap-checker/ — next page research
+### /meta-tag-checker/ — next page research
 
 Status: UNKNOWN — NOT YET AUDITED UNDER THE CURRENT HARD GATE.
 
-Open Graph Preview is now VERIFIED via the approved isolated ZTHosting fallback:
-- Ubersuggest U.S. demand was verified, including `open graph preview` at 480 searches/month with SD 36, `og preview` at 480 with SD 40 and the low-difficulty `open graph generator` at 50 with SD 3;
-- recent U.S. SERPs include several low-authority Open Graph preview/generator utilities, especially for the generator long tail;
-- the current Open Graph protocol was rechecked before implementation: `og:title`, `og:type`, `og:image` and `og:url` are the four required properties; structured image metadata includes width, height and alt; the protocol states that an image should have `og:image:alt`;
-- live competitor review confirmed the current product bar includes richer image metadata, type/locale controls and multiple preview crops/styles;
-- canonical ownership remains `/open-graph-preview/`; broader metadata generation stays with `/meta-tag-generator/` and live tag inspection stays with `/open-graph-checker/`;
-- the page now supports type, locale, image alt/width/height, core-property readiness, URL/locale/dimension validation and wide/square crop previews;
-- exact current-branch Git blob identity was verified for page HTML, implementation JS, browser test, tool catalog and sitemap;
+Sitemap Checker is VERIFIED via the approved isolated ZTHosting fallback and was reverified on 2026-10-07:
+- Ubersuggest U.S. demand is documented, including `sitemap checker` at 880 searches/month with SD 32, `sitemap validator` at 480 with SD 30, `xml sitemap checker` at 260 with SD 24 and the low-difficulty `online sitemap checker tools` at 70 with SD 6;
+- current/recent U.S. SERP evidence includes multiple low-authority utilities, confirming a realistic long-tail route without implying ranking success;
+- current Sitemap protocol and Google guidance were rechecked: standard namespace, required direct-entry `loc`, absolute URLs, 2,048-character `loc` ceiling, W3C-style `lastmod`, and 50,000-entry / 50 MB protocol limits;
+- canonical ownership remains `/sitemap-checker/`; deeper page/indexability crawling remains a separate intent and is intentionally out of scope here;
+- the endpoint now validates namespace, direct `loc` quality, duplicates, `lastmod`, `changefreq`, `priority`, host diversity and the direct-entry limit while preserving a bounded 2 MB checker ceiling;
+- redirects remain manual and bounded to three hops, with each destination revalidated through the existing public-host SSRF gate;
+- oversized responses are reported as the tool's own resource-safety limit instead of being misreported as malformed XML;
+- exact current-branch Git blob identity is verified for page HTML, endpoint PHP, diagnostics JS, browser regression, backend fixture, tool catalog and sitemap;
 - static SEO QA passed 89 pages with 0 errors / 0 warnings;
 - content QA passed with 0 errors and the same 2 intentionally retained advisories;
-- implementation JavaScript and committed browser-smoke syntax passed;
-- Chromium explicitly reported `PASS open-graph-preview`;
+- PHP syntax, diagnostics JavaScript syntax and browser-smoke syntax passed;
+- the committed backend fixture passed in the cached `smartwebutility-php` runtime image that includes SimpleXML;
+- read-only live fetch of `https://smartwebutility.com/sitemap.xml` returned HTTP 200, 89 entries, correct namespace and protocol-valid analysis with no truncation;
+- loopback/private-target verification returned `Private or reserved IP addresses are not allowed.`;
+- Chromium explicitly reported `PASS sitemap-checker`;
 - browser sweep checked all 89 pages and navigation/search/mobile checks passed;
-- Ubersuggest rank tracking includes `open graph preview`, `og preview` and `open graph generator` for U.S. English;
+- Ubersuggest rank tracking includes `sitemap checker`, `sitemap validator` and `online sitemap checker tools` for U.S. English;
 - production was not used as the CI workspace and was not deployed.
 
-The broad smoke total remains 142/144 because HTML Minifier and CSS Minifier timed out waiting for provider readiness. Those failures are unrelated to Open Graph Preview but remain final-batch release blockers.
+The broad browser smoke total is now 143 passed / 2 failed. The two failures remain HTML Minifier and CSS Minifier provider-readiness timeouts. They are unrelated to Sitemap Checker but remain final-batch release blockers.
 
-The next unresolved canonical in sitemap order is `/sitemap-checker/`. No change is authorized until Ubersuggest U.S. demand, the current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
+The next unresolved canonical in sitemap order is `/meta-tag-checker/`. No change is authorized until Ubersuggest U.S. demand, the current U.S. SERP, canonical ownership and a real competitor/product/content gap are verified.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
@@ -577,6 +583,37 @@ Open Graph Preview isolated validation — 2026-10-06:
 - Page-specific gate: VERIFIED.
 - Production mutation: NONE.
 
+Sitemap Checker isolated validation — 2026-10-07:
+- Final implementation/test head before audit-state sync: `5da73adaaf3146caa05f97df06f99242c19e53b0`.
+- Audit evidence commit: `27a0c1fce04aea61a8763d982de9fa818c96c0e0`.
+- Isolated workspace: `/srv/smartwebutility-ci/workspaces/sitemap-checker-512e2d0`.
+- Exact current-branch material Git blobs:
+  - `sitemap-checker/index.html`: `590f395784d201738ed80e18095b1efb8bfef03a`;
+  - `api/sitemap-check.php`: `c6b3b44ba2b4c931e4937438679ff92febf443d9`;
+  - `assets/diagnostics.js`: `9b50a8817a4b4d21af3889190990523c6d8b86bf`;
+  - `tests/browser-smoke.cjs`: `2a409fb3eb01ed6abdf61abee1038bd18807805f`;
+  - `tests/sitemap-check-fixture.php`: `d490f96a485c2c4a5aac6adebed2b3a5f2a03dca`;
+  - `assets/tool-catalog.json`: `dd6a12d8620842bf341a1e688e7bba615b22bf5e`;
+  - `sitemap.xml`: `73bf5a5d590a27c909e6629911f32a20a1127751`.
+- Static SEO QA: 89 pages, 0 errors, 0 warnings.
+- Content QA: 89 pages, 0 errors, 2 intentionally retained advisory warnings.
+- Sitemap endpoint PHP syntax: PASS.
+- Shared diagnostics JavaScript syntax: PASS.
+- Committed browser-smoke syntax: PASS.
+- Host CLI PHP lacks SimpleXML and is not accepted as parser-runtime evidence.
+- Cached `smartwebutility-php` application image includes SimpleXML.
+- Committed backend fixture: PASS.
+- Read-only live sitemap fetch: HTTP 200; 89 direct entries; namespace valid; protocol valid; 0 redirects; not truncated.
+- Private/loopback SSRF check: PASS — `Private or reserved IP addresses are not allowed.`.
+- Chromium: `PASS sitemap-checker`.
+- Browser page sweep: 89 pages checked.
+- Active navigation, global tool search/navigation and mobile layout: PASS.
+- Broad smoke total: 143 passed, 2 failed; only `html-minifier` and `css-minifier` timed out waiting for provider readiness.
+- Ubersuggest U.S. rank tracking confirmed: `sitemap checker`, `sitemap validator`, `online sitemap checker tools`.
+- Ubersuggest tracked keyword-location usage: 94 / 300.
+- Page-specific gate: VERIFIED.
+- Production mutation: NONE.
+
 ## CI infrastructure blocker
 
 BLOCKED:
@@ -623,13 +660,14 @@ XML Formatter & Validator isolated validation:
 
 ## Work in progress
 
-Open Graph Preview is VERIFIED via the isolated fallback and its three strategic U.S. keywords are tracked in Ubersuggest. Schema Markup Generator, Robots.txt Generator, HTML Entity Encoder / Decoder, URL Encoder / Decoder, Regex Tester, Hash Generator, Unix Timestamp Converter, JSON Diff, Regex Escaper, XML Escape / Unescape and UUID Validator remain verified. The next page is `/sitemap-checker/`, beginning with research only. Production remains unchanged.
+Sitemap Checker is VERIFIED via the isolated fallback and its three strategic U.S. keywords are tracked in Ubersuggest. Open Graph Preview, Schema Markup Generator, Robots.txt Generator, HTML Entity Encoder / Decoder, URL Encoder / Decoder, Regex Tester, Hash Generator, Unix Timestamp Converter, JSON Diff, Regex Escaper, XML Escape / Unescape and UUID Validator remain verified. The next page is `/meta-tag-checker/`, beginning with research only. Production remains unchanged.
 
 ## Affected files — completed/current pages
 
 Most recently verified page:
-- `open-graph-preview/index.html`
-- `assets/og-preview.js`
+- `sitemap-checker/index.html`
+- `api/sitemap-check.php`
+- `assets/diagnostics.js`
 
 Shared direct requirements verified with that page:
 - `assets/tool-catalog.json`
@@ -640,13 +678,13 @@ Shared direct requirements verified with that page:
 
 ## NEXT ACTION
 
-Audit `/sitemap-checker/` as the next and only active page:
+Audit `/meta-tag-checker/` as the next and only active page:
 1. verify Ubersuggest U.S. demand, difficulty, CPC/intent and useful semantic variants;
-2. inspect the current U.S. SERP, sitemap validation expectations and relevant competitors;
-3. confirm canonical ownership and no cannibalization with other sitemap / crawlability tools;
-4. inspect current functionality/content against the verified intent;
+2. inspect the current U.S. SERP and relevant live metadata-checker competitors;
+3. confirm canonical ownership and no cannibalization with `/meta-tag-generator/`, `/open-graph-checker/` or other page-inspection tools;
+4. inspect current functionality/content and the shared network/API path without weakening SSRF protections;
 5. identify a concrete product/content gap or record an evidence-based NO CHANGE decision;
-6. only if a real gap exists, implement that page plus directly required tests/search metadata and validate it before moving to another page;
+6. only if a real gap exists, implement that page plus directly required shared code/tests/search metadata and validate it before moving to another page;
 7. after the page is VERIFIED, add 1–3 strategic U.S. keywords to Ubersuggest rank tracking while preserving the existing project keyword map.
 
 Do not deploy production.
