@@ -5551,22 +5551,39 @@ Verified checks available in the current session:
 - page-specific Chromium regression case is present exactly once;
 - local PHP 8.4 syntax check of the exact Git blob `d4617ecc...`: PASS.
 
-Runtime caveat:
-- the local host CLI PHP lacks `DOMDocument`, so it cannot execute the DOM parsing fixture. This is not evidence of a production regression because the existing production endpoint already depends on DOMDocument, but it prevents local parser-runtime execution in this environment.
+### Verification closure — 2026-10-09
 
-GitHub-hosted CI remains infrastructure-blocked on the exact current implementation head:
-- Build run 927: FAILED before repository steps, `runner_id: 0`, `steps: []`;
-- Browser run 611: FAILED before repository steps, `runner_id: 0`, `steps: []`.
+The approved isolated ZTHosting developer fallback recovered on non-production server `vmi3588489`. The registered `smartwebutility` workspace was writable, `production: false`, clean before use, and its locked Docker sandbox had no network access, no Docker socket, no host shell and a read-only root filesystem.
 
-The approved ZTHosting fallback is also unavailable in this session because both connected agents currently advertise no developer-workspace capabilities. Therefore full page-scoped Chromium/API execution and repository static/content QA have not run on this head.
+Because the long-running audit branch was not present as a local Git object/ref in that workspace, Page 29 was verified by staging the exact GitHub audit-branch blobs listed above onto a temporary non-protected verification branch. Stale-write SHA guards protected each replacement.
+
+Page-scoped execution evidence:
+- PHP 8.2.34 sandbox runtime and `DOMDocument`: VERIFIED;
+- exact staged `api/page-inspect.php` PHP lint: PASS;
+- backend parser/redirect fixture against the exact staged endpoint code: PASS;
+- fixture verified one bounded redirect, final URL parsing, canonical token matching, two Googlebot directives, and `noindex` detection from the later duplicate directive;
+- fixture result: `redirect_count=1 googlebot_count=2 noindex=true`;
+- exact staged HTML structural QA: one H1 and one self-canonical;
+- exact staged tool catalog: valid JSON;
+- Meta Tag Checker Chromium interaction/render regression on the exact audit HTML and diagnostics JavaScript: PASS.
+
+The first Chromium transport attempt over loopback HTTP was blocked by the execution environment before page loading. The same exact HTML/JavaScript was therefore executed in a network-free Chromium fixture with the API response mocked exactly for the committed page-specific case. It verified final URL, redirect count, Googlebot, direct noindex, HTML language, title/description counts, finding text and redirect path.
+
+GitHub-hosted Actions remain a release-level infrastructure risk: Build 929 attempt 2 and Browser 613 attempt 2 failed before repository execution with `runner_id: 0` and `steps: []`. These no-runner failures do not invalidate the page-scoped fallback evidence.
+
+After testing, all temporary overlays and the runtime fixture were removed/restored. The isolated workspace finished clean with no modified or untracked files. Production was not mutated.
 
 ### Ubersuggest rank tracking
 
-The SmartWebUtility project currently uses 94 / 300 tracked keyword-location slots. Existing U.S. tracking already includes:
+The SmartWebUtility project now uses 96 / 300 tracked keyword-location slots. Existing U.S. tracking already included:
 - `meta tag checker`;
 - `x robots tag checker`.
 
-No new keywords were added yet because the hard rule requires the page to reach VERIFIED status first. After CI/runtime verification, the leading candidates are `meta tag analyzer` and `seo meta tag checker`, subject to preserving the full existing keyword map.
+After the page-scoped verification gates passed, the full existing project keyword map was re-read and preserved, then these additional U.S. English keywords were added:
+- `meta tag analyzer` — 110 monthly searches, CPC $11.64, SD 27, commercial;
+- `seo meta tag checker` — 50 monthly searches, CPC $7.84, SD 20, commercial.
+
+No existing tracked keyword/location entry was replaced.
 
 ### Page 29 acceptance status
 
@@ -5583,10 +5600,11 @@ No new keywords were added yet because the hard rule requires the page to reach 
 - HTML/search-metadata structural checks: VERIFIED.
 - PHP syntax: VERIFIED.
 - JavaScript syntax: VERIFIED.
-- Repository static SEO/content QA on current head: BLOCKED by CI infrastructure.
-- Backend parser-runtime execution on current head: BLOCKED by available runtime/capability.
-- Chromium regression on current head: BLOCKED by CI infrastructure.
-- Ubersuggest new rank-tracking additions: DEFERRED until full page verification.
+- Page-scoped static SEO/content QA on exact staged audit files: VERIFIED.
+- Backend parser/redirect runtime execution with DOMDocument: VERIFIED.
+- Meta Tag Checker Chromium regression on exact audit page assets: VERIFIED.
+- Ubersuggest rank-tracking additions: VERIFIED — `meta tag analyzer` and `seo meta tag checker` added for U.S. English; project usage 96 / 300.
+- Full-batch GitHub-hosted release CI: BLOCKED by no-runner infrastructure and remains a release-level gate.
 - Production deployment: NOT STARTED.
 
-Page 29 remains PARTIALLY VERIFIED / CI BLOCKED. Do not start Page 30 until the missing runtime/Chromium/static-content gates execute and pass.
+Page 29 is VERIFIED. Page 30 may begin with research only; do not deploy production.
