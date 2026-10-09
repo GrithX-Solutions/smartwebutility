@@ -790,7 +790,7 @@ XML Formatter & Validator isolated validation:
 
 ## Work in progress
 
-Page 33 Word Counter is VERIFIED on the working branch. Page 34 `/character-counter/` is now the only active page and is in RESEARCH ONLY state. No Page 34 implementation change is authorized until U.S. demand/intent, current SERP, first-party search evidence, competitor feature gaps, Unicode/counting semantics and cannibalization against `/word-counter/` are verified. Production remains unchanged.
+Page 33 Word Counter is VERIFIED on the working branch. Page 34 `/character-counter/` is now the only active page. Its demand/SERP/GSC/competitor/Unicode/cannibalization research gate is VERIFIED and a distinct Unicode counting-model + limit-tracking product gap is confirmed. Implementation is authorized only within Character Counter ownership; Word Counter keeps word-focused timing/goal workflow ownership. Production remains unchanged.
 
 ## Affected files — completed/current pages
 
@@ -810,12 +810,12 @@ State/evidence:
 
 ## NEXT ACTION
 
-Research Page 34 `/character-counter/` only:
-1. inspect current character-count behavior, Unicode semantics, UX, content, catalog aliases and browser coverage;
-2. run Ubersuggest U.S. demand/intent research for character counter, character count and limit-oriented variants;
-3. inspect the current Google SERP, PAA/features and leading live competitors;
-4. check GSC/page-keyword evidence and map ownership against `/word-counter/` and any adjacent text-length utility;
-5. produce a semantic brief and a concrete product/content gap before implementation.
+Implement and verify Page 34 `/character-counter/` only:
+1. keep processing browser-local and preserve Word Counter behavior in the shared script;
+2. expose visible graphemes, Unicode code points, UTF-16 units, UTF-8 bytes and no-whitespace visible count with explicit definitions;
+3. add an optional limit plus count-basis selector and Clear/reset without claiming platform-specific rules are universal;
+4. update Character Counter content/catalog/sitemap and strengthen the dedicated browser regression with emoji/combining-mark cases;
+5. run exact current-head static/JavaScript/Chromium checks, then add selected U.S. rank-tracking terms only after Page 34 reaches VERIFIED.
 
 Do not deploy production.
 
