@@ -7,12 +7,25 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 async function copyText(value,btn){if(!value)return;try{await navigator.clipboard.writeText(value);const o=btn.textContent;btn.textContent='Copied';setTimeout(()=>btn.textContent=o,1200)}catch{}}
 
 if(tool==='word-counter'||tool==='character-counter'){
- const input=$('textInput'), stats=$('textStats'), isWordCounter=tool==='word-counter';
+ const input=$('textInput'), stats=$('textStats'), isWordCounter=tool==='word-counter', isCharacterCounter=tool==='character-counter';
  const insights=isWordCounter?$('wordInsights'):null, target=isWordCounter?$('wordTarget'):null;
  const targetStatus=isWordCounter?$('wordTargetStatus'):null, targetText=isWordCounter?$('wordTargetText'):null;
  const targetProgress=isWordCounter?$('wordTargetProgress'):null, clearWordCounter=isWordCounter?$('clearWordCounter'):null;
+ const characterInsights=isCharacterCounter?$('characterInsights'):null, characterLimit=isCharacterCounter?$('characterLimit'):null;
+ const characterLimitBasis=isCharacterCounter?$('characterLimitBasis'):null, characterLimitStatus=isCharacterCounter?$('characterLimitStatus'):null;
+ const characterLimitText=isCharacterCounter?$('characterLimitText'):null, characterLimitProgress=isCharacterCounter?$('characterLimitProgress'):null;
+ const clearCharacterCounter=isCharacterCounter?$('clearCharacterCounter'):null;
  const tokenList=text=>text.trim().match(/\S+/g)||[];
  const normalizeToken=token=>token.toLocaleLowerCase().replace(/^[^a-z0-9\u00c0-\u024f]+|[^a-z0-9\u00c0-\u024f]+$/gi,'');
+ const graphemeSegmenter=isCharacterCounter && typeof Intl!=='undefined' && typeof Intl.Segmenter==='function'
+  ? new Intl.Segmenter(undefined,{granularity:'grapheme'})
+  : null;
+ const graphemeCount=text=>graphemeSegmenter
+  ? Array.from(graphemeSegmenter.segment(text)).length
+  : Array.from(text).length;
+ const utf8Length=text=>typeof TextEncoder==='function'
+  ? new TextEncoder().encode(text).length
+  : new Blob([text]).size;
  const duration=(words,wpm)=>{
   if(!words)return '0 sec';
   const seconds=Math.max(1,Math.ceil(words*60/wpm));
@@ -41,6 +54,35 @@ if(tool==='word-counter'||tool==='character-counter'){
    targetText.textContent=over+' '+(over===1?'word':'words')+' over '+goal+'-word target';
   }
  }
+ function updateCharacterLimit(metrics){
+  if(!isCharacterCounter)return;
+  const limit=Math.floor(Number(characterLimit.value)||0);
+  if(limit<1){
+   characterLimitStatus.hidden=true;
+   characterLimitProgress.value=0;
+   characterLimitProgress.max=1;
+   return;
+  }
+  const basis=characterLimitBasis.value;
+  const model={
+   visible:{value:metrics.visible,singular:'visible character',plural:'visible characters'},
+   utf16:{value:metrics.utf16,singular:'UTF-16 unit',plural:'UTF-16 units'},
+   codepoints:{value:metrics.codepoints,singular:'code point',plural:'code points'},
+   bytes:{value:metrics.bytes,singular:'UTF-8 byte',plural:'UTF-8 bytes'}
+  }[basis]||{value:metrics.visible,singular:'visible character',plural:'visible characters'};
+  characterLimitStatus.hidden=false;
+  characterLimitProgress.max=limit;
+  characterLimitProgress.value=Math.min(model.value,limit);
+  if(model.value<limit){
+   const remaining=limit-model.value;
+   characterLimitText.textContent=remaining+' '+(remaining===1?model.singular:model.plural)+' remaining of '+limit;
+  } else if(model.value===limit){
+   characterLimitText.textContent='Limit reached: '+limit+' '+(limit===1?model.singular:model.plural);
+  } else {
+   const over=model.value-limit;
+   characterLimitText.textContent=over+' '+(over===1?model.singular:model.plural)+' over '+limit;
+  }
+ }
  function count(){
   const text=input.value;
   const chars=text.length, charsNoSpace=text.replace(/\s/g,'').length;
@@ -48,6 +90,30 @@ if(tool==='word-counter'||tool==='character-counter'){
   const sentences=(text.match(/[.!?]+(?=\s|$)/g)||[]).length;
   const paragraphs=text.trim()?text.trim().split(/\n\s*\n/).length:0;
   const lines=text?text.split(/\n/).length:0;
+  if(isCharacterCounter){
+   const metrics={
+    visible:graphemeCount(text),
+    noWhitespace:graphemeCount(text.replace(/\s/gu,'')),
+    codepoints:Array.from(text).length,
+    utf16:chars,
+    bytes:utf8Length(text)
+   };
+   stats.innerHTML=[
+    ['Visible characters',metrics.visible],
+    ['Without whitespace',metrics.noWhitespace],
+    ['Unicode code points',metrics.codepoints],
+    ['UTF-16 units',metrics.utf16],
+    ['UTF-8 bytes',metrics.bytes],
+    ['Words',words]
+   ].map(([k,v])=>'<div><b>'+v+'</b><span>'+k+'</span></div>').join('');
+   characterInsights.innerHTML=[
+    ['Sentences',sentences],
+    ['Paragraphs',paragraphs],
+    ['Lines',lines]
+   ].map(([k,v])=>'<div><b>'+v+'</b><span>'+k+'</span></div>').join('');
+   updateCharacterLimit(metrics);
+   return;
+  }
   stats.innerHTML=[
    ['Words',words],['Characters',chars],['Without spaces',charsNoSpace],['Sentences',sentences],['Paragraphs',paragraphs],['Lines',lines]
   ].map(([k,v])=>'<div><b>'+v+'</b><span>'+k+'</span></div>').join('');
@@ -68,9 +134,18 @@ if(tool==='word-counter'||tool==='character-counter'){
  }
  input.addEventListener('input',count);
  target?.addEventListener('input',count);
+ characterLimit?.addEventListener('input',count);
+ characterLimitBasis?.addEventListener('change',count);
  clearWordCounter?.addEventListener('click',()=>{
   input.value='';
   target.value='';
+  count();
+  input.focus();
+ });
+ clearCharacterCounter?.addEventListener('click',()=>{
+  input.value='';
+  characterLimit.value='';
+  characterLimitBasis.value='visible';
   count();
   input.focus();
  });
