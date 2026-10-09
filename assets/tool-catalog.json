@@ -682,16 +682,17 @@
     "category": "Website",
     "url": "/dns-propagation-checker/",
     "title": "DNS Resolver Checker",
-    "description": "Compare Google Public DNS, Cloudflare DNS and server-resolver status, TTL, DNSSEC and answers.",
+    "description": "Compare Google, Cloudflare and server DNS resolver status, TTL, DNSSEC AD, latency and answers.",
     "keywords": [
       "dns resolver checker",
+      "dns resolver check",
+      "check dns resolver",
+      "public dns checker",
       "google dns checker",
       "google dns lookup",
       "cloudflare dns checker",
       "cloudflare dns lookup",
-      "public dns checker",
-      "dns resolver check",
-      "check dns resolver"
+      "compare dns resolvers"
     ]
   },
   {
