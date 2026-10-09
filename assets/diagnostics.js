@@ -72,7 +72,54 @@ function render(data){
    +row('First H1',r.first_h1)
    +'</tbody></table>'+findings+redirects;
  } else if(tool==='og'){
-  const r=data.result.open_graph; title.textContent='Open Graph check'; body.innerHTML='<table class="record-table"><tbody>'+Object.entries(r).map(([k,v])=>row(k,v)).join('')+'</tbody></table>';
+  const r=data.result, og=r.open_graph||{}, img=r.primary_image||{}, probe=img.probe||null;
+  const findings=(r.findings||[]).length
+   ? '<div class="result-sub"><strong>Review findings</strong><div class="chips">'+r.findings.map(x=>'<span>'+esc(x)+'</span>').join('')+'</div></div>'
+   : '<div class="result-sub"><strong>Review findings</strong><p>No basic Open Graph protocol conflicts were detected in the fetched HTML.</p></div>';
+  const redirects=(r.redirects||[]).length
+   ? '<div class="result-sub"><strong>Page redirect path</strong><div class="chips">'+r.redirects.map(x=>'<span>'+esc(x.status+' '+x.from+' → '+x.to)+'</span>').join('')+'</div></div>'
+   : '';
+  const imageRedirects=probe?.redirects?.length
+   ? '<div class="result-sub"><strong>Image redirect path</strong><div class="chips">'+probe.redirects.map(x=>'<span>'+esc(x.status+' '+x.from+' → '+x.to)+'</span>').join('')+'</div></div>'
+   : '';
+  const imageDimensions=probe?.dimensions ? probe.dimensions.width+' × '+probe.dimensions.height : '—';
+  const allTags=Object.entries(r.open_graph_all||{}).length
+   ? '<div class="result-sub"><strong>All Open Graph properties</strong><table class="record-table"><tbody>'+Object.entries(r.open_graph_all).map(([k,v])=>row(k,(v||[]).join(' | '))).join('')+'</tbody></table></div>'
+   : '<div class="result-sub"><strong>All Open Graph properties</strong><p>No Open Graph properties were found in the HTML head.</p></div>';
+  title.textContent='Open Graph check';
+  body.innerHTML='<table class="record-table"><tbody>'
+   +row('Requested URL',r.url)
+   +row('Final URL',r.final_url||r.url)
+   +row('Page redirects',r.redirect_count||0)
+   +row('HTTP status',r.status)
+   +row('Content type',r.content_type)
+   +row('Core properties',String(r.core_present??0)+' / '+String(r.core_required??4))
+   +row('OG tags found',r.og_tag_count??0)
+   +row('Unique OG properties',r.og_property_count??0)
+   +row('OG tags outside head',r.outside_head_count??0)
+   +row('og:title',og['og:title'])
+   +row('og:type',og['og:type'])
+   +row('og:url',og['og:url'])
+   +row('og:image',og['og:image'])
+   +row('og:description',og['og:description'])
+   +row('og:site_name',og['og:site_name'])
+   +row('og:locale',og['og:locale'])
+   +'</tbody></table>'
+   +'<div class="result-sub"><strong>Primary image diagnostics</strong><table class="record-table"><tbody>'
+   +row('Image URL',img.url)
+   +row('Secure image URL',img.secure_url)
+   +row('Declared type',img.type)
+   +row('Declared width',img.width)
+   +row('Declared height',img.height)
+   +row('Image alt',img.alt)
+   +row('Image check',probe?(probe.ok?'Fetched':'Could not validate'):'Not run')
+   +row('Image HTTP status',probe?.status)
+   +row('Image content type',probe?.content_type)
+   +row('Image final URL',probe?.final_url)
+   +row('Image redirects',probe?.redirect_count??0)
+   +row('Detected dimensions',imageDimensions)
+   +'</tbody></table></div>'
+   +findings+redirects+imageRedirects+allTags;
  } else if(tool==='headers'){
   const r=data.result; title.textContent='HTTP headers'; body.innerHTML='<table class="record-table"><tbody>'+row('Status',r.status)+row('Resolved IP',r.ip)+row('Response time',r.time_ms+' ms')+Object.entries(r.headers||{}).map(([k,v])=>row(k,v)).join('')+'</tbody></table>';
  } else {
