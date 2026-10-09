@@ -5957,7 +5957,82 @@ Internal-link targets:
 - `/cache-control-checker/`;
 - `/ssl-checker/`.
 
-### Research status
+### Implementation
+
+Final implementation/test head before audit-state sync:
+- `2911f061b5895dfb57e3b2e487072083da0de21e`.
+
+From the authorized Page 31 checkpoint `6e01609fc46d3fdd2a3878bcbe369d4e4b1f11e3` to the implementation head, the branch is nine commits ahead and changes exactly six files:
+- `api/http-status.php`;
+- `assets/diagnostics.js`;
+- `http-header-checker/index.html`;
+- `assets/tool-catalog.json`;
+- `tests/browser-smoke.cjs`;
+- `sitemap.xml`.
+
+The implementation:
+- leaves the default `/api/http-status.php?url=...` path intact for `/http-status-checker/`, preserving its first-response HEAD behavior;
+- adds a scoped `mode=headers` contract for HTTP Header Checker;
+- supports Auto / HEAD / GET;
+- Auto starts with HEAD and falls back to GET only for HTTP 405/501;
+- GET mode discards response-body chunks instead of accumulating page content;
+- follows at most three redirects for Header Checker only and revalidates every redirect destination through `normalize_url(...)`;
+- preserves repeated response-header values in `headers_all` while retaining a flattened compatibility map;
+- reports requested/final URL, redirect path, requested/actual method, whether any HEAD→GET fallback occurred, final and total diagnostic timing, status, IP, content type and header counts;
+- aggregates method-fallback state across earlier redirect hops instead of reporting only the final hop;
+- renders common header evidence plus the complete final-response header map;
+- keeps security/cache interpretation delegated to the dedicated specialist pages;
+- adds a dedicated `http-header-checker` mocked browser regression, including an assertion that the UI sends `method=auto`;
+- updates search aliases without claiming ambiguous broad `header checker` ownership;
+- updates this URL's sitemap `lastmod` to 2026-10-09.
+
+### Verification — 2026-10-09
+
+Exact current Git blobs:
+- `api/http-status.php` — `e8e63f9bd9d3a0d5340e8e4bf2593bce8745770c`;
+- `assets/diagnostics.js` — `8ec4c18956590e3816d08f0fe1e1b41a9e6d18a3`;
+- `http-header-checker/index.html` — `55d58bd2d9a0dac6b9c1a79abb1b0bb024296a6b`;
+- `assets/tool-catalog.json` — `1417bdc9c590edea0a3f928928b85ec0440321f1`;
+- `tests/browser-smoke.cjs` — `e6c6eb7b6226b2a2190cf2339f19382fea0df9b8`;
+- `sitemap.xml` — `eb36503febe3db75d86cadae84be36694e9268f2`.
+
+Page-scoped fallback evidence:
+- implementation scope from the Page 31 authorization checkpoint: VERIFIED, nine commits / six files only;
+- isolated ZTHosting developer workspace on `vmi3588489`: VERIFIED non-production and clean before staging;
+- exact current Page 31 GitHub blobs staged with stale-write SHA protection;
+- exact endpoint PHP syntax: PASS;
+- deterministic backend orchestration fixture: PASS;
+- fixture verified HEAD 405 → GET fallback on the first hop, GET 301 redirect, final HEAD 200, aggregate fallback state, total timing across all attempts, duplicate `Set-Cookie` preservation and final-response counts;
+- fixture result: `fallback=true redirect=1 total_ms=59 duplicate_set_cookie=2`;
+- source guard confirmed the default `curl_headers($url)` status-checker path remains present outside `mode=headers`;
+- per-hop redirect revalidation remains explicit in the implementation through `normalize_url(absolute_url(...))`;
+- GET response bodies are discarded via the cURL write callback rather than stored;
+- static HTML QA: one H1, one self-canonical, request-method selector present;
+- title length: 48 characters;
+- meta description length: 140 characters;
+- tool catalog JSON: PASS;
+- sitemap: 89 URLs / 89 unique;
+- targeted Chromium regression: PASS using Python Playwright with system Chromium and the exact shared diagnostics JavaScript;
+- local diagnostics Git blob hash matched GitHub exactly: `8ec4c18956590e3816d08f0fe1e1b41a9e6d18a3`;
+- browser assertions verified `mode=headers&method=auto`, encoded target URL, final URL, redirect count, requested/used method, fallback flag, header count, duplicate-header rendering, Cache-Control rendering, repeated Set-Cookie values and redirect path;
+- temporary staged files/runtime fixture were restored/removed; isolated workspace finished clean with no modified or untracked files.
+
+GitHub-hosted CI remains a batch/release infrastructure issue:
+- Build run 952: FAILED before repository execution, `runner_id: 0`, `steps: []`;
+- Browser run 636: FAILED before repository execution, `runner_id: 0`, `steps: []`.
+
+These no-runner jobs do not invalidate the page-scoped fallback evidence.
+
+### Ubersuggest rank tracking
+
+After verification, the full existing SmartWebUtility keyword map was re-read and preserved. Added for U.S. English:
+- `http header checker`;
+- `check http headers`;
+- `http header checker tool`.
+
+Tracked keyword-location usage moved from 99 / 300 to 102 / 300.
+
+### Page 31 acceptance status
 
 - Demand / CPC / SD / intent: VERIFIED.
 - Ubersuggest U.S. SERP: VERIFIED.
@@ -5966,5 +6041,14 @@ Internal-link targets:
 - Existing implementation/call-site compatibility: VERIFIED.
 - Cannibalization ownership: VERIFIED.
 - Product/content gap: VERIFIED.
-- Implementation: NOT STARTED at this checkpoint.
+- Six-file implementation scope: VERIFIED.
+- Default HTTP Status Checker contract preservation: VERIFIED.
+- Redirect / SSRF / GET-body handling by code path: VERIFIED.
+- Backend fallback/redirect/duplicate-header runtime fixture: VERIFIED.
+- Static SEO/content structure: VERIFIED.
+- Targeted Chromium UI regression: VERIFIED.
+- Ubersuggest rank tracking: VERIFIED.
+- Full-batch GitHub-hosted release CI: BLOCKED by no-runner infrastructure and remains a release-level gate.
 - Production deployment: NOT STARTED.
+
+Page 31 is VERIFIED. Page 32 may begin with research only; do not deploy production.
