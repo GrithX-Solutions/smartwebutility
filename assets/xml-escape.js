@@ -34,7 +34,28 @@
     (cp >= 0xE000 && cp <= 0xFFFD) ||
     (cp >= 0x10000 && cp <= 0x10FFFF);
 
+  const formatCodePoint = cp =>
+    'U+' + cp.toString(16).toUpperCase().padStart(cp <= 0xFFFF ? 4 : 6, '0');
+
+  function assertXml10Characters(text) {
+    const invalid = [];
+    for (const ch of text) {
+      const cp = ch.codePointAt(0);
+      if (!validXml10CodePoint(cp)) invalid.push(cp);
+    }
+
+    if (!invalid.length) return;
+
+    const first = formatCodePoint(invalid[0]);
+    const label = invalid.length === 1 ? 'character' : 'characters';
+    throw new Error(
+      `XML 1.0 cannot represent ${invalid.length} invalid ${label}. First invalid code point: ${first}. Remove or replace it before escaping; a numeric character reference cannot make it legal XML 1.0.`
+    );
+  }
+
   function escapeXml(text) {
+    assertXml10Characters(text);
+
     let changed = 0;
     let result = '';
 

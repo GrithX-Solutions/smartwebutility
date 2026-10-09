@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>YAML Formatter Online — Format & Validate YAML</title>
-  <meta name="description" content="Format and validate YAML online in your browser. Beautify YAML with 2 or 4 space indentation, open local files, copy or download output.">
+  <meta name="description" content="Format and validate YAML online in your browser. Beautify single or multi-document YAML streams with 2 or 4 space indentation, files and download.">
   <link rel="canonical" href="https://smartwebutility.com/yaml-formatter/">
   <meta property="og:title" content="YAML Formatter Online — Format & Validate YAML">
-  <meta property="og:description" content="Beautify and validate YAML locally with configurable indentation and downloadable output.">
+  <meta property="og:description" content="Beautify and validate single or multi-document YAML locally with configurable indentation and downloadable output.">
   <meta property="og:url" content="https://smartwebutility.com/yaml-formatter/">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary">
@@ -15,7 +15,7 @@
   <link rel="icon" href="/favicon-sw-v5.svg?v=20261001e" type="image/svg+xml">
   <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
   <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js" defer></script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"YAML Formatter Online","url":"https://smartwebutility.com/yaml-formatter/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Format and validate YAML locally in the browser with configurable indentation.","featureList":["YAML syntax validation","2 or 4 space indentation","Local file input","Copy and download","Browser-side formatting"]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"YAML Formatter Online","url":"https://smartwebutility.com/yaml-formatter/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Format and validate YAML locally in the browser with configurable indentation.","featureList":["YAML syntax validation","Single-document YAML formatting","Multi-document YAML stream formatting","2 or 4 space indentation","Local file input","Copy and download","Browser-side formatting"]}</script>
 </head>
 <body data-view-tool-mode="yaml-formatter">
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
@@ -24,7 +24,7 @@
   <div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>YAML Formatter</span></div>
   <span class="kicker">Developer tool · YAML beautifier and validator</span>
   <h1>YAML Formatter Online</h1>
-  <p class="lead compact">Paste YAML or open a local .yaml/.yml file, validate the syntax and rewrite it with consistent indentation. Formatting runs in your browser.</p>
+  <p class="lead compact">Paste YAML or open a local .yaml/.yml file, validate the syntax and rewrite it with consistent indentation. Single documents and multi-document streams separated by <code>---</code> are formatted locally in your browser.</p>
   <div class="json-toolbar data-view-toolbar" aria-label="YAML formatter actions">
     <button class="btn primary" id="formatYaml" type="button">Format & Validate</button>
     <label class="file-btn">Open YAML<input id="yamlFile" type="file" accept=".yaml,.yml,text/yaml,application/yaml" hidden></label>
@@ -46,16 +46,16 @@
   </div>
   <div id="yamlError" class="error" hidden role="alert"></div>
   <div id="yamlStats" class="json-stats" hidden aria-label="YAML statistics"></div>
-  <div class="trustbar"><span>Browser-side formatting</span><span>No account</span><span>Ctrl/⌘ + Enter to format</span></div>
+  <div class="trustbar"><span>Browser-side formatting</span><span>Single + multi-document YAML</span><span>No account</span><span>Ctrl/⌘ + Enter to format</span></div>
 </section>
 
-<section class="section wrap prose" data-quality-content="v5">
-<h2>Format and validate one YAML document in your browser</h2>
-<p>This YAML Formatter parses the input with <code>js-yaml</code> 4.1.0 and serializes the parsed value back to clean YAML using either 2-space or 4-space indentation. Parsing and formatting happen in browser JavaScript, while the parser library itself is loaded from jsDelivr.</p>
+<section class="section wrap prose" data-quality-content="v6">
+<h2>Format and validate YAML documents in your browser</h2>
+<p>This YAML Formatter parses the input with <code>js-yaml</code> 4.1.0 and serializes each parsed document back to clean YAML using either 2-space or 4-space indentation. Parsing and formatting happen in browser JavaScript, while the parser library itself is loaded from jsDelivr.</p>
 
 <h2>What happens when you format YAML</h2>
 <div class="info-grid">
-  <article><h3>Syntax validation</h3><p>The tool parses YAML before producing output. A parser error is shown instead of returning formatted text when the document is invalid.</p></article>
+  <article><h3>Syntax validation</h3><p>The tool parses the complete YAML stream before producing output. A parser error is shown instead of returning formatted text when any document is invalid.</p></article>
   <article><h3>2 or 4 spaces</h3><p>Choose the indentation width for the serialized output. The formatter uses spaces rather than tabs for YAML indentation.</p></article>
   <article><h3>Local file input</h3><p>Open a local YAML file up to 5 MB or paste text directly into the editor. File contents are read by the browser.</p></article>
   <article><h3>Copy or download</h3><p>Copy the formatted result or download it as <code>formatted.yaml</code> after validation succeeds.</p></article>
@@ -70,8 +70,9 @@
 <h2>Anchors, aliases and references may be rewritten</h2>
 <p>YAML anchors and aliases describe relationships in the source document, but the formatter emits output with reference generation disabled. A parse-and-dump cycle can expand or rewrite those source-level constructs. If anchors and aliases are important to maintain as authored, use an editor or formatter designed to preserve YAML source structure.</p>
 
-<h2>Use one YAML document at a time</h2>
-<p>The formatter uses the parser's single-document load operation. A stream containing multiple YAML documents separated by document markers can fail validation. Format each document separately when you are working with a multi-document YAML stream.</p>
+<h2>Multi-document YAML streams keep explicit document boundaries</h2>
+<p>The formatter uses <code>js-yaml</code>'s multi-document parser. When input contains two or more YAML documents, each parsed document is serialized independently and the output prefixes every document with <code>---</code>. That keeps the stream boundaries visible instead of merging documents into one data structure. A single-document input keeps the simpler single-document output without an added marker.</p>
+<p>Formatting remains a parse-and-dump operation for each document. Comments and exact source presentation can still change, and aliases or anchors can be rewritten inside their document. YAML anchors cannot reference nodes in another document, so each stream document remains an independent serialization unit.</p>
 
 <h2>Where YAML formatting helps</h2>
 <div class="info-grid">
@@ -89,14 +90,14 @@
 </div>
 </section>
 
-<section class="section alt" data-quality-content="v5"><div class="wrap prose">
+<section class="section alt" data-quality-content="v6"><div class="wrap prose">
 <h2>Frequently asked questions</h2>
 <h3>Does the formatter preserve YAML comments?</h3><p>No. It parses YAML into data and serializes the value again, so source comments can be removed.</p>
 <h3>Does Smart Web Utility upload my YAML for formatting?</h3><p>No. The YAML value is parsed in browser JavaScript. The page separately loads the <code>js-yaml</code> library from a CDN.</p>
 <h3>Can I use four-space indentation?</h3><p>Yes. Choose 2 or 4 spaces before formatting.</p>
-<h3>Can I format multiple YAML documents in one stream?</h3><p>The current formatter uses a single-document parser operation. Format separate documents individually.</p>
+<h3>Can I format multiple YAML documents in one stream?</h3><p>Yes. Separate documents with YAML document markers such as <code>---</code>. The formatter validates the whole stream and emits each formatted document with an explicit <code>---</code> boundary.</p>
 </div></section></main>
 <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
-<script src="/assets/data-view-tools.js?v=20261002-1" defer></script>
+<script src="/assets/data-view-tools.js?v=20261004-1" defer></script>
 </body>
 </html>

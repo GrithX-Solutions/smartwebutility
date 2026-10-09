@@ -39,11 +39,13 @@ if (mode === 'markdown-to-html') {
   const preview = document.getElementById('markdownHtmlPreview');
   const file = document.getElementById('markdownFile');
   const breaks = document.getElementById('markdownBreaks');
+  const sanitize = document.getElementById('markdownSanitize');
   const statusEl = document.getElementById('markdownHtmlStatus');
   const error = document.getElementById('markdownHtmlError');
   const stats = document.getElementById('markdownHtmlStats');
 
   let marked = null;
+  let DOMPurify = null;
 
   const setStatus = (text, kind = 'neutral') => {
     statusEl.textContent = text;
@@ -79,23 +81,38 @@ if (mode === 'markdown-to-html') {
       setStatus('Add Markdown');
       return;
     }
-    const html = marked.parse(source, { gfm: true, breaks: breaks.checked, async: false });
-    output.value = String(html);
-    preview.srcdoc = previewDocument(String(html));
+    const rawHtml = String(marked.parse(source, { gfm: true, breaks: breaks.checked, async: false }));
+    if (sanitize.checked && (!DOMPurify || typeof DOMPurify.sanitize !== 'function')) {
+      throw new Error('HTML sanitizer is still loading. Please try again.');
+    }
+    const html = sanitize.checked
+      ? DOMPurify.sanitize(rawHtml, { USE_PROFILES: { html: true } })
+      : rawHtml;
+
+    output.value = html;
+    preview.srcdoc = previewDocument(html);
     stats.hidden = false;
     stats.innerHTML =
       '<span><b>' + source.length.toLocaleString() + '</b> input chars</span>' +
-      '<span><b>' + String(html).length.toLocaleString() + '</b> HTML chars</span>' +
-      '<span><b>' + source.split(/\r?\n/).length.toLocaleString() + '</b> input lines</span>';
-    setStatus('Converted', 'success');
+      '<span><b>' + html.length.toLocaleString() + '</b> HTML chars</span>' +
+      '<span><b>' + source.split(/\r?\n/).length.toLocaleString() + '</b> input lines</span>' +
+      '<span><b>' + (sanitize.checked ? 'Sanitized' : 'Raw') + '</b> output mode</span>';
+    setStatus(sanitize.checked ? 'Converted · sanitized' : 'Converted · raw HTML', sanitize.checked ? 'success' : 'warning');
   };
 
   try {
-    const mod = await import('https://cdn.jsdelivr.net/npm/marked@18.0.14/+esm');
-    marked = mod.marked;
+    const [markedMod, purifyMod] = await Promise.all([
+      import('https://cdn.jsdelivr.net/npm/marked@18.0.14/+esm'),
+      import('https://cdn.jsdelivr.net/npm/dompurify@3.4.16/dist/purify.es.mjs')
+    ]);
+    marked = markedMod.marked;
+    DOMPurify = purifyMod.default || purifyMod;
+    if (!marked || !DOMPurify || typeof DOMPurify.sanitize !== 'function') {
+      throw new Error('Converter dependency missing.');
+    }
     setStatus('Ready');
   } catch {
-    fail(new Error('Markdown parser failed to load. Refresh the page and try again.'));
+    fail(new Error('Markdown converter or HTML sanitizer failed to load. Refresh the page and try again.'));
   }
 
   document.getElementById('convertMarkdownHtml').addEventListener('click', () => {
@@ -118,10 +135,12 @@ if (mode === 'markdown-to-html') {
     input.focus();
   });
 
-  breaks.addEventListener('change', () => {
-    if (!input.value.trim()) return;
-    try { convert(); } catch (caught) { fail(caught); }
-  });
+  for (const control of [breaks, sanitize]) {
+    control.addEventListener('change', () => {
+      if (!input.value.trim()) return;
+      try { convert(); } catch (caught) { fail(caught); }
+    });
+  }
 
   file.addEventListener('change', async () => {
     try {
@@ -161,6 +180,7 @@ if (mode === 'html-to-markdown') {
 
   let TurndownService = null;
   let gfmPlugin = null;
+  let DOMPurify = null;
 
   const setStatus = (text, kind = 'neutral') => {
     statusEl.textContent = text;
@@ -187,8 +207,16 @@ if (mode === 'html-to-markdown') {
       return;
     }
 
-    const doc = new DOMParser().parseFromString(source, 'text/html');
-    doc.querySelectorAll('script,style,noscript,template,iframe,object,embed').forEach(node => node.remove());
+    if (!DOMPurify || typeof DOMPurify.sanitize !== 'function') {
+      throw new Error('HTML sanitizer is still loading. Please try again.');
+    }
+
+    const safeFragment = DOMPurify.sanitize(source, {
+      USE_PROFILES: { html: true },
+      RETURN_DOM_FRAGMENT: true,
+      FORBID_TAGS: ['script','style','noscript','template','iframe','object','embed','link','meta','base']
+    });
+    safeFragment.querySelectorAll('script,style,noscript,template,iframe,object,embed,link,meta,base').forEach(node => node.remove());
 
     const service = new TurndownService({
       headingStyle: heading.value,
@@ -200,7 +228,44 @@ if (mode === 'html-to-markdown') {
     });
     if (useGfm.checked && gfmPlugin) service.use(gfmPlugin);
 
-    const markdown = service.turndown(doc.body);
+    const codeLanguage = (codeNode, preNode) => {
+      for (const candidate of [
+        codeNode?.getAttribute('data-language'),
+        preNode?.getAttribute('data-language')
+      ].filter(Boolean)) {
+        const direct = String(candidate).trim();
+        if (/^[A-Za-z0-9_+#.-]+$/.test(direct)) return direct;
+      }
+
+      for (const candidate of [
+        codeNode?.getAttribute('class'),
+        preNode?.getAttribute('class')
+      ].filter(Boolean)) {
+        const match = String(candidate).match(/(?:^|\s)(?:language-|lang-)([A-Za-z0-9_+#.-]+)/i);
+        if (match) return match[1];
+      }
+
+      return '';
+    };
+
+    service.addRule('languageAwareFencedCodeBlock', {
+      filter(node) {
+        if (node.nodeName !== 'PRE') return false;
+        const codeNode = node.firstElementChild;
+        return codeNode?.nodeName === 'CODE' && Boolean(codeLanguage(codeNode, node));
+      },
+      replacement(_content, node) {
+        const codeNode = node.firstElementChild;
+        const language = codeLanguage(codeNode, node);
+        const code = codeNode.textContent.replace(/\n$/, '');
+        const runs = code.match(/`+/g) || [];
+        const longestRun = runs.reduce((max, run) => Math.max(max, run.length), 0);
+        const fence = '`'.repeat(Math.max(3, longestRun + 1));
+        return '\n\n' + fence + language + '\n' + code + '\n' + fence + '\n\n';
+      }
+    });
+
+    const markdown = service.turndown(safeFragment);
     output.value = markdown;
     stats.hidden = false;
     stats.innerHTML =
@@ -211,16 +276,20 @@ if (mode === 'html-to-markdown') {
   };
 
   try {
-    const [turndownMod, gfmMod] = await Promise.all([
+    const [turndownMod, gfmMod, purifyMod] = await Promise.all([
       import('https://cdn.jsdelivr.net/npm/turndown@7.2.4/+esm'),
-      import('https://cdn.jsdelivr.net/npm/turndown-plugin-gfm@1.0.2/+esm')
+      import('https://cdn.jsdelivr.net/npm/turndown-plugin-gfm@1.0.2/+esm'),
+      import('https://cdn.jsdelivr.net/npm/dompurify@3.4.16/dist/purify.es.mjs')
     ]);
     TurndownService = turndownMod.default || turndownMod.TurndownService;
     gfmPlugin = gfmMod.gfm || gfmMod.default?.gfm || null;
-    if (!TurndownService) throw new Error('Turndown constructor not found.');
+    DOMPurify = purifyMod.default || purifyMod;
+    if (!TurndownService || !DOMPurify || typeof DOMPurify.sanitize !== 'function') {
+      throw new Error('Converter dependency missing.');
+    }
     setStatus('Ready');
   } catch {
-    fail(new Error('HTML-to-Markdown converter failed to load. Refresh the page and try again.'));
+    fail(new Error('HTML-to-Markdown converter or sanitizer failed to load. Refresh the page and try again.'));
   }
 
   document.getElementById('convertHtmlMarkdown').addEventListener('click', () => {

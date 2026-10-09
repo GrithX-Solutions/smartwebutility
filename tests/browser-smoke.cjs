@@ -55,8 +55,25 @@ const cases = [
   ['yaml-formatter', async p => {
     await p.locator('#yamlInput').fill('service:\n name: api\n port: 8080');
     await p.locator('#formatYaml').click();
-    assert.ok((await p.locator('#yamlOutput').inputValue()).includes('service:'));
+    let output = await p.locator('#yamlOutput').inputValue();
+    assert.ok(output.includes('service:'));
+    assert.equal(output.startsWith('---\n'), false);
     assert.equal(await p.locator('#yamlError').isHidden(), true);
+
+    await p.locator('#yamlIndent').selectOption('4');
+    await p.locator('#yamlInput').fill('service:\n  name: api\n---\nservice:\n  name: worker');
+    await p.locator('#formatYaml').click();
+    output = await p.locator('#yamlOutput').inputValue();
+    assert.equal((output.match(/^---$/gm) || []).length, 2);
+    assert.match(output, /service:\n {4}name: api/);
+    assert.match(output, /service:\n {4}name: worker/);
+    assert.match(await p.locator('#yamlStatus').innerText(), /formatted stream/i);
+    assert.match(await p.locator('#yamlStats').innerText(), /2\s+documents/i);
+
+    await p.locator('#yamlInput').fill('service:\n  name: api\n---\nservice: [broken');
+    await p.locator('#formatYaml').click();
+    assert.equal(await p.locator('#yamlError').isHidden(), false);
+    assert.equal(await p.locator('#yamlOutput').inputValue(), '');
   }],
   ['xml-to-csv', async p => {
     await p.locator('#xmlCsvInput').fill('<users><user id="1"><name>Ada</name></user><user id="2"><name>Linus</name></user></users>');
@@ -72,9 +89,14 @@ const cases = [
     assert.ok(formatted.includes('<catalog>'));
     assert.ok(formatted.includes('  <item id="1">'));
     assert.equal(await p.locator('#xmlFormatError').isHidden(), true);
-    await p.locator('#xmlFormatInput').fill('<catalog><item></catalog>');
+
+    await p.locator('#xmlFormatInput').fill('<catalog>\n  <item>\n</catalog>');
     await p.locator('#validateXml').click();
     assert.equal(await p.locator('#xmlFormatError').isHidden(), false);
+    const parseError = await p.locator('#xmlFormatError').innerText();
+    assert.match(parseError, /Invalid XML/i);
+    assert.match(parseError, /line\s+\d+/i);
+    assert.match(parseError, /column\s+\d+/i);
   }],
   ['toml-formatter-validator', async p => {
     await p.locator('#tomlInput').fill('title = "Example"\n\n[database]\nserver = "db.example.com"\n');
@@ -97,6 +119,31 @@ const cases = [
     code = await p.locator('#curlOutput').inputValue();
     assert.ok(code.includes('fetch('));
     assert.ok(code.includes('JSON.stringify'));
+
+    await p.locator('#curlInput').fill("curl --json '{\"name\":' --json '\"Ada\",\"active\":true}' https://api.example.com/v1/items");
+    await p.locator('#curlTarget').selectOption('python');
+    await p.locator('#convertCurl').click();
+    code = await p.locator('#curlOutput').inputValue();
+    assert.ok(code.includes('json=payload'));
+    assert.ok(code.includes('Content-Type'));
+    assert.ok(code.includes('application/json'));
+    assert.ok(code.includes('Accept'));
+    assert.equal(await p.locator('#curlError').isHidden(), true);
+
+    await p.locator('#curlInput').fill("curl --json '{\"name\":\"Ada\"}' -H 'Content-Type: application/vnd.api+json' -H 'Accept: application/problem+json' https://api.example.com/v1/items");
+    await p.locator('#curlTarget').selectOption('fetch');
+    await p.locator('#convertCurl').click();
+    code = await p.locator('#curlOutput').inputValue();
+    assert.ok(code.includes('application/vnd.api+json'));
+    assert.ok(code.includes('application/problem+json'));
+    assert.ok(code.includes('JSON.stringify'));
+    assert.equal((code.match(/Content-Type/g) || []).length, 1);
+
+    await p.locator('#curlInput').fill("curl --json @payload.json https://api.example.com/v1/items");
+    await p.locator('#convertCurl').click();
+    assert.equal(await p.locator('#curlError').isHidden(), false);
+    assert.match(await p.locator('#curlError').innerText(), /file\/stdin/i);
+
     await p.locator('#curlInput').fill("curl https://example.com -F 'file=@demo.txt'");
     await p.locator('#convertCurl').click();
     assert.equal(await p.locator('#curlError').isHidden(), false);
@@ -113,6 +160,25 @@ const cases = [
     value = await p.locator('#jsonEscapeOutput').inputValue();
     assert.ok(value.includes('Line 1\nLine 2'));
     assert.equal(await p.locator('#jsonEscapeError').isHidden(), true);
+
+    await p.locator('#jsonEscapeInput').fill('</script>');
+    await p.locator('#jsonEscapeSlashes').check();
+    await p.locator('#escapeJsonString').click();
+    value = await p.locator('#jsonEscapeOutput').inputValue();
+    assert.equal(value[0], '<');
+    assert.equal(value.charCodeAt(1), 92);
+    assert.equal(value.slice(2), '/script>');
+
+    await p.locator('#jsonEscapeInput').fill(value);
+    await p.locator('#unescapeJsonString').click();
+    assert.equal(await p.locator('#jsonEscapeOutput').inputValue(), '</script>');
+
+    await p.locator('#jsonEscapeSlashes').uncheck();
+    await p.locator('#jsonEscapeInput').fill('café 😀');
+    await p.locator('#escapeJsonString').click();
+    value = await p.locator('#jsonEscapeOutput').inputValue();
+    assert.equal(value, 'café 😀');
+
     await p.locator('#jsonEscapeInput').fill('\\q');
     await p.locator('#unescapeJsonString').click();
     assert.equal(await p.locator('#jsonEscapeError').isHidden(), false);
@@ -128,6 +194,23 @@ const cases = [
     data = JSON.parse(await p.locator('#csvJsonOutput').inputValue());
     assert.equal(data[0].active, true);
     assert.equal(data[0].score, 98.5);
+
+    await p.locator('#csvJsonOutputFormat').selectOption('jsonl');
+    const jsonLines = (await p.locator('#csvJsonOutput').inputValue()).trim().split(/\r?\n/);
+    assert.equal(jsonLines.length, 2);
+    assert.equal(JSON.parse(jsonLines[0]).name, 'Ada Lovelace');
+    assert.equal(JSON.parse(jsonLines[0]).active, true);
+
+    await p.locator('#csvJsonOutputFormat').selectOption('compact');
+    const compact = await p.locator('#csvJsonOutput').inputValue();
+    assert.equal(compact.includes('\n'), false);
+    assert.equal(JSON.parse(compact).length, 2);
+
+    await p.locator('#csvJsonOutputFormat').selectOption('pretty4');
+    const pretty4 = await p.locator('#csvJsonOutput').inputValue();
+    assert.match(pretty4, /\n {4}\{/);
+
+    await p.locator('#csvJsonOutputFormat').selectOption('pretty2');
     await p.locator('#csvJsonHeader').uncheck();
     data = JSON.parse(await p.locator('#csvJsonOutput').inputValue());
     assert.ok(Array.isArray(data[0]));
@@ -150,35 +233,211 @@ const cases = [
   }],
   ['markdown-to-html', async p => {
     await p.waitForFunction(() => document.getElementById('markdownHtmlStatus').textContent === 'Ready');
-    await p.locator('#markdownInput').fill('# Hello\n\n| A | B |\n| --- | --- |\n| one | two |');
+    const source = '# Hello\n\n| A | B |\n| --- | --- |\n| one | two |\n\n<script>window.__mdXss = true</script>\n\n<img src="x" onerror="window.__mdXss=true">';
+    await p.locator('#markdownInput').fill(source);
     await p.locator('#convertMarkdownHtml').click();
-    const html = await p.locator('#markdownHtmlOutput').inputValue();
+
+    let html = await p.locator('#markdownHtmlOutput').inputValue();
     assert.ok(html.includes('<h1>Hello</h1>'));
     assert.ok(html.includes('<table>'));
+    assert.equal(html.includes('<script'), false);
+    assert.equal(/onerror\s*=/.test(html), false);
+    assert.match(await p.locator('#markdownHtmlStatus').innerText(), /sanitized/i);
     assert.equal(await p.locator('#markdownHtmlPreview').getAttribute('sandbox'), '');
+
+    await p.locator('#markdownSanitize').uncheck();
+    html = await p.locator('#markdownHtmlOutput').inputValue();
+    assert.ok(html.includes('<script>window.__mdXss = true</script>'));
+    assert.ok(/onerror\s*=/.test(html));
+    assert.match(await p.locator('#markdownHtmlStatus').innerText(), /raw html/i);
+
+    const frame = p.frameLocator('#markdownHtmlPreview');
+    await frame.locator('body').waitFor();
+    const executed = await frame.locator('body').evaluate(() => Boolean(window.__mdXss));
+    assert.equal(executed, false);
+
+    await p.locator('#markdownSanitize').check();
+    html = await p.locator('#markdownHtmlOutput').inputValue();
+    assert.equal(html.includes('<script'), false);
+    assert.equal(/onerror\s*=/.test(html), false);
     assert.equal(await p.locator('#markdownHtmlError').isHidden(), true);
   }],
   ['html-to-markdown', async p => {
     await p.waitForFunction(() => document.getElementById('htmlMarkdownStatus').textContent === 'Ready');
-    await p.locator('#htmlMarkdownInput').fill('<h1>Hello</h1><p>A <strong>bold</strong> paragraph.</p><table><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td>one</td><td>two</td></tr></tbody></table>');
+
+    let probeRequests = 0;
+    const requestListener = request => {
+      if (request.url().includes('swu-probe.invalid')) probeRequests += 1;
+    };
+    p.on('request', requestListener);
+
+    await p.locator('#htmlMarkdownInput').fill('<h1>Hello</h1><p>A <strong>bold</strong> paragraph with <a href="https://example.com/docs">docs</a> and <a href="javascript:alert(1)">unsafe</a>.</p><img src="https://swu-probe.invalid/pixel.png" alt="probe"><script>window.__htmlMdXss=true</script><table><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td>one</td><td>two</td></tr></tbody></table><pre><code class="language-js">const fence = "\x60\x60\x60";\nconsole.log(fence);</code></pre>');
     await p.locator('#convertHtmlMarkdown').click();
     const markdown = await p.locator('#htmlMarkdownOutput').inputValue();
+
     assert.ok(markdown.includes('# Hello'));
     assert.ok(markdown.includes('**bold**'));
+    assert.ok(markdown.includes('[docs](https://example.com/docs)'));
+    assert.equal(markdown.includes('javascript:'), false);
+    assert.ok(markdown.includes('![probe](https://swu-probe.invalid/pixel.png)'));
+    assert.equal(markdown.includes('__htmlMdXss'), false);
     assert.ok(markdown.includes('| A'));
+    assert.ok(markdown.includes('\x60\x60\x60\x60js'));
+    assert.ok(markdown.includes('const fence = "\x60\x60\x60";'));
+
+    await p.waitForTimeout(250);
+    p.off('request', requestListener);
+    assert.equal(probeRequests, 0);
     assert.equal(await p.locator('#htmlMarkdownError').isHidden(), true);
   }],
   ['html-minifier', async p => {
-    await p.waitForFunction(() => document.getElementById('htmlMinifierStatus').textContent === 'Ready');
+    await p.waitForFunction(() => window.__swuHtmlMinifierScriptLoaded === true || window.__swuHtmlMinifierScriptError === true, null, {timeout: 10000});
+    await p.waitForFunction(() =>
+      window.__swuHtmlMinifierEngineReady === true ||
+      Boolean(window.__swuHtmlMinifierEngineError),
+      null,
+      {timeout: 25000}
+    );
+
+    const startup = await p.evaluate(() => ({
+      loaded: window.__swuHtmlMinifierScriptLoaded === true,
+      loadError: window.__swuHtmlMinifierScriptError === true,
+      booted: window.__swuHtmlMinifierBooted === true,
+      workerType: typeof Worker,
+      engineReady: window.__swuHtmlMinifierEngineReady === true,
+      engineProvider: window.__swuHtmlMinifierEngineProvider || '',
+      engineError: window.__swuHtmlMinifierEngineError || '',
+      status: document.getElementById('htmlMinifierStatus')?.textContent || ''
+    }));
+
+    assert.equal(startup.loaded, true);
+    assert.equal(startup.loadError, false);
+    assert.equal(startup.booted, true);
+    assert.equal(startup.workerType, 'function');
+    assert.equal(startup.engineReady, true, startup.engineError || 'HTML minifier engine did not become ready.');
+    assert.ok(['jsdelivr', 'unpkg'].includes(startup.engineProvider));
+    assert.equal(startup.engineError, '');
+    assert.equal(startup.status, 'Ready');
+
+    assert.equal(await p.locator('#minAttributeQuotes').isChecked(), false);
+
+    const waitForHtmlMinifier = async () => {
+      await p.waitForFunction(() => {
+        const status = document.getElementById('htmlMinifierStatus')?.textContent || '';
+        const error = document.getElementById('htmlMinifierError');
+        return status === 'Minified' || (error && !error.hidden);
+      }, null, {timeout: 15000});
+
+      if (!await p.locator('#htmlMinifierError').isHidden()) {
+        const message = await p.locator('#htmlMinifierError').innerText();
+        throw new Error('HTML Minifier runtime error: ' + message);
+      }
+      assert.equal(await p.locator('#htmlMinifierStatus').innerText(), 'Minified');
+    };
+
+    // Exercise provider fallback deterministically without depending on the fallback CDN.
+    await p.evaluate(() => {
+      window.__swuNativeWorker = window.Worker;
+      let primaryFailed = false;
+
+      window.Worker = class TestWorker extends EventTarget {
+        constructor(url) {
+          super();
+          this.url = String(url);
+          this.terminated = false;
+
+          setTimeout(() => {
+            if (this.terminated) return;
+            if (!primaryFailed && this.url.includes('engine=jsdelivr')) {
+              primaryFailed = true;
+              this.dispatchEvent(new ErrorEvent('error', {message:'synthetic primary provider failure'}));
+              return;
+            }
+
+            this.dispatchEvent(new MessageEvent('message', {
+              data:{type:'ready', provider:'unpkg'}
+            }));
+          }, 0);
+        }
+
+        terminate() {
+          this.terminated = true;
+        }
+
+        postMessage(data) {
+          if (this.terminated || data?.type !== 'minify') return;
+          const result = String(data.source || '').replace(/>\s+</g, '><').trim();
+          setTimeout(() => {
+            if (this.terminated) return;
+            this.dispatchEvent(new MessageEvent('message', {
+              data:{
+                type:'result',
+                provider:'unpkg',
+                requestId:data.requestId,
+                result
+              }
+            }));
+          }, 0);
+        }
+      };
+    });
+
+    await p.locator('#htmlMinifierInput').fill('<p>fallback</p>\n<p>provider</p>');
+    await p.locator('#minifyHtml').click();
+    await waitForHtmlMinifier();
+    assert.equal(await p.locator('#htmlMinifierOutput').inputValue(), '<p>fallback</p><p>provider</p>');
+
+    await p.evaluate(() => {
+      window.Worker = window.__swuNativeWorker;
+    });
+
+    // Exercise the real production worker/minifier path with its normal provider order.
     const source = '<!doctype html>\n<html>\n  <body>\n    <!-- remove me -->\n    <main>\n      <h1>Hello</h1>\n      <p>World</p>\n    </main>\n  </body>\n</html>';
     await p.locator('#htmlMinifierInput').fill(source);
     await p.locator('#minifyHtml').click();
-    await p.waitForFunction(() => document.getElementById('htmlMinifierStatus').textContent === 'Minified');
+    await waitForHtmlMinifier();
     const minified = await p.locator('#htmlMinifierOutput').inputValue();
     assert.ok(minified.length < source.length);
     assert.ok(!minified.includes('remove me'));
     assert.ok(minified.includes('<h1>Hello</h1>'));
+
+    const legacy = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html><head><style type="text/css">body { color: red; }</style><script type="text/javascript">console.log("x");</script></head><body><input disabled="disabled"></body></html>';
+    await p.locator('#htmlMinifierInput').fill(legacy);
+    await p.locator('#minHtml5Cleanup').check();
+    await p.locator('#minifyHtml').click();
+    await waitForHtmlMinifier();
+    const html5 = await p.locator('#htmlMinifierOutput').inputValue();
+    assert.match(html5, /^<!doctype html>/i);
+    assert.ok(!html5.includes('type="text/css"'));
+    assert.ok(!html5.includes('type="text/javascript"'));
+    assert.ok(html5.includes(' disabled'));
+    assert.ok(!html5.includes('disabled="disabled"'));
+
+    await p.locator('#htmlMinifierInput').fill('<meta property="og:image" content="https://example.com/image.jpg">');
+    await p.locator('#minAttributeQuotes').check();
+    await p.locator('#minifyHtml').click();
+    await waitForHtmlMinifier();
+    const unquoted = await p.locator('#htmlMinifierOutput').inputValue();
+    assert.ok(unquoted.includes('property=og:image'));
+    assert.ok(unquoted.includes('content=https://example.com/image.jpg'));
+
+    await p.locator('#htmlMinifierInput').evaluate(el => {
+      el.value = '\t'.repeat(550000) + '.\t1x';
+    });
+    await p.locator('#minifyHtml').click();
+    await p.waitForTimeout(75);
+    await p.locator('#clearHtmlMinifier').click({timeout: 1500});
+    assert.equal(await p.locator('#htmlMinifierInput').inputValue(), '');
+    assert.equal(await p.locator('#htmlMinifierStatus').innerText(), 'Ready');
+
     assert.equal(await p.locator('#htmlMinifierError').isHidden(), true);
+
+    await p.evaluate(() => {
+      if (window.__swuNativeWorker) {
+        window.Worker = window.__swuNativeWorker;
+        delete window.__swuNativeWorker;
+      }
+    });
   }],
   ['jsonpath-tester', async p => {
     await p.waitForFunction(() => document.getElementById('jsonPathStatus').textContent === 'Ready');
@@ -197,21 +456,54 @@ const cases = [
     assert.equal(await p.locator('#jsonPathError').isHidden(), false);
   }],
   ['css-minifier', async p => {
-    await p.waitForFunction(() => document.getElementById('cssMinifierStatus').textContent === 'Ready');
-    const source = '.card { color: #ff0000; margin: 0px 0px 0px 0px; padding: 16px 16px 16px 16px; }';
+    await p.waitForFunction(() =>
+      window.__swuCssMinifierEngineReady === true ||
+      Boolean(window.__swuCssMinifierEngineError),
+      null,
+      {timeout: 25000}
+    );
+
+    const startup = await p.evaluate(() => ({
+      booted: window.__swuCssMinifierBooted === true,
+      engineReady: window.__swuCssMinifierEngineReady === true,
+      engineProvider: window.__swuCssMinifierEngineProvider || '',
+      engineError: window.__swuCssMinifierEngineError || '',
+      status: document.getElementById('cssMinifierStatus')?.textContent || ''
+    }));
+
+    assert.equal(startup.booted, true);
+    assert.equal(startup.engineReady, true, startup.engineError || 'CSS minifier engine did not become ready.');
+    assert.ok(['jsdelivr', 'unpkg'].includes(startup.engineProvider));
+    assert.equal(startup.engineError, '');
+    assert.equal(startup.status, 'Ready');
+    assert.equal(await p.locator('#cssPreserveComments').isChecked(), true);
+
+    const source = '/*! Package license */\n/* remove this note */\n.card { color: #ff0000; margin: 0px 0px 0px 0px; padding: 16px 16px 16px 16px; }';
     await p.locator('#cssMinifierInput').fill(source);
     await p.locator('#minifyCss').click();
     await p.waitForFunction(() => document.getElementById('cssMinifierStatus').textContent === 'Minified');
-    const minified = await p.locator('#cssMinifierOutput').inputValue();
+    let minified = await p.locator('#cssMinifierOutput').inputValue();
     assert.ok(minified.length < source.length);
+    assert.ok(minified.includes('/*! Package license */'));
+    assert.equal(minified.includes('remove this note'), false);
     assert.ok(minified.includes('.card{'));
     assert.ok(minified.includes('color:red'));
     assert.equal(await p.locator('#cssMinifierError').isHidden(), true);
+
+    await p.locator('#cssPreserveComments').uncheck();
+    minified = await p.locator('#cssMinifierOutput').inputValue();
+    assert.equal(minified.includes('Package license'), false);
+    assert.match(await p.locator('#cssMinifierStats').innerText(), /Remove all\s+comments/i);
+
     await p.locator('#cssRestructure').check();
     await p.locator('#minifyCss').click();
     const restructured = await p.locator('#cssMinifierOutput').inputValue();
     assert.ok(restructured.length > 0);
     assert.equal(await p.locator('#cssMinifierError').isHidden(), true);
+
+    await p.locator('#clearCssMinifier').click();
+    assert.equal(await p.locator('#cssPreserveComments').isChecked(), true);
+    assert.equal(await p.locator('#cssRestructure').isChecked(), false);
   }],
   ['json-to-xml', async p => {
     await p.locator('#converterInput').fill(JSON.stringify({store:{book:[{title:'A'},{title:'B'}]},'first name':'Ada',active:true,note:null}));
@@ -304,6 +596,7 @@ const cases = [
       '01890f4e-7c88-7abc-8def-0123456789ab',
       '00000000-0000-0000-0000-000000000000',
       '{550E8400-E29B-41D4-A716-446655440000}',
+      '(550E8400-E29B-41D4-A716-446655440000)',
       '550e8400-e29b-41d4-c716-446655440000',
       'not-a-uuid'
     ].join('\n');
@@ -311,20 +604,23 @@ const cases = [
     await p.locator('#validateUuid').click();
 
     const normalized = (await p.locator('#uuidValidatorOutput').inputValue()).split('\n').filter(Boolean);
-    assert.equal(normalized.length, 4);
+    assert.equal(normalized.length, 5);
     assert.ok(normalized.includes('550e8400-e29b-41d4-a716-446655440000'));
     assert.ok(normalized.includes('00000000-0000-0000-0000-000000000000'));
 
     const rows = p.locator('#uuidValidatorTable tbody tr');
-    assert.equal(await rows.count(), 6);
+    assert.equal(await rows.count(), 7);
     assert.equal(await rows.nth(0).getAttribute('data-valid'), 'true');
-    assert.equal(await rows.nth(4).getAttribute('data-format-valid'), 'true');
-    assert.equal(await rows.nth(4).getAttribute('data-valid'), 'false');
-    assert.equal(await rows.nth(5).getAttribute('data-format-valid'), 'false');
+    assert.equal(await rows.nth(4).getAttribute('data-valid'), 'true');
+    assert.ok((await rows.nth(4).innerText()).includes('550e8400-e29b-41d4-a716-446655440000'));
+    assert.equal(await rows.nth(5).getAttribute('data-format-valid'), 'true');
+    assert.equal(await rows.nth(5).getAttribute('data-valid'), 'false');
+    assert.equal(await rows.nth(6).getAttribute('data-format-valid'), 'false');
     assert.ok((await rows.nth(1).innerText()).includes('v7 time:'));
 
     await p.locator('#uuidAcceptWrappers').uncheck();
     assert.equal(await p.locator('#uuidValidatorTable tbody tr').nth(3).getAttribute('data-format-valid'), 'false');
+    assert.equal(await p.locator('#uuidValidatorTable tbody tr').nth(4).getAttribute('data-format-valid'), 'false');
     assert.equal(await p.locator('#uuidValidatorError').isHidden(), true);
   }],
   ['xml-escape-unescape', async p => {
@@ -338,6 +634,17 @@ const cases = [
     result = await p.locator('#xmlEscapeOutput').inputValue();
     assert.ok(result.includes('&quot;quoted&quot;'));
     assert.ok(result.includes("'single'"));
+
+    await p.evaluate(() => {
+      const input = document.getElementById('xmlEscapeInput');
+      input.value = 'safe' + String.fromCharCode(0) + 'unsafe';
+    });
+    await p.locator('#runXmlEscape').click();
+    assert.equal(await p.locator('#xmlEscapeOutput').inputValue(), '');
+    assert.equal(await p.locator('#xmlEscapeError').isHidden(), false);
+    const invalidMessage = await p.locator('#xmlEscapeError').innerText();
+    assert.ok(invalidMessage.includes('XML 1.0'));
+    assert.ok(invalidMessage.includes('U+0000'));
 
     await p.locator('#xmlEscapeMode').selectOption('unescape');
     await p.locator('#xmlEscapeInput').fill('&lt;tag&gt;Tom &amp; Jerry&#33; &#x1F600; &nbsp; &#0;');
@@ -388,9 +695,47 @@ const cases = [
     await p.locator('#jsonDiffLeft').fill('{"port":8080,"enabled":false}');
     await p.locator('#jsonDiffRight').fill('{"port":8443,"enabled":true,"region":"us"}');
     await p.locator('#compareJson').click();
-    const text = await p.locator('#jsonDiffResult').innerText();
+    let text = await p.locator('#jsonDiffResult').innerText();
     assert.ok(text.includes('$.port'));
     assert.ok(text.includes('$.region'));
+    assert.equal(await p.locator('#downloadJsonDiff').isDisabled(), false);
+
+    await p.locator('#jsonDiffLeftFile').setInputFiles({
+      name: 'left.json',
+      mimeType: 'application/json',
+      buffer: Buffer.from('{"service":{"port":8080},"regions":["us","eu"]}')
+    });
+    await p.locator('#jsonDiffRightFile').setInputFiles({
+      name: 'right.json',
+      mimeType: 'application/json',
+      buffer: Buffer.from('{"service":{"port":8443},"regions":["eu","us"],"enabled":true}')
+    });
+    await p.waitForFunction(() => document.getElementById('jsonDiffResult')?.textContent.includes('$.service.port'));
+    text = await p.locator('#jsonDiffResult').innerText();
+    assert.ok(text.includes('$.service.port'));
+    assert.ok(text.includes('$.enabled'));
+
+    await p.locator('#jsonDiffIgnoreOrder').check();
+    text = await p.locator('#jsonDiffResult').innerText();
+    assert.ok(text.includes('$.service.port'));
+    assert.equal(text.includes('$.regions'), false);
+
+    await p.locator('#swapJsonDiff').click();
+    text = await p.locator('#jsonDiffResult').innerText();
+    assert.equal(await p.locator('#jsonDiffResult tr[data-kind="removed"]').count(), 1);
+
+    const downloadPromise = p.waitForEvent('download');
+    await p.locator('#downloadJsonDiff').click();
+    const reportDownload = await downloadPromise;
+    assert.equal(reportDownload.suggestedFilename(), 'json-diff-report.json');
+    const reportPath = await reportDownload.path();
+    const report = JSON.parse(readFileSync(reportPath, 'utf8'));
+    assert.equal(report.format, 'smartwebutility-json-diff-report');
+    assert.equal(report.version, 1);
+    assert.equal(report.ignoreArrayOrder, true);
+    assert.ok(report.summary.differences >= 2);
+    assert.ok(report.differences.some(row => row.path === '$.service.port' && row.status === 'changed'));
+    assert.ok(report.differences.some(row => row.path === '$.enabled' && row.status === 'removed'));
   }],
   ['base64-encoder-decoder', async p => {
     await p.locator('#base64Input').fill('hello');
@@ -412,7 +757,43 @@ const cases = [
   ['unix-timestamp-converter', async p => {
     await p.locator('#unixInput').fill('1767225600');
     await p.locator('#convertUnix').click();
-    assert.ok((await p.locator('#dateResult').innerText()).trim().length);
+    let dateText = await p.locator('#dateResult').innerText();
+    assert.ok(dateText.includes('2026-01-01T00:00:00.000Z'));
+    assert.ok(dateText.includes('1767225600000000000'));
+
+    await p.locator('#unixUnit').selectOption('microseconds');
+    await p.locator('#unixInput').fill('1767225600123456');
+    await p.locator('#convertUnix').click();
+    dateText = await p.locator('#dateResult').innerText();
+    assert.ok(dateText.includes('2026-01-01T00:00:00.123Z'));
+    assert.ok(dateText.includes('1767225600123456'));
+    assert.equal(await p.locator('#timestampStatus').innerText(), 'Converted from microseconds');
+
+    await p.locator('#unixUnit').selectOption('nanoseconds');
+    await p.locator('#unixInput').fill('1767225600123456789');
+    await p.locator('#convertUnix').click();
+    dateText = await p.locator('#dateResult').innerText();
+    assert.ok(dateText.includes('2026-01-01T00:00:00.123Z'));
+    assert.ok(dateText.includes('1767225600123456789'));
+
+    await p.locator('#unixInput').fill('-1');
+    await p.locator('#convertUnix').click();
+    dateText = await p.locator('#dateResult').innerText();
+    assert.ok(dateText.includes('1969-12-31T23:59:59.999Z'));
+    assert.ok(dateText.includes('-1'));
+
+    await p.locator('#unixUnit').selectOption('auto');
+    await p.locator('#unixInput').fill('1767225600123456');
+    await p.locator('#convertUnix').click();
+    assert.equal(await p.locator('#timestampStatus').innerText(), 'Converted from microseconds');
+
+    await p.locator('#dateTimeZone').selectOption('utc');
+    await p.locator('#dateInput').fill('2026-01-01T00:00');
+    await p.locator('#convertDate').click();
+    const unixText = await p.locator('#unixResult').innerText();
+    assert.ok(unixText.includes('1767225600'));
+    assert.ok(unixText.includes('1767225600000000000'));
+    assert.equal(await p.locator('#timestampStatus').innerText(), 'UTC date converted');
   }],
   ['uuid-generator', async p => {
     await p.locator('#uuidCount').fill('3');
@@ -427,19 +808,31 @@ const cases = [
     let braced = (await p.locator('#uuidOutput').inputValue()).trim().split(/\r?\n/)[0];
     assert.match(braced, /^\{[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\}$/);
 
-    const before = Date.now();
+    const fixedV7Ms = 1767225600123;
+    await p.evaluate(ms => {
+      window.__uuidOriginalDateNow = Date.now;
+      Date.now = () => ms;
+    }, fixedV7Ms);
+    await p.locator('#uuidCount').fill('100');
     await p.locator('#uuidVersion').selectOption('7');
     await p.locator('#uuidFormat').selectOption('canonical');
     await p.locator('#generateUuid').click();
     values = (await p.locator('#uuidOutput').inputValue()).trim().split(/\r?\n/);
+    assert.equal(values.length, 100);
     values.forEach(value => assert.match(value, /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/));
-    const timestamp = parseInt(values[0].replace(/-/g, '').slice(0, 12), 16);
-    assert.ok(timestamp >= before - 1000 && timestamp <= Date.now() + 1000);
+    assert.equal(new Set(values).size, values.length);
+    assert.deepEqual(values, [...values].sort());
+    const timestamps = new Set(values.map(value => parseInt(value.replace(/-/g, '').slice(0, 12), 16)));
+    assert.deepEqual([...timestamps], [fixedV7Ms]);
 
     await p.locator('#uuidFormat').selectOption('urn');
     await p.locator('#uuidUppercase').check();
     const urn = (await p.locator('#uuidOutput').inputValue()).trim().split(/\r?\n/)[0];
     assert.match(urn, /^urn:uuid:[0-9A-F]{8}-[0-9A-F]{4}-7[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/);
+    await p.evaluate(() => {
+      Date.now = window.__uuidOriginalDateNow;
+      delete window.__uuidOriginalDateNow;
+    });
 
     await p.locator('#uuidVersion').selectOption('4');
     await p.locator('#uuidUppercase').uncheck();
@@ -469,13 +862,28 @@ const cases = [
     await p.locator('#chmodSymbolic').fill('rwxr-xr-x');
     assert.equal(await p.locator('#chmodOctal').inputValue(), '755');
 
+    await p.locator('#chmodSymbolic').fill('-rwsr-xr-x');
+    assert.equal(await p.locator('#chmodOctal').inputValue(), '4755');
+    assert.equal(await p.locator('#chmodSymbolic').inputValue(), 'rwsr-xr-x');
+    assert.equal(await p.locator('#chmodSpecialResult').innerText(), 'setuid');
+
+    await p.locator('#chmodSymbolic').fill('drwxrwxrwt');
+    assert.equal(await p.locator('#chmodOctal').inputValue(), '1777');
+    assert.equal(await p.locator('#chmodSymbolic').inputValue(), 'rwxrwxrwt');
+    assert.equal(await p.locator('#chmodSpecialResult').innerText(), 'sticky');
+
     await p.locator('[data-mode="1777"]').click();
     assert.equal(await p.locator('#chmodOctal').inputValue(), '1777');
     assert.equal(await p.locator('#chmodSymbolic').inputValue(), 'rwxrwxrwt');
 
     await p.locator('#chmodTarget').fill('/srv/app');
     await p.locator('#chmodRecursive').check();
-    assert.match(await p.locator('#chmodCommand').innerText(), /chmod -R 1777 \/srv\/app/);
+    assert.equal((await p.locator('#chmodCommand').innerText()).trim(), 'chmod -R 1777 /srv/app');
+    assert.equal((await p.locator('#chmodSymbolicCommand').innerText()).trim(), 'chmod -R u=rwx,g=rwx,o=rwxt /srv/app');
+
+    await p.locator('#chmodSymbolic').fill('-rwSr-xr-x');
+    assert.equal(await p.locator('#chmodOctal').inputValue(), '4655');
+    assert.equal((await p.locator('#chmodSymbolicCommand').innerText()).trim(), 'chmod -R u=rws,g=rx,o=rx /srv/app');
 
     await p.locator('#umaskValue').fill('027');
     assert.equal(await p.locator('#umaskFileResult').innerText(), '640');
@@ -501,7 +909,51 @@ const cases = [
     const firstMsText = await rows.nth(0).locator('td').nth(1).innerText();
     const decodedMs = Number(firstMsText.replace(/,/g, ''));
     assert.equal(decodedMs, expectedMs);
+
+    await p.locator('#useFirstUlid').click();
+    assert.equal(await p.locator('#ulidInspectError').isHidden(), true);
+    assert.equal((await p.locator('#ulidInspectNormalized').innerText()).trim(), values[0]);
+    assert.equal(Number((await p.locator('#ulidInspectTimestampMs').innerText()).replace(/,/g, '')), expectedMs);
+    assert.equal((await p.locator('#ulidInspectRandomBase32').innerText()).trim().length, 16);
+    assert.match((await p.locator('#ulidInspectRandomHex').innerText()).trim(), /^[0-9A-F]{20}$/);
+
+    await p.locator('#ulidInspectInput').fill(values[0].toLowerCase());
+    await p.locator('#inspectUlid').click();
+    assert.equal((await p.locator('#ulidInspectNormalized').innerText()).trim(), values[0]);
+
+    await p.locator('#ulidInspectInput').fill('8' + '0'.repeat(25));
+    await p.locator('#inspectUlid').click();
+    assert.equal(await p.locator('#ulidInspectError').isHidden(), false);
     assert.equal(await p.locator('#ulidError').isHidden(), true);
+
+    await p.locator('#clearUlid').click();
+    const rollbackStartMs = 1767225600123;
+    await p.evaluate(start => {
+      window.__ulidOriginalDateNow = Date.now;
+      const sequence = [start, start, start - 123];
+      let index = 0;
+      Date.now = () => sequence[Math.min(index++, sequence.length - 1)];
+    }, rollbackStartMs);
+
+    await p.locator('#ulidCount').fill('3');
+    await p.locator('#generateUlid').click();
+    const rollbackValues = (await p.locator('#ulidOutput').inputValue()).trim().split(/\r?\n/);
+    assert.equal(rollbackValues.length, 3);
+    assert.equal(new Set(rollbackValues).size, 3);
+    assert.deepEqual(rollbackValues, [...rollbackValues].sort());
+    assert.equal(new Set(rollbackValues.map(value => value.slice(0, 10))).size, 1);
+
+    const rollbackRows = p.locator('#ulidTable tbody tr');
+    assert.equal(await rollbackRows.count(), 3);
+    for (let index = 0; index < 3; index += 1) {
+      const text = await rollbackRows.nth(index).locator('td').nth(1).innerText();
+      assert.equal(Number(text.replace(/,/g, '')), rollbackStartMs);
+    }
+
+    await p.evaluate(() => {
+      Date.now = window.__ulidOriginalDateNow;
+      delete window.__ulidOriginalDateNow;
+    });
   }],
   ['random-port-generator', async p => {
     await p.locator('#portRangePreset').selectOption('dynamic');
@@ -557,57 +1009,695 @@ const cases = [
     const csv = await p.locator('#macOutput').inputValue();
     assert.match(csv, /^mac_address\n/);
     assert.equal(csv.trim().split(/\r?\n/).length, 26);
+
+    await p.locator('#macListFormat').selectOption('lines');
+    await p.locator('#macFormat').selectOption('colon');
+    await p.locator('#macUppercase').check();
+    await p.locator('#macCount').fill('10');
+
+    await p.locator('#macAdministration').selectOption('universal');
+    await p.locator('#macTransmission').selectOption('unicast');
+    await p.locator('#generateMac').click();
+    values = (await p.locator('#macOutput').inputValue()).trim().split(/\r?\n/);
+    values.forEach(value => {
+      const first = parseInt(value.slice(0,2), 16);
+      assert.equal(first & 1, 0);
+      assert.equal(first & 2, 0);
+    });
+
+    await p.locator('#macAdministration').selectOption('local');
+    await p.locator('#macTransmission').selectOption('multicast');
+    await p.locator('#generateMac').click();
+    values = (await p.locator('#macOutput').inputValue()).trim().split(/\r?\n/);
+    values.forEach(value => {
+      const first = parseInt(value.slice(0,2), 16);
+      assert.equal(first & 1, 1);
+      assert.equal(first & 2, 2);
+    });
+
+    await p.locator('#macAdministration').selectOption('universal');
+    await p.locator('#macTransmission').selectOption('multicast');
+    await p.locator('#generateMac').click();
+    values = (await p.locator('#macOutput').inputValue()).trim().split(/\r?\n/);
+    values.forEach(value => {
+      const first = parseInt(value.slice(0,2), 16);
+      assert.equal(first & 1, 1);
+      assert.equal(first & 2, 0);
+    });
+
     assert.equal(await p.locator('#macError').isHidden(), true);
   }],
   ['hash-generator', async p => {
+    const helloSha256 = '2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824';
+
     await p.locator('#hashInput').fill('hello');
+    await p.locator('#expectedHash').fill(helloSha256);
     await p.locator('#generateHash').click();
-    await p.waitForFunction(() => document.getElementById('hashOutput').value.trim().length >= 32);
-    assert.ok((await p.locator('#hashOutput').inputValue()).trim().length >= 32);
+    await p.waitForFunction(() => document.getElementById('hashOutput').value.trim().length === 64);
+    assert.equal(await p.locator('#hashOutput').inputValue(), helloSha256);
+    assert.match(await p.locator('#hashVerifyStatus').innerText(), /matches/i);
+
+    await p.locator('#expectedHash').fill('0'.repeat(64));
+    assert.match(await p.locator('#hashVerifyStatus').innerText(), /does not match/i);
+
+    await p.locator('#expectedHash').fill(helloSha256.toUpperCase() + '  hello.txt');
+    assert.match(await p.locator('#hashVerifyStatus').innerText(), /matches/i);
+
+    await p.locator('#hashFile').setInputFiles({
+      name: 'hello.txt',
+      mimeType: 'text/plain',
+      buffer: Buffer.from('hello')
+    });
+    await p.waitForFunction(() => document.getElementById('hashStatus')?.textContent.includes('hello.txt'));
+    assert.equal(await p.locator('#hashOutput').inputValue(), helloSha256);
+    assert.match(await p.locator('#hashVerifyStatus').innerText(), /matches/i);
   }],
   ['jwt-decoder', async p => {
     await p.locator('#exampleJwt').click();
-    await p.locator('#decodeJwt').click();
     assert.ok((await p.locator('#jwtHeader').inputValue()).includes('alg'));
+    assert.ok((await p.locator('#jwtPayload').inputValue()).includes('"exp"'));
+    assert.equal(await p.locator('#jwtSignature').inputValue(), 'signature-not-verified');
+    assert.match(await p.locator('#jwtTimeStatus').innerText(), /Not expired by exp/i);
+
+    const expiredToken = await p.evaluate(() => {
+      const encode = value => btoa(JSON.stringify(value))
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=+$/g, '');
+      const now = Math.floor(Date.now() / 1000);
+      return [
+        encode({alg:'HS256',typ:'JWT',kid:'test-key'}),
+        encode({sub:'user-1',iat:now-3600,nbf:now-3600,exp:now-60}),
+        'test-signature'
+      ].join('.');
+    });
+
+    await p.locator('#jwtInput').fill('Bearer ' + expiredToken);
+    await p.locator('#decodeJwt').click();
+    assert.equal(await p.locator('#jwtError').isHidden(), true);
+    assert.match(await p.locator('#jwtStatus').innerText(), /Bearer prefix removed/i);
+    assert.equal(await p.locator('#jwtSignature').inputValue(), 'test-signature');
+    assert.match(await p.locator('#jwtTimeStatus').innerText(), /Expired by exp/i);
+
+    await p.locator('#jwtInput').fill('one.two');
+    await p.locator('#decodeJwt').click();
+    assert.equal(await p.locator('#jwtError').isHidden(), false);
+    assert.match(await p.locator('#jwtError').innerText(), /three dot-separated parts/i);
   }],
   ['regex-tester', async p => {
-    await p.locator('#regexPattern').fill('\\d+');
+    await p.locator('#regexPattern').fill('(?<digits>\\d+)');
+    await p.locator('#regexFlags').fill('gd');
     await p.locator('#regexInput').fill('A12 B34');
+    await p.locator('#regexReplace').fill('[$<digits>]');
     await p.locator('#runRegex').click();
-    assert.ok((await p.locator('#regexMatches').innerText()).includes('12'));
+
+    let matchesText = await p.locator('#regexMatches').innerText();
+    assert.ok(matchesText.includes('12'));
+    assert.ok(matchesText.includes('1 → 3'));
+    assert.ok(matchesText.includes('Named: {"digits":"12"}'));
+    assert.equal(await p.locator('#regexHighlighted mark').count(), 2);
+    assert.equal(await p.locator('#regexOutput').inputValue(), 'A[12] B[34]');
+
+    await p.locator('#regexPattern').fill('(?=a)');
+    await p.locator('#regexFlags').fill('g');
+    await p.locator('#regexInput').fill('aa');
+    await p.locator('#regexReplace').fill('');
+    await p.locator('#runRegex').click();
+    matchesText = await p.locator('#regexMatches').innerText();
+    assert.ok(matchesText.includes('0 → 0'));
+    assert.equal(await p.locator('#regexHighlighted mark').count(), 2);
+    assert.equal(await p.locator('#regexHighlighted').textContent(), '↧a↧a');
+    assert.equal(await p.locator('#regexStatus').innerText(), '2 matches');
+
+    await p.locator('#regexPattern').fill('a');
+    await p.locator('#regexInput').fill('a'.repeat(501));
+    await p.locator('#runRegex').click();
+    assert.equal(await p.locator('#regexStatus').innerText(), '500+ matches · display capped');
+    assert.equal(await p.locator('#regexMatches tbody tr').count(), 500);
   }],
   ['url-encoder-decoder', async p => {
     await p.locator('#urlInput').fill('hello world');
     await p.locator('#runUrlCodec').click();
     assert.equal((await p.locator('#urlOutput').inputValue()).trim(), 'hello%20world');
+    assert.equal(await p.locator('#urlStatus').innerText(), 'Encoded · component');
+
+    await p.locator('#urlFormEncoding').check();
+    assert.equal((await p.locator('#urlOutput').inputValue()).trim(), 'hello+world');
+    assert.equal(await p.locator('#urlStatus').innerText(), 'Encoded · form value');
+
+    await p.locator('#urlInput').fill('a+b c');
+    await p.locator('#runUrlCodec').click();
+    assert.equal(await p.locator('#urlOutput').inputValue(), 'a%2Bb+c');
+
+    await p.locator('#urlMode').selectOption('decode');
+    await p.locator('#urlInput').fill('a%2Bb+c');
+    await p.locator('#runUrlCodec').click();
+    assert.equal(await p.locator('#urlOutput').inputValue(), 'a+b c');
+
+    await p.locator('#urlComponent').uncheck();
+    await p.locator('#urlMode').selectOption('encode');
+    await p.locator('#urlInput').fill('https://example.com/a b?q=x y');
+    await p.locator('#runUrlCodec').click();
+    assert.equal(await p.locator('#urlOutput').inputValue(), 'https://example.com/a%20b?q=x%20y');
+    assert.equal(await p.locator('#urlFormEncoding').isDisabled(), true);
+
+    await p.locator('#urlComponent').check();
+    await p.locator('#urlMode').selectOption('decode');
+    await p.locator('#urlInput').fill('bad%2');
+    await p.locator('#runUrlCodec').click();
+    assert.equal(await p.locator('#urlError').isHidden(), false);
+    assert.match(await p.locator('#urlError').innerText(), /index 3/i);
   }],
   ['html-entity-encoder-decoder', async p => {
-    await p.locator('#htmlEntityInput').fill('<h1>Hi & bye</h1>');
+    await p.locator('#htmlEntityInput').fill('<p title="café">Tom & Jerry\'s 😀</p>');
     await p.locator('#runHtmlEntity').click();
-    assert.ok((await p.locator('#htmlEntityOutput').inputValue()).includes('&lt;h1&gt;'));
+    assert.equal(
+      await p.locator('#htmlEntityOutput').inputValue(),
+      '&lt;p title=&quot;café&quot;&gt;Tom &amp; Jerry&#39;s 😀&lt;/p&gt;'
+    );
+    assert.equal(await p.locator('#htmlEntityStatus').innerText(), 'Encoded · named essentials');
+
+    await p.locator('#htmlEntityFormat').selectOption('decimal');
+    await p.locator('#htmlEntityNonAscii').check();
+    await p.locator('#htmlEntityInput').fill('é 😀 & <');
+    await p.locator('#runHtmlEntity').click();
+    assert.equal(
+      await p.locator('#htmlEntityOutput').inputValue(),
+      '&#233; &#128512; &#38; &#60;'
+    );
+
+    await p.locator('#htmlEntityFormat').selectOption('hex');
+    assert.equal(
+      await p.locator('#htmlEntityOutput').inputValue(),
+      '&#xE9; &#x1F600; &#x26; &#x3C;'
+    );
+
+    await p.locator('#htmlEntityMode').selectOption('decode');
+    assert.equal(await p.locator('#htmlEntityFormat').isDisabled(), true);
+    assert.equal(await p.locator('#htmlEntityNonAscii').isDisabled(), true);
+    await p.locator('#htmlEntityInput').fill('&lt;b&gt;caf&eacute; &#x1F600; &#128512;&lt;/b&gt;');
+    await p.locator('#runHtmlEntity').click();
+    assert.equal(await p.locator('#htmlEntityOutput').inputValue(), '<b>café 😀 😀</b>');
+    assert.equal(await p.locator('#htmlEntityStatus').innerText(), 'Decoded · one pass');
+
+    await p.locator('#htmlEntityInput').fill('&amp;lt;');
+    await p.locator('#runHtmlEntity').click();
+    assert.equal(await p.locator('#htmlEntityOutput').inputValue(), '&lt;');
   }],
   ['cron-expression-helper', async p => {
-    await p.locator('#cronInput').fill('*/5 * * * *');
+    await p.locator('#cronMinute').fill('*/15');
+    await p.locator('#cronHour').fill('*');
+    await p.locator('#cronDay').fill('*');
+    await p.locator('#cronMonth').fill('*');
+    await p.locator('#cronWeekday').fill('*');
+    assert.equal((await p.locator('#cronInput').inputValue()).trim(), '*/15 * * * *');
+    assert.match(await p.locator('#cronDescription').innerText(), /Every 15 minutes/i);
+    assert.equal(await p.locator('#cronNextRuns li').count(), 5);
+
+    await p.locator('#cronInput').fill('0 9 * * MON-FRI');
     await p.locator('#parseCron').click();
     assert.equal(await p.locator('#cronError').isHidden(), true);
+    assert.equal(await p.locator('#cronWeekday').inputValue(), 'MON-FRI');
+    assert.equal(await p.locator('#cronNextRuns li').count(), 5);
+
+    await p.locator('#cronInput').fill('0 0 9 * * 1-5');
+    await p.locator('#parseCron').click();
+    assert.equal(await p.locator('#cronError').isHidden(), false);
+    assert.match(await p.locator('#cronError').innerText(), /5-field/i);
   }],
   ['meta-tag-generator', async p => {
-    await p.locator('#metaTitle').fill('Sample Page');
-    await p.locator('#metaDescription').fill('A sample description');
-    assert.ok((await p.locator('#metaOutput').inputValue()).includes('Sample Page'));
+    await p.locator('#metaTitle').fill('The "Sample" Page & Tools');
+    await p.locator('#metaDescription').fill('A sample description for search and social previews.');
+    await p.locator('#metaCanonical').fill('https://example.com/sample?x=1&y=2');
+    await p.locator('#metaSiteName').fill('Example Site');
+    await p.locator('#metaImage').fill('https://example.com/social.jpg');
+    await p.locator('#metaImageAlt').fill('Example "social" card');
+    await p.locator('#metaTwitterSite').fill('@example');
+
+    const meta = await p.locator('#metaOutput').inputValue();
+    assert.ok(meta.includes('&quot;Sample&quot;'));
+    assert.ok(meta.includes('https://example.com/sample?x=1&amp;y=2'));
+    assert.ok(meta.includes('property="og:title"'));
+    assert.ok(meta.includes('property="og:image:alt"'));
+    assert.ok(meta.includes('name="twitter:card"'));
+    assert.ok(meta.includes('name="twitter:site"'));
+    assert.equal(meta.includes('name="keywords"'), false);
+    assert.match(await p.locator('#metaTitleCount').innerText(), /25 characters/);
+    assert.ok((await p.locator('#metaSearchPreview').innerText()).includes('Sample'));
+    assert.ok((await p.locator('#metaSocialPreview').innerText()).includes('Example Site'));
+    assert.equal(await p.locator('#metaSocialPreview img').count(), 0);
   }],
   ['robots-txt-generator', async p => {
+    await p.locator('#robotsUserAgent').fill('Googlebot\nGooglebot-Image');
+    await p.locator('#robotsDisallow').fill('/admin/\n/private/');
+    await p.locator('#robotsAllow').fill('/public/');
+    await p.locator('#robotsSitemap').fill('https://example.com/sitemap.xml\nhttps://cdn.example.com/images-sitemap.xml');
+
+    let robots = await p.locator('#robotsOutput').inputValue();
+    assert.ok(robots.includes('User-agent: Googlebot\nUser-agent: Googlebot-Image'));
+    assert.ok(robots.includes('Disallow: /admin/'));
+    assert.ok(robots.includes('Allow: /public/'));
+    assert.ok(robots.includes('Sitemap: https://example.com/sitemap.xml'));
+    assert.ok(robots.includes('Sitemap: https://cdn.example.com/images-sitemap.xml'));
+    assert.equal(await p.locator('#robotsError').isHidden(), true);
+
+    await p.locator('#robotsCrawlDelay').fill('10');
+    robots = await p.locator('#robotsOutput').inputValue();
+    assert.ok(robots.includes('Crawl-delay: 10'));
+    assert.match(await p.locator('#robotsStatus').innerText(), /not supported by Google/i);
+
+    await p.locator('#robotsDisallow').fill('admin/');
+    assert.equal(await p.locator('#robotsError').isHidden(), false);
+    assert.match(await p.locator('#robotsError').innerText(), /must start with/i);
+    assert.equal(await p.locator('#robotsOutput').inputValue(), '');
+
     await p.locator('#robotsDisallow').fill('/admin/');
-    assert.ok((await p.locator('#robotsOutput').inputValue()).includes('/admin/'));
+    await p.locator('#robotsSitemap').fill('/sitemap.xml');
+    assert.equal(await p.locator('#robotsError').isHidden(), false);
+    assert.match(await p.locator('#robotsError').innerText(), /fully qualified HTTP\(S\) URL/i);
+
+    await p.locator('#robotsSitemap').fill('https://example.com/sitemap.xml');
+    await p.locator('#robotsCrawlDelay').fill('slow');
+    assert.equal(await p.locator('#robotsError').isHidden(), false);
+    assert.match(await p.locator('#robotsError').innerText(), /non-negative number/i);
   }],
   ['schema-markup-generator', async p => {
-    await p.locator('#schemaName').fill('Example Business');
-    await p.locator('#schemaUrl').fill('https://example.com/');
-    assert.ok((await p.locator('#schemaOutput').inputValue()).includes('Example Business'));
+    await p.locator('#schemaType').selectOption('LocalBusiness');
+    await p.locator('#schemaName').fill('Example Books');
+    await p.locator('#schemaUrl').fill('https://example.com/locations/downtown');
+    await p.locator('#schemaStreet').fill('148 W 51st St');
+    await p.locator('#schemaLocality').fill('New York');
+    await p.locator('#schemaRegion').fill('NY');
+    await p.locator('#schemaPostalCode').fill('10019');
+    await p.locator('#schemaCountry').fill('US');
+
+    let schema = await p.locator('#schemaOutput').inputValue();
+    assert.ok(schema.includes('"@type": "LocalBusiness"'));
+    assert.ok(schema.includes('"@type": "PostalAddress"'));
+    assert.ok(schema.includes('"streetAddress": "148 W 51st St"'));
+    assert.match(await p.locator('#schemaReadiness').innerText(), /detailed PostalAddress/i);
+    assert.equal(await p.locator('#schemaError').isHidden(), true);
+
+    await p.locator('#schemaType').selectOption('SoftwareApplication');
+    await p.locator('#schemaName').fill('Example App');
+    await p.locator('#schemaApplicationCategory').selectOption('UtilitiesApplication');
+    await p.locator('#schemaOperatingSystem').fill('Web');
+    await p.locator('#schemaPrice').fill('0');
+    await p.locator('#schemaRatingValue').fill('4.8');
+    await p.locator('#schemaRatingCount').fill('125');
+
+    schema = await p.locator('#schemaOutput').inputValue();
+    assert.ok(schema.includes('"@type": "SoftwareApplication"'));
+    assert.ok(schema.includes('"price": 0'));
+    assert.ok(schema.includes('"ratingValue": 4.8'));
+    assert.ok(schema.includes('"ratingCount": 125'));
+    assert.match(await p.locator('#schemaReadiness').innerText(), /required fields covered by this form are present/i);
+
+    await p.locator('#schemaType').selectOption('Article');
+    await p.locator('#schemaName').fill('Testing Structured Data');
+    await p.locator('#schemaAuthorName').fill('Jane Doe');
+    await p.locator('#schemaAuthorUrl').fill('https://example.com/authors/jane-doe');
+    await p.locator('#schemaDatePublished').fill('2026-10-06T14:00:00+00:00');
+    schema = await p.locator('#schemaOutput').inputValue();
+    assert.ok(schema.includes('"headline": "Testing Structured Data"'));
+    assert.ok(schema.includes('"@type": "Person"'));
+    assert.ok(schema.includes('"name": "Jane Doe"'));
+    assert.ok(schema.includes('"datePublished": "2026-10-06T14:00:00+00:00"'));
+
+    await p.locator('#schemaUrl').fill('/relative');
+    assert.equal(await p.locator('#schemaError').isHidden(), false);
+    assert.match(await p.locator('#schemaError').innerText(), /fully qualified URL/i);
+    assert.equal(await p.locator('#schemaOutput').inputValue(), '');
+  }],
+  ['dns-propagation-checker', async p => {
+    await p.route('**/api/dns-propagation.php?host=**', async route => {
+      const requestUrl=route.request().url();
+      assert.match(requestUrl, /[?&]host=example\.com(?:&|$)/);
+      assert.match(requestUrl, /[?&]type=A(?:&|$)/);
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          ok: true,
+          host: 'example.com',
+          type: 'A',
+          results: [
+            {
+              resolver: 'Cloudflare',
+              ok: true,
+              http_status: 200,
+              dns_status: 0,
+              status_name: 'NOERROR',
+              dnssec_authenticated: true,
+              latency_ms: 24,
+              answers: ['93.184.216.34'],
+              ttls: [300],
+              records: [{name:'example.com.',type:1,type_name:'A',ttl:300,data:'93.184.216.34'}]
+            },
+            {
+              resolver: 'Google',
+              ok: true,
+              http_status: 200,
+              dns_status: 0,
+              status_name: 'NOERROR',
+              dnssec_authenticated: true,
+              latency_ms: 31,
+              answers: ['93.184.216.34'],
+              ttls: [240],
+              records: [{name:'example.com.',type:1,type_name:'A',ttl:240,data:'93.184.216.34'}]
+            },
+            {
+              resolver: 'Server resolver',
+              ok: true,
+              http_status: null,
+              dns_status: null,
+              status_name: null,
+              dnssec_authenticated: null,
+              latency_ms: 8,
+              answers: ['192.0.2.44'],
+              ttls: [180],
+              records: [{name:'example.com',type:1,type_name:'A',ttl:180,data:'192.0.2.44'}]
+            }
+          ],
+          agreement: {
+            public_resolvers_comparable: true,
+            public_resolvers_agree: true,
+            all_answer_sets_agree: false,
+            distinct_answer_sets: 2
+          },
+          findings: [
+            'Google Public DNS and Cloudflare returned the same DNS status and requested-type answer set.',
+            'At least two successful resolver paths returned different requested-type answer sets.'
+          ],
+          methodology: {
+            public_resolvers:['Cloudflare DNS over HTTPS','Google Public DNS over HTTPS'],
+            server_resolver:'PHP dns_get_record from the Smart Web Utility server environment',
+            worldwide_propagation:false
+          }
+        })
+      });
+    });
+    await p.locator('#target').fill('example.com');
+    await p.locator('#recordType').selectOption('A');
+    await p.locator('#diagForm button[type="submit"]').click();
+    await p.locator('#result').waitFor({state:'visible'});
+    const resultText=await p.locator('#resultBody').innerText();
+    assert.match(resultText,/Google vs Cloudflare\s+Agree/i);
+    assert.match(resultText,/All resolver answer sets\s+Disagree/i);
+    assert.match(resultText,/Distinct answer sets\s+2/i);
+    assert.match(resultText,/Cloudflare\s+NOERROR\s+Yes\s+24 ms\s+300\s+93\.184\.216\.34/i);
+    assert.match(resultText,/Google\s+NOERROR\s+Yes\s+31 ms\s+240\s+93\.184\.216\.34/i);
+    assert.match(resultText,/Server resolver\s+—\s+—\s+8 ms\s+180\s+192\.0\.2\.44/i);
+    assert.match(resultText,/Cloudflare returned records/i);
+    assert.match(resultText,/At least two successful resolver paths returned different requested-type answer sets/i);
+    assert.match(resultText,/not a worldwide propagation percentage/i);
+  }],
+  ['http-header-checker', async p => {
+    await p.route('**/api/http-status.php?mode=headers**', async route => {
+      assert.match(route.request().url(), /[?&]method=auto(?:&|$)/);
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          ok: true,
+          result: {
+            url: 'https://example.com/old',
+            final_url: 'https://www.example.com/final',
+            redirect_count: 1,
+            redirects: [{status:301,method:'GET',from:'https://example.com/old',to:'https://www.example.com/final'}],
+            requested_method: 'auto',
+            method_used: 'HEAD',
+            method_fallback: true,
+            status: 200,
+            time_ms: 42,
+            total_time_ms: 91,
+            content_type: 'text/html; charset=UTF-8',
+            ip: '203.0.113.10',
+            header_count: 8,
+            unique_header_count: 7,
+            duplicate_headers: {'set-cookie':2},
+            headers: {
+              'content-type':'text/html; charset=UTF-8',
+              'cache-control':'public, max-age=300',
+              'etag':'"abc"',
+              'server':'example-edge',
+              'strict-transport-security':'max-age=31536000',
+              'access-control-allow-origin':'https://app.example.com',
+              'set-cookie':'a=1, b=2'
+            },
+            headers_all: {
+              'content-type':['text/html; charset=UTF-8'],
+              'cache-control':['public, max-age=300'],
+              'etag':['"abc"'],
+              'server':['example-edge'],
+              'strict-transport-security':['max-age=31536000'],
+              'access-control-allow-origin':['https://app.example.com'],
+              'set-cookie':['a=1','b=2']
+            }
+          }
+        })
+      });
+    });
+    await p.locator('#target').fill('https://example.com/old');
+    await p.locator('#headerMethod').selectOption('auto');
+    await p.locator('#diagForm button[type="submit"]').click();
+    await p.locator('#result').waitFor({state:'visible'});
+    const resultText=await p.locator('#resultBody').innerText();
+    assert.match(resultText,/Final URL\s+https:\/\/www\.example\.com\/final/i);
+    assert.match(resultText,/Redirects followed\s+1/i);
+    assert.match(resultText,/Requested method\s+AUTO/i);
+    assert.match(resultText,/Method used\s+HEAD/i);
+    assert.match(resultText,/HEAD → GET fallback\s+Yes/i);
+    assert.match(resultText,/Header fields received\s+8/i);
+    assert.match(resultText,/Repeated header names\s+set-cookie × 2/i);
+    assert.match(resultText,/cache-control\s+public, max-age=300/i);
+    assert.match(resultText,/set-cookie\s+a=1 \| b=2/i);
+    assert.match(resultText,/301 GET https:\/\/example\.com\/old → https:\/\/www\.example\.com\/final/i);
+  }],
+  ['open-graph-checker', async p => {
+    await p.route('**/api/page-inspect.php?mode=og**', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          ok: true,
+          result: {
+            url: 'https://example.com/old',
+            final_url: 'https://www.example.com/article',
+            redirect_count: 1,
+            redirects: [{status:301,from:'https://example.com/old',to:'https://www.example.com/article'}],
+            status: 200,
+            content_type: 'text/html; charset=UTF-8',
+            bytes_checked: 4096,
+            truncated: false,
+            core_present: 4,
+            core_required: 4,
+            missing_required: [],
+            og_tag_count: 9,
+            og_property_count: 9,
+            outside_head_count: 0,
+            open_graph: {
+              'og:title': 'Example article',
+              'og:description': 'A useful social description.',
+              'og:url': 'https://www.example.com/article',
+              'og:image': 'https://cdn.example.com/social.jpg',
+              'og:type': 'article',
+              'og:site_name': 'Example Site',
+              'og:locale': 'en_US'
+            },
+            open_graph_all: {
+              'og:title': ['Example article'],
+              'og:type': ['article'],
+              'og:url': ['https://www.example.com/article'],
+              'og:image': ['https://cdn.example.com/social.jpg'],
+              'og:image:width': ['1200'],
+              'og:image:height': ['630'],
+              'og:image:alt': ['Example social image'],
+              'og:description': ['A useful social description.'],
+              'og:site_name': ['Example Site']
+            },
+            primary_image: {
+              url: 'https://cdn.example.com/social.jpg',
+              secure_url: null,
+              type: 'image/jpeg',
+              width: '1200',
+              height: '630',
+              alt: 'Example social image',
+              probe: {
+                ok: true,
+                status: 200,
+                content_type: 'image/jpeg',
+                final_url: 'https://img.example.com/social.jpg',
+                redirect_count: 1,
+                redirects: [{status:302,from:'https://cdn.example.com/social.jpg',to:'https://img.example.com/social.jpg'}],
+                bytes_checked: 65536,
+                truncated: false,
+                dimensions: {width:1200,height:630}
+              }
+            },
+            findings: ['The requested page redirected 1 time(s) before Open Graph tags were parsed.']
+          }
+        })
+      });
+    });
+    await p.locator('#target').fill('https://example.com/old');
+    await p.locator('#diagForm button[type="submit"]').click();
+    await p.locator('#result').waitFor({state:'visible'});
+    const resultText = await p.locator('#resultBody').innerText();
+    assert.match(resultText, /Final URL\s+https:\/\/www\.example\.com\/article/i);
+    assert.match(resultText, /Core properties\s+4 \/ 4/i);
+    assert.match(resultText, /OG tags found\s+9/i);
+    assert.match(resultText, /og:title\s+Example article/i);
+    assert.match(resultText, /Image check\s+Fetched/i);
+    assert.match(resultText, /Image HTTP status\s+200/i);
+    assert.match(resultText, /Detected dimensions\s+1200 × 630/i);
+    assert.match(resultText, /og:image:alt\s+Example social image/i);
+    assert.match(resultText, /301 https:\/\/example\.com\/old → https:\/\/www\.example\.com\/article/i);
+    assert.match(resultText, /302 https:\/\/cdn\.example\.com\/social\.jpg → https:\/\/img\.example\.com\/social\.jpg/i);
   }],
   ['open-graph-preview', async p => {
     await p.locator('#ogTitle').fill('Example OG');
-    assert.ok((await p.locator('#ogOutput').inputValue()).includes('Example OG'));
+    await p.locator('#ogDescription').fill('Preview description');
+    await p.locator('#ogType').selectOption('article');
+    await p.locator('#ogLocale').fill('en_us');
+    await p.locator('#ogUrl').fill('https://example.com/article');
+    await p.locator('#ogImage').fill('http://127.0.0.1:8765/favicon-64.png');
+    await p.locator('#ogImageAlt').fill('Example preview image');
+    await p.locator('#ogImageWidth').fill('1200');
+    await p.locator('#ogImageHeight').fill('630');
+    await p.locator('#ogSite').fill('Example Site');
+
+    let meta = await p.locator('#ogOutput').inputValue();
+    assert.ok(meta.includes('property="og:title" content="Example OG"'));
+    assert.ok(meta.includes('property="og:type" content="article"'));
+    assert.ok(meta.includes('property="og:locale" content="en_US"'));
+    assert.ok(meta.includes('property="og:image:width" content="1200"'));
+    assert.ok(meta.includes('property="og:image:height" content="630"'));
+    assert.ok(meta.includes('property="og:image:alt" content="Example preview image"'));
+    assert.match(await p.locator('#ogReadiness').innerText(), /All four Open Graph core properties are present/i);
+    assert.match(await p.locator('#ogReadiness').innerText(), /1\.91:1 wide-card ratio/i);
+    assert.equal(await p.locator('#ogError').isHidden(), true);
+    assert.equal(await p.locator('#ogStatus').innerText(), 'Ready · core properties complete');
+
+    const media = p.locator('#ogCard > div').first();
+    assert.equal(await media.evaluate(el => el.style.aspectRatio), '1.91 / 1');
+    await p.locator('#ogPreviewCrop').selectOption('square');
+    assert.equal(await media.evaluate(el => el.style.aspectRatio), '1 / 1');
+
+    await p.locator('#ogImageAlt').fill('');
+    assert.match(await p.locator('#ogReadiness').innerText(), /Add og:image:alt/i);
+
+    await p.locator('#ogUrl').fill('/relative');
+    assert.equal(await p.locator('#ogError').isHidden(), false);
+    assert.match(await p.locator('#ogError').innerText(), /fully qualified URL/i);
+    assert.equal(await p.locator('#ogOutput').inputValue(), '');
+
+    await p.locator('#ogUrl').fill('https://example.com/article');
+    await p.locator('#ogLocale').fill('english_USA');
+    assert.equal(await p.locator('#ogError').isHidden(), false);
+    assert.match(await p.locator('#ogError').innerText(), /language_TERRITORY/i);
+  }],
+  ['meta-tag-checker', async p => {
+    await p.route('**/api/page-inspect.php?mode=meta**', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          ok: true,
+          result: {
+            url: 'https://example.com/old',
+            final_url: 'https://www.example.com/page',
+            redirect_count: 1,
+            redirects: [{status:301,from:'https://example.com/old',to:'https://www.example.com/page'}],
+            status: 200,
+            content_type: 'text/html; charset=UTF-8',
+            title: 'Example page',
+            title_length: 12,
+            title_count: 1,
+            description: 'A useful example description.',
+            description_length: 29,
+            description_count: 1,
+            canonical: 'https://www.example.com/page',
+            canonical_count: 1,
+            canonical_head_count: 1,
+            robots: 'index,follow',
+            robots_count: 1,
+            googlebot: 'noindex,follow',
+            googlebot_count: 1,
+            x_robots_tag: null,
+            noindex_detected: true,
+            html_lang: 'en',
+            viewport: 'width=device-width,initial-scale=1',
+            h1_count: 1,
+            first_h1: 'Example heading',
+            findings: [
+              'A direct noindex directive was detected in robots, Googlebot or X-Robots-Tag metadata.',
+              'The requested URL redirected 1 time(s) before metadata was parsed.'
+            ]
+          }
+        })
+      });
+    });
+    await p.locator('#target').fill('https://example.com/old');
+    await p.locator('#diagForm button[type="submit"]').click();
+    await p.locator('#result').waitFor({state:'visible'});
+    const resultText = await p.locator('#resultBody').innerText();
+    assert.match(resultText, /Final URL\s+https:\/\/www\.example\.com\/page/i);
+    assert.match(resultText, /Redirects followed\s+1/i);
+    assert.match(resultText, /Googlebot\s+noindex,follow/i);
+    assert.match(resultText, /Direct noindex detected\s+Yes/i);
+    assert.match(resultText, /HTML lang\s+en/i);
+    assert.match(resultText, /Title elements\s+1/i);
+    assert.match(resultText, /Description tags\s+1/i);
+    assert.match(resultText, /A direct noindex directive was detected/i);
+    assert.match(resultText, /301 https:\/\/example\.com\/old → https:\/\/www\.example\.com\/page/i);
+  }],
+  ['sitemap-checker', async p => {
+    await p.route('**/api/sitemap-check.php*', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          ok: true,
+          result: {
+            url: 'https://example.com/sitemap.xml',
+            final_url: 'https://www.example.com/sitemap.xml',
+            status: 200,
+            redirect_count: 1,
+            type: 'urlset',
+            protocol_valid: false,
+            namespace_ok: true,
+            entries: 4,
+            valid_locs: 3,
+            invalid_locs: 1,
+            duplicates: 1,
+            hosts: ['www.example.com'],
+            lastmod_count: 3,
+            invalid_lastmod: 1,
+            future_lastmod: 1,
+            issues: ['url #4 has an invalid <loc>; use an absolute HTTP(S) URL no longer than 2,048 characters.'],
+            warnings: ['Duplicate <loc>: https://www.example.com/about/'],
+            sample: ['https://www.example.com/','https://www.example.com/about/'],
+            bytes_checked: 4096,
+            truncated: false
+          }
+        })
+      });
+    });
+
+    await p.locator('#target').fill('https://example.com/sitemap.xml');
+    await p.locator('#diagForm button[type="submit"]').click();
+    await p.locator('#result').waitFor({state:'visible'});
+
+    const resultText = await p.locator('#resultBody').innerText();
+    assert.match(resultText, /Protocol status\s+Issues found/i);
+    assert.match(resultText, /Sitemap namespace\s+Valid/i);
+    assert.match(resultText, /Invalid locations\s+1/i);
+    assert.match(resultText, /Duplicate locations\s+1/i);
+    assert.match(resultText, /lastmod coverage\s+3 \/ 4/i);
+    assert.match(resultText, /url #4 has an invalid <loc>/i);
+    assert.match(resultText, /Duplicate <loc>/i);
+    assert.match(resultText, /https:\/\/www\.example\.com\/about\//i);
   }],
   ['bulk-redirect-checker', async p => {
     await p.route('**/api/redirect-check.php*', async route => {
@@ -620,12 +1710,69 @@ const cases = [
     assert.ok((await p.locator('#bulkRedirectBody').innerText()).includes('example.com/a/final'));
   }],
   ['word-counter', async p => {
-    await p.locator('#textInput').fill('One two three.');
-    assert.ok((await p.locator('#textStats').innerText()).includes('3'));
+    await p.locator('#textInput').fill('One two two three.\n\nFour five!');
+    const baseStats=await p.locator('#textStats').innerText();
+    assert.match(baseStats,/6\s+Words/i);
+    assert.match(baseStats,/2\s+Sentences/i);
+    assert.match(baseStats,/2\s+Paragraphs/i);
+    assert.match(baseStats,/3\s+Lines/i);
+
+    const insights=await p.locator('#wordInsights').innerText();
+    assert.match(insights,/2 sec\s+Reading time/i);
+    assert.match(insights,/3 sec\s+Speaking time/i);
+    assert.match(insights,/5\s+Unique words/i);
+    assert.match(insights,/3\.7\s+Avg word length/i);
+
+    await p.locator('#wordTarget').fill('10');
+    assert.equal(await p.locator('#wordTargetStatus').isHidden(),false);
+    assert.match(await p.locator('#wordTargetText').innerText(),/4 words remaining of 10/i);
+    assert.equal(await p.locator('#wordTargetProgress').evaluate(el=>Number(el.value)),6);
+    assert.equal(await p.locator('#wordTargetProgress').evaluate(el=>Number(el.max)),10);
+
+    await p.locator('#wordTarget').fill('5');
+    assert.match(await p.locator('#wordTargetText').innerText(),/1 word over 5-word target/i);
+
+    await p.locator('#clearWordCounter').click();
+    assert.equal(await p.locator('#textInput').inputValue(),'');
+    assert.equal(await p.locator('#wordTarget').inputValue(),'');
+    assert.equal(await p.locator('#wordTargetStatus').isHidden(),true);
+    assert.match(await p.locator('#textStats').innerText(),/0\s+Words/i);
   }],
   ['character-counter', async p => {
-    await p.locator('#textInput').fill('abc def');
-    assert.ok((await p.locator('#textStats').innerText()).includes('7'));
+    await p.locator('#textInput').fill('A😀 e\u0301\nZ');
+    const stats=await p.locator('#textStats').innerText();
+    assert.match(stats,/6\s+Visible characters/i);
+    assert.match(stats,/4\s+Without whitespace/i);
+    assert.match(stats,/7\s+Unicode code points/i);
+    assert.match(stats,/8\s+UTF-16 units/i);
+    assert.match(stats,/11\s+UTF-8 bytes/i);
+    assert.match(stats,/3\s+Words/i);
+
+    const insights=await p.locator('#characterInsights').innerText();
+    assert.match(insights,/0\s+Sentences/i);
+    assert.match(insights,/1\s+Paragraphs/i);
+    assert.match(insights,/2\s+Lines/i);
+
+    await p.locator('#characterLimit').fill('5');
+    assert.equal(await p.locator('#characterLimitStatus').isHidden(),false);
+    assert.match(await p.locator('#characterLimitText').innerText(),/1 visible character over 5/i);
+    assert.equal(await p.locator('#characterLimitProgress').evaluate(el=>Number(el.value)),5);
+    assert.equal(await p.locator('#characterLimitProgress').evaluate(el=>Number(el.max)),5);
+
+    await p.locator('#characterLimitBasis').selectOption('utf16');
+    await p.locator('#characterLimit').fill('10');
+    assert.match(await p.locator('#characterLimitText').innerText(),/2 UTF-16 units remaining of 10/i);
+
+    await p.locator('#characterLimitBasis').selectOption('bytes');
+    await p.locator('#characterLimit').fill('11');
+    assert.match(await p.locator('#characterLimitText').innerText(),/Limit reached: 11 UTF-8 bytes/i);
+
+    await p.locator('#clearCharacterCounter').click();
+    assert.equal(await p.locator('#textInput').inputValue(),'');
+    assert.equal(await p.locator('#characterLimit').inputValue(),'');
+    assert.equal(await p.locator('#characterLimitBasis').inputValue(),'visible');
+    assert.equal(await p.locator('#characterLimitStatus').isHidden(),true);
+    assert.match(await p.locator('#textStats').innerText(),/0\s+Visible characters/i);
   }],
   ['reverse-dns-checker', async p => {
     await p.route('**/api/reverse-dns-check.php**', route => route.fulfill({
@@ -646,8 +1793,33 @@ const cases = [
   ['favicon-generator', async p => {
     await p.locator('[data-mode="text"]').click();
     await p.locator('#faviconText').fill('SW');
+    await p.locator('#bgColor').fill('#123456');
+    await p.locator('#transparentBg').check();
     await p.locator('#generateFavicons').click();
-    assert.ok((await p.locator('#faviconStatus').innerText()).trim().length);
+    await p.waitForFunction(() => {
+      const status = document.getElementById('faviconStatus');
+      const button = document.getElementById('generateFavicons');
+      return status && /maskable/i.test(status.textContent || '') && button && !button.disabled;
+    });
+
+    const status = (await p.locator('#faviconStatus').innerText()).trim();
+    assert.match(status, /maskable/i);
+
+    const manifest = JSON.parse(await p.locator('#manifestCode').inputValue());
+    const maskable = manifest.icons.filter(icon => icon.purpose === 'maskable');
+    assert.equal(maskable.length, 2);
+    assert.deepEqual(maskable.map(icon => icon.sizes), ['192x192', '512x512']);
+    assert.deepEqual(maskable.map(icon => icon.src), [
+      '/android-chrome-192x192-maskable.png',
+      '/android-chrome-512x512-maskable.png'
+    ]);
+    assert.equal(manifest.icons.filter(icon => icon.purpose === 'any').length, 2);
+
+    const cornerPixel = await p.locator('#previewMaskable192').evaluate(canvas =>
+      [...canvas.getContext('2d').getImageData(0, 0, 1, 1).data]
+    );
+    assert.deepEqual(cornerPixel, [18, 52, 86, 255]);
+    assert.equal(await p.locator('#downloadZip').isEnabled(), true);
   }],
   ['case-converter', async p => {
     await p.locator('#caseInput').fill('hello world');

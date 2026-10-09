@@ -16,6 +16,14 @@
   const error = document.getElementById('ulidError');
   const stats = document.getElementById('ulidStats');
   const tbody = document.querySelector('#ulidTable tbody');
+  const inspectInput = document.getElementById('ulidInspectInput');
+  const inspectError = document.getElementById('ulidInspectError');
+  const inspectResult = document.getElementById('ulidInspectResult');
+  const inspectNormalized = document.getElementById('ulidInspectNormalized');
+  const inspectTimestampMs = document.getElementById('ulidInspectTimestampMs');
+  const inspectTimestampUtc = document.getElementById('ulidInspectTimestampUtc');
+  const inspectRandomBase32 = document.getElementById('ulidInspectRandomBase32');
+  const inspectRandomHex = document.getElementById('ulidInspectRandomHex');
 
   let lastTimestamp = null;
   let lastRandom = null;
@@ -82,32 +90,72 @@
     return value;
   }
 
-  function nextRandom(timestamp) {
-    if (monotonicEl.checked && lastTimestamp === timestamp && lastRandom !== null) {
-      if (lastRandom >= MAX_RANDOM) throw new Error('ULID monotonic randomness overflowed for this millisecond.');
+  function nextMonotonicParts(timestamp) {
+    if (monotonicEl.checked && lastTimestamp !== null && lastRandom !== null && timestamp <= lastTimestamp) {
+      if (lastRandom >= MAX_RANDOM) throw new Error('ULID monotonic randomness overflowed for this logical millisecond.');
       lastRandom += 1n;
-      return lastRandom;
+      return {timestamp:lastTimestamp, random:lastRandom};
     }
 
     lastTimestamp = timestamp;
     lastRandom = random80();
-    return lastRandom;
+    return {timestamp:lastTimestamp, random:lastRandom};
   }
 
   function generateOne(timestamp) {
-    const random = nextRandom(timestamp);
-    return encodeBigInt(timestamp, 10) + encodeBigInt(random, 16);
+    const parts = nextMonotonicParts(timestamp);
+    return {
+      value: encodeBigInt(parts.timestamp, 10) + encodeBigInt(parts.random, 16),
+      timestamp: parts.timestamp
+    };
+  }
+
+  function decodeUlid(raw) {
+    const ulid = String(raw || '').trim().toUpperCase();
+    if (ulid.length !== 26) throw new Error('A ULID must contain exactly 26 Crockford Base32 characters.');
+    if (!/^[0-7][0-9A-HJKMNP-TV-Z]{25}$/.test(ulid)) {
+      throw new Error('Invalid ULID. Use Crockford Base32 characters only; I, L, O and U are not valid.');
+    }
+
+    const time = decodeBase32(ulid.slice(0, 10));
+    if (time > MAX_TIME) throw new Error('ULID timestamp exceeds the 48-bit maximum.');
+    const randomness = decodeBase32(ulid.slice(10));
+    const milliseconds = Number(time);
+
+    return {
+      ulid,
+      milliseconds,
+      iso: new Date(milliseconds).toISOString(),
+      randomBase32: ulid.slice(10),
+      randomHex: randomness.toString(16).padStart(20, '0').toUpperCase()
+    };
   }
 
   function decodeTime(ulid) {
-    if (!/^[0-7][0-9A-HJKMNP-TV-Z]{25}$/.test(ulid)) throw new Error('Generated ULID failed canonical validation.');
-    const time = decodeBase32(ulid.slice(0, 10));
-    if (time > MAX_TIME) throw new Error('ULID timestamp exceeds 48-bit range.');
-    const milliseconds = Number(time);
+    const decoded = decodeUlid(ulid);
     return {
-      milliseconds,
-      iso: new Date(milliseconds).toISOString()
+      milliseconds: decoded.milliseconds,
+      iso: decoded.iso
     };
+  }
+
+  function inspectUlid() {
+    inspectError.hidden = true;
+    inspectError.textContent = '';
+    inspectResult.hidden = true;
+
+    try {
+      const decoded = decodeUlid(inspectInput.value);
+      inspectNormalized.textContent = decoded.ulid;
+      inspectTimestampMs.textContent = decoded.milliseconds.toLocaleString();
+      inspectTimestampUtc.textContent = decoded.iso;
+      inspectRandomBase32.textContent = decoded.randomBase32;
+      inspectRandomHex.textContent = decoded.randomHex;
+      inspectResult.hidden = false;
+    } catch (caught) {
+      inspectError.textContent = caught?.message || String(caught);
+      inspectError.hidden = false;
+    }
   }
 
   function renderTable(values) {
@@ -136,9 +184,10 @@
 
     for (let i = 0; i < count; i++) {
       const timestamp = resolveTimestamp();
-      if (firstTime === null) firstTime = timestamp;
-      lastTime = timestamp;
-      values.push(generateOne(timestamp));
+      const generated = generateOne(timestamp);
+      if (firstTime === null) firstTime = generated.timestamp;
+      lastTime = generated.timestamp;
+      values.push(generated.value);
     }
 
     lastValues = values;
@@ -235,6 +284,19 @@
     if (event.key === 'Enter') {
       event.preventDefault();
       try { generate(); } catch (caught) { fail(caught); }
+    }
+  });
+
+  document.getElementById('inspectUlid').addEventListener('click', inspectUlid);
+  document.getElementById('useFirstUlid').addEventListener('click', () => {
+    if (!lastValues.length) return;
+    inspectInput.value = lastValues[0];
+    inspectUlid();
+  });
+  inspectInput.addEventListener('keydown', event => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      inspectUlid();
     }
   });
 

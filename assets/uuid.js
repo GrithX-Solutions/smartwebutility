@@ -56,11 +56,49 @@
     return bytesToCanonical(bytes);
   }
 
-  function uuidV7() {
-    const bytes = new Uint8Array(16);
-    crypto.getRandomValues(bytes);
+  const V7_RANDOM_BITS = 74n;
+  const V7_RANDOM_MASK = (1n << V7_RANDOM_BITS) - 1n;
+  const V7_RAND_B_MASK = (1n << 62n) - 1n;
+  let lastV7Timestamp = -1n;
+  let lastV7Payload = 0n;
 
-    const timestamp = BigInt(Date.now());
+  function randomBits(bitCount) {
+    const byteCount = Math.ceil(Number(bitCount) / 8);
+    const bytes = new Uint8Array(byteCount);
+    crypto.getRandomValues(bytes);
+    let value = 0n;
+    for (const byte of bytes) value = (value << 8n) | BigInt(byte);
+    return value & ((1n << bitCount) - 1n);
+  }
+
+  function randomPositiveIncrement() {
+    const value = new Uint32Array(1);
+    crypto.getRandomValues(value);
+    return BigInt(value[0] || 1);
+  }
+
+  function uuidV7() {
+    let timestamp = BigInt(Date.now());
+    let payload;
+
+    if (timestamp > lastV7Timestamp) {
+      payload = randomBits(V7_RANDOM_BITS);
+    } else {
+      timestamp = lastV7Timestamp;
+      payload = lastV7Payload + randomPositiveIncrement();
+      if (payload > V7_RANDOM_MASK) {
+        timestamp += 1n;
+        payload = randomBits(V7_RANDOM_BITS);
+      }
+    }
+
+    lastV7Timestamp = timestamp;
+    lastV7Payload = payload;
+
+    const randA = payload >> 62n;
+    const randB = payload & V7_RAND_B_MASK;
+    const bytes = new Uint8Array(16);
+
     bytes[0] = Number((timestamp >> 40n) & 0xffn);
     bytes[1] = Number((timestamp >> 32n) & 0xffn);
     bytes[2] = Number((timestamp >> 24n) & 0xffn);
@@ -68,8 +106,16 @@
     bytes[4] = Number((timestamp >> 8n) & 0xffn);
     bytes[5] = Number(timestamp & 0xffn);
 
-    bytes[6] = (bytes[6] & 0x0f) | 0x70;
-    bytes[8] = (bytes[8] & 0x3f) | 0x80;
+    bytes[6] = 0x70 | Number((randA >> 8n) & 0x0fn);
+    bytes[7] = Number(randA & 0xffn);
+    bytes[8] = 0x80 | Number((randB >> 56n) & 0x3fn);
+    bytes[9] = Number((randB >> 48n) & 0xffn);
+    bytes[10] = Number((randB >> 40n) & 0xffn);
+    bytes[11] = Number((randB >> 32n) & 0xffn);
+    bytes[12] = Number((randB >> 24n) & 0xffn);
+    bytes[13] = Number((randB >> 16n) & 0xffn);
+    bytes[14] = Number((randB >> 8n) & 0xffn);
+    bytes[15] = Number(randB & 0xffn);
 
     return bytesToCanonical(bytes);
   }

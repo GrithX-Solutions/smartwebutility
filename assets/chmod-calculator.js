@@ -12,6 +12,7 @@
   const symbolicResult = document.getElementById('chmodSymbolicResult');
   const specialResult = document.getElementById('chmodSpecialResult');
   const command = document.getElementById('chmodCommand');
+  const symbolicCommand = document.getElementById('chmodSymbolicCommand');
   const umask = document.getElementById('umaskValue');
   const umaskFile = document.getElementById('umaskFileResult');
   const umaskDir = document.getElementById('umaskDirResult');
@@ -71,6 +72,16 @@
     return lead ? String(lead) + core : core;
   }
 
+  function symbolicAssignment() {
+    return ['u','g','o'].map(cls => {
+      let perms = bits[cls].map((el, i) => el.checked ? chars[i] : '').join('');
+      if (cls === 'u' && special.setuid.checked) perms += 's';
+      if (cls === 'g' && special.setgid.checked) perms += 's';
+      if (cls === 'o' && special.sticky.checked) perms += 't';
+      return cls + '=' + perms;
+    }).join(',');
+  }
+
   function updateOutputs() {
     clearError();
     const mode = currentOctal();
@@ -87,6 +98,7 @@
     specialResult.textContent = specials.length ? specials.join(', ') : 'none';
     const safeTarget = (target.value.trim() || 'file').replace(/[\r\n]/g, ' ');
     command.textContent = 'chmod ' + (recursive.checked ? '-R ' : '') + mode + ' ' + safeTarget;
+    symbolicCommand.textContent = 'chmod ' + (recursive.checked ? '-R ' : '') + symbolicAssignment() + ' ' + safeTarget;
   }
 
   function applyOctal(raw) {
@@ -108,11 +120,16 @@
   }
 
   function applySymbolic(raw) {
-    const value = raw.trim();
+    const inputValue = raw.trim();
+    const value = inputValue.length === 10 && /^[bcdlps-]/.test(inputValue)
+      ? inputValue.slice(1)
+      : inputValue;
+
     if (!/^[r-][w-][xSs-][r-][w-][xSs-][r-][w-][xTt-]$/.test(value)) {
-      showError('Enter a 9-character permission string such as rwxr-xr-x or rwxr-sr-t.');
+      showError('Enter permissions such as rwxr-xr-x, rwxr-sr-t, or an ls -l field such as -rwxr-xr-x.');
       return false;
     }
+
     const positions = [[0,1,2],[3,4,5],[6,7,8]];
     ['u','g','o'].forEach((cls, group) => {
       const p = positions[group];
@@ -120,6 +137,7 @@
       bits[cls][1].checked = value[p[1]] === 'w';
       bits[cls][2].checked = /[xst]/.test(value[p[2]]);
     });
+
     special.setuid.checked = /[sS]/.test(value[2]);
     special.setgid.checked = /[sS]/.test(value[5]);
     special.sticky.checked = /[tT]/.test(value[8]);
@@ -157,8 +175,7 @@
     applyOctal('755');
   });
 
-  document.getElementById('copyChmod').addEventListener('click', async () => {
-    const text = command.textContent;
+  async function copyCommand(text, label) {
     try {
       await navigator.clipboard.writeText(text);
     } catch {
@@ -169,8 +186,16 @@
       document.execCommand('copy');
       temp.remove();
     }
-    status.textContent = 'Command copied';
+    status.textContent = label + ' copied';
     status.dataset.kind = 'success';
+  }
+
+  document.getElementById('copyChmod').addEventListener('click', () => {
+    copyCommand(command.textContent, 'Octal command');
+  });
+
+  document.getElementById('copyChmodSymbolic').addEventListener('click', () => {
+    copyCommand(symbolicCommand.textContent, 'Symbolic command');
   });
 
   applyOctal('755');

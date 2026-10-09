@@ -88,11 +88,49 @@
     ctx.restore();
   }
 
+  function drawMaskableIcon(canvas, size) {
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, size, size);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+
+    ctx.fillStyle = els.bg.value;
+    ctx.fillRect(0, 0, size, size);
+
+    // The maskable safe zone is a centered circle with an 80% diameter.
+    // Keeping the important artwork inside the largest square that fits
+    // within that circle protects it from common OS mask shapes.
+    const safeBox = size * .8 / Math.SQRT2;
+
+    if (mode === 'image' && sourceImage) {
+      const iw = sourceImage.naturalWidth || sourceImage.width || 1;
+      const ih = sourceImage.naturalHeight || sourceImage.height || 1;
+      const scale = Math.min(safeBox / iw, safeBox / ih);
+      const dw = iw * scale;
+      const dh = ih * scale;
+      ctx.drawImage(sourceImage, (size - dw) / 2, (size - dh) / 2, dw, dh);
+    } else {
+      const value = getTextValue();
+      const isEmoji = /[\u{1F000}-\u{1FAFF}\u2600-\u27BF]/u.test(value);
+      let fontSize = safeBox * (value.length > 2 ? .48 : value.length > 1 ? .58 : .68);
+      fontSize = Math.max(6, fontSize);
+      ctx.fillStyle = els.fg.value;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = (isEmoji ? '' : '800 ') + fontSize + 'px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';
+      ctx.fillText(value, size / 2, size / 2 + size * .02, safeBox);
+    }
+  }
+
   function renderPreviews() {
     previewSizes.forEach(size => {
       const canvas = $('preview' + size);
       if (canvas) drawIcon(canvas, size);
     });
+    const maskablePreview = $('previewMaskable192');
+    if (maskablePreview) drawMaskableIcon(maskablePreview, 192);
     els.previewMode.textContent = mode === 'image' ? (sourceImage ? 'Image' : 'Image pending') : 'Text / Emoji';
     generated = null;
     els.downloadIco.disabled = true;
@@ -148,10 +186,11 @@
     image.src = url;
   }
 
-  function canvasBlob(size) {
+  function canvasBlob(size, maskable = false) {
     return new Promise((resolve, reject) => {
       const canvas = document.createElement('canvas');
-      drawIcon(canvas, size);
+      if (maskable) drawMaskableIcon(canvas, size);
+      else drawIcon(canvas, size);
       canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('PNG export failed')), 'image/png');
     });
   }
@@ -313,6 +352,10 @@
       const sizes = [16, 32, 48, 180, 192, 512];
       const png = {};
       for (const size of sizes) png[size] = await canvasBlob(size);
+      const maskable = {
+        192: await canvasBlob(192, true),
+        512: await canvasBlob(512, true)
+      };
 
       const ico = await createIco([
         { size: 16, blob: png[16] },
@@ -324,8 +367,10 @@
         name: '',
         short_name: '',
         icons: [
-          { src: '/android-chrome-192x192.png', sizes: '192x192', type: 'image/png' },
-          { src: '/android-chrome-512x512.png', sizes: '512x512', type: 'image/png' }
+          { src: '/android-chrome-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: '/android-chrome-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          { src: '/android-chrome-192x192-maskable.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
+          { src: '/android-chrome-512x512-maskable.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
         ],
         theme_color: els.bg.value,
         background_color: els.bg.value,
@@ -349,6 +394,8 @@
         { name: 'apple-touch-icon.png', blob: png[180] },
         { name: 'android-chrome-192x192.png', blob: png[192] },
         { name: 'android-chrome-512x512.png', blob: png[512] },
+        { name: 'android-chrome-192x192-maskable.png', blob: maskable[192] },
+        { name: 'android-chrome-512x512-maskable.png', blob: maskable[512] },
         { name: 'site.webmanifest', text: manifestText }
       ];
 
@@ -359,7 +406,7 @@
       els.downloadIco.disabled = false;
       els.downloadZip.disabled = false;
       els.install.hidden = false;
-      setStatus('Favicon package ready: ICO, PNG sizes, Apple icon, web app icons and manifest.', 'success');
+      setStatus('Favicon package ready: ICO, PNG sizes, Apple icon, standard + maskable web app icons and manifest.', 'success');
     } catch (error) {
       console.error(error);
       setStatus('The browser could not generate the favicon package. Try a different source image.', 'error');

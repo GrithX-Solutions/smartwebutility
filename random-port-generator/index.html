@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Random Port Generator Online — TCP/UDP Port Numbers</title>
-<meta name="description" content="Generate random TCP or UDP port numbers online in your browser. Choose dynamic/private, user/registered, non-system or custom ranges with unique bulk output.">
+<meta name="description" content="Generate random TCP/UDP port numbers locally. Use IANA dynamic/private, user, non-system or custom ranges and understand host ephemeral-range differences.">
 <link rel="canonical" href="https://smartwebutility.com/random-port-generator/">
 <meta property="og:title" content="Random Port Generator Online — TCP/UDP Port Numbers">
 <meta property="og:description" content="Generate random valid port numbers locally with range presets and unique bulk output.">
@@ -48,15 +48,19 @@
 <div class="trustbar"><span>Browser-side generation</span><span>Web Crypto randomness</span><span>Ports 1–65535</span><span>Bulk up to 500</span><span>No availability scan</span></div>
 </section>
 
-<section class="section wrap prose">
+<section class="section wrap prose" data-quality-content="v2">
 <h2>Generate random port numbers for TCP or UDP configurations</h2>
 <p>A transport port is a 16-bit number, so the numeric space runs from 0 through 65535. This generator intentionally uses ports 1 through 65535 and provides presets for common non-system ranges. The number itself is not inherently “TCP” or “UDP”; the transport protocol is determined by the service that uses it.</p>
 <div class="info-grid">
-<article><h3>Dynamic/private range</h3><p>The 49152–65535 range is commonly designated for dynamic or private use. It is the default here because it avoids the lower system and user/registered ranges.</p></article>
+<article><h3>IANA Dynamic/Private</h3><p>IANA designates 49152–65535 as Dynamic/Private and does not assign individual services from that range. It is the default here because it avoids the System and User ranges, but it is not proof that a specific host will choose client source ports from exactly those bounds.</p></article>
 <article><h3>User/registered range</h3><p>The 1024–49151 range contains many registered service assignments. Use it only when your application or test environment allows the selected value and you have checked for conflicts.</p></article>
 <article><h3>Non-system range</h3><p>The 1024–65535 preset excludes the well-known system range while allowing both user/registered and dynamic/private numbers.</p></article>
 <article><h3>Custom range</h3><p>Choose any minimum and maximum between 1 and 65535. Unique mode prevents duplicate numbers within one generated batch when the requested count fits inside the range.</p></article>
 </div>
+
+<h2>IANA Dynamic/Private is not every operating system's ephemeral range</h2>
+<p>The <a href="https://www.iana.org/assignments/service-names-port-numbers/" rel="noopener noreferrer">IANA Service Name and Transport Protocol Port Number Registry</a> defines three registry ranges: System 0–1023, User 1024–49151, and Dynamic/Private 49152–65535. RFC 6335 reserves the Dynamic range for local/dynamic use and does not assign individual services there.</p>
+<p>An operating system can still configure its own local source-port range. On Linux, for example, the global <code>ip_local_port_range</code> setting—and newer per-socket controls—determines the local automatic port range. If your goal is to reproduce or avoid a host's ephemeral source ports, inspect that host's configuration instead of assuming the IANA range is identical.</p>
 
 <h2>A random port is not automatically available</h2>
 <p>This tool generates numbers only. It does not inspect your computer, container, router, firewall, Kubernetes cluster, remote server or operating-system socket table. A generated port can already be bound by another process, reserved by an application, blocked by policy or unsuitable for the environment where you plan to use it.</p>
@@ -77,10 +81,11 @@
 <div class="related-tools"><a href="/random-string-generator/">Random String Generator<span>Generate random fixture values and identifiers.</span></a><a href="/uuid-generator/">UUID & GUID Generator<span>Generate UUID v4/v7 and GUID-style identifiers.</span></a><a href="/ulid-generator/">ULID Generator<span>Generate lexicographically sortable identifiers.</span></a></div>
 </section>
 
-<section class="section alt" data-quality-content="v1"><div class="wrap prose">
+<section class="section alt" data-quality-content="v2"><div class="wrap prose">
 <h2>Frequently asked questions</h2>
 <h3>What is the valid port number range?</h3><p>Transport port numbers are 16-bit values from 0 through 65535. This generator returns explicit nonzero values from 1 through 65535.</p>
-<h3>What range does the random port generator use by default?</h3><p>The default is the dynamic/private range from 49152 through 65535.</p>
+<h3>What range does the random port generator use by default?</h3><p>The default is IANA's Dynamic/Private range from 49152 through 65535.</p>
+<h3>Is 49152–65535 always my computer's ephemeral port range?</h3><p>No. It is IANA's Dynamic/Private registry range, but operating systems can configure different local source-port ranges. Check the target host when that distinction matters.</p>
 <h3>Does this check whether a port is open or free?</h3><p>No. It only generates random numbers. Availability must be checked on the target system.</p>
 <h3>Can it generate unique port numbers?</h3><p>Yes. Unique mode prevents duplicates within the current generated batch when the selected range is large enough.</p>
 <h3>Are generated ports sent to the server?</h3><p>No. Generation runs locally in browser JavaScript.</p>

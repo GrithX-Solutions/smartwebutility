@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>HTML to Markdown Converter Online — Convert HTML</title>
-<meta name="description" content="Convert HTML to Markdown online in your browser. Preserve headings, links, lists, code and GFM tables, then copy or download clean Markdown.">
+<meta name="description" content="Convert HTML to Markdown locally with GFM tables, task lists and code hints. HTML is sanitized before conversion, then copied or downloaded as Markdown.">
 <link rel="canonical" href="https://smartwebutility.com/html-to-markdown/">
 <meta property="og:title" content="HTML to Markdown Converter Online — Convert HTML">
-<meta property="og:description" content="Convert HTML into readable Markdown locally with optional GFM table and task-list support.">
+<meta property="og:description" content="Convert sanitized HTML into readable Markdown locally with GFM tables, task lists and code-language hints.">
 <meta property="og:url" content="https://smartwebutility.com/html-to-markdown/"><meta property="og:type" content="website">
 <meta name="twitter:card" content="summary"><meta name="theme-color" content="#071426">
 <link rel="icon" href="/favicon-sw-v5.svg?v=20261001e" type="image/svg+xml">
 <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"HTML to Markdown Converter Online","url":"https://smartwebutility.com/html-to-markdown/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert HTML to Markdown locally in the browser.","featureList":["HTML to Markdown conversion","GFM table conversion","Task-list and strikethrough support","Heading style control","Local HTML file input","Copy and download Markdown"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"HTML to Markdown Converter Online","url":"https://smartwebutility.com/html-to-markdown/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert HTML to Markdown locally in the browser.","featureList":["HTML to Markdown conversion","DOMPurify sanitization before conversion","Dangerous URL scheme removal","GFM table conversion","Task-list and strikethrough support","Code block language hint preservation","Heading style control","Local HTML file input","Copy and download Markdown"]}</script>
 </head>
 <body data-markdown-html-tool="html-to-markdown">
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
@@ -20,7 +20,7 @@
 <div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>HTML to Markdown</span></div>
 <span class="kicker">Developer tool · HTML converter</span>
 <h1>HTML to Markdown Converter Online</h1>
-<p class="lead compact">Paste HTML or open a local file and convert semantic content into readable Markdown. Your browser handles headings, links, lists, code, tables and other common content structures locally.</p>
+<p class="lead compact">Paste HTML or open a local file and convert semantic content into readable Markdown. Before Turndown converts the document, DOMPurify sanitizes the HTML in an isolated browser DOM so active markup and dangerous URL schemes do not flow into the Markdown output.</p>
 <div class="json-toolbar">
 <button class="btn primary" id="convertHtmlMarkdown" type="button">Convert to Markdown</button>
 <label class="file-btn">Open .html<input id="htmlMarkdownFile" type="file" accept=".html,.htm,text/html,text/plain" hidden></label>
@@ -36,24 +36,28 @@
 </div>
 <div id="htmlMarkdownError" class="error" hidden role="alert"></div>
 <div id="htmlMarkdownStats" class="json-stats" hidden></div>
-<div class="trustbar"><span>Browser-side conversion</span><span>No HTML execution</span><span>Active elements removed before conversion</span><span>Local files up to 5 MB</span><span>Ctrl/⌘ + Enter to convert</span></div>
+<div class="trustbar"><span>Browser-side conversion</span><span>Sanitized before conversion</span><span>Dangerous URL schemes removed</span><span>Local files up to 5 MB</span><span>Ctrl/⌘ + Enter to convert</span></div>
 </section>
 
-<section class="section wrap prose">
+<section class="section wrap prose" data-quality-content="v3">
 <h2>Convert HTML to Markdown locally</h2>
 <p>We designed this HTML to Markdown converter for content migration and editing workflows where existing HTML needs to become portable Markdown. Common use cases include moving CMS content into documentation, cleaning copied article markup, preparing text for a repository, converting notes, or simplifying content before importing it into a Markdown publishing system.</p>
 <div class="info-grid">
 <article><h3>Semantic headings and paragraphs</h3><p>HTML headings become Markdown headings, and the converter retains paragraph structure without carrying across CSS classes or presentational layout attributes.</p></article>
 <article><h3>Links and emphasis</h3><p>Anchor elements become Markdown links, while strong and emphasis elements map to familiar Markdown syntax.</p></article>
-<article><h3>Lists and code</h3><p>The converter turns ordered and unordered lists, inline code and preformatted code blocks into readable Markdown representations.</p></article>
+<article><h3>Lists and code</h3><p>The converter turns ordered and unordered lists, inline code and preformatted code blocks into readable Markdown. Common code classes such as <code>language-js</code> or <code>lang-python</code> become fenced-code language hints.</p></article>
 <article><h3>GFM tables and tasks</h3><p>When you enable GFM support, the converter can represent compatible HTML tables, task-list items and strikethrough markup with GitHub Flavored Markdown syntax.</p></article>
 </div>
 
-<h2>What happens to scripts, styles and embedded content</h2>
-<p>The converter parses the input as an HTML document but does not execute it. It removes active or non-content elements such as <code>script</code>, <code>style</code>, <code>iframe</code>, <code>object</code>, <code>embed</code>, <code>template</code> and <code>noscript</code> before conversion. The goal is to convert document content, not reproduce a webpage runtime.</p>
+<h2>HTML is sanitized before Turndown converts it</h2>
+<p>Turndown's own security guidance warns that untrusted HTML should be cleaned before conversion. This page therefore passes the source through DOMPurify 3.4.16 first and gives Turndown the resulting inert DOM fragment instead of handing raw HTML directly to the converter.</p>
+<p>The sanitizer removes active/non-content elements such as <code>script</code>, <code>style</code>, <code>iframe</code>, <code>object</code>, <code>embed</code>, <code>template</code>, <code>link</code>, <code>meta</code> and <code>base</code>. DOMPurify also removes unsafe URL schemes such as <code>javascript:</code> from attributes before links or images become Markdown. Ordinary HTTPS links and images can still be preserved as content.</p>
 
 <h2>HTML layout does not map perfectly to Markdown</h2>
 <p>Markdown intentionally has a smaller formatting vocabulary than HTML. Complex grids, forms, positioned elements, interactive widgets, deeply nested tables and CSS-driven presentation may not have a faithful Markdown equivalent. The output focuses on readable content structure rather than pixel-perfect webpage reconstruction.</p>
+
+<h2>Code block language hints are preserved when HTML supplies them</h2>
+<p>Syntax highlighters commonly put a language token on <code>&lt;code&gt;</code> or <code>&lt;pre&gt;</code>, for example <code>class="language-js"</code>, <code>class="lang-python"</code> or a <code>data-language</code> attribute. When the converter finds one of those explicit hints, it adds the language after the opening Markdown fence. It also lengthens the fence when the code itself contains a run of backticks, so embedded triple-backtick text does not prematurely close the generated block. The converter does not guess a programming language when the HTML provides no hint.</p>
 
 <h2>Tables need a Markdown dialect</h2>
 <p>Standard Markdown does not define tables, while GitHub Flavored Markdown does. Keep GFM support on when table preservation matters. Turn it off when your destination accepts only a minimal Markdown subset and you prefer the converter to simplify unsupported table markup.</p>
@@ -62,21 +66,23 @@
 <p>Markdown describes content structure rather than browser presentation. Classes, IDs, inline styles, data attributes and most layout-specific properties therefore do not survive normal conversion. That is expected behavior and often desirable when migrating content out of a page builder or CMS.</p>
 
 <h2>Conversion is not webpage scraping</h2>
-<p>This tool converts HTML that you provide. It does not fetch a remote URL, run JavaScript on another site, bypass access controls or attempt to extract content from an arbitrary webpage. If JavaScript renders a website dynamically, obtain the HTML you are authorized to use before converting it here.</p>
+<p>This tool converts HTML that you provide. It does not fetch a remote URL, run JavaScript on another site, bypass access controls or attempt to extract content from an arbitrary webpage. Sanitization also prevents the conversion step from treating embedded active markup as executable page behavior. If JavaScript renders a website dynamically, obtain the HTML you are authorized to use before converting it here.</p>
 
 <h2>Related developer tools</h2>
 <div class="related-tools"><a href="/markdown-to-html/">Markdown to HTML<span>Convert Markdown back into HTML source.</span></a><a href="/html-entity-encoder-decoder/">HTML Entity Encoder / Decoder<span>Encode and decode HTML entity syntax.</span></a><a href="/text-tools/">Text Tools<span>Clean and transform plain text content.</span></a></div>
 </section>
 
-<section class="section alt" data-quality-content="v1"><div class="wrap prose">
+<section class="section alt" data-quality-content="v3"><div class="wrap prose">
 <h2>Frequently asked questions</h2>
 <h3>Can it convert HTML tables to Markdown?</h3><p>Yes, for compatible tables when you enable GFM support.</p>
-<h3>Does it execute scripts in the HTML?</h3><p>No. The converter parses the source as data and removes active embedded elements before conversion.</p>
+<h3>Does it preserve code block language names?</h3><p>Yes, when the HTML includes an explicit <code>language-*</code>, <code>lang-*</code> or <code>data-language</code> hint on the code block. It does not infer a language from the code text.</p>
+<h3>Does it execute scripts in the HTML?</h3><p>No. DOMPurify sanitizes the source in an isolated DOM before Turndown receives it, and active/non-content elements are removed before Markdown generation.</p>
+<h3>What happens to javascript: links?</h3><p>DOMPurify removes dangerous URL schemes before conversion. Safe links such as normal HTTPS URLs remain available for Markdown conversion.</p>
 <h3>Will CSS be converted?</h3><p>No. Markdown does not provide a general equivalent for CSS layout and styling.</p>
 <h3>Can I convert an HTML file?</h3><p>Yes. Open a local <code>.html</code> or <code>.htm</code> file up to 5 MB.</p>
 <h3>Is my HTML uploaded?</h3><p>No. Conversion runs locally in browser JavaScript on this page.</p>
 </div></section>
 </main>
 <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
-<script type="module" src="/assets/markdown-html-tools.mjs?v=20261002-1"></script>
+<script type="module" src="/assets/markdown-html-tools.mjs?v=20261004-2"></script>
 </body></html>

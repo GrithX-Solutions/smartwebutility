@@ -240,20 +240,36 @@
         setStatus('Add YAML', 'neutral');
         return;
       }
-      if (!window.jsyaml || typeof window.jsyaml.load !== 'function') {
+      if (!window.jsyaml || typeof window.jsyaml.loadAll !== 'function' || typeof window.jsyaml.dump !== 'function') {
         throw new Error('YAML parser failed to load. Refresh the page and try again.');
       }
-      const parsed = window.jsyaml.load(raw);
-      const result = window.jsyaml.dump(parsed === undefined ? null : parsed, {
+
+      const documents = [];
+      window.jsyaml.loadAll(raw, document => documents.push(document));
+      if (!documents.length) {
+        throw new Error('No YAML document was found.');
+      }
+
+      const dumpOptions = {
         indent:Number(indent.value) || 2,
         noRefs:true,
         lineWidth:-1,
         sortKeys:false
-      });
+      };
+      const rendered = documents.map(document =>
+        window.jsyaml.dump(document === undefined ? null : document, dumpOptions)
+      );
+      const result = documents.length === 1
+        ? rendered[0]
+        : rendered.map(document => '---\n' + document).join('');
+
       output.value = result;
       stats.hidden = false;
-      stats.innerHTML = '<span><b>'+result.length.toLocaleString()+'</b> characters</span><span><b>'+result.split(/\r?\n/).length.toLocaleString()+'</b> lines</span>';
-      setStatus('Valid · formatted', 'success');
+      stats.innerHTML =
+        '<span><b>'+documents.length.toLocaleString()+'</b> document'+(documents.length === 1 ? '' : 's')+'</span>' +
+        '<span><b>'+result.length.toLocaleString()+'</b> characters</span>' +
+        '<span><b>'+result.split(/\r?\n/).length.toLocaleString()+'</b> lines</span>';
+      setStatus(documents.length === 1 ? 'Valid · formatted' : 'Valid · formatted stream', 'success');
     }
 
     document.getElementById('formatYaml').addEventListener('click', () => {

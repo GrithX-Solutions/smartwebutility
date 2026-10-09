@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>CSS Minifier Online — Minify & Compress CSS</title>
-<meta name="description" content="Minify CSS online in your browser. Compress whitespace and values, optionally enable structural optimization, compare byte savings, then copy or download CSS.">
+<meta name="description" content="Minify CSS locally in your browser. Compress whitespace and values, preserve /*! */ banners by default, optionally restructure, copy or download CSS.">
 <link rel="canonical" href="https://smartwebutility.com/css-minifier/">
 <meta property="og:title" content="CSS Minifier Online — Minify & Compress CSS">
-<meta property="og:description" content="Minify CSS locally with conservative defaults and optional structural optimization.">
+<meta property="og:description" content="Minify CSS locally with conservative defaults, preserved /*! */ banners and optional structural optimization.">
 <meta property="og:url" content="https://smartwebutility.com/css-minifier/"><meta property="og:type" content="website">
 <meta name="twitter:card" content="summary"><meta name="theme-color" content="#071426">
 <link rel="icon" href="/favicon-sw-v5.svg?v=20261001e" type="image/svg+xml">
 <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"CSS Minifier Online","url":"https://smartwebutility.com/css-minifier/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Minify and compress CSS locally in the browser.","featureList":["CSS minification","Value compression","Whitespace removal","Optional structural optimization","Local CSS file input","Byte savings report","Copy and download minified CSS"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"CSS Minifier Online","url":"https://smartwebutility.com/css-minifier/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Minify and compress CSS locally in the browser.","featureList":["CSS minification","Value compression","Whitespace removal","Preserve /*! */ comments by default","Optional remove-all-comments mode","Optional structural optimization","Pinned CSSO engine readiness check","jsDelivr to UNPKG fallback","Local CSS file input","Byte savings report","Copy and download minified CSS"]}</script>
 </head>
 <body data-css-minifier>
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
@@ -27,6 +27,7 @@
 <label class="file-btn">Open .css<input id="cssMinifierFile" type="file" accept=".css,text/css,text/plain" hidden></label>
 <button class="text-btn" id="exampleCssMinifier" type="button">Example</button>
 <button class="text-btn" id="clearCssMinifier" type="button">Clear</button>
+<label class="check-control"><input id="cssPreserveComments" type="checkbox" checked> Preserve <code>/*! ... */</code> comments</label>
 <label class="check-control"><input id="cssRestructure" type="checkbox"> Structural optimization</label>
 </div>
 
@@ -36,21 +37,30 @@
 </div>
 <div id="cssMinifierError" class="error" hidden role="alert"></div>
 <div id="cssMinifierStats" class="json-stats" hidden></div>
-<div class="trustbar"><span>Browser-side minification</span><span>No upload</span><span>Structural optimization off by default</span><span>Local files up to 5 MB</span><span>Ctrl/⌘ + Enter to minify</span></div>
+<div class="trustbar"><span>Browser-side minification</span><span>Engine Ready only after load</span><span>jsDelivr → UNPKG fallback</span><span>No CSS upload</span><span><code>/*! ... */</code> preserved by default</span></div>
 </section>
 
-<section class="section wrap prose">
+<section class="section wrap prose" data-quality-content="v3">
 <h2>Minify CSS without uploading the stylesheet</h2>
 <p>This CSS minifier parses and compresses CSS directly in browser JavaScript. It removes redundant formatting, shortens compatible values and produces compact output suitable for build artifacts, static sites, test fixtures and other workflows where smaller stylesheet source is useful.</p>
 <div class="info-grid">
 <article><h3>Whitespace and formatting</h3><p>The parser removes indentation, line breaks and unnecessary spaces where it can do so without changing the stylesheet grammar.</p></article>
+<article><h3>Important comment banners</h3><p>By default the tool preserves CSSO's exclamation-comment form, <code>/*! ... */</code>, while removing ordinary comments. Projects often use these banners for license, copyright or build notices that must survive minification.</p></article>
 <article><h3>Shorter equivalent values</h3><p>The minifier can rewrite compatible values to shorter forms. For example, it can represent some colors, zero values and redundant syntax more compactly.</p></article>
 <article><h3>Structural optimization</h3><p>Optional restructuring can merge compatible rules and declarations for additional savings. The tool disables it by default because changing stylesheet structure is more aggressive than basic compression.</p></article>
 <article><h3>Measure the result</h3><p>The tool reports input bytes, output bytes and percentage saved so you can evaluate real compression rather than assuming every stylesheet benefits equally.</p></article>
 </div>
 
+<h2>Comment preservation is explicit</h2>
+<p>CSSO supports preserving comments that begin with an exclamation mark. Smart Web Utility enables that behavior by default, so a banner such as <code>/*! Package name — license notice */</code> remains in the minified output while ordinary <code>/* ... */</code> comments are removed. Turn the option off only when your build is allowed to remove every comment.</p>
+<p>This control is intentionally exact: a normal comment that merely contains <code>@license</code> or <code>@preserve</code> is not the same as CSSO's <code>/*! ... */</code> preservation mode. If your project has legal or attribution requirements, verify the actual comment form in the source and review the resulting artifact before deployment.</p>
+
 <h2>Why structural optimization is opt-in</h2>
 <p>CSS optimizers can sometimes combine declarations or rules that appear equivalent. In normal stylesheets this can reduce size, but CSS ordering, cascade behavior, browser quirks and framework-generated selectors can make aggressive restructuring harder to review. The default mode therefore compresses without structural merging.</p>
+
+<h2>Engine availability is checked before the page reports Ready</h2>
+<p>The tool uses the pinned CSSO 5.0.5 browser bundle. It tries jsDelivr first and falls back to UNPKG if the first provider fails or does not become ready within ten seconds. The status changes to <strong>Ready</strong> only after <code>csso.minify</code> is available. If both providers fail, the page shows the engine-load error instead of waiting for the first minification click to discover the problem.</p>
+<p>Only the CSSO library asset is requested from those CDNs. The stylesheet text you paste or open stays in the browser and is not submitted to a Smart Web Utility API or to either CDN provider.</p>
 
 <h2>Minification is not the same as removing unused CSS</h2>
 <p>This page compresses CSS that you provide. It does not inspect an entire website to determine which selectors are unused. Removing unused CSS requires analyzing the HTML, templates, runtime states, responsive breakpoints and JavaScript-driven classes that may appear only under specific conditions.</p>
@@ -68,16 +78,17 @@
 <div class="related-tools"><a href="/html-minifier/">HTML Minifier<span>Compress HTML source with conservative defaults.</span></a><a href="/website-speed-test/">Website Speed Test<span>Measure page-performance signals separately from source size.</span></a><a href="/developer-tools/">Developer Tools<span>Browse data, encoding and debugging utilities.</span></a></div>
 </section>
 
-<section class="section alt" data-quality-content="v1"><div class="wrap prose">
+<section class="section alt" data-quality-content="v3"><div class="wrap prose">
 <h2>Frequently asked questions</h2>
 <h3>Does CSS minification change styling?</h3><p>Basic compression aims to preserve CSS behavior, but you should test all production output, especially when you enable structural optimization.</p>
+<h3>Does the minifier keep license comments?</h3><p>It preserves comments written with the CSSO exclamation form <code>/*! ... */</code> by default. Ordinary comments are removed. You can turn the preservation option off to remove all comments.</p>
 <h3>Does this remove unused selectors?</h3><p>No. It compresses the CSS provided; it does not crawl a site or determine whether selectors are unused.</p>
 <h3>Can I upload a CSS file?</h3><p>You can open a local <code>.css</code> file up to 5 MB. Browser JavaScript processes the file locally.</p>
 <h3>What does structural optimization do?</h3><p>It allows the minifier to restructure compatible rules and declarations to reduce source size further.</p>
-<h3>Is my CSS sent to the server?</h3><p>No. Minification runs locally in browser JavaScript.</p>
+<h3>Is my CSS sent to the server?</h3><p>No. Minification runs locally in browser JavaScript. The page fetches the pinned CSSO library asset from jsDelivr or its UNPKG fallback, but your stylesheet content is not uploaded to either provider.</p>
+<h3>What happens if the CSS minifier CDN fails?</h3><p>The page tries jsDelivr first and then UNPKG. It reports Ready only after one pinned CSSO 5.0.5 bundle exposes the minifier; otherwise it shows an engine-load error.</p>
 </div></section>
 </main>
 <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
-<script src="https://cdn.jsdelivr.net/npm/csso@5.0.5/dist/csso.js" defer></script>
-<script src="/assets/css-minifier.js?v=20261002-1" defer></script>
+<script src="/assets/css-minifier.js?v=20261005-1" defer></script>
 </body></html>

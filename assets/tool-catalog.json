@@ -4,39 +4,74 @@
     "url": "/base64-encoder-decoder/",
     "title": "Base64 Encoder / Decoder",
     "description": "Encode UTF-8 text or local files to Base64 and decode Base64URL text.",
-    "keywords": ["base64 decoder", "base64 encoder", "base64url", "base64 file encoder"]
+    "keywords": [
+      "base64 decoder",
+      "base64 encoder",
+      "base64url",
+      "base64 file encoder"
+    ]
   },
   {
     "category": "Developer",
     "url": "/chmod-calculator/",
     "title": "chmod Calculator",
-    "description": "Convert Linux permissions between octal, rwx and chmod commands.",
+    "description": "Convert Linux permissions between octal, rwx, ls -l strings and chmod commands.",
     "keywords": [
       "chmod calculator",
+      "linux chmod calculator",
+      "chmod calculator online",
+      "unix chmod calculator",
       "unix permissions calculator",
-      "linux permissions"
+      "linux permissions calculator",
+      "linux permissions",
+      "ls -l permissions",
+      "octal permissions calculator"
     ]
   },
   {
     "category": "Developer",
     "url": "/cron-expression-helper/",
-    "title": "Cron Expression Helper",
-    "description": "Understand common cron schedules.",
-    "keywords": []
+    "title": "Cron Expression Generator & Parser",
+    "description": "Build, validate and preview standard 5-field cron schedules locally.",
+    "keywords": [
+      "cron expression generator",
+      "cron generator",
+      "cron generator online",
+      "cron expression generator online",
+      "crontab generator",
+      "cron parser",
+      "cron schedule generator"
+    ]
   },
   {
     "category": "Developer",
     "url": "/css-minifier/",
     "title": "CSS Minifier",
-    "description": "Compress CSS with conservative defaults and optional restructuring.",
-    "keywords": []
+    "description": "Compress CSS with preserved /*! */ banners by default and optional restructuring.",
+    "keywords": [
+      "css minifier",
+      "online css minifier",
+      "css minifier tool",
+      "css minifier online",
+      "css minifier compressor"
+    ]
   },
   {
     "category": "Developer",
     "url": "/csv-to-json/",
     "title": "CSV to JSON",
-    "description": "Convert quoted CSV rows into formatted JSON locally.",
-    "keywords": []
+    "description": "Convert CSV to pretty, compact or JSON Lines output locally.",
+    "keywords": [
+      "csv to json",
+      "csv to json format",
+      "csv to json conversion",
+      "convert csv to json",
+      "csv to json converter",
+      "online csv to json converter",
+      "csv to json online",
+      "csv to json lines",
+      "csv to ndjson"
+    ]
   },
   {
     "category": "Developer",
@@ -56,29 +91,64 @@
     "category": "Developer",
     "url": "/curl-converter/",
     "title": "cURL Converter",
-    "description": "Convert cURL API commands to Python, fetch, Axios or PHP.",
-    "keywords": []
+    "description": "Convert cURL API commands, including inline --json, to Python, fetch, Axios or PHP.",
+    "keywords": [
+      "curl converter",
+      "curl to python",
+      "curl converter python",
+      "curl json",
+      "curl json post",
+      "curl post json",
+      "curl to fetch",
+      "curl to axios"
+    ]
   },
   {
     "category": "Developer",
     "url": "/hash-generator/",
     "title": "Hash Generator",
-    "description": "Generate SHA hashes for text and files.",
-    "keywords": []
+    "description": "Generate SHA hashes for text or files and verify expected checksums locally.",
+    "keywords": [
+      "hash generator",
+      "sha256 generator",
+      "sha256 hash generator",
+      "sha 256 hash generator",
+      "sha 1 hash generator",
+      "sha 512 hash generator",
+      "file hash generator",
+      "checksum calculator",
+      "checksum verifier"
+    ]
   },
   {
     "category": "Developer",
     "url": "/html-entity-encoder-decoder/",
     "title": "HTML Entity Encoder / Decoder",
-    "description": "Escape and decode HTML entities.",
-    "keywords": []
+    "description": "Encode HTML character references as named, decimal or hex entities and decode them back to text.",
+    "keywords": [
+      "html encode",
+      "html decode",
+      "html entity decoder",
+      "html entity encoder",
+      "html escape online",
+      "html encode online",
+      "online html decode",
+      "html entity converter"
+    ]
   },
   {
     "category": "Developer",
     "url": "/html-minifier/",
     "title": "HTML Minifier",
-    "description": "Minify HTML with conservative defaults and measurable byte savings.",
-    "keywords": []
+    "description": "Minify HTML with conservative defaults, optional HTML5 cleanup and measurable byte savings.",
+    "keywords": [
+      "html minifier",
+      "online html minifier",
+      "html minifier online",
+      "minify html",
+      "html compressor",
+      "compress html"
+    ]
   },
   {
     "category": "Developer",
@@ -91,8 +161,16 @@
     "category": "Developer",
     "url": "/html-to-markdown/",
     "title": "HTML to Markdown",
-    "description": "Convert semantic HTML into readable Markdown with GFM table support.",
-    "keywords": []
+    "description": "Sanitize and convert semantic HTML into readable Markdown with GFM tables and fenced-code language hints.",
+    "keywords": [
+      "html to markdown",
+      "html to markdown converter",
+      "html to markdown converter online",
+      "online html to markdown converter",
+      "html to markdown online",
+      "convert html to markdown",
+      "html to markdown table"
+    ]
   },
   {
     "category": "Developer",
@@ -101,15 +179,30 @@
     "description": "Compare two JSON structures by semantic path.",
     "keywords": [
       "json diff tools",
-      "json compare"
+      "json compare",
+      "json diff online",
+      "json compare online",
+      "online json diff",
+      "json diff checker",
+      "json compare tool",
+      "json diff viewer",
+      "json compare without order"
     ]
   },
   {
     "category": "Developer",
     "url": "/json-escape-unescape/",
     "title": "JSON Escape / Unescape",
-    "description": "Escape JSON string content or decode JSON escape sequences.",
-    "keywords": []
+    "description": "Escape JSON string content or decode JSON escape sequences with context-specific guidance.",
+    "keywords": [
+      "json escape",
+      "json escape chars",
+      "json escape online",
+      "json escape character",
+      "json escape quote",
+      "json escape double quote",
+      "json escape unescape"
+    ]
   },
   {
     "category": "Developer",
@@ -148,7 +241,11 @@
     "url": "/json-to-yaml/",
     "title": "JSON to YAML",
     "description": "Convert JSON objects and arrays into clean YAML with configurable indentation.",
-    "keywords": ["json to yaml converter", "json yaml", "convert json to yaml"]
+    "keywords": [
+      "json to yaml converter",
+      "json yaml",
+      "convert json to yaml"
+    ]
   },
   {
     "category": "Developer",
@@ -161,16 +258,28 @@
     "category": "Developer",
     "url": "/jwt-decoder/",
     "title": "JWT Decoder",
-    "description": "Inspect JWT headers, payloads and claims.",
-    "keywords": []
+    "description": "Decode JWT parts locally, inspect claims and check exp/nbf timing without signature verification.",
+    "keywords": [
+      "jwt decoder",
+      "jwt decoder online",
+      "online jwt decoder",
+      "jwt token decoder",
+      "decode jwt",
+      "jwt claims decoder",
+      "local jwt decoder"
+    ]
   },
   {
     "category": "Developer",
     "url": "/mac-address-generator/",
     "title": "MAC Address Generator",
-    "description": "Generate locally administered unicast MAC-48 addresses for testing.",
+    "description": "Generate random MAC-48 addresses with local/universal-style and unicast/multicast bit controls.",
     "keywords": [
       "mac address generator",
+      "random mac address generator",
+      "mac address generator unicast",
+      "unicast mac address generator",
+      "mac address generator online",
       "generate mac address",
       "random mac generator"
     ]
@@ -179,8 +288,15 @@
     "category": "Developer",
     "url": "/markdown-to-html/",
     "title": "Markdown to HTML",
-    "description": "Convert Markdown and GFM content into HTML with a sandboxed preview.",
-    "keywords": []
+    "description": "Convert Markdown/GFM to sanitized HTML by default with optional raw output and sandboxed preview.",
+    "keywords": [
+      "markdown to html",
+      "markdown to html converter",
+      "online markdown to html converter",
+      "markdown to html online",
+      "markdown to html converter online",
+      "free markdown to html converter"
+    ]
   },
   {
     "category": "Developer",
@@ -193,10 +309,13 @@
     "category": "Developer",
     "url": "/random-port-generator/",
     "title": "Random Port Generator",
-    "description": "Generate unique TCP/UDP port numbers from standard or custom ranges.",
+    "description": "Generate random TCP/UDP port numbers from IANA or custom ranges.",
     "keywords": [
       "random port generator",
-      "random tcp port generator"
+      "random tcp port generator",
+      "random port number generator",
+      "port number generator",
+      "random port number"
     ]
   },
   {
@@ -213,15 +332,30 @@
     "description": "Escape literal text using modern JavaScript RegExp.escape semantics.",
     "keywords": [
       "regex escape",
-      "regex escaper"
+      "regex escaper",
+      "regex escape characters",
+      "regex escape special characters",
+      "regex escape forward slash",
+      "regex escape period",
+      "regex escape backslash",
+      "regex escape online"
     ]
   },
   {
     "category": "Developer",
     "url": "/regex-tester/",
     "title": "Regex Tester",
-    "description": "Test expressions, groups and replacements.",
-    "keywords": []
+    "description": "Test JavaScript regular expressions with highlighted matches, capture groups, ranges and replacement preview.",
+    "keywords": [
+      "regex tester",
+      "regular expression tester",
+      "regex tester online",
+      "online regular expression tester",
+      "regex tester javascript",
+      "javascript regular expression tester",
+      "regex tester js",
+      "free regex tester"
+    ]
   },
   {
     "category": "Developer",
@@ -243,23 +377,49 @@
   {
     "category": "Developer",
     "url": "/ulid-generator/",
-    "title": "ULID Generator",
-    "description": "Generate monotonic time-sortable ULIDs with decoded timestamps.",
-    "keywords": []
+    "title": "ULID Generator & Decoder",
+    "description": "Generate monotonic ULIDs and inspect existing ULID timestamps and randomness.",
+    "keywords": [
+      "ulid generator",
+      "online ulid generator",
+      "ulid generator online",
+      "ulid decoder",
+      "ulid timestamp decoder",
+      "monotonic ulid",
+      "sortable id generator"
+    ]
   },
   {
     "category": "Developer",
     "url": "/unix-timestamp-converter/",
     "title": "Unix Timestamp Converter",
-    "description": "Convert epoch timestamps and dates.",
-    "keywords": []
+    "description": "Convert Unix/epoch timestamps in seconds, milliseconds, microseconds or nanoseconds and convert local or UTC dates back to epoch values.",
+    "keywords": [
+      "epoch converter",
+      "timestamp converter",
+      "unix timestamp converter online",
+      "epoch timestamp converter",
+      "date to unix timestamp converter",
+      "timestamp to epoch converter",
+      "utc timestamp converter",
+      "epoch to timestamp converter"
+    ]
   },
   {
     "category": "Developer",
     "url": "/url-encoder-decoder/",
     "title": "URL Encoder / Decoder",
-    "description": "Encode and decode URLs and components.",
-    "keywords": []
+    "description": "Encode and decode full URLs, components and form-style query values locally.",
+    "keywords": [
+      "url encoder",
+      "url decoder",
+      "url encoder decoder",
+      "url encoder and decoder",
+      "url decoder online",
+      "url encoder online",
+      "url encoder javascript",
+      "url encoder and decoder online"
+    ]
   },
   {
     "category": "Developer",
@@ -269,8 +429,11 @@
     "keywords": [
       "uuid generator",
       "guid generator",
+      "guid uuid generator",
       "guid generator online",
       "uuid generator online",
+      "v4 uuid generator",
+      "random uuid generator",
       "uuid v4",
       "uuid v7",
       "random guid generator",
@@ -287,23 +450,38 @@
     "description": "Check UUID/GUID format, version, variant and UUID v7 timestamps.",
     "keywords": [
       "uuid validator",
-      "guid validator"
+      "guid validator",
+      "online uuid validator",
+      "uuid version checker"
     ]
   },
   {
     "category": "Developer",
     "url": "/xml-escape-unescape/",
     "title": "XML Escape / Unescape",
-    "description": "Escape XML text or attributes and decode predefined or numeric entities.",
-    "keywords": []
+    "description": "Escape XML text or attributes, reject XML 1.0-illegal characters, and decode predefined or numeric entities.",
+    "keywords": [
+      "xml escape",
+      "xml unescape",
+      "xml escape online",
+      "online xml escape",
+      "xml escape characters",
+      "xml escape ampersand",
+      "xml escape special characters",
+      "xml entity encoder",
+      "xml entity decoder"
+    ]
   },
   {
     "category": "Developer",
     "url": "/xml-formatter-validator/",
     "title": "XML Formatter & Validator",
-    "description": "Format, validate and minify XML locally in your browser.",
+    "description": "Format, validate and minify XML locally with clear parser errors.",
     "keywords": [
       "xml formatter",
+      "online xml formatter",
+      "xml formatter online",
+      "xml beautifier",
       "xml validator",
       "xml formatter and validator"
     ]
@@ -329,8 +507,12 @@
     "category": "Developer",
     "url": "/yaml-formatter/",
     "title": "YAML Formatter",
-    "description": "Format and validate YAML with consistent indentation.",
+    "description": "Format and validate single or multi-document YAML with consistent indentation.",
     "keywords": [
+      "yaml formatter",
+      "yaml formatter online",
+      "online yaml formatter",
+      "yaml formatter and validator",
       "yaml validator",
       "format yaml"
     ]
@@ -340,7 +522,12 @@
     "url": "/yaml-to-json/",
     "title": "YAML to JSON",
     "description": "Parse single or multi-document YAML into readable JSON with configurable indentation.",
-    "keywords": ["yaml to json converter", "yaml json", "yaml2json", "convert yaml to json"]
+    "keywords": [
+      "yaml to json converter",
+      "yaml json",
+      "yaml2json",
+      "convert yaml to json"
+    ]
   },
   {
     "category": "SEO",
@@ -356,22 +543,48 @@
     "category": "SEO",
     "url": "/meta-tag-generator/",
     "title": "Meta Tag Generator",
-    "description": "Create title, description, canonical and robots markup.",
-    "keywords": []
+    "description": "Generate SEO, Open Graph and Twitter/X metadata with local previews.",
+    "keywords": [
+      "meta tag generator",
+      "meta tag generator seo",
+      "seo meta tag generator",
+      "og meta tag generator",
+      "social meta tag generator",
+      "website meta tag generator",
+      "meta tag generator html"
+    ]
   },
   {
     "category": "SEO",
     "url": "/open-graph-preview/",
     "title": "Open Graph Preview",
-    "description": "Generate OG tags and preview social-card metadata.",
-    "keywords": []
+    "description": "Generate Open Graph tags with core-property readiness, image metadata and crop previews.",
+    "keywords": [
+      "open graph preview",
+      "og preview",
+      "open graph generator",
+      "open graph preview tool",
+      "open graph generator online",
+      "open graph preview image",
+      "facebook open graph generator",
+      "social media preview"
+    ]
   },
   {
     "category": "SEO",
     "url": "/robots-txt-generator/",
     "title": "Robots.txt Generator",
-    "description": "Build common crawler directives and sitemap references.",
-    "keywords": []
+    "description": "Generate validated robots.txt groups for multiple crawlers, Allow/Disallow paths and sitemap URLs.",
+    "keywords": [
+      "robots.txt generator",
+      "robots txt generator",
+      "create robots txt generator",
+      "online robots txt generator",
+      "robots txt generator online",
+      "free robots txt generator",
+      "sitemap robots txt generator",
+      "website robots txt generator"
+    ]
   },
   {
     "category": "SEO",
@@ -384,8 +597,17 @@
     "category": "SEO",
     "url": "/schema-markup-generator/",
     "title": "Schema Markup Generator",
-    "description": "Create starter JSON-LD for common entity types.",
-    "keywords": []
+    "description": "Generate type-specific JSON-LD with readiness checks for common Schema.org entities.",
+    "keywords": [
+      "schema markup generator",
+      "json ld generator",
+      "json ld schema markup generator",
+      "schema org json ld generator",
+      "structured data generator",
+      "schema markup generator free",
+      "schema markup generator tool",
+      "schema generator"
+    ]
   },
   {
     "category": "SEO",
@@ -411,8 +633,18 @@
     "category": "Text",
     "url": "/character-counter/",
     "title": "Character Counter",
-    "description": "Count characters with and without spaces.",
-    "keywords": []
+    "description": "Count visible graphemes, Unicode code points, UTF-16 units and UTF-8 bytes with an optional custom limit.",
+    "keywords": [
+      "character counter",
+      "character count",
+      "online character counter",
+      "character counter online",
+      "character count checker",
+      "character limit counter",
+      "character counter with spaces",
+      "character counter without spaces",
+      "unicode character counter"
+    ]
   },
   {
     "category": "Text",
@@ -425,11 +657,17 @@
     "category": "Text",
     "url": "/word-counter/",
     "title": "Word Counter",
-    "description": "Count words, characters, sentences and paragraphs.",
+    "description": "Count words and text structure, estimate reading/speaking time, and track an optional word goal.",
     "keywords": [
-      "online word counter free",
-      "letter and word counter",
-      "word count checker"
+      "word counter",
+      "word count",
+      "word count checker",
+      "online word counter",
+      "word counter online",
+      "word counter tool",
+      "free word counter",
+      "free online word counter",
+      "letter and word counter"
     ]
   },
   {
@@ -459,9 +697,19 @@
   {
     "category": "Website",
     "url": "/dns-propagation-checker/",
-    "title": "DNS Propagation Checker",
-    "description": "Compare answers across independent resolvers.",
-    "keywords": []
+    "title": "DNS Resolver Checker",
+    "description": "Compare Google, Cloudflare and server DNS resolver status, TTL, DNSSEC AD, latency and answers.",
+    "keywords": [
+      "dns resolver checker",
+      "dns resolver check",
+      "check dns resolver",
+      "public dns checker",
+      "google dns checker",
+      "google dns lookup",
+      "cloudflare dns checker",
+      "cloudflare dns lookup",
+      "compare dns resolvers"
+    ]
   },
   {
     "category": "Website",
@@ -477,15 +725,30 @@
     "category": "Website",
     "url": "/favicon-generator/",
     "title": "Favicon Generator",
-    "description": "Generate favicon.ico, PNG, Apple and PWA icons from an image, SVG, logo, text or emoji.",
-    "keywords": []
+    "description": "Generate ICO, PNG, Apple, standard and maskable PWA icons from an image, SVG, logo, text or emoji.",
+    "keywords": [
+      "favicon generator",
+      "favicon maker",
+      "favicon generator from image",
+      "image to favicon generator",
+      "svg favicon generator",
+      "favicon generator for website",
+      "maskable pwa icon"
+    ]
   },
   {
     "category": "Website",
     "url": "/http-header-checker/",
     "title": "HTTP Header Checker",
-    "description": "Inspect HTTP response headers.",
-    "keywords": []
+    "description": "Inspect final HTTP response headers with method transparency, redirects and repeated values.",
+    "keywords": [
+      "http header checker",
+      "http headers checker",
+      "check http headers",
+      "website header checker",
+      "http header checker tool",
+      "http header checker online"
+    ]
   },
   {
     "category": "Website",
@@ -498,8 +761,17 @@
     "category": "Website",
     "url": "/open-graph-checker/",
     "title": "Open Graph Checker",
-    "description": "Inspect social metadata on public pages.",
-    "keywords": []
+    "description": "Validate live Open Graph tags, required properties, redirects and the primary OG image.",
+    "keywords": [
+      "open graph checker",
+      "og checker",
+      "open graph tester",
+      "open graph validator",
+      "open graph tag checker",
+      "open graph debugger",
+      "check og tags",
+      "test open graph tags"
+    ]
   },
   {
     "category": "Website",
@@ -532,15 +804,29 @@
     "description": "Inspect title, description, canonical, meta robots and X-Robots-Tag.",
     "keywords": [
       "meta tag checker",
+      "meta tag analyzer",
+      "seo meta tag checker",
+      "website meta tag checker",
+      "site meta tag checker",
+      "check meta tags",
       "x robots tag checker"
     ]
   },
   {
     "category": "Website",
     "url": "/sitemap-checker/",
-    "title": "Sitemap Checker",
-    "description": "Validate XML sitemaps and sitemap indexes.",
-    "keywords": []
+    "title": "XML Sitemap Checker & Validator",
+    "description": "Validate sitemap namespace, locations, duplicates, lastmod values and core protocol rules.",
+    "keywords": [
+      "sitemap checker",
+      "sitemap validator",
+      "xml sitemap checker",
+      "xml sitemap validator",
+      "sitemap checker tool",
+      "online sitemap checker tools",
+      "sitemap validator online",
+      "sitemap checker online"
+    ]
   },
   {
     "category": "Website",

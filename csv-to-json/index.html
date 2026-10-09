@@ -4,17 +4,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>CSV to JSON Converter Online — Convert CSV to JSON</title>
-  <meta name="description" content="Convert CSV to JSON online in your browser. Handle quoted fields, detect common delimiters, choose header mode, then copy or download formatted JSON.">
+  <meta name="description" content="Convert CSV to JSON online in your browser. Handle quoted fields and delimiters, infer types, and output pretty, compact or JSON Lines data.">
   <link rel="canonical" href="https://smartwebutility.com/csv-to-json/">
   <meta property="og:title" content="CSV to JSON Converter Online — Convert CSV to JSON">
-  <meta property="og:description" content="Convert CSV rows to JSON locally in your browser with delimiter detection, quoted-field parsing and optional type inference.">
+  <meta property="og:description" content="Convert CSV locally with delimiter detection, quoted-field parsing, optional type inference and JSON or JSON Lines output.">
   <meta property="og:url" content="https://smartwebutility.com/csv-to-json/">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary">
   <meta name="theme-color" content="#071426">
   <link rel="icon" href="/favicon-sw-v5.svg?v=20261001e" type="image/svg+xml">
   <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"CSV to JSON Converter Online","url":"https://smartwebutility.com/csv-to-json/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert CSV to formatted JSON locally in the browser.","featureList":["CSV to JSON conversion","Automatic comma/tab/semicolon/pipe detection","Quoted field support","Header or array mode","Optional simple type inference","Local CSV file input","Copy and download JSON"]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"CSV to JSON Converter Online","url":"https://smartwebutility.com/csv-to-json/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert CSV to formatted JSON locally in the browser.","featureList":["CSV to JSON conversion","JSON Lines NDJSON output","2-space or 4-space pretty JSON","Compact JSON output","Automatic comma/tab/semicolon/pipe detection","Quoted field support","Header or array mode","Optional simple type inference","Local CSV file input","Copy and download JSON"]}</script>
 </head>
 <body data-csv-json-tool>
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
@@ -38,6 +38,14 @@
         <option value="|">Pipe</option>
       </select>
     </label>
+    <label class="compact-control">Output
+      <select id="csvJsonOutputFormat">
+        <option value="pretty2" selected>Pretty JSON · 2 spaces</option>
+        <option value="pretty4">Pretty JSON · 4 spaces</option>
+        <option value="compact">Compact JSON</option>
+        <option value="jsonl">JSON Lines · NDJSON</option>
+      </select>
+    </label>
     <label class="check-control"><input id="csvJsonHeader" type="checkbox" checked> First row is header</label>
     <label class="check-control"><input id="csvJsonTypes" type="checkbox"> Infer booleans, nulls and safe numbers</label>
   </div>
@@ -55,10 +63,10 @@
   <div id="csvJsonError" class="error" hidden role="alert"></div>
   <div id="csvJsonStats" class="json-stats" hidden aria-label="CSV to JSON statistics"></div>
   <div id="csvJsonWarnings" class="json-stats" hidden aria-label="CSV to JSON warnings"></div>
-  <div class="trustbar"><span>Browser-side conversion</span><span>No upload</span><span>Local files up to 5 MB</span><span>Ctrl/⌘ + Enter to convert</span></div>
+  <div class="trustbar"><span>Browser-side conversion</span><span>No upload</span><span>JSON + JSON Lines</span><span>Local files up to 5 MB</span><span>Ctrl/⌘ + Enter to convert</span></div>
 </section>
 
-<section class="section wrap prose">
+<section class="section wrap prose" data-quality-content="v2">
   <h2>Convert CSV to JSON without uploading the file</h2>
   <p>This CSV to JSON converter reads delimited text directly in your browser and converts each record into JSON. It is useful for API fixtures, small data migrations, configuration work, test datasets, exported spreadsheets and developer debugging where you need structured JSON quickly.</p>
 
@@ -74,6 +82,9 @@
 
   <h2>Why values remain strings by default</h2>
   <p>CSV itself does not carry a reliable type system. A value such as <code>00123</code> might be an identifier rather than a number, and a word such as <code>true</code> may be literal text in the source dataset. Preserving strings by default avoids changing source meaning. Type inference is opt-in and intentionally limited.</p>
+
+  <h2>Choose pretty JSON, compact JSON or JSON Lines</h2>
+  <p>Standard JSON output wraps all converted rows in one array. Choose 2-space or 4-space indentation when humans need to review the file, or compact JSON when size matters more than readability. JSON Lines (also called NDJSON) writes one JSON value per line without an outer array, which is useful for line-oriented ingestion, logs and streaming pipelines. When header mode is off, each JSON Lines record is an array instead of an object.</p>
 
   <h2>Rows with different numbers of columns</h2>
   <p>The converter preserves the widest row found in the CSV. Shorter rows are padded with empty values. If data rows contain more fields than the header row, additional generated column names are created so values are not dropped.</p>
@@ -92,16 +103,18 @@
   </div>
 </section>
 
-<section class="section alt" data-quality-content="v1"><div class="wrap prose">
+<section class="section alt" data-quality-content="v2"><div class="wrap prose">
   <h2>Frequently asked questions</h2>
   <h3>Can I convert a CSV file to JSON online?</h3><p>Yes. Open a local CSV file up to 5 MB or paste CSV text, then convert it to JSON in the browser.</p>
   <h3>Does it handle commas inside CSV values?</h3><p>Yes, when the field is quoted correctly. Quoted delimiters remain part of the field value rather than splitting the row.</p>
   <h3>Can CSV rows become JSON objects?</h3><p>Yes. Keep “First row is header” enabled and each data row becomes an object keyed by the header row.</p>
   <h3>Can it output arrays when there is no header?</h3><p>Yes. Disable the header option and each parsed row is emitted as a JSON array.</p>
+  <h3>Can I convert CSV to JSON Lines or NDJSON?</h3><p>Yes. Choose JSON Lines · NDJSON and the converter writes one object or array per line without an outer JSON array.</p>
+  <h3>Can I generate compact JSON?</h3><p>Yes. Choose Compact JSON to remove pretty-print indentation and line breaks between array values.</p>
   <h3>Is my CSV uploaded?</h3><p>No. Conversion runs in browser JavaScript for this tool.</p>
 </div></section>
 </main>
 <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
-<script src="/assets/csv-to-json.js?v=20261002-1" defer></script>
+<script src="/assets/csv-to-json.js?v=20261003-2" defer></script>
 </body>
 </html>

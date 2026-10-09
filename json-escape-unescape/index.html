@@ -11,7 +11,7 @@
 <meta name="twitter:card" content="summary"><meta name="theme-color" content="#071426">
 <link rel="icon" href="/favicon-sw-v5.svg?v=20261001e" type="image/svg+xml">
 <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"JSON Escape / Unescape Online","url":"https://smartwebutility.com/json-escape-unescape/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Escape JSON string content and decode JSON escape sequences locally in the browser.","featureList":["JSON string escaping","JSON string unescaping","Optional surrounding quotes","Optional escaped forward slashes","Copy and download","Browser-side processing"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"JSON Escape / Unescape Online","url":"https://smartwebutility.com/json-escape-unescape/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Escape JSON string content and decode JSON escape sequences locally in the browser.","featureList":["JSON string escaping","JSON string unescaping","Optional surrounding quotes","Optional escaped forward slashes","Inline script context guidance","Copy and download","Browser-side processing"]}</script>
 </head>
 <body data-json-escape-tool>
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
@@ -35,36 +35,41 @@
 </div>
 <div id="jsonEscapeError" class="error" hidden role="alert"></div>
 <div id="jsonEscapeStats" class="json-stats" hidden></div>
-<div class="trustbar"><span>Browser-side processing</span><span>No upload</span><span>JSON-standard escaping</span><span>No account</span></div>
+<div class="trustbar"><span>Browser-side processing</span><span>No upload</span><span>RFC 8259 string escaping</span><span>Context-specific safety guidance</span><span>No account</span></div>
 </section>
 
-<section class="section wrap prose">
+<section class="section wrap prose" data-quality-content="v2">
 <h2>Escape text for a JSON string</h2>
 <p>JSON strings use backslash escape sequences for characters that would otherwise terminate the string or represent control characters. The Escape action uses the browser's JSON serializer so quotation marks, backslashes, tabs, carriage returns, line feeds and other required control characters are encoded according to JSON rules.</p>
 <div class="info-grid">
 <article><h3>Quotes and backslashes</h3><p>Double quotes become <code>\"</code> and backslashes become <code>\\</code>, allowing the text to be placed safely inside a JSON string value.</p></article>
 <article><h3>Tabs and line breaks</h3><p>Tabs, new lines and carriage returns become <code>\t</code>, <code>\n</code> and <code>\r</code> rather than literal control characters inside the escaped output.</p></article>
 <article><h3>Optional JSON quotes</h3><p>Enable surrounding quotes when you need a complete JSON string literal. Leave it disabled when another application expects only the escaped string content.</p></article>
-<article><h3>Forward slashes</h3><p>JSON does not require forward slashes to be escaped, but the optional slash setting can emit <code>\/</code> for systems that prefer that representation.</p></article>
+<article><h3>Forward slashes</h3><p>JSON does not require forward slashes to be escaped. The optional slash setting emits <code>\/</code>, which is useful when you specifically need to avoid a literal sequence such as <code>&lt;/script&gt;</code> while embedding JSON text inside an HTML script element.</p></article>
 </div>
 <h2>Unescape JSON string content</h2>
 <p>The Unescape action accepts either a complete quoted JSON string or raw escaped string content. It decodes valid JSON escapes such as <code>\b</code>, <code>\f</code>, <code>\n</code>, <code>\r</code>, <code>\t</code>, escaped quotes, escaped backslashes and <code>\uXXXX</code> Unicode sequences.</p>
 <h2>Escaping is not the same as formatting JSON</h2>
 <p>This tool operates on a single JSON string value. It does not beautify objects, validate object structure or repair malformed JSON documents. Use the <a href="/json-formatter/">JSON Formatter</a> when your input is an object or array and you need structural validation, indentation or minification.</p>
+
+<h2>JSON escaping does not make text safe for every output context</h2>
+<p>JSON escaping answers one question: how should text be represented inside a JSON string value? It is not a general-purpose sanitizer. HTML, URLs, shell commands and SQL all have different parsing rules, so reusing JSON escapes in those contexts can still produce broken or unsafe output.</p>
+<p>A common edge case is JSON embedded directly inside an HTML <code>&lt;script&gt;</code> element. A JSON string may legally contain the literal text <code>&lt;/script&gt;</code>, which the HTML parser can treat as the end of the script element before JavaScript or JSON parsing occurs. Enabling “Escape / as \/” changes that sequence to <code>&lt;\/script&gt;</code>. Applications that inline untrusted JSON into HTML can require additional context-specific handling for characters such as <code>&lt;</code>, <code>&gt;</code> and <code>&amp;</code>; follow the destination framework's safe serialization guidance rather than treating this string tool as an HTML sanitizer.</p>
 <h2>Unicode behavior</h2>
-<p>Valid JSON can contain ordinary Unicode characters directly, so the Escape action does not convert every non-ASCII character into a <code>\uXXXX</code> sequence. Required control characters are escaped, while readable Unicode text generally remains readable.</p>
+<p>RFC 8259 allows ordinary Unicode characters directly inside JSON strings. The Escape action therefore keeps readable Unicode text such as accented letters and emoji instead of forcing every non-ASCII character into <code>\uXXXX</code>. Characters that JSON requires to be escaped—quotation marks, backslashes and control characters below U+0020—are encoded by the browser's JSON serializer.</p>
 <h2>Common developer use cases</h2>
-<p>JSON escaping is useful when embedding text into API payloads, test fixtures, configuration values, logs, generated source code or nested JSON strings. Unescaping is useful when reading copied log output, serialized message content or API fields that contain escaped string data.</p>
+<p>JSON escaping is useful when placing arbitrary text inside API payload string fields, test fixtures, configuration values, logs or nested JSON strings. Unescaping is useful when reading copied log output, serialized message content or API fields that contain escaped string data. When the destination is source code, HTML, a URL, SQL or a shell command, use the escaping or parameterization rules for that destination rather than assuming JSON rules are interchangeable.</p>
 <h2>Privacy</h2>
 <p>Escaping and unescaping run locally in browser JavaScript. Input text is not submitted to a Smart Web Utility API for this operation.</p>
 <h2>Related developer tools</h2>
-<div class="related-tools"><a href="/json-formatter/">JSON Formatter<span>Format, validate and minify full JSON documents.</span></a><a href="/json-diff/">JSON Diff<span>Compare JSON objects and arrays by semantic path.</span></a><a href="/html-entity-encoder-decoder/">HTML Entity Encoder / Decoder<span>Escape characters for HTML rather than JSON.</span></a></div>
+<div class="related-tools"><a href="/json-formatter/">JSON Formatter<span>Format, validate and minify full JSON documents.</span></a><a href="/html-entity-encoder-decoder/">HTML Entity Encoder / Decoder<span>Escape characters for HTML rather than JSON.</span></a><a href="/url-encoder-decoder/">URL Encoder / Decoder<span>Percent-encode URL components with URL-specific rules.</span></a></div>
 </section>
-<section class="section alt" data-quality-content="v1"><div class="wrap prose">
+<section class="section alt" data-quality-content="v2"><div class="wrap prose">
 <h2>Frequently asked questions</h2>
 <h3>What does JSON escape do?</h3><p>It converts characters that need special representation inside a JSON string into valid JSON escape sequences.</p>
 <h3>Can I unescape a quoted JSON string?</h3><p>Yes. A valid quoted JSON string can be parsed directly, and raw escaped content is also accepted.</p>
-<h3>Are forward slashes required to be escaped?</h3><p>No. Escaping <code>/</code> as <code>\/</code> is optional in JSON.</p>
+<h3>Are forward slashes required to be escaped?</h3><p>No. Escaping <code>/</code> as <code>\/</code> is optional in JSON. It is commonly useful when avoiding a literal <code>&lt;/script&gt;</code> sequence in JSON embedded inside an HTML script element.</p>
+<h3>Does JSON escaping make text safe for HTML or SQL?</h3><p>No. JSON, HTML, URLs, SQL and shell commands use different parsing rules. Use the destination context's encoder, sanitizer or parameterized API instead.</p>
 <h3>Does this validate a complete JSON object?</h3><p>No. Use the JSON Formatter for objects and arrays.</p>
 </div></section>
 </main>

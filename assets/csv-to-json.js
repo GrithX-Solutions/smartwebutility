@@ -8,6 +8,7 @@
   const delimiterSelect = document.getElementById('csvJsonDelimiter');
   const hasHeader = document.getElementById('csvJsonHeader');
   const inferTypes = document.getElementById('csvJsonTypes');
+  const outputFormat = document.getElementById('csvJsonOutputFormat');
   const status = document.getElementById('csvJsonStatus');
   const error = document.getElementById('csvJsonError');
   const stats = document.getElementById('csvJsonStats');
@@ -180,13 +181,27 @@
       data = dataRows.map(row => row.map(convertCell));
     }
 
-    const json = JSON.stringify(data, null, 2);
+    let json;
+    let formatLabel;
+    if (outputFormat.value === 'jsonl') {
+      json = data.map(row => JSON.stringify(row)).join('\n');
+      formatLabel = 'JSON Lines';
+    } else if (outputFormat.value === 'compact') {
+      json = JSON.stringify(data);
+      formatLabel = 'Compact JSON';
+    } else {
+      const indent = outputFormat.value === 'pretty4' ? 4 : 2;
+      json = JSON.stringify(data, null, indent);
+      formatLabel = indent + '-space JSON';
+    }
+
     output.value = json;
     stats.hidden = false;
     stats.innerHTML =
       '<span><b>' + dataRows.length.toLocaleString() + '</b> data rows</span>' +
       '<span><b>' + normalized.width.toLocaleString() + '</b> columns</span>' +
       '<span><b>' + (delimiter === '\t' ? 'Tab' : delimiter) + '</b> delimiter</span>' +
+      '<span><b>' + formatLabel + '</b> output</span>' +
       '<span><b>' + new Blob([json]).size.toLocaleString() + '</b> output bytes</span>';
     setStatus('Converted', 'success');
   }
@@ -238,7 +253,7 @@
     const url = URL.createObjectURL(new Blob([output.value], {type:'application/json;charset=utf-8'}));
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'converted.json';
+    link.download = outputFormat.value === 'jsonl' ? 'converted.jsonl' : 'converted.json';
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -257,7 +272,7 @@
     try { convert(); } catch (caught) { fail(caught); }
   });
 
-  for (const control of [delimiterSelect, hasHeader, inferTypes]) {
+  for (const control of [delimiterSelect, hasHeader, inferTypes, outputFormat]) {
     control.addEventListener('change', () => {
       if (!input.value.trim()) return;
       try { convert(); } catch (caught) { fail(caught); }

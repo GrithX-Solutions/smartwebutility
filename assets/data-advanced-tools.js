@@ -54,7 +54,14 @@
       if(!raw.trim())throw new Error('Add XML to validate or format.');
       const doc=new DOMParser().parseFromString(raw,'application/xml');
       const pe=doc.querySelector('parsererror');
-      if(pe)throw new Error('Invalid XML: '+pe.textContent.replace(/\s+/g,' ').trim().slice(0,320));
+      if(pe){
+        const detail=pe.textContent.replace(/\s+/g,' ').trim();
+        const location=detail.match(/line\s+(\d+)(?:\s*(?:,|at)?\s*column\s+(\d+))?/i);
+        const where=location
+          ? ' at line '+location[1]+(location[2]?', column '+location[2]:'')
+          : '';
+        throw new Error('Invalid XML'+where+': '+detail.slice(0,320));
+      }
       return doc;
     }
     function xmlSpacePreserve(el){
@@ -127,8 +134,10 @@
   }
 
   if(mode==='json-diff'){
-    const left=document.getElementById('jsonDiffLeft'), right=document.getElementById('jsonDiffRight'), result=document.getElementById('jsonDiffResult'), status=document.getElementById('jsonDiffStatus'), error=document.getElementById('jsonDiffError'), stats=document.getElementById('jsonDiffStats'), ignore=document.getElementById('jsonDiffIgnoreOrder');
+    const left=document.getElementById('jsonDiffLeft'), right=document.getElementById('jsonDiffRight'), result=document.getElementById('jsonDiffResult'), status=document.getElementById('jsonDiffStatus'), error=document.getElementById('jsonDiffError'), stats=document.getElementById('jsonDiffStats'), ignore=document.getElementById('jsonDiffIgnoreOrder'), leftFile=document.getElementById('jsonDiffLeftFile'), rightFile=document.getElementById('jsonDiffRightFile'), downloadButton=document.getElementById('downloadJsonDiff');
+    let lastReport=null;
     const setStatus=(t,k='neutral')=>{status.textContent=t;status.dataset.kind=k};
+    const invalidateReport=()=>{lastReport=null;downloadButton.disabled=true};
     function stable(v){if(Array.isArray(v)){const a=v.map(stable);return ignore.checked?a.sort((x,y)=>JSON.stringify(x).localeCompare(JSON.stringify(y))):a}if(v&&typeof v==='object')return Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])]));return v}
     const same=(a,b)=>JSON.stringify(stable(a))===JSON.stringify(stable(b));
     const repr=v=>v===undefined?'—':typeof v==='string'?v:JSON.stringify(v);
@@ -139,18 +148,51 @@
       if(Array.isArray(a)&&Array.isArray(b)&&!ignore.checked){for(let i=0;i<Math.max(a.length,b.length);i++)walk(a[i],b[i],path+'['+i+']',rows);return rows}
       rows.push({path,kind:a===undefined?'added':b===undefined?'removed':'changed',left:a,right:b});return rows;
     }
+    function makeReport(rows,counts){
+      return {
+        format:'smartwebutility-json-diff-report',
+        version:1,
+        ignoreArrayOrder:ignore.checked,
+        equal:rows.length===0,
+        summary:{
+          differences:rows.length,
+          added:counts.added||0,
+          removed:counts.removed||0,
+          changed:counts.changed||0
+        },
+        differences:rows.map(row=>{
+          const item={path:row.path,status:row.kind,leftPresent:row.left!==undefined,rightPresent:row.right!==undefined};
+          if(row.left!==undefined)item.left=row.left;
+          if(row.right!==undefined)item.right=row.right;
+          return item;
+        })
+      };
+    }
     function compare(){
       error.hidden=true;error.textContent='';
-      let a,b;try{a=JSON.parse(left.value)}catch(e){throw new Error('Left JSON is invalid: '+e.message)}try{b=JSON.parse(right.value)}catch(e){throw new Error('Right JSON is invalid: '+e.message)}
-      const rows=walk(a,b);
+      let a,b;try{a=JSON.parse(left.value)}catch(e){invalidateReport();throw new Error('Left JSON is invalid: '+e.message)}try{b=JSON.parse(right.value)}catch(e){invalidateReport();throw new Error('Right JSON is invalid: '+e.message)}
+      const rows=walk(a,b), counts=rows.reduce((m,r)=>(m[r.kind]=(m[r.kind]||0)+1,m),{});
+      lastReport=makeReport(rows,counts);
+      downloadButton.disabled=false;
       if(!rows.length){result.innerHTML='<div class="json-diff-equal">No semantic differences found.</div>';stats.hidden=false;stats.innerHTML='<span><b>0</b> differences</span>';setStatus('Equal','success');return}
       result.innerHTML='<table class="json-diff-table"><thead><tr><th>Path</th><th>Status</th><th>Left</th><th>Right</th></tr></thead><tbody>'+rows.map(r=>'<tr data-kind="'+r.kind+'"><td><code>'+esc(r.path)+'</code></td><td><span class="diff-badge">'+r.kind+'</span></td><td><pre>'+esc(repr(r.left))+'</pre></td><td><pre>'+esc(repr(r.right))+'</pre></td></tr>').join('')+'</tbody></table>';
-      const c=rows.reduce((m,r)=>(m[r.kind]=(m[r.kind]||0)+1,m),{});stats.hidden=false;stats.innerHTML='<span><b>'+rows.length+'</b> differences</span><span><b>'+(c.added||0)+'</b> added</span><span><b>'+(c.removed||0)+'</b> removed</span><span><b>'+(c.changed||0)+'</b> changed</span>';setStatus('Compared','success');
+      stats.hidden=false;stats.innerHTML='<span><b>'+rows.length+'</b> differences</span><span><b>'+(counts.added||0)+'</b> added</span><span><b>'+(counts.removed||0)+'</b> removed</span><span><b>'+(counts.changed||0)+'</b> changed</span>';setStatus('Compared','success');
     }
     const fail=e=>{result.innerHTML='';stats.hidden=true;error.textContent=e?.message||String(e);error.hidden=false;setStatus('Fix JSON','error')};
+    async function loadFile(fileInput,target,label){
+      const chosen=fileInput.files?.[0];if(!chosen)return;
+      if(chosen.size>5*1024*1024){fileInput.value='';invalidateReport();fail(new Error('Please choose a '+label+' JSON file smaller than 5 MB.'));return}
+      target.value=await chosen.text();invalidateReport();
+      if(left.value.trim()&&right.value.trim()){try{compare()}catch(e){fail(e)}}else setStatus('Loaded '+label);
+    }
     document.getElementById('compareJson').addEventListener('click',()=>{try{compare()}catch(e){fail(e)}});
     document.getElementById('exampleJsonDiff').addEventListener('click',()=>{left.value='{"service":"api","port":8080,"regions":["us","eu"],"debug":false}';right.value='{"service":"api","port":8443,"regions":["us","apac"],"enabled":true}';try{compare()}catch(e){fail(e)}});
-    document.getElementById('clearJsonDiff').addEventListener('click',()=>{left.value='';right.value='';result.innerHTML='';error.hidden=true;stats.hidden=true;setStatus('Ready');left.focus()});
-    ignore.addEventListener('change',()=>{if(left.value.trim()&&right.value.trim()){try{compare()}catch(e){fail(e)}}});
-  }
-})();
+    document.getElementById('swapJsonDiff').addEventListener('click',()=>{const current=left.value;left.value=right.value;right.value=current;invalidateReport();if(left.value.trim()&&right.value.trim()){try{compare()}catch(e){fail(e)}}else setStatus('Sides swapped')});
+    document.getElementById('downloadJsonDiff').addEventListener('click',()=>{if(!lastReport)return;download('json-diff-report.json','application/json;charset=utf-8',JSON.stringify(lastReport,null,2))});
+    document.getElementById('clearJsonDiff').addEventListener('click',()=>{left.value='';right.value='';leftFile.value='';rightFile.value='';result.innerHTML='';error.hidden=true;stats.hidden=true;ignore.checked=false;invalidateReport();setStatus('Ready');left.focus()});
+    leftFile.addEventListener('change',()=>loadFile(leftFile,left,'left'));
+    rightFile.addEventListener('change',()=>loadFile(rightFile,right,'right'));
+    left.addEventListener('input',invalidateReport);
+    right.addEventListener('input',invalidateReport);
+    ignore.addEventListener('change',()=>{invalidateReport();if(left.value.trim()&&right.value.trim()){try{compare()}catch(e){fail(e)}}});
+  }})();

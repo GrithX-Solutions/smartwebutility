@@ -1,1 +1,129 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cron Expression Helper — Parse 5-Field Cron Online</title><meta name="description" content="Parse common 5-field cron expressions and understand what they mean. Includes useful cron presets for developers and sysadmins."><link rel="canonical" href="https://smartwebutility.com/cron-expression-helper/"><meta property="og:title" content="Cron Expression Helper — Parse 5-Field Cron Online"><meta property="og:description" content="Parse common 5-field cron expressions and understand what they mean. Includes useful cron presets for developers and sysadmins."><meta property="og:url" content="https://smartwebutility.com/cron-expression-helper/"><meta property="og:type" content="website"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Cron Expression Helper — Parse 5-Field Cron Online"><meta name="twitter:description" content="Parse common 5-field cron expressions and understand what they mean. Includes useful cron presets for developers and sysadmins."><meta name="theme-color" content="#07101b"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css"><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Cron Expression Helper","url":"https://smartwebutility.com/cron-expression-helper/","description":"Parse and understand common five-field cron expressions with useful presets for developers and system administrators.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script></head><body><header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header><main><section class="tool-hero wrap"><div class="crumb"><a href="/">Home</a><span>/</span><span>Cron Expression Helper</span></div><span class="kicker">DevOps tool · runs locally</span><h1>Cron Expression Helper</h1><p class="lead compact">Understand common 5-field cron expressions and quickly load useful scheduling presets.</p><form class="lookup" onsubmit="return false"><input id="cronInput" placeholder="0 9 * * 1-5"><button class="btn primary" id="parseCron" type="button">Explain Cron</button><button class="btn ghost" id="clearCron" type="button">Clear</button></form><div class="quick-types"><button data-cron="* * * * *">Every minute</button><button data-cron="*/5 * * * *">Every 5 min</button><button data-cron="0 * * * *">Hourly</button><button data-cron="0 0 * * *">Daily</button><button data-cron="0 9 * * 1-5">Weekdays 9 AM</button></div><section class="result-card"><div class="result-head"><strong>Description</strong><span id="cronStatus">Ready</span></div><div id="cronDescription" class="empty">Enter a cron expression or choose a preset.</div></section><div id="cronError" class="error" hidden></div><div class="trustbar"><span>5-field cron</span><span>Useful presets</span><span>No server request</span></div></section><section class="section wrap prose"><h2>Cron format</h2><p>Standard cron uses five fields: minute, hour, day of month, month and day of week. This helper focuses on common expressions used in Linux cron jobs and scheduled tasks.</p><div class="info-grid"><article><h3>Minute</h3><p>0–59, wildcard or step values such as <code>*/5</code>.</p></article><article><h3>Hour</h3><p>0–23 for the hour of day.</p></article><article><h3>Day / Month</h3><p>Restrict jobs to dates or months.</p></article><article><h3>Weekday</h3><p>Typically 0–7 for Sunday through Saturday.</p></article></div></section><section class="section alt" data-quality-content="v3"><div class="wrap prose"><h2>Read common five-field cron expressions</h2><p>The Cron Expression Helper parses standard five-field schedules for minute, hour, day of month, month and day of week. Use it to translate a schedule into a more readable form and compare it with common presets.</p><div class="info-grid"><article><h3>Five-field format</h3><p>The fields are interpreted in the common order <code>minute hour day-of-month month day-of-week</code>. Some schedulers add seconds or a year field, which this helper does not represent.</p></article><article><h3>Ranges and steps</h3><p>Values such as ranges, lists and step expressions can create compact recurring schedules. Review the actual scheduler's documentation before deploying a complex expression.</p></article><article><h3>Timezone matters</h3><p>A syntactically correct cron expression can still run at the wrong local time if the server, container or scheduling service uses a different timezone.</p></article><article><h3>Production safety</h3><p>Test important jobs in a non-destructive environment and add idempotency or locking where duplicate execution could cause harm.</p></article></div><h2>Cron syntax is not perfectly universal</h2><p>Linux cron, Kubernetes CronJobs, Quartz-style schedulers and managed cloud schedulers can support different fields or special characters. Treat this helper as a five-field cron aid and confirm platform-specific behavior before relying on it.</p></div></section><section class="section wrap prose" data-adsense-depth="20261001"><h2>Examples of five-field schedules</h2><p><code>0 9 * * 1-5</code> commonly means 09:00 on weekdays, while <code>*/15 * * * *</code> means every 15 minutes. The schedule is evaluated by the system running the job, so the effective timezone and supported syntax come from that scheduler rather than from the text of the expression alone.</p><h2>Common cron mistakes</h2><p>Frequent production errors include assuming a local timezone that the server does not use, creating overlapping long-running jobs, using a syntax feature from a different cron implementation, and scheduling a destructive task more frequently than intended. Always verify the destination platform's documentation.</p><h2>Operational checks</h2><p>For important recurring work, log each run, alert on failures and make the job safe to repeat where possible. If the job calls a web endpoint, the <a href="/http-status-checker/">HTTP Status Checker</a> can help inspect the endpoint response separately from the scheduler.</p></section></main><footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer><script src="/assets/cron.js" defer></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Cron Expression Generator & Parser — 5-Field Cron</title>
+  <meta name="description" content="Build and validate 5-field cron expressions, explain schedules, use presets, and preview the next five runs in your browser local timezone.">
+  <link rel="canonical" href="https://smartwebutility.com/cron-expression-helper/">
+  <meta property="og:title" content="Cron Expression Generator & Parser — 5-Field Cron">
+  <meta property="og:description" content="Build, validate and explain standard five-field cron schedules with presets and a local next-run preview.">
+  <meta property="og:url" content="https://smartwebutility.com/cron-expression-helper/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#07101b">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <script src="/assets/theme.js"></script>
+  <link rel="stylesheet" href="/assets/styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Cron Expression Generator & Parser","url":"https://smartwebutility.com/cron-expression-helper/","description":"Build, validate and explain standard five-field cron expressions and preview upcoming runs locally in the browser.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["5-field cron expression generator","Cron expression parser and validator","Minute hour day month weekday builder","Common schedule presets","Local next-run preview","Month and weekday names","Ranges lists and step syntax","Browser-local processing"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap nav">
+    <a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a>
+    <nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav>
+    <div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div>
+  </div>
+</header>
+
+<main>
+<section class="tool-hero wrap json-tool-hero">
+  <div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>Cron Expression Generator</span></div>
+  <span class="kicker">DevOps tool · standard 5-field cron · browser local</span>
+  <h1>Cron Expression Generator & Parser</h1>
+  <p class="lead compact">Build a standard five-field cron expression, paste one you already have, and verify it with a readable description plus upcoming run times in your browser's local timezone.</p>
+
+  <div class="json-toolbar data-view-toolbar" aria-label="Cron expression actions">
+    <label class="compact-control" style="flex:1 1 320px">Cron expression
+      <input id="cronInput" value="0 9 * * 1-5" autocomplete="off" spellcheck="false" aria-label="Cron expression">
+    </label>
+    <button class="btn primary" id="parseCron" type="button">Validate & Preview</button>
+    <button class="text-btn" id="copyCron" type="button">Copy</button>
+    <button class="text-btn" id="clearCron" type="button">Clear</button>
+  </div>
+
+  <div class="quick-types" aria-label="Common cron presets">
+    <button data-cron="* * * * *" type="button">Every minute</button>
+    <button data-cron="*/5 * * * *" type="button">Every 5 min</button>
+    <button data-cron="*/15 * * * *" type="button">Every 15 min</button>
+    <button data-cron="0 * * * *" type="button">Hourly</button>
+    <button data-cron="0 0 * * *" type="button">Daily</button>
+    <button data-cron="0 9 * * 1-5" type="button">Weekdays 9 AM</button>
+    <button data-cron="0 0 * * 0" type="button">Sunday midnight</button>
+    <button data-cron="0 0 1 * *" type="button">Monthly</button>
+  </div>
+
+  <section class="editor-panel" style="margin-top:14px">
+    <div class="editor-head"><div><strong>Build from cron fields</strong><span>Use *, lists, ranges or steps</span></div></div>
+    <div class="json-toolbar data-view-toolbar" style="margin-top:12px">
+      <label class="compact-control">Minute <span>0–59</span><input id="cronMinute" value="0" autocomplete="off" spellcheck="false" style="width:105px"></label>
+      <label class="compact-control">Hour <span>0–23</span><input id="cronHour" value="9" autocomplete="off" spellcheck="false" style="width:105px"></label>
+      <label class="compact-control">Day <span>1–31</span><input id="cronDay" value="*" autocomplete="off" spellcheck="false" style="width:105px"></label>
+      <label class="compact-control">Month <span>1–12/JAN</span><input id="cronMonth" value="*" autocomplete="off" spellcheck="false" style="width:105px"></label>
+      <label class="compact-control">Weekday <span>0–7/MON</span><input id="cronWeekday" value="1-5" autocomplete="off" spellcheck="false" style="width:105px"></label>
+    </div>
+  </section>
+
+  <section class="result-card" style="margin-top:14px">
+    <div class="result-head"><strong>Schedule explanation</strong><span id="cronStatus" data-kind="neutral">Ready</span></div>
+    <div id="cronDescription" class="empty">Enter a cron expression, use the builder, or choose a preset.</div>
+  </section>
+
+  <section class="editor-panel" style="margin-top:14px">
+    <div class="editor-head"><div><strong>Next runs</strong><span>Timezone: <span id="cronTimezone">browser local time</span></span></div></div>
+    <ol id="cronNextRuns" style="margin:14px 0 0;padding-left:24px"></ol>
+  </section>
+
+  <div id="cronError" class="error" hidden role="alert"></div>
+  <div class="trustbar"><span>Standard 5-field cron</span><span>Builder + parser</span><span>Next-run preview</span><span>Browser local</span><span>No server request</span></div>
+</section>
+
+<section class="section wrap prose" data-quality-content="v2">
+  <h2>Build a standard five-field cron expression</h2>
+  <p>The builder uses the common Unix cron field order <code>minute hour day-of-month month day-of-week</code>. Edit the five fields directly or start from a preset. The expression above stays synchronized with the builder, so you can copy the final schedule into a compatible crontab or scheduler after validating it.</p>
+
+  <div class="info-grid">
+    <article><h3>Minute</h3><p>Use values from 0–59. <code>*</code> means every minute, <code>*/5</code> means every five minutes, and lists or ranges can target selected minutes.</p></article>
+    <article><h3>Hour</h3><p>Use 0–23. For example, <code>9-17</code> restricts the schedule to hours from 09:00 through 17:59 when the other fields also match.</p></article>
+    <article><h3>Day and month</h3><p>Day-of-month accepts 1–31. Month accepts 1–12 and standard three-letter names such as <code>JAN</code> or <code>OCT</code>.</p></article>
+    <article><h3>Day of week</h3><p>Use 0–7, where 0 and 7 represent Sunday, or names such as <code>MON-FRI</code>. The preview normalizes Sunday to the browser's day-of-week value.</p></article>
+  </div>
+
+  <h2>Validate a cron expression before deploying it</h2>
+  <p>The parser checks field count, numeric ranges, comma-separated lists, ranges and step syntax. It rejects a sixth seconds field instead of silently treating a Quartz or Spring expression as Unix cron. Validation only confirms the syntax supported by this tool; your target scheduler remains the authority for platform-specific extensions.</p>
+
+  <h2>Preview the next run times in your browser timezone</h2>
+  <p>The page calculates up to five upcoming matches within a 400-day preview window. Times use the browser's local timezone. A Linux server, container, Kubernetes cluster or cloud scheduler may evaluate the same text in a different timezone, so verify the target environment before production use. Daylight-saving transitions can also change the wall-clock behavior of local-time schedules.</p>
+
+  <h2>Day-of-month and day-of-week can use OR semantics</h2>
+  <p>Traditional Vixie-style cron treats day-of-month and day-of-week specially. When both fields are restricted, a date can match when either field matches. When one field is <code>*</code>, the other field controls the date. Scheduler implementations can differ, so test important combinations against the exact cron implementation you deploy.</p>
+
+  <h2>Cron syntax is not universal</h2>
+  <p>This tool intentionally targets standard five-field cron. Quartz, Spring, AWS EventBridge, Azure Functions and other schedulers can add seconds, years or different special characters. Do not paste a six- or seven-field expression here and assume it has the same meaning. Use the documentation for the destination scheduler when its syntax differs from Unix crontab.</p>
+
+  <h2>Common five-field examples</h2>
+  <div class="info-grid">
+    <article><h3>Every 5 minutes</h3><p><code>*/5 * * * *</code> runs on minute values divisible by five.</p></article>
+    <article><h3>Weekdays at 09:00</h3><p><code>0 9 * * 1-5</code> targets Monday through Friday at 09:00 in the scheduler's timezone.</p></article>
+    <article><h3>Every Sunday</h3><p><code>0 0 * * 0</code> runs at midnight when the day of week is Sunday.</p></article>
+    <article><h3>First day of the month</h3><p><code>0 0 1 * *</code> runs at midnight on day 1 of each month.</p></article>
+  </div>
+
+  <h2>Operational checks before using cron in production</h2>
+  <p>Confirm the effective timezone, make long-running jobs safe against overlap, log each execution and alert on failures. Idempotent jobs reduce damage when a task runs twice after retries, failover or operator error. If the scheduled job calls a public web endpoint, the <a href="/http-status-checker/">HTTP Status Checker</a> can verify that endpoint separately from the scheduler.</p>
+</section>
+
+<section class="section alt" data-quality-content="v2"><div class="wrap prose">
+  <h2>Frequently asked questions</h2>
+  <h3>Does this cron generator support seconds?</h3><p>No. It supports the standard five fields only: minute, hour, day-of-month, month and day-of-week.</p>
+  <h3>Can I use month and weekday names?</h3><p>Yes. Standard three-letter names such as <code>JAN</code>, <code>DEC</code>, <code>MON</code> and <code>FRI</code> are accepted.</p>
+  <h3>Does it support lists, ranges and steps?</h3><p>Yes. You can use lists such as <code>1,15</code>, ranges such as <code>MON-FRI</code>, and steps such as <code>*/10</code> or <code>1-20/2</code>.</p>
+  <h3>Which timezone does the next-run preview use?</h3><p>It uses the timezone reported by your browser. Your server or scheduling platform may use a different timezone.</p>
+  <h3>Is this compatible with Quartz or AWS EventBridge?</h3><p>Not as a general guarantee. Those platforms use cron variants with different field counts or rules. This tool intentionally validates standard five-field cron.</p>
+</div></section>
+</main>
+
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
+<script src="/assets/cron.js?v=20261003-2" defer></script>
+</body>
+</html>

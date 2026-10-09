@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>chmod Calculator — Linux Permissions & Octal Converter</title>
-<meta name="description" content="Free chmod calculator for Linux/Unix permissions. Convert 755 or 644 octal to rwx, toggle permission bits, use special bits, and generate chmod commands.">
+<meta name="description" content="Free chmod calculator for Linux/Unix permissions. Convert octal, rwx and ls -l strings, use special bits and umask, and generate octal or symbolic commands.">
 <link rel="canonical" href="https://smartwebutility.com/chmod-calculator/">
 <meta property="og:title" content="chmod Calculator — Linux Permissions & Octal Converter">
-<meta property="og:description" content="Convert Linux file permissions between octal, rwx symbols and checkboxes, including special bits and ready-to-run chmod commands.">
+<meta property="og:description" content="Convert Linux permissions between octal, rwx, ls -l strings and checkboxes, then generate exact octal or symbolic chmod commands.">
 <meta property="og:url" content="https://smartwebutility.com/chmod-calculator/"><meta property="og:type" content="website">
 <meta name="twitter:card" content="summary"><meta name="theme-color" content="#071426">
 <link rel="icon" href="/favicon-sw-v5.svg?v=20261001e" type="image/svg+xml">
 <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"chmod Calculator","url":"https://smartwebutility.com/chmod-calculator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert Linux and Unix file permissions between octal, symbolic rwx and visual permission bits, including setuid, setgid and sticky bits.","featureList":["Octal to rwx conversion","rwx to octal conversion","Interactive owner/group/others permission matrix","setuid setgid and sticky bit support","chmod command generation","Common permission presets","umask result calculator","Browser-local processing"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"chmod Calculator","url":"https://smartwebutility.com/chmod-calculator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert Linux and Unix file permissions between octal, symbolic rwx and visual permission bits, including setuid, setgid and sticky bits.","featureList":["Octal to rwx conversion","rwx to octal conversion","ls -l permission field parsing","Interactive owner/group/others permission matrix","setuid setgid and sticky bit support","Octal chmod command generation","Symbolic chmod assignment command generation","Common permission presets","umask result calculator","Browser-local processing"]}</script>
 </head>
 <body data-chmod-calculator>
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
@@ -20,13 +20,13 @@
 <div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>chmod Calculator</span></div>
 <span class="kicker">Developer tool · Linux / Unix file permissions</span>
 <h1>chmod Calculator</h1>
-<p class="lead compact">Convert Linux file permissions between octal values such as <code>755</code> or <code>644</code>, symbolic <code>rwxr-xr-x</code> notation and a visual permission matrix. Special setuid, setgid and sticky bits are supported.</p>
+<p class="lead compact">Convert Linux file permissions between octal values such as <code>755</code>, symbolic <code>rwxr-xr-x</code>, or a 10-character <code>ls -l</code> permission field such as <code>-rwsr-xr-x</code>. The calculator also handles setuid, setgid, sticky bits and umask, then generates both octal and symbolic chmod commands.</p>
 
 <div class="json-toolbar data-view-toolbar">
 <label class="compact-control">Octal
 <input id="chmodOctal" inputmode="numeric" autocomplete="off" value="755" maxlength="4" style="width:90px" aria-label="Octal permission"></label>
 <label class="compact-control">Symbolic
-<input id="chmodSymbolic" autocomplete="off" value="rwxr-xr-x" maxlength="9" style="width:130px" aria-label="Symbolic permission"></label>
+<input id="chmodSymbolic" autocomplete="off" value="rwxr-xr-x" maxlength="10" style="width:145px" aria-label="Symbolic or ls -l permission"></label>
 <label class="compact-control">Target
 <input id="chmodTarget" autocomplete="off" value="file" style="width:160px" aria-label="Target file or directory"></label>
 <label class="check-control"><input id="chmodRecursive" type="checkbox"> Recursive (-R)</label>
@@ -64,19 +64,20 @@
 </div>
 
 <section class="editor-panel" style="margin-top:14px">
-<div class="editor-head"><div><strong>chmod result</strong><span id="chmodStatus" data-kind="success">Valid permissions</span></div><div class="editor-actions"><button id="copyChmod" class="text-btn" type="button">Copy command</button></div></div>
+<div class="editor-head"><div><strong>chmod result</strong><span id="chmodStatus" data-kind="success">Valid permissions</span></div><div class="editor-actions"><button id="copyChmod" class="text-btn" type="button">Copy octal</button><button id="copyChmodSymbolic" class="text-btn" type="button">Copy symbolic</button></div></div>
 <div class="json-stats" style="margin-top:12px">
 <span><b id="chmodOctalResult">755</b> octal</span>
 <span><b id="chmodSymbolicResult">rwxr-xr-x</b> symbolic</span>
 <span><b id="chmodSpecialResult">none</b> special bits</span>
 </div>
-<pre id="chmodCommand" style="white-space:pre-wrap;margin:14px 0 0"><code>chmod 755 file</code></pre>
+<div style="margin-top:14px"><strong>Octal command</strong><pre id="chmodCommand" style="white-space:pre-wrap;margin:6px 0 0"><code>chmod 755 file</code></pre></div>
+<div style="margin-top:14px"><strong>Symbolic assignment command</strong><pre id="chmodSymbolicCommand" style="white-space:pre-wrap;margin:6px 0 0"><code>chmod u=rwx,g=rx,o=rx file</code></pre></div>
 </section>
 <div id="chmodError" class="error" hidden role="alert"></div>
-<div class="trustbar"><span>Browser-side calculation</span><span>Octal ↔ rwx</span><span>Special bits</span><span>Command generation</span><span>No server request</span></div>
+<div class="trustbar"><span>Browser-side calculation</span><span>Octal ↔ rwx</span><span>Paste ls -l permissions</span><span>Special bits</span><span>Octal + symbolic commands</span><span>No server request</span></div>
 </section>
 
-<section class="section wrap prose">
+<section class="section wrap prose" data-quality-content="v2">
 <h2>Linux permissions calculator: octal, rwx and chmod commands</h2>
 <p>Linux and other Unix-like systems represent the basic permission set with three classes: owner (user), group and others. Each class has read, write and execute bits. This calculator keeps the checkboxes, octal value and symbolic <code>rwx</code> string synchronized so you can work from whichever representation you already have.</p>
 <div class="info-grid">
@@ -89,11 +90,15 @@
 <h2>What chmod 755 and chmod 644 mean</h2>
 <p><code>755</code> is <code>rwxr-xr-x</code>: the owner can read, write and execute, while group and others can read and execute. <code>644</code> is <code>rw-r--r--</code>: the owner can read and write while group and others are read-only. These are common examples, not universal recommendations; the correct permission depends on whether the target is a file or directory and what the application must allow.</p>
 
-<h2>Special permission bits: setuid, setgid and sticky</h2>
-<p>A leading octal digit represents three special bits. Setuid contributes 4, setgid contributes 2 and sticky contributes 1. This is why <code>4755</code>, <code>2755</code> and <code>1777</code> have four digits. Their runtime effect depends on file type, operating system and filesystem semantics, so apply them deliberately.</p>
+<h2>Paste permissions directly from ls -l</h2>
+<p>The symbolic field accepts either the nine permission characters or the usual 10-character permission field copied from <code>ls -l</code>. For example, <code>-rwsr-xr-x</code> becomes mode <code>4755</code>, while <code>drwxrwxrwt</code> becomes <code>1777</code>. The first character only describes the file type, so the calculator ignores it when computing chmod bits and returns the normalized nine-character permission string.</p>
 
-<h2>Generate a chmod command without guessing</h2>
-<p>Enter a target path and optionally enable recursive mode to generate a numeric <code>chmod</code> command. Recursive changes can affect many files and directories at once; review the target and permission model before using <code>-R</code> in production.</p>
+<h2>Special permission bits: setuid, setgid and sticky</h2>
+<p>A leading octal digit represents three special bits. Setuid contributes 4, setgid contributes 2 and sticky contributes 1. Symbolic permission output uses <code>s</code> or <code>S</code> for setuid/setgid and <code>t</code> or <code>T</code> for sticky depending on whether the corresponding execute bit is set. This is why <code>4755</code>, <code>2755</code> and <code>1777</code> have four digits. Their runtime effect depends on file type, operating system and filesystem semantics, so apply them deliberately.</p>
+
+<h2>Generate octal and symbolic chmod commands</h2>
+<p>Enter a target path and optionally enable recursive mode to generate two equivalent assignment commands. The octal form uses a mode such as <code>chmod 4755 file</code>. The symbolic assignment form expresses the same final bits by class, such as <code>chmod u=rwxs,g=rx,o=rx file</code>. Unlike an <code>ls -l</code> display string, chmod symbolic syntax uses clauses such as <code>u=</code>, <code>g=</code> and <code>o=</code>; the calculator includes <code>s</code> or <code>t</code> when the matching special bit is selected.</p>
+<p>Recursive changes can affect many files and directories at once. A single recursive mode can also make regular files executable when you only intended to add directory search permission, so review the target tree and permission model before using <code>-R</code> in production.</p>
 
 <h2>umask calculator</h2>
 <p>A process umask removes permission bits from base creation modes. New regular files commonly start from base <code>666</code> and directories from <code>777</code> before the mask is applied. Use the field below to calculate the resulting basic modes.</p>
@@ -110,15 +115,17 @@
 <div class="related-tools"><a href="/unix-timestamp-converter/">Unix Timestamp Converter<span>Convert Unix timestamps and human-readable dates.</span></a><a href="/random-port-generator/">Random Port Generator<span>Generate test TCP/UDP port numbers from defined ranges.</span></a><a href="/uuid-generator/">UUID & GUID Generator<span>Generate browser-local UUID v4/v7 identifiers.</span></a></div>
 </section>
 
-<section class="section alt" data-quality-content="v1"><div class="wrap prose">
+<section class="section alt" data-quality-content="v2"><div class="wrap prose">
 <h2>Frequently asked questions</h2>
 <h3>What is chmod 755?</h3><p>It represents <code>rwxr-xr-x</code>: owner has read/write/execute, while group and others have read/execute.</p>
 <h3>What is chmod 644?</h3><p>It represents <code>rw-r--r--</code>: owner has read/write, while group and others have read-only permission.</p>
 <h3>Can this calculator convert rwxr-xr-x to octal?</h3><p>Yes. Enter a nine-character symbolic permission string and it updates the octal value and permission matrix.</p>
-<h3>Does it support setuid, setgid and sticky bits?</h3><p>Yes. The calculator supports all three special bits and four-digit octal modes.</p>
+<h3>Can I paste permissions from ls -l?</h3><p>Yes. Paste the 10-character permission field, such as <code>-rw-r--r--</code>, <code>-rwsr-xr-x</code> or <code>drwxrwxrwt</code>. The calculator ignores the leading file-type character and converts the remaining permission bits.</p>
+<h3>Does it support setuid, setgid and sticky bits?</h3><p>Yes. The calculator supports all three special bits and four-digit octal modes, and it carries those bits into the generated symbolic chmod assignment.</p>
+<h3>Can it generate symbolic chmod syntax?</h3><p>Yes. In addition to the numeric command, it generates an exact class assignment such as <code>chmod u=rwx,g=rx,o=rx file</code>. Special bits appear as <code>s</code> or <code>t</code> in the appropriate class clause.</p>
 <h3>Does this run locally?</h3><p>Yes. Permission calculation runs in browser JavaScript and does not send your values to the server.</p>
 </div></section>
 </main>
 <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
-<script src="/assets/chmod-calculator.js?v=20261002-1" defer></script>
+<script src="/assets/chmod-calculator.js?v=20261003-1" defer></script>
 </body></html>

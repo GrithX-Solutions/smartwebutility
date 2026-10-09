@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>cURL Converter — cURL to Python, Fetch, Axios & PHP</title>
-<meta name="description" content="Convert cURL commands to Python requests, JavaScript fetch, Axios or PHP cURL online. Parse common headers, JSON bodies, auth and query data locally in your browser.">
+<meta name="description" content="Convert cURL to Python requests, fetch, Axios or PHP locally. Supports headers, auth, data flags and inline curl --json with repeated JSON fragments.">
 <link rel="canonical" href="https://smartwebutility.com/curl-converter/">
 <meta property="og:title" content="cURL Converter — cURL to Python, Fetch, Axios & PHP">
 <meta property="og:description" content="Convert common API cURL commands into Python, fetch, Axios or PHP code locally in your browser.">
@@ -14,7 +14,7 @@
 <meta name="theme-color" content="#071426">
 <link rel="icon" href="/favicon-sw-v5.svg?v=20261001e" type="image/svg+xml">
 <script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"cURL Converter","url":"https://smartwebutility.com/curl-converter/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert common cURL API commands into Python requests, JavaScript fetch, Axios and PHP cURL code locally in the browser.","featureList":["cURL to Python requests","cURL to JavaScript fetch","cURL to Axios","cURL to PHP cURL","Headers, request bodies and Basic Auth","Browser-side conversion"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"cURL Converter","url":"https://smartwebutility.com/curl-converter/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert common cURL API commands into Python requests, JavaScript fetch, Axios and PHP cURL code locally in the browser.","featureList":["cURL to Python requests","cURL to JavaScript fetch","cURL to Axios","cURL to PHP cURL","Inline curl --json support","Repeated --json fragment concatenation","Headers, request bodies and Basic Auth","Browser-side conversion"]}</script>
 </head>
 <body data-curl-converter>
 <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
@@ -23,7 +23,7 @@
 <div class="crumb"><a href="/">Home</a><span>/</span><a href="/developer-tools/">Developer Tools</a><span>/</span><span>cURL Converter</span></div>
 <span class="kicker">Developer tool · API request code generator</span>
 <h1>cURL Converter</h1>
-<p class="lead compact">Paste a common API cURL command and convert it into Python requests, JavaScript fetch, Axios or PHP cURL code. Parsing and code generation run locally in your browser.</p>
+<p class="lead compact">Paste a common API cURL command and convert it into Python requests, JavaScript fetch, Axios or PHP cURL code. Your browser parses modern inline <code>--json</code> requests, repeated JSON fragments, headers, auth and common data flags locally.</p>
 <div class="json-toolbar" aria-label="cURL converter actions">
 <button class="btn primary" id="convertCurl" type="button">Convert cURL</button>
 <label class="compact-control">Output
@@ -42,21 +42,25 @@
 <div class="trustbar"><span>Browser-side conversion</span><span>No request is sent</span><span>No account</span><span>Ctrl/⌘ + Enter to convert</span></div>
 </section>
 
-<section class="section wrap prose">
+<section class="section wrap prose" data-quality-content="v2">
 <h2>Convert cURL to Python, fetch, Axios or PHP</h2>
-<p>The converter reads a cURL command as an HTTP request description and generates equivalent starter code for a selected client. It is designed for API examples copied from documentation, browser developer tools, terminal history and support tickets.</p>
+<p>The converter reads a cURL command as an HTTP request description and generates equivalent starter code for your selected client. It handles API examples from documentation, browser developer tools, terminal history and support tickets.</p>
 <div class="info-grid">
-<article><h3>cURL to Python requests</h3><p>Generate a <code>requests.request()</code> call with method, URL, headers, Basic Auth and request data. JSON request bodies are emitted through the native JSON parameter.</p></article>
+<article><h3>cURL to Python requests</h3><p>Generate a <code>requests.request()</code> call with method, URL, headers, Basic Auth and request data. The generated Python code sends JSON request bodies through the native JSON parameter.</p></article>
 <article><h3>cURL to JavaScript fetch</h3><p>Create a browser or modern runtime <code>fetch()</code> request with method, headers and a string or JSON body.</p></article>
 <article><h3>cURL to Axios</h3><p>Generate an Axios request configuration for Node.js or application code, including URL, method, headers, auth and request data.</p></article>
 <article><h3>cURL to PHP</h3><p>Create PHP cURL setup code with <code>curl_setopt_array()</code>, HTTP headers, request method and request body.</p></article>
 </div>
 <h2>Supported cURL options</h2>
-<p>This implementation focuses on common API request flags: <code>-X/--request</code>, <code>-H/--header</code>, <code>-d/--data</code>, <code>--data-raw</code>, <code>--data-binary</code>, <code>--data-ascii</code>, <code>-u/--user</code>, <code>-b/--cookie</code>, <code>-A/--user-agent</code>, <code>-e/--referer</code>, <code>-G/--get</code>, <code>--url</code>, <code>-I/--head</code>, <code>-L/--location</code> and <code>-s/--silent</code>.</p>
+<p>This implementation focuses on common API request flags: <code>-X/--request</code>, <code>-H/--header</code>, <code>-d/--data</code>, <code>--data-raw</code>, <code>--data-binary</code>, <code>--data-ascii</code>, <code>--json</code>, <code>-u/--user</code>, <code>-b/--cookie</code>, <code>-A/--user-agent</code>, <code>-e/--referer</code>, <code>-G/--get</code>, <code>--url</code>, <code>-I/--head</code>, <code>-L/--location</code> and <code>-s/--silent</code>.</p>
+
+<h2>How curl --json is converted</h2>
+<p>curl added <code>--json</code> in version 7.82.0 as a shortcut for a binary request body plus default <code>Content-Type: application/json</code> and <code>Accept: application/json</code> headers. This converter follows those semantics for inline JSON. If you repeat <code>--json</code>, the converter concatenates the fragments without an ampersand before JSON parsing and code generation.</p>
+<p>Explicit <code>-H/--header</code> values still win: if the source command already supplies Content-Type or Accept, the converter does not add a duplicate default. The converter rejects file/stdin forms such as <code>--json @payload.json</code> and <code>--json @-</code> because the browser cannot safely infer shell-local file or stdin contents from pasted command text.</p>
 <h2>What is intentionally not converted</h2>
-<p>A cURL command can also be a shell program. Pipes, redirects, shell variables, command substitution, local-file bodies such as <code>@payload.json</code>, multipart <code>-F/--form</code>, and uncommon cURL flags can change request semantics in ways that should not be guessed. This tool rejects those cases instead of silently producing code that may make a different request.</p>
+<p>A cURL command can also be a shell program. Pipes, redirects, shell variables, command substitution, local-file bodies such as <code>@payload.json</code>, <code>--json</code> file/stdin forms, multipart <code>-F/--form</code>, and uncommon cURL flags can change request semantics in ways the converter should not guess. This tool rejects those cases instead of silently producing code that may make a different request.</p>
 <h2>JSON body detection</h2>
-<p>When the request body parses as JSON and the request has an <code>application/json</code> content type, the generated Python and Axios examples use native JSON data structures and JavaScript uses <code>JSON.stringify()</code>. Other bodies are emitted as strings. A regular <code>-d</code> body without a content type is treated like cURL's common URL-encoded form behavior.</p>
+<p>When the request body parses as JSON and the request has an <code>application/json</code> content type, the generated Python and Axios examples use native JSON data structures and JavaScript uses <code>JSON.stringify()</code>. The generator emits other bodies as strings. The converter treats a regular <code>-d</code> body without a content type like cURL's common URL-encoded form behavior.</p>
 <h2>Security and privacy</h2>
 <p>The converter does not execute the cURL request and does not send the command to Smart Web Utility. Tokens, cookies and credentials remain in the browser during conversion, but generated code can still contain secrets from the source command. Remove real credentials before sharing generated snippets, screenshots or bug reports.</p>
 <h2>Conversion is a starting point, not a runtime guarantee</h2>
@@ -64,16 +68,17 @@
 <h2>Related developer tools</h2>
 <div class="related-tools"><a href="/json-formatter/">JSON Formatter<span>Validate and format API request or response JSON.</span></a><a href="/json-diff/">JSON Diff<span>Compare API payloads by semantic path.</span></a><a href="/url-encoder-decoder/">URL Encoder / Decoder<span>Encode query values and URL components.</span></a></div>
 </section>
-<section class="section alt" data-quality-content="v1"><div class="wrap prose">
+<section class="section alt" data-quality-content="v2"><div class="wrap prose">
 <h2>Frequently asked questions</h2>
 <h3>Can I convert cURL to Python requests?</h3><p>Yes. Choose Python requests and the tool generates a <code>requests.request()</code> example from the supported cURL options.</p>
-<h3>Can I convert cURL to fetch or Axios?</h3><p>Yes. JavaScript fetch and Node.js Axios are available from the Output selector.</p>
+<h3>Can I convert cURL to fetch or Axios?</h3><p>Yes. Choose JavaScript fetch or Node.js Axios from the Output selector.</p>
 <h3>Does the converter run the API request?</h3><p>No. It only parses the command and generates code locally in the browser.</p>
 <h3>Why does the tool reject some valid cURL commands?</h3><p>Complex shell syntax and advanced cURL options can require runtime context. Rejecting unsupported input is safer than generating code with different semantics.</p>
-<h3>Does it support Bearer tokens?</h3><p>Yes. Bearer tokens supplied through an <code>Authorization</code> header are preserved as a normal HTTP header in generated code.</p>
+<h3>Does it support Bearer tokens?</h3><p>Yes. The converter preserves Bearer tokens from an <code>Authorization</code> header as a normal HTTP header in generated code.</p>
+<h3>Does it support curl --json?</h3><p>Yes for inline JSON. The converter applies curl's default JSON Content-Type and Accept headers unless the command overrides them. The converter concatenates repeated inline <code>--json</code> fragments. It intentionally leaves local-file and stdin forms unsupported.</p>
 </div></section>
 </main>
 <footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/about/">About</a><a href="/methodology/">Methodology</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Contact</a><a href="/sitemap.xml">Sitemap</a></div></div></footer>
-<script src="/assets/curl-converter.js?v=20261002-1" defer></script>
+<script src="/assets/curl-converter.js?v=20261004-1" defer></script>
 </body>
 </html>

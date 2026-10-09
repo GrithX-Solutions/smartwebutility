@@ -6,9 +6,18 @@
   const output = document.getElementById('cssMinifierOutput');
   const file = document.getElementById('cssMinifierFile');
   const restructure = document.getElementById('cssRestructure');
+  const preserveComments = document.getElementById('cssPreserveComments');
   const status = document.getElementById('cssMinifierStatus');
   const error = document.getElementById('cssMinifierError');
   const stats = document.getElementById('cssMinifierStats');
+
+  const ENGINE_URLS = [
+    ['jsdelivr', 'https://cdn.jsdelivr.net/npm/csso@5.0.5/dist/csso.js'],
+    ['unpkg', 'https://unpkg.com/csso@5.0.5/dist/csso.js']
+  ];
+  const ENGINE_LOAD_TIMEOUT_MS = 10000;
+  let engineReady = false;
+  let engineError = null;
 
   const setStatus = (text, kind = 'neutral') => {
     status.textContent = text;
@@ -19,6 +28,67 @@
     ? window.csso.minify
     : null;
 
+  const loadScript = (provider, url) => new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    let settled = false;
+
+    const finish = callback => value => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      script.onload = null;
+      script.onerror = null;
+      callback(value);
+    };
+
+    const timer = setTimeout(() => {
+      script.remove();
+      finish(reject)(new Error(provider + ' engine load exceeded ' + (ENGINE_LOAD_TIMEOUT_MS / 1000) + ' seconds'));
+    }, ENGINE_LOAD_TIMEOUT_MS);
+
+    script.src = url;
+    script.async = true;
+    script.onload = finish(resolve);
+    script.onerror = () => {
+      script.remove();
+      finish(reject)(new Error(provider + ' engine failed to load'));
+    };
+    document.head.appendChild(script);
+  });
+
+  const initializeEngine = async () => {
+    window.__swuCssMinifierEngineReady = false;
+    window.__swuCssMinifierEngineProvider = '';
+    window.__swuCssMinifierEngineError = '';
+    setStatus('Loading minifier…');
+
+    const failures = [];
+    for (const [provider, url] of ENGINE_URLS) {
+      try {
+        await loadScript(provider, url);
+        if (!engine()) throw new Error(provider + ' loaded without exposing CSSO.minify');
+        engineReady = true;
+        engineError = null;
+        window.__swuCssMinifierEngineReady = true;
+        window.__swuCssMinifierEngineProvider = provider;
+        setStatus('Ready');
+        return true;
+      } catch (caught) {
+        failures.push(provider + ': ' + (caught?.message || String(caught)));
+      }
+    }
+
+    engineReady = false;
+    engineError = new Error('CSS minifier engine could not load: ' + failures.join(' | '));
+    window.__swuCssMinifierEngineError = engineError.message;
+    error.textContent = engineError.message;
+    error.hidden = false;
+    setStatus('Minifier unavailable', 'error');
+    return false;
+  };
+
+  const engineReadyPromise = initializeEngine();
+
   const fail = caught => {
     output.value = '';
     stats.hidden = true;
@@ -27,7 +97,12 @@
     setStatus('Fix CSS', 'error');
   };
 
-  const run = () => {
+  const run = async () => {
+    if (!engineReady) {
+      const ready = await engineReadyPromise;
+      if (!ready) throw engineError || new Error('CSS minifier engine is unavailable.');
+    }
+
     const minify = engine();
     if (!minify) throw new Error('CSS minifier engine failed to load. Refresh the page and try again.');
 
@@ -44,7 +119,7 @@
 
     const result = minify(source, {
       restructure: restructure.checked,
-      comments: false
+      comments: preserveComments.checked ? 'exclamation' : false
     });
 
     const minified = String(result.css || '');
@@ -61,14 +136,17 @@
       '<span><b>' + after.toLocaleString() + '</b> output bytes</span>' +
       '<span><b>' + saved.toLocaleString() + '</b> bytes saved</span>' +
       '<span><b>' + percent.toFixed(1) + '%</b> smaller</span>' +
-      '<span><b>' + (restructure.checked ? 'On' : 'Off') + '</b> restructuring</span>';
+      '<span><b>' + (restructure.checked ? 'On' : 'Off') + '</b> restructuring</span>' +
+      '<span><b>' + (preserveComments.checked ? 'Keep /*! */' : 'Remove all') + '</b> comments</span>';
 
     setStatus('Minified', 'success');
   };
 
-  document.getElementById('minifyCss').addEventListener('click', () => {
-    try { run(); } catch (caught) { fail(caught); }
-  });
+  const runSafely = () => {
+    run().catch(caught => fail(caught));
+  };
+
+  document.getElementById('minifyCss').addEventListener('click', runSafely);
 
   document.getElementById('exampleCssMinifier').addEventListener('click', () => {
     input.value = `:root {
@@ -85,7 +163,7 @@
   font-weight: 700;
 }`;
     restructure.checked = false;
-    try { run(); } catch (caught) { fail(caught); }
+    runSafely();
   });
 
   document.getElementById('clearCssMinifier').addEventListener('click', () => {
@@ -95,7 +173,10 @@
     error.hidden = true;
     stats.hidden = true;
     restructure.checked = false;
-    setStatus(engine() ? 'Ready' : 'Loading minifier…');
+    preserveComments.checked = true;
+    if (engineReady) setStatus('Ready');
+    else if (engineError) setStatus('Minifier unavailable', 'error');
+    else setStatus('Loading minifier…');
     input.focus();
   });
 
@@ -131,25 +212,25 @@
         throw new Error('Please choose a CSS file smaller than 5 MB.');
       }
       input.value = await chosen.text();
-      run();
+      await run();
     } catch (caught) {
       fail(caught);
     }
   });
 
-  restructure.addEventListener('change', () => {
-    if (!input.value.trim()) return;
-    try { run(); } catch (caught) { fail(caught); }
-  });
+  for (const control of [restructure, preserveComments]) {
+    control.addEventListener('change', () => {
+      if (!input.value.trim()) return;
+      runSafely();
+    });
+  }
 
   input.addEventListener('keydown', event => {
     if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
       event.preventDefault();
-      try { run(); } catch (caught) { fail(caught); }
+      runSafely();
     }
   });
 
-  window.addEventListener('load', () => {
-    setStatus(engine() ? 'Ready' : 'Minifier failed to load', engine() ? 'neutral' : 'error');
-  });
+  window.__swuCssMinifierBooted = true;
 })();
