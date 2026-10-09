@@ -681,9 +681,18 @@
   {
     "category": "Website",
     "url": "/dns-propagation-checker/",
-    "title": "DNS Propagation Checker",
-    "description": "Compare answers across independent resolvers.",
-    "keywords": []
+    "title": "DNS Resolver Checker",
+    "description": "Compare Google Public DNS, Cloudflare DNS and server-resolver status, TTL, DNSSEC and answers.",
+    "keywords": [
+      "dns resolver checker",
+      "google dns checker",
+      "google dns lookup",
+      "cloudflare dns checker",
+      "cloudflare dns lookup",
+      "public dns checker",
+      "dns resolver check",
+      "check dns resolver"
+    ]
   },
   {
     "category": "Website",
