@@ -6460,14 +6460,96 @@ Internal-link targets:
 - `/slug-generator/`;
 - `/text-tools/`.
 
-### Research status
+### Implementation
+
+Final implementation/test head before audit-state sync:
+- `39a1a335868d427e1ce4e8d08094fb35ed808f4f`.
+
+The authorized Page 33 implementation is contained to five files:
+- `word-counter/index.html`;
+- `assets/text-tools.js`;
+- `assets/tool-catalog.json`;
+- `tests/browser-smoke.cjs`;
+- `sitemap.xml`.
+
+The Word Counter now:
+- keeps the existing six live counts: words, characters, characters without whitespace, sentences, paragraphs and lines;
+- adds estimated reading time at the documented 200 WPM default;
+- adds estimated speaking time at the documented 130 WPM default;
+- adds unique-word count and average normalized word length;
+- adds an optional target-word field with progress, remaining, reached and over-target feedback;
+- includes a Clear action for fast reuse;
+- keeps all processing browser-local with no upload or backend request;
+- gates the new insights and goal workflow to `body[data-tool="word-counter"]`, preserving Character Counter behavior;
+- keeps word-frequency, multilingual/CJK-specific, file/OCR, Google Docs/Microsoft Word and synthetic SEO-score intents out of scope.
+
+A final acceptance review found and fixed one visible grammar defect in target feedback: singular states now render `1 word remaining` / `1 word over` instead of `1 words ...`. The committed browser regression was updated accordingly.
+
+The public page now documents the counting rules, reading/speaking assumptions, privacy model, goal behavior and the lack of a universal SEO word-count target. Tool-search aliases cover the word-counter/checker/tool cluster while leaving Character Counter ownership separate.
+
+Sitemap `lastmod` for `/word-counter/` is 2026-10-09.
+
+### Verification — 2026-10-09
+
+Final implementation head:
+- `39a1a335868d427e1ce4e8d08094fb35ed808f4f`.
+
+Exact current material blobs:
+- `word-counter/index.html` — `6de82c2c79ad2bbf29ecfb3ca18cc2df38730a61`;
+- `assets/text-tools.js` — `c472985182f0f8195d92fb9cc23d9333ee22f72b`;
+- `assets/tool-catalog.json` — `ef8693201af4ac132f0ff9a423dd9486bad3d97f`;
+- `tests/browser-smoke.cjs` — `28d2e8bf3856a636b5af81061963447812a98de6`;
+- `sitemap.xml` — `5f517d44bcb8ccd1bf1f08d9e08f0b3738594255`.
+
+Page-scoped evidence:
+- Page 33 authorization checkpoint → final implementation head: seven commits, five changed files only;
+- isolated ZTHosting `smartwebutility` workspace on `vmi3588489`: VERIFIED non-production;
+- exact final GitHub blobs staged with stale-write SHA protection;
+- HTML structural QA: one H1 and one self-canonical;
+- title length: 50 characters;
+- meta description length: 149 characters;
+- optional target and insights controls: present;
+- tool catalog JSON: PASS;
+- sitemap: 89 URLs / 89 unique;
+- exact `assets/text-tools.js` syntax: PASS;
+- exact `tests/browser-smoke.cjs` syntax: PASS;
+- exact GitHub Word Counter JavaScript was byte-for-byte matched before browser execution;
+- targeted Chromium interaction regression: PASS with 22 checks;
+- Chromium verified the six base counts, 200-WPM reading estimate, 130-WPM speaking estimate, unique-word count, average word length, target remaining/reached/over states including singular grammar, progress values, Clear/reset behavior and Character Counter shared-script behavior.
+
+GitHub-hosted CI remains a batch/release infrastructure issue:
+- Build run 977: FAILED before repository execution with `runner_id: 0` and `steps: []`;
+- Browser run 661: FAILED before repository execution with `runner_id: 0` and `steps: []`.
+
+These no-runner jobs do not invalidate the page-scoped fallback evidence.
+
+After verification, all staged Page 33 files were restored to the workspace baseline. The isolated workspace ended clean with no modified or untracked files. Production was not mutated.
+
+### Ubersuggest rank tracking
+
+After verification, the full existing SmartWebUtility keyword map was re-read and preserved. Added for U.S. English:
+- `word counter`;
+- `word count checker`;
+- `word counter tool`.
+
+`letter and word counter` was already tracked. Keyword-location usage moved from 105 / 300 to 108 / 300.
+
+### Page 33 acceptance status
 
 - Demand / CPC / SD / intent: VERIFIED.
 - Ubersuggest U.S. SERP: VERIFIED.
 - Current live competitor functionality: VERIFIED.
 - First-party GSC evidence: VERIFIED.
-- Existing implementation / tests: VERIFIED.
 - Character Counter cannibalization ownership: VERIFIED.
 - Distinct lightweight product gap: VERIFIED.
-- Implementation: NOT STARTED at this checkpoint.
+- Five-file implementation scope: VERIFIED.
+- Browser-local privacy model: VERIFIED.
+- Static SEO/content structure: VERIFIED.
+- JavaScript syntax: VERIFIED.
+- Word Counter Chromium regression: VERIFIED.
+- Character Counter shared-script regression: VERIFIED.
+- Ubersuggest rank tracking: VERIFIED.
+- Full-batch GitHub-hosted release CI: BLOCKED by no-runner infrastructure and remains a release-level gate.
 - Production deployment: NOT STARTED.
+
+Page 33 is VERIFIED. Page 34 `/character-counter/` may begin with research only; do not deploy production.
