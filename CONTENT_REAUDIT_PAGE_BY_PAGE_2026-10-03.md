@@ -5608,3 +5608,138 @@ No existing tracked keyword/location entry was replaced.
 - Production deployment: NOT STARTED.
 
 Page 29 is VERIFIED. Page 30 may begin with research only; do not deploy production.
+
+
+---
+
+## Page 30 — Open Graph Checker — 2026-10-09
+
+URL: `/open-graph-checker/`
+
+### Research evidence
+
+Ubersuggest U.S. English:
+- `open graph checker`: 480 monthly searches, CPC $33.44, SD 38, navigational;
+- `og checker`: 480, CPC $0, SD 39, informational;
+- `open graph tester`: 390, CPC $12.49, SD 36, navigational;
+- `open graph tag checker`: 170, CPC $0, SD 39, navigational;
+- `open graph validator`: 110, CPC $0, SD 41, navigational;
+- `open graph image checker`: 480, CPC $0, SD 38, informational.
+
+Autocomplete/suggestion evidence also includes `open graph tester`, `open graph validator`, `open graph tag checker`, `open graph image checker`, `open graph debugger`, `open graph url checker`, `open graph metadata checker` and related live-diagnostic variants.
+
+Latest available Ubersuggest U.S. Google SERP snapshots:
+- `open graph tester` updated 2026-09-11;
+- `og checker` updated 2026-09-10;
+- `open graph validator` updated 2026-09-19.
+
+Those SERPs are dominated by live URL validation/checking tools and include AI Overview / People Also Ask feature blocks for the tester/validator variants. Leading utility domains include OpenGraph.xyz, Orca Scan, OpenGraph.to, DebugBear, OpenGraphExamples, OpenGraph.dev and Meta's Sharing Debugger. Multiple low/moderate-authority domains rank prominently, including OpenGraph.to (DA 8) and OpenGraphExamples (DA 15), so the utility intent is competitive but not authority-locked.
+
+Current web search corroborates the same intent pattern in October 2026: strong competing checkers expose live URL fetching, redirect awareness, required-property validation, all OG tags, image diagnostics and actionable findings rather than returning only six raw values.
+
+### First-party search evidence
+
+Google Search Console through the connected Search Console source for the last 90 days:
+- `/open-graph-checker/`: no query/page rows returned;
+- `/open-graph-preview/`: four rows appeared, including U.S. impressions for `open graph preview` and one U.S. impression for `og metadata`, with no clicks and very low positions.
+
+Therefore current ranking success for the checker is UNKNOWN / not observed. The small preview-page impression set supports preserving a separate preview/generator URL rather than merging the two intents.
+
+Ubersuggest `page_keywords` for `https://smartwebutility.com/open-graph-checker/` in U.S. English also returned no ranking-keyword data.
+
+### Existing implementation review
+
+Current checker behavior:
+- fetches one public URL through `/api/page-inspect.php?mode=og`;
+- uses the existing public-target SSRF controls and 1 MB response ceiling;
+- does not follow redirects in OG mode;
+- returns only first values for `og:title`, `og:description`, `og:url`, `og:image`, `og:type` and `og:site_name`;
+- does not show all `og:*` properties, counts, required-property readiness, structured image metadata, image URL health or concrete findings;
+- has no dedicated Open Graph Checker functional browser regression.
+
+The page HTML/content is materially thinner than the already-verified `/open-graph-preview/`.
+
+### Cannibalization / canonical ownership
+
+Keep distinct ownership:
+- `/open-graph-checker/` owns live URL checking, testing, validation and debugging intent: `open graph checker`, `og checker`, `open graph tester`, `open graph validator`, `open graph tag checker`.
+- `/open-graph-preview/` owns local composition/generation/preview intent: `open graph preview`, `og preview`, `open graph generator`, `open graph preview tool`.
+- `/meta-tag-checker/` owns broader search metadata/indexing diagnostics and intentionally leaves `og:*` social metadata to this checker.
+
+Do not add `open graph preview` or `open graph generator` aliases to the checker catalog entry.
+
+### Protocol / source-of-truth evidence
+
+The Open Graph protocol lists four required properties: `og:title`, `og:type`, `og:image` and `og:url`. It also documents optional `og:description`, `og:locale` and `og:site_name`, structured image properties such as `og:image:secure_url`, `og:image:type`, `og:image:width`, `og:image:height` and `og:image:alt`, and array behavior where the first tag is preferred when multiple values are supplied.
+
+Implementation must follow the protocol rather than invent universal social-platform character or image-size requirements.
+
+### Confirmed product/content gap
+
+The page should become a live Open Graph validator/debugger without absorbing the local generator intent. The justified gap is:
+- bounded redirect-aware live page fetch using the same per-hop SSRF revalidation model as Meta Tag Checker;
+- requested vs final URL and redirect path;
+- four-core-property readiness;
+- all Open Graph properties in the returned HTML head, not only six hard-coded fields;
+- counts / first-value precedence context;
+- structured primary-image metadata;
+- safe first-image response validation with bounded public-target fetching;
+- concrete findings for missing required properties, malformed absolute URLs, image-response/content-type issues and missing `og:image:alt`;
+- no artificial quality score;
+- specification-grounded content and FAQ;
+- a dedicated mocked Chromium regression.
+
+### Semantic brief
+
+Primary intent / keyword:
+- live Open Graph checker / OG checker.
+
+Secondary terms:
+- open graph tester;
+- open graph validator;
+- open graph tag checker;
+- open graph debugger;
+- check OG tags;
+- test Open Graph tags.
+
+Entities / attributes:
+- Open Graph protocol;
+- `og:title`;
+- `og:type`;
+- `og:image`;
+- `og:url`;
+- `og:description`;
+- `og:site_name`;
+- `og:locale`;
+- structured image properties;
+- redirect;
+- HTTP status;
+- content type;
+- social crawler;
+- server-rendered HTML.
+
+Questions / sub-intents:
+- which Open Graph properties are required;
+- why an OG image is missing;
+- why a platform can still show old metadata;
+- whether JavaScript-injected tags are visible to non-rendering crawlers;
+- how multiple OG image tags are interpreted;
+- when to use the checker vs the local Open Graph Preview.
+
+Internal-link targets:
+- `/open-graph-preview/` for local generation / preview;
+- `/meta-tag-checker/` for broader SEO metadata;
+- `/meta-tag-generator/` for broader metadata generation.
+
+### Research status
+
+- Demand / CPC / SD / intent: VERIFIED.
+- Latest available Ubersuggest U.S. Google SERP snapshots: VERIFIED (2026-09-10 to 2026-09-19 depending on variant).
+- Current October 2026 web competitor review: VERIFIED.
+- First-party GSC evidence: VERIFIED.
+- Existing implementation: VERIFIED.
+- Cannibalization ownership: VERIFIED.
+- Open Graph protocol requirements: VERIFIED.
+- Product/content gap: VERIFIED.
+- Implementation: NOT STARTED at this checkpoint.
+- Production deployment: NOT STARTED.
