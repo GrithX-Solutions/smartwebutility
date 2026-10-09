@@ -1329,6 +1329,67 @@ const cases = [
     assert.match(await p.locator('#schemaError').innerText(), /fully qualified URL/i);
     assert.equal(await p.locator('#schemaOutput').inputValue(), '');
   }],
+  ['http-header-checker', async p => {
+    await p.route('**/api/http-status.php?mode=headers**', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          ok: true,
+          result: {
+            url: 'https://example.com/old',
+            final_url: 'https://www.example.com/final',
+            redirect_count: 1,
+            redirects: [{status:301,method:'GET',from:'https://example.com/old',to:'https://www.example.com/final'}],
+            requested_method: 'auto',
+            method_used: 'HEAD',
+            method_fallback: true,
+            status: 200,
+            time_ms: 42,
+            total_time_ms: 91,
+            content_type: 'text/html; charset=UTF-8',
+            ip: '203.0.113.10',
+            header_count: 8,
+            unique_header_count: 7,
+            duplicate_headers: {'set-cookie':2},
+            headers: {
+              'content-type':'text/html; charset=UTF-8',
+              'cache-control':'public, max-age=300',
+              'etag':'"abc"',
+              'server':'example-edge',
+              'strict-transport-security':'max-age=31536000',
+              'access-control-allow-origin':'https://app.example.com',
+              'set-cookie':'a=1, b=2'
+            },
+            headers_all: {
+              'content-type':['text/html; charset=UTF-8'],
+              'cache-control':['public, max-age=300'],
+              'etag':['"abc"'],
+              'server':['example-edge'],
+              'strict-transport-security':['max-age=31536000'],
+              'access-control-allow-origin':['https://app.example.com'],
+              'set-cookie':['a=1','b=2']
+            }
+          }
+        })
+      });
+    });
+    await p.locator('#target').fill('https://example.com/old');
+    await p.locator('#headerMethod').selectOption('auto');
+    await p.locator('#diagForm button[type="submit"]').click();
+    await p.locator('#result').waitFor({state:'visible'});
+    const resultText=await p.locator('#resultBody').innerText();
+    assert.match(resultText,/Final URL\s+https:\/\/www\.example\.com\/final/i);
+    assert.match(resultText,/Redirects followed\s+1/i);
+    assert.match(resultText,/Requested method\s+AUTO/i);
+    assert.match(resultText,/Method used\s+HEAD/i);
+    assert.match(resultText,/HEAD → GET fallback\s+Yes/i);
+    assert.match(resultText,/Header fields received\s+8/i);
+    assert.match(resultText,/Repeated header names\s+set-cookie × 2/i);
+    assert.match(resultText,/cache-control\s+public, max-age=300/i);
+    assert.match(resultText,/set-cookie\s+a=1 \| b=2/i);
+    assert.match(resultText,/301 GET https:\/\/example\.com\/old → https:\/\/www\.example\.com\/final/i);
+  }],
   ['open-graph-checker', async p => {
     await p.route('**/api/page-inspect.php?mode=og**', async route => {
       await route.fulfill({
