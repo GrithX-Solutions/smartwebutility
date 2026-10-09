@@ -1730,7 +1730,7 @@ const cases = [
     assert.equal(await p.locator('#wordTargetProgress').evaluate(el=>Number(el.max)),10);
 
     await p.locator('#wordTarget').fill('5');
-    assert.match(await p.locator('#wordTargetText').innerText(),/1 words over 5-word target/i);
+    assert.match(await p.locator('#wordTargetText').innerText(),/1 word over 5-word target/i);
 
     await p.locator('#clearWordCounter').click();
     assert.equal(await p.locator('#textInput').inputValue(),'');
