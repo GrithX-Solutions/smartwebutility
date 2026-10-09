@@ -5825,3 +5825,146 @@ Tracked keyword-location usage moved from 96 / 300 to 99 / 300. Existing preview
 - Production deployment: NOT STARTED.
 
 Page 30 is VERIFIED. Page 31 may begin with research only; do not deploy production.
+
+
+---
+
+## Page 31 — HTTP Header Checker — 2026-10-09
+
+URL: `/http-header-checker/`
+
+### Research evidence
+
+Ubersuggest U.S. English:
+- `http header checker`: 320 monthly searches, CPC $17.95, SD 53, informational;
+- `http headers checker`: 320, CPC $17.95, SD 58, informational;
+- `check http headers`: 390, CPC $0, SD 58, informational;
+- `website header checker`: 110, CPC $0, SD 57, informational;
+- `http header checker tool`: 20, SD 8;
+- `http header checker online`: 10, SD 5;
+- `http header checker last modified`: 10, SD 6.
+
+The broad `header checker` query is ambiguous and is not selected as primary ownership even though Ubersuggest reports 320 U.S. searches/month.
+
+Latest available Ubersuggest U.S. SERP snapshot for `http header checker` is dated 2026-09-09. Leading results include KeyCDN (DA 65), SecurityHeaders.com (DA 69), HackerTarget (DA 54), MDN Observatory (DA 97), DNSChecker (DA 50), HTTPStatus.io (DA 37), Uptrends (DA 49) and DebugBear (DA 50), with AI Overview and People Also Ask blocks. Lower-authority utilities also rank, including Aquilax (DA 18), HeaderScan (DA 12), Xitoring (DA 15), DNSRobot (DA 24), CertNotify (DA 11) and ShowDNS (DA 8). The intent is competitive and authority-heavy but not authority-locked.
+
+Current October 2026 competitor review shows recurring capabilities across serious general-header tools:
+- server-side header retrieval;
+- explicit HEAD/GET behavior or fallback;
+- raw response-header output rather than a synthetic score;
+- redirect/final-URL context;
+- status, response time and IP context;
+- filtering/grouping or explanation of arbitrary headers;
+- strong tools keep security/cache interpretation distinct from the raw evidence layer.
+
+### First-party search evidence
+
+Google Search Console through the connected Search Console source for the last 90 days returned no rows for `/http-header-checker/`.
+
+Ubersuggest `page_keywords` for `https://smartwebutility.com/http-header-checker/` in U.S. English also returned no ranking-keyword data.
+
+Current ranking success is therefore UNKNOWN / not observed.
+
+### Existing implementation review
+
+The public page already has useful explanatory content and clear links to specialist tools, but the live tool is shallow:
+- shared diagnostics calls `/api/http-status.php?url=...`;
+- the endpoint performs one HEAD request only;
+- redirects are not followed;
+- no method used/fallback is reported;
+- duplicate response-header fields are collapsed into one map value;
+- the UI shows status, IP, time and the raw map only;
+- no dedicated HTTP Header Checker browser regression is committed.
+
+The same `/api/http-status.php` endpoint is also used by `/http-status-checker/` through `assets/network-tools.js`. Its current default behavior deliberately exposes the first response without following redirects. That behavior must remain unchanged for status-checker compatibility.
+
+### Cannibalization / canonical ownership
+
+Keep distinct ownership:
+- `/http-header-checker/` owns general/raw HTTP response-header inspection and arbitrary header evidence;
+- `/http-status-checker/` owns first-response status-code intent and must continue exposing 3xx rather than silently following it;
+- `/security-headers-checker/` owns security-policy interpretation such as HSTS/CSP/framing/MIME/referrer/permissions;
+- `/cache-control-checker/` owns parsed browser/CDN cache policy, validators and repeated-request evidence;
+- `/redirect-checker/` owns detailed redirect-chain diagnosis.
+
+The Header Checker may show bounded redirect/final-response context and point to the specialist tools, but it must not duplicate their scoring/interpretation workflows.
+
+### Confirmed product/content gap
+
+A distinct improvement is justified:
+- preserve the existing default `/api/http-status.php` contract for Status Checker;
+- add a separate `mode=headers` path used only by HTTP Header Checker;
+- support explicit Auto / HEAD / GET request method selection;
+- in Auto mode use HEAD first and fall back to GET only when the server reports HEAD unsupported (405/501);
+- discard GET response bodies rather than downloading/storing page content;
+- follow only a small bounded redirect path for Header Checker, revalidating every destination with existing public-target SSRF controls;
+- report requested URL, final URL, redirect count/path, requested method, actual method, fallback status, final response status, IP and timing;
+- preserve repeated response-header values rather than silently overwriting duplicates;
+- keep the complete raw final-response header map as the primary output;
+- add lightweight category context for content/cache/security/CORS/delivery headers without specialist scoring;
+- add a dedicated mocked Chromium regression;
+- keep the public explanation clear that server-side results can differ from a logged-in browser/session.
+
+### Semantic brief
+
+Primary intent / keyword:
+- HTTP header checker.
+
+Secondary terms:
+- HTTP headers checker;
+- check HTTP headers;
+- website header checker;
+- HTTP header checker tool;
+- HTTP header checker online;
+- HTTP response headers.
+
+Entities / attributes:
+- HTTP response header;
+- HEAD request;
+- GET request;
+- status code;
+- Location;
+- Content-Type;
+- Content-Length;
+- Content-Encoding;
+- Cache-Control;
+- ETag;
+- Last-Modified;
+- Vary;
+- Strict-Transport-Security;
+- Content-Security-Policy;
+- Access-Control-Allow-Origin;
+- Server;
+- Via;
+- CDN/proxy headers;
+- redirect;
+- final URL;
+- response time;
+- resolved public IP.
+
+Questions / sub-intents:
+- why HEAD and GET can differ;
+- why a browser can show different headers;
+- how redirects affect which headers are inspected;
+- how repeated headers such as Set-Cookie should be represented;
+- how to distinguish raw header evidence from security/cache interpretation;
+- why the Server header may be absent.
+
+Internal-link targets:
+- `/http-status-checker/`;
+- `/redirect-checker/`;
+- `/security-headers-checker/`;
+- `/cache-control-checker/`;
+- `/ssl-checker/`.
+
+### Research status
+
+- Demand / CPC / SD / intent: VERIFIED.
+- Ubersuggest U.S. SERP: VERIFIED.
+- Current competitor/functionality review: VERIFIED.
+- First-party GSC evidence: VERIFIED.
+- Existing implementation/call-site compatibility: VERIFIED.
+- Cannibalization ownership: VERIFIED.
+- Product/content gap: VERIFIED.
+- Implementation: NOT STARTED at this checkpoint.
+- Production deployment: NOT STARTED.
