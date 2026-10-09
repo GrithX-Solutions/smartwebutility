@@ -1,6 +1,8 @@
 <?php
 require __DIR__.'/common.php';
 
+const SWU_DOH_RESPONSE_LIMIT = 262144;
+
 rate_limit('dns-propagation', 30, 60);
 
 $host=clean_host($_GET['host'] ?? '');
@@ -53,7 +55,11 @@ function dns_status_name(?int $code): ?string {
 function normalize_dns_answer(string $type,string $value): string {
   $value=trim($value);
   if($type==='TXT'){
-    if(strlen($value)>=2 && $value[0]==='"' && $value[strlen($value)-1]==='"'){
+    if(str_contains($value,'"') && preg_match_all('/"((?:\\\\.|[^"\\\\])*)"/',$value,$matches) && !empty($matches[1])){
+      $parts=[];
+      foreach($matches[1] as $part) $parts[]=stripcslashes($part);
+      $value=implode('',$parts);
+    } elseif(strlen($value)>=2 && $value[0]==='"' && $value[strlen($value)-1]==='"'){
       $value=substr($value,1,-1);
     }
     return preg_replace('/\s+/',' ',$value) ?? $value;
@@ -97,26 +103,48 @@ function resolver_result(
   ?callable $requester=null
 ): array {
   $requester=$requester ?? function(string $url): array {
+    $body='';
+    $truncated=false;
     $ch=curl_init($url);
     curl_setopt_array($ch,[
-      CURLOPT_RETURNTRANSFER=>true,
+      CURLOPT_RETURNTRANSFER=>false,
       CURLOPT_FOLLOWLOCATION=>false,
       CURLOPT_TIMEOUT=>8,
       CURLOPT_CONNECTTIMEOUT=>4,
       CURLOPT_HTTPHEADER=>['Accept: application/dns-json'],
       CURLOPT_USERAGENT=>'SmartWebUtility/1.0 (+https://smartwebutility.com/)',
       CURLOPT_SSL_VERIFYPEER=>true,
-      CURLOPT_SSL_VERIFYHOST=>2
+      CURLOPT_SSL_VERIFYHOST=>2,
+      CURLOPT_WRITEFUNCTION=>function($ch,$chunk) use (&$body,&$truncated){
+        $remaining=SWU_DOH_RESPONSE_LIMIT-strlen($body);
+        if($remaining<=0){$truncated=true;return 0;}
+        if(strlen($chunk)>$remaining){
+          $body.=substr($chunk,0,$remaining);
+          $truncated=true;
+          return 0;
+        }
+        $body.=$chunk;
+        return strlen($chunk);
+      }
     ]);
     $start=microtime(true);
-    $raw=curl_exec($ch);
+    $ok=curl_exec($ch);
     $elapsed=(microtime(true)-$start)*1000;
+    $errno=curl_errno($ch);
     $err=curl_error($ch);
     $code=(int)curl_getinfo($ch,CURLINFO_HTTP_CODE);
     curl_close($ch);
+    if($truncated){
+      return [
+        'raw'=>false,
+        'error'=>'Resolver response exceeded the 256 KB safety limit.',
+        'http_status'=>$code,
+        'latency_ms'=>(int)round($elapsed)
+      ];
+    }
     return [
-      'raw'=>$raw,
-      'error'=>$err,
+      'raw'=>$ok===false?false:$body,
+      'error'=>$ok===false||$errno?$err:'',
       'http_status'=>$code,
       'latency_ms'=>(int)round($elapsed)
     ];
