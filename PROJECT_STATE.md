@@ -742,7 +742,7 @@ XML Formatter & Validator isolated validation:
 
 ## Work in progress
 
-Page 31 HTTP Header Checker is VERIFIED on the working branch. Page 32 `/dns-propagation-checker/` is now the only active page and is in RESEARCH ONLY state. No Page 32 implementation change is authorized until demand, SERP intent, competitor gap, resolver methodology and cannibalization against `/dns-checker/` are verified. Production remains unchanged.
+Page 31 HTTP Header Checker is VERIFIED on the working branch. Page 32 `/dns-propagation-checker/` is now the only active page. Its research gate is VERIFIED with a mandatory retarget: homepage `/` keeps worldwide/global DNS propagation intent, while this legacy URL will own named public-resolver comparison (Google, Cloudflare and server resolver). Implementation is authorized only within that distinct resolver-comparison scope. Production remains unchanged.
 
 ## Affected files — completed/current pages
 
@@ -763,12 +763,12 @@ State/evidence:
 
 ## NEXT ACTION
 
-Research Page 32 `/dns-propagation-checker/` only:
-1. inspect current resolver/API behavior, supported record types, UI, security/privacy, internal links and tests;
-2. run Ubersuggest U.S. demand/intent research for DNS propagation checker/test variants;
-3. inspect current Google SERP, PAA/features and leading live competitors such as multi-resolver DNS propagation tools;
-4. map ownership against `/dns-checker/`, reverse DNS and DNSSEC tools so one URL owns each intent;
-5. produce a semantic brief plus a concrete product/functionality gap before any implementation.
+Implement and verify Page 32 `/dns-propagation-checker/` as the distinct DNS Resolver Checker:
+1. keep the URL/self-canonical but retarget title/H1/content/catalog away from generic worldwide propagation terms;
+2. preserve homepage ownership of `dns propagation checker/test/global DNS` and link worldwide propagation users to `/`;
+3. expand Google/Cloudflare/server resolver output with DNS status, TTL, DNSSEC AD where available, latency, correctly formatted local records and answer-agreement diagnostics;
+4. add page-specific backend/static/Chromium regressions and verify the exact current branch in the isolated non-production fallback when hosted runners are unavailable;
+5. add only selected resolver-comparison U.S. tracking terms after the page reaches VERIFIED.
 
 Do not deploy production.
 
