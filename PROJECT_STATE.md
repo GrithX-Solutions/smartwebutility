@@ -128,17 +128,19 @@ Current verification:
 - one H1 / one canonical, title 48 chars, description 144 chars: VERIFIED;
 - tool catalog JSON: PASS;
 - sitemap: 89 URLs / 89 unique, Meta Tag Checker `lastmod` 2026-10-07: PASS;
-- diagnostics JavaScript syntax: PASS;
-- committed browser-smoke syntax: PASS;
-- PHP syntax on the exact endpoint Git blob: PASS;
-- GitHub Build 927 and Browser 611 failed before repository execution with `runner_id: 0` and `steps: []`;
-- current branch checkpoint `619b8fe65b9730ee6bacaf5e017a276c6ace4919` was explicitly rerun on 2026-10-07: Build run 929 attempt 2 and Browser run 613 attempt 2 both again failed before repository execution with `runner_id: 0` and `steps: []`;
-- both connected ZTHosting agents currently advertise no developer-workspace capabilities, so the approved isolated fallback cannot execute this checkpoint right now;
-- local CLI PHP lacks DOMDocument, so it cannot substitute for the application/runtime parser test.
+- diagnostics JavaScript syntax and committed browser-smoke syntax: PASS;
+- exact endpoint PHP syntax: PASS;
+- isolated ZTHosting `smartwebutility` workspace on `vmi3588489`: VERIFIED operational, writable and `production: false`;
+- PHP 8.2.34 + DOMDocument runtime: VERIFIED;
+- exact staged backend meta-parser/redirect fixture: PASS — one redirect, canonical token match, two Googlebot directives and later duplicate `noindex` detection;
+- exact audit HTML/tool-catalog static checks: PASS;
+- page-specific Chromium interaction/render regression on the exact audit HTML and diagnostics JavaScript: PASS via network-free fixture after loopback HTTP was environment-blocked;
+- temporary verification overlays/fixture were removed and the isolated workspace ended clean;
+- GitHub Build 929 attempt 2 and Browser 613 attempt 2 still failed before repository execution with `runner_id: 0` and `steps: []`; this remains a final-batch/release CI infrastructure risk, not a Page 29 code failure.
 
-Ubersuggest project currently uses 94 / 300 keyword-location slots. Existing U.S. tracking already includes `meta tag checker` and `x robots tag checker`. No new keywords were added because the page has not reached VERIFIED status.
+Ubersuggest project now uses 96 / 300 keyword-location slots. Existing U.S. tracking includes `meta tag checker` and `x robots tag checker`; `meta tag analyzer` and `seo meta tag checker` were added after verification while preserving the full existing keyword map.
 
-Do not start the next page until current-head repository static/content QA, backend runtime behavior and Chromium regression execute and pass.
+Page 29 Meta Tag Checker is VERIFIED. Page 30 `/open-graph-checker/` may begin with research only.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
@@ -637,18 +639,19 @@ Sitemap Checker isolated validation — 2026-10-07:
 ### Page 29 Meta Tag Checker validation
 - Research / intent / cannibalization: VERIFIED.
 - Implementation head: `8dead313ae83277d68a3efd50d075f19989fd8a1`.
-- Audit evidence commit: `5565be6e26e9463986c3990242c54905701b49cf`.
-- Exact endpoint blob `d4617ecc305cd738447215a3191a751e31ca27e9`: local PHP 8.4 syntax PASS.
+- Initial audit evidence commit: `5565be6e26e9463986c3990242c54905701b49cf`.
+- Verification-closure evidence commit: `ca25d08552594814fd1ed0210f07f7836540d6f8`.
+- Exact endpoint blob `d4617ecc305cd738447215a3191a751e31ca27e9`: PHP syntax PASS.
 - Shared diagnostics JS and committed browser-smoke syntax: PASS.
 - HTML/search-metadata structural checks: PASS.
 - Tool catalog JSON and 89/89 unique sitemap inventory: PASS.
-- GitHub Build 927: infrastructure failure before steps, runner_id 0.
-- GitHub Browser 611: infrastructure failure before steps, runner_id 0.
-- ZTHosting developer fallback: BLOCKED because current connected agents advertise no developer workspace capability.
-- Current-head repository static/content QA: BLOCKED.
-- Current-head backend parser runtime: BLOCKED.
-- Current-head Chromium regression: BLOCKED.
-- New Ubersuggest tracking additions: DEFERRED until VERIFIED.
+- Isolated ZTHosting workspace/runtime: VERIFIED; PHP 8.2.34 and DOMDocument available.
+- Exact staged backend parser/redirect fixture: PASS (`redirect_count=1 googlebot_count=2 noindex=true`).
+- Exact audit HTML/diagnostics Chromium page regression: PASS in network-free Chromium fixture.
+- Ubersuggest U.S. tracking additions: VERIFIED — `meta tag analyzer`, `seo meta tag checker`; usage 96 / 300.
+- GitHub-hosted Build/Browser jobs remain no-runner infrastructure failures and are retained as final-batch release blockers, not Page 29 failures.
+- Temporary fallback files restored/removed; isolated workspace clean.
+- Page-specific gate: VERIFIED.
 - Production mutation: NONE.
 
 ## CI infrastructure blocker
@@ -685,8 +688,8 @@ XML Formatter & Validator isolated validation:
 
 - GitHub-hosted Actions runner allocation remains unreliable for this long-running branch.
 - Reverification on current checkpoint `619b8fe65b9730ee6bacaf5e017a276c6ace4919` confirmed the same allocation failure: Build 929 attempt 2 and Browser 613 attempt 2 completed with no assigned runner and no executed steps.
-- The approved isolated ZTHosting fallback previously verified multiple pages without using production as a CI workspace, but both currently connected agents advertise no developer-workspace capability; fallback execution is therefore temporarily BLOCKED.
-- Both connected ZTHosting hosts were rechecked and are healthy at host level, so the blocker is specifically missing advertised developer-workspace capability rather than host unavailability.
+- The approved isolated ZTHosting fallback is operational again on non-production server `vmi3588489`; its `smartwebutility` developer workspace passed Page 29 PHP/runtime/static checks without using production paths.
+- The separate live-web MCP host remains healthy but does not advertise developer-workspace capability; it is not used as a development/CI workspace.
 - The latest broad Chromium smoke on the UUID Validator snapshot was 142/144 because HTML Minifier and CSS Minifier each timed out on provider readiness. This is not a UUID Validator failure, but final merge/deploy remains blocked until the accumulated branch is fully green.
 - Production deployment remains intentionally blocked until the complete page-by-page batch is finished and one final controlled release gate is approved.
 
@@ -699,40 +702,43 @@ XML Formatter & Validator isolated validation:
 
 ## Work in progress
 
-Meta Tag Checker research and implementation are complete on the working branch, but its runtime/static-content/Chromium gate is blocked by current CI infrastructure. It remains the only active page and must not be promoted to VERIFIED yet. Sitemap Checker, Open Graph Preview, Schema Markup Generator, Robots.txt Generator, HTML Entity Encoder / Decoder, URL Encoder / Decoder, Regex Tester, Hash Generator, Unix Timestamp Converter, JSON Diff, Regex Escaper, XML Escape / Unescape and UUID Validator remain verified. Production remains unchanged.
+Page 29 Meta Tag Checker is VERIFIED on the working branch. Page 30 `/open-graph-checker/` is now the only active page and is in RESEARCH ONLY state; no Page 30 implementation change is authorized until demand, SERP intent, competitor gaps and cannibalization against `/open-graph-preview/` are verified. Production remains unchanged.
 
 ## Affected files — completed/current pages
 
-Current active page:
+Completed Page 29 implementation/direct dependencies:
 - `meta-tag-checker/index.html`
 - `api/page-inspect.php`
 - `assets/diagnostics.js`
-
-Direct shared requirements:
 - `assets/tool-catalog.json`
 - `tests/browser-smoke.cjs`
 - `sitemap.xml`
+
+Current active Page 30 research target:
+- `open-graph-checker/index.html` — read-only until the semantic/research brief is complete.
+
+State/evidence:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
 - `PROJECT_STATE.md`
 
 ## NEXT ACTION
 
-Finish verification of `/meta-tag-checker/` and do not start another page:
-1. rerun current-head static SEO QA and content QA when an execution path is available;
-2. execute the backend meta-parser/redirect behavior in an application runtime with DOMDocument;
-3. execute the committed Meta Tag Checker Chromium regression;
-4. if all page-specific gates pass, mark Page 29 VERIFIED and add only the selected additional U.S. rank-tracking keywords while preserving the full Ubersuggest project keyword map;
-5. if any gate exposes a code/content defect, fix only this page/direct dependency and repeat the gate.
+Research Page 30 `/open-graph-checker/` only:
+1. inspect its current implementation, API behavior, content, internal links and existing tests;
+2. run Ubersuggest U.S. demand/intent research for the live Open Graph checker intent and relevant semantic variants;
+3. inspect the current Google SERP, SERP features/PAA and leading live competitors;
+4. map cannibalization against the already-verified `/open-graph-preview/`, `/meta-tag-checker/` and any other overlapping URL so one canonical page owns each intent;
+5. produce a semantic brief and a concrete product/content gap; implement only if the evidence supports a distinct useful intent.
 
 Do not deploy production.
 
 ## CI infrastructure status
 
-Status: PARTIALLY VERIFIED.
+Status: PARTIALLY VERIFIED at batch/release level.
 
-- GitHub-hosted Actions remain unreliable for this long-running branch; several runs have failed before checkout/test execution with no repository-test logs.
-- The approved ZTHosting isolated fallback is VERIFIED operational and passed Page 15 on the exact staged material files.
-- Fallback isolation root: `/srv/smartwebutility-ci/`.
-- Production paths `/srv/smartwebutility/site.current`, `site.prev` and running production containers are not used as CI workspaces.
-- Pinned browser image: `mcr.microsoft.com/playwright:v1.55.1-noble`.
+- GitHub-hosted Actions remain unreliable for this long-running branch; several runs still fail before runner assignment with no repository-test steps.
+- The approved ZTHosting isolated developer fallback is operational on `vmi3588489` and passed Page 29 page-scoped PHP/runtime/static verification on exact audit files.
+- The fallback workspace is non-production; temporary verification changes were fully cleaned.
+- Production paths and running production containers are not used as CI workspaces.
+- The final accumulated branch still requires a full green release gate before merge/deployment.
 - Production deployment remains NOT STARTED for this audit batch.
