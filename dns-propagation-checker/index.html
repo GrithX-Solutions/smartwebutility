@@ -1,102 +1,61 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DNS Resolver Checker — Google vs Cloudflare DNS</title>
-<meta name="description" content="Compare Google Public DNS, Cloudflare DNS and a server resolver. See DNS status, TTL, DNSSEC flags, latency and common record answers side by side.">
-<link rel="canonical" href="https://smartwebutility.com/dns-propagation-checker/">
-<meta property="og:title" content="DNS Resolver Checker — Google vs Cloudflare DNS">
-<meta property="og:description" content="Compare Google Public DNS, Cloudflare DNS and a server resolver with status, TTL, DNSSEC and latency evidence.">
-<meta property="og:url" content="https://smartwebutility.com/dns-propagation-checker/"><meta property="og:type" content="website">
-<meta name="twitter:card" content="summary"><meta name="twitter:title" content="DNS Resolver Checker — Google vs Cloudflare DNS"><meta name="twitter:description" content="Compare Google Public DNS, Cloudflare DNS and a server resolver with status, TTL, DNSSEC and latency evidence.">
-<meta name="theme-color" content="#07101b"><link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"DNS Resolver Checker","url":"https://smartwebutility.com/dns-propagation-checker/","description":"Compare DNS answers from Google Public DNS, Cloudflare DNS and the Smart Web Utility server resolver, including status, TTL, DNSSEC authenticated-data flags and latency.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Google Public DNS comparison","Cloudflare DNS comparison","Server resolver comparison","DNS response code and status","Answer TTL values","DNSSEC authenticated-data flag when exposed","Resolver latency","A, AAAA, MX, TXT, CNAME, NS and CAA records","Answer agreement without a fake propagation percentage"]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smartwebutility.com/"},{"@type":"ListItem","position":2,"name":"DNS Resolver Checker","item":"https://smartwebutility.com/dns-propagation-checker/"}]}</script>
-</head>
-<body>
-<header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header>
-
-<main>
-<section class="tool-hero wrap">
-  <div class="crumb"><a href="/">Home</a><span>/</span><span>DNS Resolver Checker</span></div>
-  <span class="kicker">Public DNS resolver comparison</span>
-  <h1>DNS Resolver Checker: Google vs Cloudflare</h1>
-  <p class="lead compact">Compare what Google Public DNS, Cloudflare DNS and the Smart Web Utility server resolver return for the same hostname and record type. Review DNS status, TTL, DNSSEC authenticated-data flags, latency and answer agreement side by side.</p>
-  <form id="diagForm" class="lookup" data-tool="dnsprop" novalidate>
-    <label class="sr-only" for="target">Domain name</label>
-    <input id="target" name="target" inputmode="url" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="example.com" required>
-    <label class="sr-only" for="recordType">DNS record type</label>
-    <select id="recordType" aria-label="DNS record type"><option>A</option><option>AAAA</option><option>MX</option><option>TXT</option><option>CNAME</option><option>NS</option><option>CAA</option></select>
-    <button class="btn primary" type="submit">Compare Resolvers</button>
-  </form>
-  <section id="result" class="result-card" hidden><div class="result-head"><strong id="resultTitle">Result</strong><button id="copyBtn" class="text-btn" type="button">Copy</button></div><div id="resultBody"></div></section>
-  <div id="error" class="error" hidden></div>
-</section>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DNS Resolver Checker — Compare Google & Cloudflare</title><meta name="description" content="Compare Google, Cloudflare and server DNS resolver answers with TTL, DNS status, DNSSEC AD, latency and agreement for common record types."><link rel="canonical" href="https://smartwebutility.com/dns-propagation-checker/"><meta property="og:title" content="DNS Resolver Checker — Compare Google & Cloudflare"><meta property="og:description" content="Compare public DNS resolver answers, TTLs, DNS status, DNSSEC AD and latency for the same hostname and record type."><meta property="og:url" content="https://smartwebutility.com/dns-propagation-checker/"><meta property="og:type" content="website"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="DNS Resolver Checker — Compare Google & Cloudflare"><meta name="twitter:description" content="Compare Google Public DNS, Cloudflare DNS and the Smart Web Utility server resolver."><meta name="theme-color" content="#07101b"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/styles.css"><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"DNS Resolver Checker","url":"https://smartwebutility.com/dns-propagation-checker/","description":"Compare Google Public DNS, Cloudflare DNS and the Smart Web Utility server resolver with DNS status, TTL, DNSSEC authenticated-data evidence, latency and answer agreement.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Google Public DNS comparison","Cloudflare DNS-over-HTTPS comparison","Server resolver comparison","DNS response code and status","DNSSEC authenticated-data flag","Per-resolver TTL and latency","Resolver answer agreement","A, AAAA, MX, TXT, CNAME, NS and CAA records"]}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smartwebutility.com/"},{"@type":"ListItem","position":2,"name":"DNS Resolver Checker","item":"https://smartwebutility.com/dns-propagation-checker/"}]}</script></head><body><header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Smart Web Utility home"><span class="brand-mark">SW</span><span>Smart Web Utility</span></a><nav id="primaryNav" class="primary-nav" aria-label="Primary"><a href="/developer-tools/">Developer</a><a href="/website-tools/">Website</a><a href="/seo-tools/">SEO</a><a href="/text-tools/">Text</a></nav><div class="nav-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-controls="primaryNav" aria-expanded="false">Menu</button></div></div></header><main><section class="tool-hero wrap"><div class="crumb"><a href="/">Home</a><span>/</span><span>DNS Resolver Checker</span></div><span class="kicker">Public DNS comparison</span><h1>DNS Resolver Checker</h1><p class="lead compact">Compare the same DNS lookup through Google Public DNS, Cloudflare DNS and the Smart Web Utility server resolver. Review DNS status, TTL, DNSSEC AD evidence, latency and answer agreement.</p><form id="diagForm" class="lookup" data-tool="dnsprop" novalidate><label class="sr-only" for="target">Domain name</label><input id="target" name="target" inputmode="url" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="example.com" required><label class="sr-only" for="recordType">DNS record type</label><select id="recordType" aria-label="DNS record type"><option>A</option><option>AAAA</option><option>MX</option><option>TXT</option><option>CNAME</option><option>NS</option><option>CAA</option></select><button class="btn primary" type="submit">Compare Resolvers</button></form><section id="result" class="result-card" hidden><div class="result-head"><strong id="resultTitle">Result</strong><button id="copyBtn" class="text-btn" type="button">Copy</button></div><div id="resultBody"></div></section><div id="error" class="error" hidden></div></section>
 
 <section class="section wrap prose" data-quality-content="v3">
-  <h2>Compare the same DNS question across named resolvers</h2>
-  <p>This tool sends the selected DNS question to Google Public DNS and Cloudflare DNS over HTTPS, then runs the same record lookup through the resolver available to the Smart Web Utility server. It is designed for resolver-specific evidence: whether those named paths currently agree, what TTL each answer carries and what DNS response each public resolver reports.</p>
-
+  <h2>Compare Google, Cloudflare and the server resolver</h2>
+  <p>This DNS Resolver Checker sends the same hostname and record type to Google Public DNS and Cloudflare's DNS-over-HTTPS JSON services, then runs the equivalent lookup through the resolver available to the Smart Web Utility server. The report keeps each resolver separate so you can compare evidence instead of collapsing different answers into one result.</p>
   <div class="info-grid">
-    <article><h3>Google Public DNS</h3><p>See the DNS response code, requested-type answers, TTL values, latency and DNSSEC authenticated-data flag returned by Google's JSON DNS-over-HTTPS endpoint.</p></article>
-    <article><h3>Cloudflare DNS</h3><p>Compare the same hostname and record type against Cloudflare's public DNS-over-HTTPS JSON endpoint using the same report fields.</p></article>
-    <article><h3>Server resolver</h3><p>The third row comes from the Smart Web Utility server environment. PHP's resolver API exposes record data and TTLs but does not expose the same DNS response-code or AD fields as the public JSON endpoints.</p></article>
-    <article><h3>Agreement, not a score</h3><p>The report compares normalized answer sets and tells you whether the public resolvers agree. It does not turn three resolver paths into a made-up global propagation percentage.</p></article>
+    <article><h3>DNS status</h3><p>Google and Cloudflare expose a DNS response code separately from HTTP status. <code>NOERROR</code>, <code>NXDOMAIN</code>, <code>SERVFAIL</code> and <code>REFUSED</code> describe the DNS result even when the HTTPS request itself succeeded.</p></article>
+    <article><h3>TTL by resolver</h3><p>See the TTL values returned with the selected record type. Different TTLs can reflect separate recursive cache states even when the answer data already matches.</p></article>
+    <article><h3>DNSSEC AD evidence</h3><p>The public-resolver rows show the Authenticated Data flag when their JSON response exposes it. An AD value is resolver validation evidence; this page does not replace the deeper <a href="/dnssec-checker/">DNSSEC Checker</a>.</p></article>
+    <article><h3>Resolver latency</h3><p>Compare how long each lookup took from the Smart Web Utility server environment. This is diagnostic timing from one location, not a global DNS performance benchmark.</p></article>
   </div>
 
-  <h2>What DNS status, TTL and DNSSEC AD mean</h2>
-  <p><strong>DNS status</strong> is the DNS response code, separate from the HTTP status of the DNS-over-HTTPS request. <code>NOERROR</code> means the DNS query completed without a DNS-level error; <code>NXDOMAIN</code> means the queried name does not exist; <code>SERVFAIL</code> means the resolver could not complete the query successfully. An HTTPS request can succeed while the DNS response itself reports a failure.</p>
-  <p><strong>TTL</strong> is the answer's time to live in seconds. Recursive resolvers can cache an answer until its remaining TTL expires, so two resolvers can temporarily return different values after a DNS change. <strong>DNSSEC AD</strong> is the authenticated-data flag exposed by the public resolver response; it indicates DNSSEC validation state for that resolver response, not a full replacement for a dedicated DNSSEC chain analysis.</p>
+  <h2>Answer agreement without a fake propagation score</h2>
+  <p>The checker normalizes the requested record type and reports whether Google and Cloudflare agree and whether the successful resolver paths return the same answer set. It also preserves the returned record data so CNAME chains and related records remain inspectable. Agreement means these resolver paths match now; disagreement tells you exactly where the observations differ.</p>
+  <p>Three resolver paths cannot prove worldwide DNS convergence. If your task is a <strong>global DNS propagation test</strong> across distributed country-level probes, use the <a href="/">Smart Web Utility homepage DNS propagation checker</a>. This page intentionally owns the narrower resolver-comparison workflow.</p>
 
-  <h2>Which record type should you compare?</h2>
+  <h2>Supported DNS records</h2>
   <div class="info-grid">
-    <article><h3>A and AAAA</h3><p>Compare IPv4 and IPv6 destinations after hosting, CDN or origin changes. Remember that a working A record does not prove the AAAA path is correct.</p></article>
-    <article><h3>MX and TXT</h3><p>Use MX for mail-routing destinations and TXT for SPF, ownership verification and other text-based policies. Multiple TXT answers are normal.</p></article>
-    <article><h3>CNAME and NS</h3><p>Use CNAME for aliases and NS for nameserver data. The report keeps returned record data visible while normalizing only for the agreement calculation.</p></article>
-    <article><h3>CAA</h3><p>Compare certificate-authority authorization records. The server-resolver row preserves CAA flags, tag and value instead of dropping CAA-specific fields.</p></article>
+    <article><h3>A and AAAA</h3><p>Compare IPv4 and IPv6 addresses after a hosting, CDN or origin change. Resolver disagreement can reveal a stale recursive cache or a recent record transition.</p></article>
+    <article><h3>MX</h3><p>Compare mail exchanger targets together with their priorities. The server-resolver output preserves MX priority rather than showing only the target hostname.</p></article>
+    <article><h3>TXT</h3><p>Compare SPF, verification and other text records. Multiple TXT answers can be legitimate, so the report treats the complete requested-type answer set as evidence.</p></article>
+    <article><h3>CNAME, NS and CAA</h3><p>Inspect aliases, nameserver targets and certificate-authority authorization records. Server-side CAA output includes flags, tag and value when PHP exposes them.</p></article>
   </div>
 
-  <h2>Resolver comparison is not worldwide DNS propagation</h2>
-  <p>This page asks a small set of named resolver paths the same question. That is useful when you specifically want to compare Google, Cloudflare and the server resolver, but it cannot prove that every ISP, enterprise resolver or country has converged. For live country-level sampling, use the <a href="/">worldwide DNS propagation checker</a> on the homepage, which runs the query through distributed probes in multiple countries.</p>
-  <p>Use the <a href="/dns-checker/">DNS Checker</a> when you want a focused lookup through one public resolver with record TTLs. Use the <a href="/dnssec-checker/">DNSSEC Checker</a> when you need DS, DNSKEY and validation evidence. Use the <a href="/reverse-dns-checker/">Reverse DNS Checker</a> for PTR and forward-confirmed reverse DNS.</p>
+  <h2>Why two public DNS resolvers can disagree</h2>
+  <p>Recursive resolvers maintain independent caches. One may have refreshed after an authoritative DNS change while another still has an older cached answer. A resolver can also return a DNS-level error such as <code>SERVFAIL</code> while another answers normally. Compare DNS status, requested-type answers and TTLs before deciding whether the difference is cache-related or points to a configuration problem.</p>
 
-  <h2>Why Google and Cloudflare can disagree</h2>
-  <p>Independent recursive resolvers maintain independent caches. After an authoritative change, one cache can refresh before another. Different answers can also be intentional when authoritative DNS uses geo-aware or policy-based responses. If both public resolvers return the same unexpected value, verify the authoritative zone before assuming you only need to wait.</p>
+  <h2>DNS Resolver Checker vs DNS Checker</h2>
+  <p>Use this page when the question is whether named resolver paths agree. Use the <a href="/dns-checker/">DNS Checker</a> for a focused single-resolver lookup with record values and TTLs. Use the <a href="/dnssec-checker/">DNSSEC Checker</a> when you need DS, DNSKEY and validation-specific evidence, and the <a href="/reverse-dns-checker/">Reverse DNS Checker</a> for PTR/rDNS checks.</p>
 
-  <h2>Provider JSON methodology and limits</h2>
-  <p>Google's JSON DNS-over-HTTPS API exposes DNS response status, the authenticated-data flag and answer records with TTL values. Cloudflare's JSON DNS-over-HTTPS response follows Google's schema for these fields. Cloudflare notes that DNS-over-HTTPS JSON has no formal IETF schema, so this checker treats the format as provider-documented behavior rather than a universal JSON DNS standard.</p>
-  <p>The resolver latency shown here is the time observed from the Smart Web Utility server environment for this diagnostic request. It is not a benchmark of resolver performance for your device, ISP or geographic location.</p>
+  <h2>Methodology and limitations</h2>
+  <p>Google and Cloudflare are queried through their public DNS-over-HTTPS JSON endpoints. Their JSON responses expose fields such as DNS <code>Status</code>, the DNSSEC <code>AD</code> flag and answer TTL/data. The server row uses PHP's <code>dns_get_record</code> from the Smart Web Utility server environment, which does not expose the same DNS response-code or AD fields.</p>
+  <p>Cloudflare documents its JSON format as following Google's JSON schema, but JSON DNS-over-HTTPS is provider-defined rather than a formal IETF JSON wire format. Results are point-in-time observations from these resolver paths and can change as recursive caches expire.</p>
 
   <h2>Primary references</h2>
-  <p><a href="https://developers.google.com/speed/public-dns/docs/doh/json" rel="noopener">Google Public DNS JSON API</a> · <a href="https://developers.cloudflare.com/1.1.1.1/encryption/dns-over-https/make-api-requests/dns-json/" rel="noopener">Cloudflare DNS-over-HTTPS JSON</a></p>
+  <p><a href="https://developers.google.com/speed/public-dns/docs/doh/json" rel="noopener">Google Public DNS JSON API</a> · <a href="https://developers.cloudflare.com/1.1.1.1/encryption/dns-over-https/make-api-requests/dns-json/" rel="noopener">Cloudflare DNS-over-HTTPS JSON API</a></p>
 
   <h2>Related DNS tools and guides</h2>
   <div class="related-tools">
-    <a href="/">Worldwide DNS Propagation Checker<span>Compare live DNS answers from distributed country-level probes.</span></a>
-    <a href="/dns-checker/">DNS Checker<span>Run a focused public-resolver record lookup with TTL values.</span></a>
-    <a href="/dnssec-checker/">DNSSEC Checker<span>Validate DNSSEC with DS, DNSKEY and public-resolver evidence.</span></a>
-    <a href="/reverse-dns-checker/">Reverse DNS Checker<span>Look up PTR hostnames and verify forward-confirmed reverse DNS.</span></a>
-    <a href="/guides/dns-propagation-resolver-cache/">DNS propagation and resolver cache<span>Understand why recursive resolver answers can differ after a change.</span></a>
+    <a href="/"><span>Worldwide DNS Propagation Checker</span><span>Check country-level DNS propagation from distributed live probes.</span></a>
+    <a href="/dns-checker/">DNS Checker<span>Run a focused record lookup with TTL from one public resolver.</span></a>
+    <a href="/dnssec-checker/">DNSSEC Checker<span>Inspect validating-resolver evidence, DS and DNSKEY records.</span></a>
+    <a href="/reverse-dns-checker/">Reverse DNS Checker<span>Check PTR and reverse-DNS behavior for an IP address.</span></a>
+    <a href="/guides/dns-changed-still-old-ip/">DNS changed but site still points to the old IP<span>Separate authoritative DNS, resolver cache and non-DNS routing issues.</span></a>
+    <a href="/guides/dns-propagation-resolver-cache/">Why resolvers still return an old DNS record<span>Understand TTL, recursive caches and temporary resolver disagreement.</span></a>
   </div>
 </section>
 
 <section class="section alt" data-quality-content="v3"><div class="wrap prose">
   <h2>Frequently asked DNS resolver questions</h2>
-  <h3>Does this check whether my computer uses Google or Cloudflare DNS?</h3>
-  <p>No. It sends the hostname you enter directly to the public resolver APIs from Smart Web Utility. It does not inspect or change the DNS resolver configured on your device or router.</p>
-  <h3>Why can Google and Cloudflare return different answers?</h3>
-  <p>They use independent recursive caches, so cache age can differ after a DNS change. Authoritative DNS can also intentionally vary answers by resolver location or policy.</p>
-  <h3>Does NOERROR always mean the record exists?</h3>
-  <p>No. A DNS response can be NOERROR while the requested record type has no answer. Read the requested-type answer list together with the status.</p>
-  <h3>Does DNSSEC AD mean my entire DNSSEC setup is correct?</h3>
-  <p>It is useful resolver evidence, but this page is not a full DNSSEC chain validator. Use the DNSSEC Checker when you need dedicated DS, DNSKEY and validation diagnostics.</p>
-  <h3>Should I use this page to check global DNS propagation?</h3>
-  <p>No. Use the homepage worldwide checker for distributed country-level probes. This page intentionally compares named resolver paths.</p>
-</div></section>
-</main>
-
-<footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/">All tools</a><a href="/sitemap.xml">Sitemap</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></div></footer>
-<script src="/assets/diagnostics.js" defer></script>
-</body>
-</html>
+  <h3>What does DNSSEC AD mean?</h3>
+  <p>AD means Authenticated Data. A validating recursive resolver can set it when the returned data passed DNSSEC validation. Treat it as evidence from that resolver, not as a substitute for inspecting the complete DNSSEC chain.</p>
+  <h3>Why do Google DNS and Cloudflare DNS return different answers?</h3>
+  <p>They use independent recursive caches and can refresh at different times. Compare the DNS status, answer set and TTL from each resolver before assuming the authoritative record is wrong.</p>
+  <h3>Does matching resolver output mean DNS has propagated everywhere?</h3>
+  <p>No. Matching Google, Cloudflare and the server resolver only proves those observed paths agree at this moment. Use the homepage worldwide propagation checker when you need distributed country-level evidence.</p>
+  <h3>What does NXDOMAIN mean?</h3>
+  <p><code>NXDOMAIN</code> means the resolver reports that the queried domain name does not exist. That is different from a successful response with no record of the selected type.</p>
+  <h3>Which resolver does the server row use?</h3>
+  <p>It uses the DNS resolver available to the Smart Web Utility server environment through PHP. It is a third comparison path, but it does not expose the same JSON status and DNSSEC AD fields as Google and Cloudflare.</p>
+</div></section></main><footer><div class="wrap footer-inner"><span>© <span id="year"></span> Smart Web Utility · Powered by <a href="https://zthosting.com/" rel="noopener">ZTHosting</a></span><div class="footer-links"><a href="/">All tools</a><a href="/sitemap.xml">Sitemap</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></div></footer><script src="/assets/diagnostics.js" defer></script></body></html>
