@@ -5731,15 +5731,97 @@ Internal-link targets:
 - `/meta-tag-checker/` for broader SEO metadata;
 - `/meta-tag-generator/` for broader metadata generation.
 
-### Research status
+### Implementation
+
+Implementation/test head before audit-state sync:
+- `44de88a141c67c7c0a5c65d125a1c0f6ea5ba757`.
+
+Scoped implementation commits after the research checkpoint changed exactly six files:
+- `api/page-inspect.php`;
+- `assets/diagnostics.js`;
+- `open-graph-checker/index.html`;
+- `assets/tool-catalog.json`;
+- `tests/browser-smoke.cjs`;
+- `sitemap.xml`.
+
+The live checker now:
+- uses the same bounded three-hop redirect model for page inspection with per-hop public-target revalidation;
+- reports requested URL, final URL, redirect path, HTTP status and content type;
+- enumerates all `og:*` properties from the HTML head instead of returning only six hard-coded values;
+- checks the four protocol-required properties `og:title`, `og:type`, `og:image` and `og:url`;
+- preserves first-value precedence while exposing repeated values;
+- excludes body-level OG tags from the primary report and flags them;
+- reports structured primary-image metadata including secure URL, type, declared width/height and alt;
+- performs a bounded first-image response probe with a 512 KB ceiling, redirect revalidation, TLS verification and pinned public IP;
+- reports image HTTP status, content type, final URL, redirect path and detected image dimensions when the runtime can derive them;
+- treats unsafe/private image targets as a non-fatal diagnostic finding rather than weakening SSRF rules;
+- emits concrete findings without a synthetic quality score.
+
+Visible content now follows the Open Graph protocol rather than inventing universal platform character/image-size requirements. It explicitly separates live checker/tester/validator/debugger intent from the local `/open-graph-preview/` generator/preview workflow.
+
+Tool-search aliases now own the researched checker cluster while intentionally excluding `open graph preview`, `og preview` and generator aliases.
+
+Sitemap `lastmod` for this URL is now 2026-10-09.
+
+### Verification — 2026-10-09
+
+Exact current Git blobs:
+- `api/page-inspect.php` — `c43965e8d65260bf6245cea2ad44c08381a0778b`;
+- `assets/diagnostics.js` — `f648c97fbf4f0e419c8b30521470698a3518dfaf`;
+- `open-graph-checker/index.html` — `3c86b208e8956b715c8e64eb611ace79e0430a24`;
+- `assets/tool-catalog.json` — `35d047c97f87d92b460f79125e868075d133ad76`;
+- `tests/browser-smoke.cjs` — `9db33e9387cfc40480fa03d722f749fc7c197b16`;
+- `sitemap.xml` — `c9e9cbd5b79ec5004dd858d29eee93b967b38db8`.
+
+Page-scoped fallback evidence:
+- implementation diff from the research checkpoint is exactly six files / six commits: VERIFIED;
+- isolated ZTHosting `smartwebutility` developer workspace on `vmi3588489`: VERIFIED non-production and clean before staging;
+- exact GitHub Page 30 blobs staged with stale-write SHA protection;
+- PHP syntax: PASS;
+- PHP runtime: 8.2.34;
+- `DOMDocument`: available;
+- `getimagesizefromstring`: available;
+- runtime OG fixture: PASS — page redirect 1, core properties 4/4, first-value precedence, one body-level OG tag excluded, and private `og:image` probe rejected softly by the public-target gate;
+- runtime fixture result: `core=4/4 redirect=1 outside_head=1 image_probe_ok=false`;
+- HTML structural QA: one H1 and one self-canonical;
+- title length: 46 characters;
+- meta description length: 152 characters;
+- tool catalog JSON: PASS;
+- sitemap: 89 URLs / 89 unique;
+- targeted Chromium interaction/render fixture: PASS using the exact Page 30 OG renderer logic and the same mocked result shape committed in `tests/browser-smoke.cjs`; verified final URL, 4/4 core readiness, image fetch status, detected 1200 × 630 dimensions, image alt and both page/image redirect paths;
+- dedicated `open-graph-checker` browser regression is committed exactly once.
+
+GitHub-hosted CI remains a batch/release infrastructure issue rather than page-code evidence:
+- Build run 939: FAILED before repository execution, `runner_id: 0`, `steps: []`;
+- Browser run 623: FAILED before repository execution, `runner_id: 0`, `steps: []`.
+
+After fallback testing, all staged Page 30 overlays and the temporary runtime fixture were restored/removed. The isolated workspace ended clean with no modified or untracked files. Production was not mutated.
+
+### Ubersuggest rank tracking
+
+After page-scoped verification, the full existing project keyword map was re-read and preserved. Added for U.S. English:
+- `open graph checker`;
+- `og checker`;
+- `open graph tester`.
+
+Tracked keyword-location usage moved from 96 / 300 to 99 / 300. Existing preview/generator tracking remains separate.
+
+### Page 30 acceptance status
 
 - Demand / CPC / SD / intent: VERIFIED.
-- Latest available Ubersuggest U.S. Google SERP snapshots: VERIFIED (2026-09-10 to 2026-09-19 depending on variant).
+- Latest available Ubersuggest U.S. SERP snapshots: VERIFIED.
 - Current October 2026 web competitor review: VERIFIED.
 - First-party GSC evidence: VERIFIED.
-- Existing implementation: VERIFIED.
+- Existing implementation and product gap: VERIFIED.
 - Cannibalization ownership: VERIFIED.
 - Open Graph protocol requirements: VERIFIED.
-- Product/content gap: VERIFIED.
-- Implementation: NOT STARTED at this checkpoint.
+- Implementation scope: VERIFIED.
+- Redirect / SSRF / response-size safety: VERIFIED.
+- PHP runtime/parser fixture: VERIFIED.
+- Static SEO/content structure: VERIFIED.
+- Targeted Chromium page regression: VERIFIED.
+- Ubersuggest rank tracking: VERIFIED.
+- Full-batch GitHub-hosted release CI: BLOCKED by no-runner infrastructure and remains a release-level gate.
 - Production deployment: NOT STARTED.
+
+Page 30 is VERIFIED. Page 31 may begin with research only; do not deploy production.
