@@ -32,9 +32,14 @@ if(tool==='word-counter'||tool==='character-counter'){
   targetStatus.hidden=false;
   targetProgress.max=goal;
   targetProgress.value=Math.min(words,goal);
-  if(words<goal)targetText.textContent=(goal-words)+' words remaining of '+goal;
-  else if(words===goal)targetText.textContent='Target reached: '+goal+' words';
-  else targetText.textContent=(words-goal)+' words over '+goal+'-word target';
+  if(words<goal){
+   const remaining=goal-words;
+   targetText.textContent=remaining+' '+(remaining===1?'word':'words')+' remaining of '+goal;
+  } else if(words===goal)targetText.textContent='Target reached: '+goal+' words';
+  else {
+   const over=words-goal;
+   targetText.textContent=over+' '+(over===1?'word':'words')+' over '+goal+'-word target';
+  }
  }
  function count(){
   const text=input.value;
