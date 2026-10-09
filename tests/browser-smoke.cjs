@@ -1739,8 +1739,40 @@ const cases = [
     assert.match(await p.locator('#textStats').innerText(),/0\s+Words/i);
   }],
   ['character-counter', async p => {
-    await p.locator('#textInput').fill('abc def');
-    assert.ok((await p.locator('#textStats').innerText()).includes('7'));
+    await p.locator('#textInput').fill('A😀 e\u0301\nZ');
+    const stats=await p.locator('#textStats').innerText();
+    assert.match(stats,/6\s+Visible characters/i);
+    assert.match(stats,/4\s+Without whitespace/i);
+    assert.match(stats,/7\s+Unicode code points/i);
+    assert.match(stats,/8\s+UTF-16 units/i);
+    assert.match(stats,/11\s+UTF-8 bytes/i);
+    assert.match(stats,/3\s+Words/i);
+
+    const insights=await p.locator('#characterInsights').innerText();
+    assert.match(insights,/0\s+Sentences/i);
+    assert.match(insights,/1\s+Paragraphs/i);
+    assert.match(insights,/2\s+Lines/i);
+
+    await p.locator('#characterLimit').fill('5');
+    assert.equal(await p.locator('#characterLimitStatus').isHidden(),false);
+    assert.match(await p.locator('#characterLimitText').innerText(),/1 visible character over 5/i);
+    assert.equal(await p.locator('#characterLimitProgress').evaluate(el=>Number(el.value)),5);
+    assert.equal(await p.locator('#characterLimitProgress').evaluate(el=>Number(el.max)),5);
+
+    await p.locator('#characterLimitBasis').selectOption('utf16');
+    await p.locator('#characterLimit').fill('10');
+    assert.match(await p.locator('#characterLimitText').innerText(),/2 UTF-16 units remaining of 10/i);
+
+    await p.locator('#characterLimitBasis').selectOption('bytes');
+    await p.locator('#characterLimit').fill('11');
+    assert.match(await p.locator('#characterLimitText').innerText(),/Limit reached: 11 UTF-8 bytes/i);
+
+    await p.locator('#clearCharacterCounter').click();
+    assert.equal(await p.locator('#textInput').inputValue(),'');
+    assert.equal(await p.locator('#characterLimit').inputValue(),'');
+    assert.equal(await p.locator('#characterLimitBasis').inputValue(),'visible');
+    assert.equal(await p.locator('#characterLimitStatus').isHidden(),true);
+    assert.match(await p.locator('#textStats').innerText(),/0\s+Visible characters/i);
   }],
   ['reverse-dns-checker', async p => {
     await p.route('**/api/reverse-dns-check.php**', route => route.fulfill({
