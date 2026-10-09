@@ -6273,7 +6273,7 @@ Page-scoped fallback evidence:
 - fixture result: `status=NOERROR ad=true ttl=300 records=2 public_agree=true all_disagree=true`;
 - source checks verified the 256 KB DoH response cap, cURL write bound, explicit TLS verification and no redirect following;
 - HTML structural QA: one H1 and one self-canonical;
-- title length: 52 characters;
+- title length: 50 Unicode characters (52 UTF-8 bytes);
 - meta description length: 138 characters;
 - tool catalog JSON: PASS; resolver-only aliases are present and propagation/global aliases are intentionally absent;
 - sitemap: 89 URLs / 89 unique;
