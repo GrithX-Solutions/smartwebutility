@@ -120,6 +120,37 @@ function render(data){
    +row('Detected dimensions',imageDimensions)
    +'</tbody></table></div>'
    +findings+redirects+imageRedirects+allTags;
+ } else if(tool==='dnsprop'){
+  const results=data.results||[], agreement=data.agreement||{};
+  const yesNo=v=>v===true?'Yes':v===false?'No':'—';
+  const publicAgreement=agreement.public_resolvers_agree===true?'Agree':agreement.public_resolvers_agree===false?'Disagree':'Unknown';
+  const allAgreement=agreement.all_answer_sets_agree===true?'Agree':agreement.all_answer_sets_agree===false?'Disagree':'Unknown';
+  const findings=(data.findings||[]).length
+   ? '<div class="result-sub"><strong>Resolver findings</strong><div class="chips">'+data.findings.map(x=>'<span>'+esc(x)+'</span>').join('')+'</div></div>'
+   : '';
+  const resolverRows=results.map(r=>{
+    const status=r.ok===false?'Request failed':(r.status_name||'—');
+    const answers=(r.answers||[]).length?(r.answers||[]).join(' | '):'No requested-type answer';
+    const ttls=(r.ttls||[]).length?(r.ttls||[]).join(' / '):'—';
+    return '<tr><td>'+esc(r.resolver)+'</td><td>'+esc(status)+'</td><td>'+esc(yesNo(r.dnssec_authenticated))+'</td><td>'+esc((r.latency_ms??0)+' ms')+'</td><td>'+esc(ttls)+'</td><td class="record-value">'+esc(answers)+'</td></tr>';
+  }).join('');
+  const recordBlocks=results.map(r=>{
+    const records=r.records||[];
+    if(!records.length)return '';
+    const rows=records.map(x=>'<tr><td>'+esc(x.type_name||x.type)+'</td><td>'+esc(x.ttl??'—')+'</td><td class="record-value">'+esc(x.data??'')+'</td></tr>').join('');
+    return '<div class="result-sub"><strong>'+esc(r.resolver)+' returned records</strong><table class="record-table"><thead><tr><th>Type</th><th>TTL</th><th>Data</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+  }).join('');
+  title.textContent='DNS resolver comparison';
+  body.innerHTML='<table class="record-table"><tbody>'
+   +row('Hostname',data.host)
+   +row('Record type',data.type)
+   +row('Google vs Cloudflare',publicAgreement)
+   +row('All resolver answer sets',allAgreement)
+   +row('Distinct answer sets',agreement.distinct_answer_sets??'—')
+   +'</tbody></table>'
+   +'<div class="result-sub"><strong>Resolver results</strong><table class="record-table"><thead><tr><th>Resolver</th><th>DNS status</th><th>DNSSEC AD</th><th>Latency</th><th>TTL (s)</th><th>Requested-type answers</th></tr></thead><tbody>'+resolverRows+'</tbody></table></div>'
+   +findings+recordBlocks
+   +'<div class="result-sub"><strong>Methodology</strong><p>Google and Cloudflare are queried through their public DNS-over-HTTPS JSON endpoints. The server row uses the Smart Web Utility server resolver. This is a named-resolver comparison, not a worldwide propagation percentage.</p></div>';
  } else if(tool==='headers'){
   const r=data.result, all=r.headers_all||{};
   const redirects=(r.redirects||[]).length
@@ -152,8 +183,8 @@ function render(data){
    +redirects
    +'<div class="result-sub"><strong>All final response headers</strong>'+(rawRows?'<table class="record-table"><tbody>'+rawRows+'</tbody></table>':'<p>No response headers were returned.</p>')+'</div>';
  } else {
-  title.textContent=data.type+' propagation / resolver comparison';
-  body.innerHTML='<table class="record-table"><thead><tr><th>Resolver</th><th>Status</th><th>Answers</th></tr></thead><tbody>'+data.results.map(r=>'<tr><td>'+esc(r.resolver)+'</td><td>'+(r.ok?'OK':'Error')+'</td><td class="record-value">'+esc((r.answers||[]).join(' | ')||r.error||'No answer')+'</td></tr>').join('')+'</tbody></table>';
+  title.textContent='DNS result';
+  body.innerHTML='<div class="empty">No renderer is available for this diagnostic.</div>';
  }
  result.hidden=false;
 }
