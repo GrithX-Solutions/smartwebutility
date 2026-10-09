@@ -1,7 +1,7 @@
 (() => {
 'use strict';
 const form=document.getElementById('diagForm'); if(!form)return;
-const tool=form.dataset.tool, input=document.getElementById('target'), type=document.getElementById('recordType'), result=document.getElementById('result'), body=document.getElementById('resultBody'), title=document.getElementById('resultTitle'), error=document.getElementById('error'), copy=document.getElementById('copyBtn'), year=document.getElementById('year');
+const tool=form.dataset.tool, input=document.getElementById('target'), type=document.getElementById('recordType'), headerMethod=document.getElementById('headerMethod'), result=document.getElementById('result'), body=document.getElementById('resultBody'), title=document.getElementById('resultTitle'), error=document.getElementById('error'), copy=document.getElementById('copyBtn'), year=document.getElementById('year');
 if(year)year.textContent=new Date().getFullYear();
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const row=(k,v)=>'<tr><th>'+esc(k)+'</th><td class="record-value">'+esc(v??'—')+'</td></tr>';
@@ -9,7 +9,7 @@ function endpoint(v){
  if(tool==='sitemap')return '/api/sitemap-check.php?url='+encodeURIComponent(v);
  if(tool==='meta')return '/api/page-inspect.php?mode=meta&url='+encodeURIComponent(v);
  if(tool==='og')return '/api/page-inspect.php?mode=og&url='+encodeURIComponent(v);
- if(tool==='headers')return '/api/http-status.php?url='+encodeURIComponent(v);
+ if(tool==='headers')return '/api/http-status.php?mode=headers&method='+encodeURIComponent(headerMethod?.value||'auto')+'&url='+encodeURIComponent(v);
  return '/api/dns-propagation.php?host='+encodeURIComponent(v.replace(/^https?:\/\//i,'').split('/')[0])+'&type='+encodeURIComponent(type.value);
 }
 function render(data){
@@ -121,14 +121,43 @@ function render(data){
    +'</tbody></table></div>'
    +findings+redirects+imageRedirects+allTags;
  } else if(tool==='headers'){
-  const r=data.result; title.textContent='HTTP headers'; body.innerHTML='<table class="record-table"><tbody>'+row('Status',r.status)+row('Resolved IP',r.ip)+row('Response time',r.time_ms+' ms')+Object.entries(r.headers||{}).map(([k,v])=>row(k,v)).join('')+'</tbody></table>';
+  const r=data.result, all=r.headers_all||{};
+  const redirects=(r.redirects||[]).length
+   ? '<div class="result-sub"><strong>Redirect path</strong><div class="chips">'+r.redirects.map(x=>'<span>'+esc(x.status+' '+x.method+' '+x.from+' → '+x.to)+'</span>').join('')+'</div></div>'
+   : '';
+  const duplicates=Object.entries(r.duplicate_headers||{}).length
+   ? Object.entries(r.duplicate_headers).map(([k,v])=>k+' × '+v).join(', ')
+   : 'None';
+  const keyNames=['content-type','content-length','content-encoding','cache-control','etag','last-modified','vary','location','server','strict-transport-security','content-security-policy','access-control-allow-origin'];
+  const keyRows=keyNames.filter(k=>all[k]?.length).map(k=>row(k,all[k].join(' | '))).join('');
+  const rawRows=Object.entries(all).map(([k,v])=>row(k,(v||[]).join(' | '))).join('');
+  title.textContent='HTTP header check';
+  body.innerHTML='<table class="record-table"><tbody>'
+   +row('Requested URL',r.url)
+   +row('Final URL',r.final_url||r.url)
+   +row('Redirects followed',r.redirect_count||0)
+   +row('Requested method',String(r.requested_method||'auto').toUpperCase())
+   +row('Method used',r.method_used||'HEAD')
+   +row('HEAD → GET fallback',r.method_fallback?'Yes':'No')
+   +row('HTTP status',r.status)
+   +row('Resolved IP',r.ip)
+   +row('Final response time',(r.time_ms??0)+' ms')
+   +row('Total diagnostic time',(r.total_time_ms??r.time_ms??0)+' ms')
+   +row('Content type',r.content_type)
+   +row('Header fields received',r.header_count??0)
+   +row('Unique header names',r.unique_header_count??Object.keys(all).length)
+   +row('Repeated header names',duplicates)
+   +'</tbody></table>'
+   +(keyRows?'<div class="result-sub"><strong>Common response headers</strong><table class="record-table"><tbody>'+keyRows+'</tbody></table></div>':'')
+   +redirects
+   +'<div class="result-sub"><strong>All final response headers</strong>'+(rawRows?'<table class="record-table"><tbody>'+rawRows+'</tbody></table>':'<p>No response headers were returned.</p>')+'</div>';
  } else {
   title.textContent=data.type+' propagation / resolver comparison';
   body.innerHTML='<table class="record-table"><thead><tr><th>Resolver</th><th>Status</th><th>Answers</th></tr></thead><tbody>'+data.results.map(r=>'<tr><td>'+esc(r.resolver)+'</td><td>'+(r.ok?'OK':'Error')+'</td><td class="record-value">'+esc((r.answers||[]).join(' | ')||r.error||'No answer')+'</td></tr>').join('')+'</tbody></table>';
  }
  result.hidden=false;
 }
-form.addEventListener('submit',async e=>{e.preventDefault();error.hidden=true;result.hidden=true;const v=input.value.trim();if(!v){error.textContent='Enter a valid URL or domain.';error.hidden=false;return}const b=form.querySelector('button[type=submit]'),old=b.textContent;b.disabled=true;b.textContent='Checking…';try{const res=await fetch(endpoint(v),{headers:{accept:'application/json'}});const data=await res.json().catch(()=>({error:'The server returned an unreadable response (HTTP '+res.status+'). Please try again later.'}));if(!res.ok||data.error)throw new Error(data.error||'Check failed');render(data);history.replaceState(null,'','?target='+encodeURIComponent(v)+(type?'&type='+encodeURIComponent(type.value):''))}catch(err){error.textContent=err.message||'Check failed.';error.hidden=false}finally{b.disabled=false;b.textContent=old}});
+form.addEventListener('submit',async e=>{e.preventDefault();error.hidden=true;result.hidden=true;const v=input.value.trim();if(!v){error.textContent='Enter a valid URL or domain.';error.hidden=false;return}const b=form.querySelector('button[type=submit]'),old=b.textContent;b.disabled=true;b.textContent='Checking…';try{const res=await fetch(endpoint(v),{headers:{accept:'application/json'}});const data=await res.json().catch(()=>({error:'The server returned an unreadable response (HTTP '+res.status+'). Please try again later.'}));if(!res.ok||data.error)throw new Error(data.error||'Check failed');render(data);history.replaceState(null,'','?target='+encodeURIComponent(v)+(type?'&type='+encodeURIComponent(type.value):'')+(headerMethod?'&method='+encodeURIComponent(headerMethod.value):''))}catch(err){error.textContent=err.message||'Check failed.';error.hidden=false}finally{b.disabled=false;b.textContent=old}});
 copy?.addEventListener('click',async()=>{if(!body.innerText)return;await navigator.clipboard.writeText(body.innerText);copy.textContent='Copied';setTimeout(()=>copy.textContent='Copy',1200)});
-const p=new URLSearchParams(location.search);if(p.get('target')){input.value=p.get('target');if(type&&p.get('type'))type.value=p.get('type');form.requestSubmit()}
+const p=new URLSearchParams(location.search);if(p.get('target')){input.value=p.get('target');if(type&&p.get('type'))type.value=p.get('type');if(headerMethod&&p.get('method'))headerMethod.value=p.get('method');form.requestSubmit()}
 })();
