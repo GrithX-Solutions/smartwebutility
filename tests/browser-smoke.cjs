@@ -1329,6 +1329,89 @@ const cases = [
     assert.match(await p.locator('#schemaError').innerText(), /fully qualified URL/i);
     assert.equal(await p.locator('#schemaOutput').inputValue(), '');
   }],
+  ['dns-propagation-checker', async p => {
+    await p.route('**/api/dns-propagation.php?host=**', async route => {
+      const requestUrl=route.request().url();
+      assert.match(requestUrl, /[?&]host=example\.com(?:&|$)/);
+      assert.match(requestUrl, /[?&]type=A(?:&|$)/);
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          ok: true,
+          host: 'example.com',
+          type: 'A',
+          results: [
+            {
+              resolver: 'Cloudflare',
+              ok: true,
+              http_status: 200,
+              dns_status: 0,
+              status_name: 'NOERROR',
+              dnssec_authenticated: true,
+              latency_ms: 24,
+              answers: ['93.184.216.34'],
+              ttls: [300],
+              records: [{name:'example.com.',type:1,type_name:'A',ttl:300,data:'93.184.216.34'}]
+            },
+            {
+              resolver: 'Google',
+              ok: true,
+              http_status: 200,
+              dns_status: 0,
+              status_name: 'NOERROR',
+              dnssec_authenticated: true,
+              latency_ms: 31,
+              answers: ['93.184.216.34'],
+              ttls: [240],
+              records: [{name:'example.com.',type:1,type_name:'A',ttl:240,data:'93.184.216.34'}]
+            },
+            {
+              resolver: 'Server resolver',
+              ok: true,
+              http_status: null,
+              dns_status: null,
+              status_name: null,
+              dnssec_authenticated: null,
+              latency_ms: 8,
+              answers: ['192.0.2.44'],
+              ttls: [180],
+              records: [{name:'example.com',type:1,type_name:'A',ttl:180,data:'192.0.2.44'}]
+            }
+          ],
+          agreement: {
+            public_resolvers_comparable: true,
+            public_resolvers_agree: true,
+            all_answer_sets_agree: false,
+            distinct_answer_sets: 2
+          },
+          findings: [
+            'Google Public DNS and Cloudflare returned the same DNS status and requested-type answer set.',
+            'At least two successful resolver paths returned different requested-type answer sets.'
+          ],
+          methodology: {
+            public_resolvers:['Cloudflare DNS over HTTPS','Google Public DNS over HTTPS'],
+            server_resolver:'PHP dns_get_record from the Smart Web Utility server environment',
+            worldwide_propagation:false
+          }
+        })
+      });
+    });
+    await p.locator('#target').fill('example.com');
+    await p.locator('#recordType').selectOption('A');
+    await p.locator('#diagForm button[type="submit"]').click();
+    await p.locator('#result').waitFor({state:'visible'});
+    const resultText=await p.locator('#resultBody').innerText();
+    assert.match(resultText,/Google vs Cloudflare\s+Agree/i);
+    assert.match(resultText,/All resolver answer sets\s+Disagree/i);
+    assert.match(resultText,/Distinct answer sets\s+2/i);
+    assert.match(resultText,/Cloudflare\s+NOERROR\s+Yes\s+24 ms\s+300\s+93\.184\.216\.34/i);
+    assert.match(resultText,/Google\s+NOERROR\s+Yes\s+31 ms\s+240\s+93\.184\.216\.34/i);
+    assert.match(resultText,/Server resolver\s+—\s+—\s+8 ms\s+180\s+192\.0\.2\.44/i);
+    assert.match(resultText,/Cloudflare returned records/i);
+    assert.match(resultText,/At least two successful resolver paths returned different requested-type answer sets/i);
+    assert.match(resultText,/not a worldwide propagation percentage/i);
+  }],
   ['http-header-checker', async p => {
     await p.route('**/api/http-status.php?mode=headers**', async route => {
       assert.match(route.request().url(), /[?&]method=auto(?:&|$)/);
