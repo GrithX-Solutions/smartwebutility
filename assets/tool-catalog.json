@@ -728,8 +728,17 @@
     "category": "Website",
     "url": "/open-graph-checker/",
     "title": "Open Graph Checker",
-    "description": "Inspect social metadata on public pages.",
-    "keywords": []
+    "description": "Validate live Open Graph tags, required properties, redirects and the primary OG image.",
+    "keywords": [
+      "open graph checker",
+      "og checker",
+      "open graph tester",
+      "open graph validator",
+      "open graph tag checker",
+      "open graph debugger",
+      "check og tags",
+      "test open graph tags"
+    ]
   },
   {
     "category": "Website",
