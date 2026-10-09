@@ -86,16 +86,20 @@ function swu_header_request(string $url,string $requestedMethod,?callable $reque
   $firstMethod=$requestedMethod==='get' ? 'GET' : 'HEAD';
   $response=$requester($url,$firstMethod);
   if(empty($response['ok'])) return $response;
+  $attemptTime=(int)($response['time_ms'] ?? 0);
 
   $fallback=false;
   if($requestedMethod==='auto' && in_array((int)$response['status'],[405,501],true)){
-    $response=$requester($url,'GET');
-    if(empty($response['ok'])) return $response;
+    $fallbackResponse=$requester($url,'GET');
+    if(empty($fallbackResponse['ok'])) return $fallbackResponse;
+    $attemptTime+=(int)($fallbackResponse['time_ms'] ?? 0);
+    $response=$fallbackResponse;
     $fallback=true;
   }
 
   $response['requested_method']=$requestedMethod;
   $response['method_fallback']=$fallback;
+  $response['attempt_time_ms']=$attemptTime;
   return $response;
 }
 
@@ -104,11 +108,13 @@ function swu_header_inspect(string $url,string $requestedMethod='auto',?callable
   $current=$requestedUrl;
   $redirects=[];
   $totalTime=0;
+  $fallbackUsed=false;
 
   for($hop=0;$hop<=SWU_HEADER_REDIRECT_LIMIT;$hop++){
     $response=swu_header_request($current,$requestedMethod,$requester);
     if(empty($response['ok'])) out(['error'=>$response['error'] ?? 'Header request failed.'],502);
-    $totalTime+=(int)($response['time_ms'] ?? 0);
+    $totalTime+=(int)($response['attempt_time_ms'] ?? $response['time_ms'] ?? 0);
+    $fallbackUsed=$fallbackUsed || !empty($response['method_fallback']);
     $status=(int)$response['status'];
 
     if($status>=300 && $status<400){
@@ -140,7 +146,7 @@ function swu_header_inspect(string $url,string $requestedMethod='auto',?callable
       'redirects'=>$redirects,
       'requested_method'=>$requestedMethod,
       'method_used'=>$response['method'],
-      'method_fallback'=>(bool)($response['method_fallback'] ?? false),
+      'method_fallback'=>$fallbackUsed,
       'status'=>$status,
       'time_ms'=>$response['time_ms'],
       'total_time_ms'=>$totalTime,
