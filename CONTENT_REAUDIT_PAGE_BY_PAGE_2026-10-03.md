@@ -6323,3 +6323,151 @@ No worldwide/propagation keyword was added to this dedicated resolver page's own
 - Production deployment: NOT STARTED.
 
 Page 32 is VERIFIED. Page 33 `/word-counter/` may begin with research only; do not deploy production.
+
+
+---
+
+## Page 33 — Word Counter — 2026-10-09
+
+URL: `/word-counter/`
+
+### Demand evidence
+
+Ubersuggest U.S. English:
+- `word counter`: 1,220,000 monthly searches, CPC $0.42, SD 67, informational;
+- `word count`: 1,220,000, CPC $0.42, SD 67, informational;
+- `online word counter`: 27,100, CPC $0.48, SD 65, informational;
+- `word counter online`: 27,100, CPC $0.48, SD 66;
+- `word count checker`: 14,800, CPC $0.65, SD 57, informational;
+- `word counter tool`: 5,400, CPC $0.68, SD 57, informational;
+- `word counter free`: 5,400, CPC $0.60, SD 66;
+- `free word counter`: 2,400, CPC $0.54, SD 66;
+- `letter and word counter`: 320, CPC $0.335, SD 7.
+
+The primary head term is extremely large but difficult. Secondary checker/tool intent remains materially competitive but has lower-authority utility results that demonstrate a credible utility-page opportunity. No ranking guarantee is implied.
+
+Fresh/available Ubersuggest U.S. SERP evidence:
+- `word counter` snapshot (2026-07-19) is dominated by WordCounter.net, Grammarly, WordCounter.io, QuillBot and other established tools, but also includes DA 1–18 utilities;
+- `word count checker` snapshot (2026-10-06) has an AI Overview and PAA plus DA 1–22 utilities near the top;
+- `word counter tool` snapshot (2026-10-09) includes DA 4–26 utilities alongside stronger domains;
+- `letter and word counter` snapshot (2026-10-09) includes many DA 2–15 utilities but overlaps strongly with Character Counter intent;
+- `frequency word counter` is a distinct 880-volume / SD 30 intent dominated by dedicated frequency-analysis pages, so this Word Counter should not claim that primary intent.
+
+### First-party search evidence
+
+Connected Google Search Console returned no rows for `/word-counter/` in the last 90 days.
+
+Ubersuggest `page_keywords` returned no U.S. ranking-keyword data for `https://smartwebutility.com/word-counter/`.
+
+Current ranking success is therefore UNKNOWN / not observed.
+
+The SmartWebUtility rank-tracking project currently uses 105 / 300 keyword-location slots. `letter and word counter` is already tracked in U.S. English; the main Word Counter terms are not currently tracked.
+
+### Current competitor / functionality review
+
+Current live Word Counter competitors repeatedly go beyond six raw counts:
+- MiniWebtool exposes words, unique words, characters, sentences, paragraphs, average word length, longest word, reading time, speaking time and common-word analysis;
+- WordCounter.net exposes reading/speaking time, unique words, sentence metrics, configurable keyword-density/details and optional autosave;
+- QuillBot exposes words, characters, sentences, paragraphs, characters without spaces and reading time;
+- current lightweight competitors such as WordCountPad and UtilityEra add reading/speaking time, unique words, average word length and an optional word-goal tracker while keeping browser-local processing;
+- WordCount.com uses browser word segmentation for scripts without spaces, but language-specific counting is a separate complexity and should not be claimed by this page without a deliberate multilingual methodology.
+
+### Existing implementation review
+
+Current `assets/text-tools.js` gives Word Counter and Character Counter the same six live metrics:
+- words as non-whitespace runs;
+- JavaScript string length;
+- characters without whitespace;
+- punctuation-based sentence estimate;
+- blank-line paragraph estimate;
+- newline line count.
+
+The public Word Counter content accurately documents those rules and already warns that word count is not an SEO ranking target. The page also mentions reading/speaking time conceptually, but the tool does not calculate either value.
+
+Current browser coverage is shallow: it types `One two three.` and only asserts that the stats contain `3`.
+
+### Cannibalization / canonical ownership
+
+Keep distinct ownership:
+- `/word-counter/` owns word count / word count checker / online word counter / word counter tool intent and word-focused writing-length workflow;
+- `/character-counter/` owns character counter, character limit, with/without-spaces and Unicode-counting caveats;
+- do not target Google Docs / Microsoft Word navigation queries on this generic browser tool;
+- do not target PDF/file/image/OCR variants without dedicated file-processing functionality;
+- do not claim CJK/language-specific counting while the current documented algorithm is whitespace-based;
+- do not claim `word frequency counter` / keyword-density primary intent; that SERP is sufficiently distinct to deserve its own canonical utility if pursued later.
+
+Supporting character counts remain useful inside Word Counter, but catalog/title/H1 should stay word-focused.
+
+### Confirmed product/content gap
+
+A lightweight client-only upgrade is justified without adding a framework, backend, upload or external API:
+- keep the existing six transparent counts;
+- add estimated reading time and speaking time using explicitly stated default WPM assumptions;
+- add unique-word count and average word length as descriptive writing statistics;
+- add an optional target word-count field with progress/remaining/over-target feedback;
+- add a Clear action for faster repeated use;
+- keep all processing local in the browser;
+- do not add an artificial SEO score or keyword-density target;
+- do not change Character Counter semantics unintentionally: Word Counter-specific enhancements should be gated to `body[data-tool="word-counter"]`;
+- strengthen the browser regression with punctuation, paragraph/line, time/unique/average metrics and target-progress assertions.
+
+### Semantic brief
+
+Primary intent / keyword:
+- word counter / word count.
+
+Secondary terms:
+- word count checker;
+- online word counter;
+- word counter online;
+- word counter tool;
+- free word counter;
+- free online word counter;
+- word count tool.
+
+Supporting concepts:
+- word limit;
+- target word count;
+- reading time;
+- speaking time;
+- unique words;
+- average word length;
+- characters with spaces;
+- characters without spaces;
+- sentence count;
+- paragraph count;
+- line count;
+- local/browser processing;
+- essay;
+- article;
+- speech;
+- script;
+- writing limit.
+
+Questions / sub-intents:
+- how many words are in this text;
+- how long will this text take to read;
+- how long will this speech take to say;
+- how many words remain to a target;
+- how words are counted;
+- why counts can differ between editors;
+- whether text is uploaded;
+- why no universal SEO word-count target exists.
+
+Internal-link targets:
+- `/character-counter/`;
+- `/case-converter/`;
+- `/slug-generator/`;
+- `/text-tools/`.
+
+### Research status
+
+- Demand / CPC / SD / intent: VERIFIED.
+- Ubersuggest U.S. SERP: VERIFIED.
+- Current live competitor functionality: VERIFIED.
+- First-party GSC evidence: VERIFIED.
+- Existing implementation / tests: VERIFIED.
+- Character Counter cannibalization ownership: VERIFIED.
+- Distinct lightweight product gap: VERIFIED.
+- Implementation: NOT STARTED at this checkpoint.
+- Production deployment: NOT STARTED.
