@@ -718,7 +718,7 @@ XML Formatter & Validator isolated validation:
 
 ## Work in progress
 
-Page 30 Open Graph Checker is VERIFIED on the working branch. Page 31 `/http-header-checker/` is now the only active page and is in RESEARCH ONLY state. No Page 31 implementation change is authorized until demand, SERP intent, competitor gap, API/security scope and cannibalization against `/http-status-checker/`, `/security-headers-checker/` and `/cache-control-checker/` are verified. Production remains unchanged.
+Page 30 Open Graph Checker is VERIFIED on the working branch. Page 31 `/http-header-checker/` is now the only active page. Its research/semantic/cannibalization gate is VERIFIED and a distinct raw-header product gap is confirmed; implementation is authorized only within the scoped Header Checker mode while preserving the default `/api/http-status.php` first-response contract used by `/http-status-checker/`. Production remains unchanged.
 
 ## Affected files — completed/current pages
 
@@ -739,12 +739,12 @@ State/evidence:
 
 ## NEXT ACTION
 
-Research Page 31 `/http-header-checker/` only:
-1. inspect current UI, API behavior, response-header coverage, security controls, internal links and tests;
-2. run Ubersuggest U.S. demand/intent research for HTTP header checker/analyzer variants;
-3. inspect current Google SERP, PAA/features and leading live tools;
-4. map ownership against `/http-status-checker/`, `/security-headers-checker/` and `/cache-control-checker/`;
-5. produce the semantic brief and a concrete product/content gap before any implementation.
+Implement and verify Page 31 `/http-header-checker/` only:
+1. keep the default `/api/http-status.php?url=...` behavior unchanged for HTTP Status Checker;
+2. add a scoped `mode=headers` path with Auto / HEAD / GET behavior, bounded redirect revalidation, repeated-header preservation and final-response context;
+3. update the Header Checker renderer/content/catalog aliases without absorbing status/security/cache/redirect specialist intents;
+4. add and run page-specific backend/static/Chromium regressions using the isolated non-production fallback when GitHub-hosted runners are unavailable;
+5. add selected U.S. rank-tracking terms only after the page reaches VERIFIED.
 
 Do not deploy production.
 
