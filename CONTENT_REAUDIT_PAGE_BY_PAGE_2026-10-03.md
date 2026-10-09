@@ -6553,3 +6553,160 @@ After verification, the full existing SmartWebUtility keyword map was re-read an
 - Production deployment: NOT STARTED.
 
 Page 33 is VERIFIED. Page 34 `/character-counter/` may begin with research only; do not deploy production.
+
+
+---
+
+## Page 34 — Character Counter — 2026-10-09
+
+URL: `/character-counter/`
+
+### Demand evidence
+
+Ubersuggest U.S. English:
+- `character counter`: 246,000 monthly searches, CPC $0.23, SD 61, informational;
+- `character count`: 246,000, CPC $0.23, SD 60, informational;
+- `online character counter`: 12,100, CPC $0.34, SD 49, informational;
+- `letter counter`: 9,900, CPC $0.63, SD 72, informational;
+- `character limit counter`: 1,300, CPC $0.31, SD 59, informational;
+- `character counter with spaces`: 720, CPC $0.36, SD 51, informational;
+- `character counter online`: 590, CPC $0.79, SD 59, informational;
+- `character count checker`: 390, CPC $0.16, SD 19;
+- `character counter without spaces`: 170, CPC $0.57, SD 61;
+- `unicode character counter`: 20, SD 14;
+- `grapheme counter`: 10, SD 18;
+- `utf-8 byte counter`: 10, SD 13.
+
+The head term is large and competitive. The fresh 2026-10-09 U.S. SERP for `character count checker` includes an AI Overview/PAA plus multiple DA 2–18 utilities near the top, and the fresh `online character counter` SERP is led by DA 2–9 utilities. A credible long-tail utility entry path exists; no ranking guarantee is implied.
+
+### First-party search evidence
+
+Connected Google Search Console returned three last-90-day impressions for this page:
+- `charactor counts` — Belgium, 1 impression, position 85;
+- `string counter` — France, 1 impression, position 45;
+- `count strings` — Australia, 1 impression, position 88.
+
+No clicks were recorded.
+
+Ubersuggest `page_keywords` returned no U.S. ranking-keyword data for this URL.
+
+Current ranking traction is therefore minimal / not established.
+
+### Current implementation review
+
+The page already has strong explanatory copy, browser-local privacy, one self-canonical and a distinct Character Counter intent. However its live output still uses the shared six-stat block:
+- JavaScript `String.length` for the main character total (UTF-16 code units);
+- the same count after removing all JavaScript whitespace;
+- words as non-whitespace runs;
+- punctuation-based sentences;
+- blank-line paragraphs;
+- newline lines.
+
+The content correctly warns that emoji/supplementary Unicode can count as multiple UTF-16 units, but the tool does not expose the alternative measurements a user needs to resolve that discrepancy.
+
+Current browser coverage is shallow: it types `abc def` and only checks that the result includes `7`.
+
+### Current competitor / functionality review
+
+Current live competitors increasingly expose the actual character model:
+- CharacterCounter.com includes optional limits/remaining counts and broad supporting text statistics;
+- CountFlows separates Unicode graphemes, UTF-16 units and UTF-8 bytes;
+- Delimiter.live distinguishes visible characters from platform/UTF-16 units and bytes;
+- AllTextConverters exposes grapheme clusters, Unicode code points, UTF-16 units and UTF-8 bytes;
+- current independent utilities such as Brewcoder and Acento also show visible graphemes, code points, UTF-16 and UTF-8 separately.
+
+This is materially better than presenting one ambiguous `Characters` number.
+
+### Standards / methodology evidence
+
+Current MDN guidance confirms:
+- JavaScript strings are represented as UTF-16 code units and `String.length` reports code units;
+- one non-BMP Unicode code point such as an emoji can therefore use two UTF-16 units;
+- `Intl.Segmenter` with grapheme granularity segments user-perceived characters and has broad modern-browser availability;
+- HTML `maxlength` is defined in UTF-16 code units, which is one concrete reason not to replace the existing UTF-16 count with a grapheme count everywhere.
+
+### Cannibalization / canonical ownership
+
+Keep distinct ownership:
+- `/character-counter/` owns character count / character counter / online character counter / character-limit intent and Unicode counting-model explanation;
+- `/word-counter/` owns word count, reading/speaking-time writing workflow and word-target intent;
+- Character Counter may show word count only as a supporting metric;
+- do not make this page a primary word counter, keyword-density analyzer, SMS segment calculator, social-platform rules page or byte-converter landing page.
+
+The existing `letter and word counter` alias remains on Word Counter because it is a combined word-focused query; standalone character/limit aliases belong here.
+
+### Confirmed product/content gap
+
+A browser-local upgrade is justified:
+- make user-perceived grapheme count the clearly labeled visible-character measurement using `Intl.Segmenter` where supported;
+- expose Unicode code points separately;
+- preserve and explicitly label JavaScript/HTML-style UTF-16 code units;
+- expose UTF-8 byte length using `TextEncoder`;
+- show visible characters after removing Unicode whitespace;
+- retain words/lines only as supporting context rather than competing with Word Counter;
+- add an optional numeric limit and a limit-basis selector so users can compare against visible graphemes, UTF-16 units, code points or UTF-8 bytes;
+- state clearly that destination platforms may use their own counting rules and remain the final authority;
+- keep all processing in-browser;
+- add Clear/reset;
+- strengthen the Chromium regression with emoji + combining-mark cases that distinguish graphemes, code points, UTF-16 and bytes;
+- verify the shared script still preserves Word Counter behavior.
+
+### Semantic brief
+
+Primary intent / keyword:
+- character counter / character count.
+
+Secondary terms:
+- online character counter;
+- character count checker;
+- character limit counter;
+- character counter online;
+- character counter with spaces;
+- character counter without spaces;
+- Unicode character counter.
+
+Entities / attributes:
+- grapheme cluster;
+- visible character;
+- Unicode code point;
+- UTF-16 code unit;
+- UTF-8 byte;
+- whitespace;
+- emoji;
+- combining mark;
+- surrogate pair;
+- `Intl.Segmenter`;
+- `String.length`;
+- `TextEncoder`;
+- HTML `maxlength`;
+- character limit;
+- remaining characters.
+
+Questions / sub-intents:
+- do spaces count as characters;
+- why does an emoji count as two;
+- what is the difference between graphemes, code points and UTF-16 units;
+- how many UTF-8 bytes does text use;
+- how many characters remain to a limit;
+- which count matches HTML maxlength;
+- why platform counters can disagree;
+- whether pasted text is uploaded.
+
+Internal-link targets:
+- `/word-counter/`;
+- `/case-converter/`;
+- `/slug-generator/`;
+- `/text-tools/`.
+
+### Research status
+
+- Demand / CPC / SD / intent: VERIFIED.
+- Fresh 2026-10-09 lower-tail Ubersuggest SERPs: VERIFIED.
+- Current live competitor functionality: VERIFIED.
+- First-party GSC evidence: VERIFIED.
+- Existing implementation / browser coverage: VERIFIED.
+- Unicode/UTF-16/maxlength methodology: VERIFIED.
+- Word Counter cannibalization ownership: VERIFIED.
+- Distinct Unicode/limit product gap: VERIFIED.
+- Implementation: NOT STARTED at this checkpoint.
+- Production deployment: NOT STARTED.
