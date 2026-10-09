@@ -19,6 +19,8 @@ Run the remaining content/SEO re-audit page by page. Research, improve, test and
 - Open Graph Checker audit evidence commit: `cf9156eeba9159b94bb818f7cdefb2a4c884796e`.
 - HTTP Header Checker implementation/test head before audit-state sync: `2911f061b5895dfb57e3b2e487072083da0de21e`.
 - HTTP Header Checker audit evidence commit: `9bece05d547bb9c231c8085006a9b49106853564`.
+- DNS Resolver Checker implementation/test head before audit-state sync: `5562e354edf9b7a91161c01300d5fedd77f1c8f2`.
+- DNS Resolver Checker audit evidence commit: `5265226a80bfda3c9758d05544ef35e9c3d8fbf5`.
 - Open Graph Preview final implementation/test head before audit-state sync: `0ac3dd07ca3a4ffe57cca9c34b697b40ce90bfa1`.
 - Open Graph Preview audit evidence commit: `47b22fe6c38ca603fcb03b11f8bb88e45d2ee1ec`.
 - Schema Markup Generator final implementation/test head before audit-state sync: `a0c41ceae9eda01d1a98b57bb40d29558f259325`.
@@ -126,23 +128,24 @@ Confirmed gap and implementation:
 Current exact implementation/test head:
 - `8dead313ae83277d68a3efd50d075f19989fd8a1`.
 
-Current verification for Page 31 HTTP Header Checker:
-- authorized Page 31 checkpoint to implementation head: exactly six scoped files / nine commits: VERIFIED;
+Current verification for Page 32 DNS Resolver Checker:
+- Page 32 authorization checkpoint to implementation head: exactly six scoped files / nine commits: VERIFIED;
 - exact Git blob identities recorded in the audit evidence: VERIFIED;
-- one H1 / one canonical, title 48 chars, description 140 chars, method selector present: VERIFIED;
-- tool catalog JSON: PASS;
-- sitemap: 89 URLs / 89 unique, HTTP Header Checker `lastmod` 2026-10-09: PASS;
+- one H1 / one canonical, title 50 Unicode characters (52 UTF-8 bytes), description 138 characters: VERIFIED;
+- tool catalog JSON: PASS with resolver-only aliases and no propagation/global ownership aliases;
+- sitemap: 89 URLs / 89 unique, legacy URL `lastmod` 2026-10-09: PASS;
 - isolated ZTHosting `smartwebutility` workspace on `vmi3588489`: VERIFIED non-production and clean before/after staging;
-- exact staged `api/http-status.php` PHP syntax: PASS;
-- backend orchestration fixture: PASS — HEAD 405 → GET fallback, GET 301 redirect, final HEAD 200, aggregate fallback state, total timing and duplicate Set-Cookie preservation;
-- default HTTP Status Checker contract guard: PASS; `curl_headers($url)` remains the non-`mode=headers` path;
-- redirect destination revalidation and GET-body discard: VERIFIED by current code path;
-- targeted Chromium interaction/render regression: PASS using Python Playwright + system Chromium and the exact GitHub diagnostics blob `8ec4c18956590e3816d08f0fe1e1b41a9e6d18a3`;
-- browser assertions verified `mode=headers&method=auto`, encoded target URL, final URL, redirects, method/fallback state, header counts, repeated values and redirect rendering;
-- Ubersuggest U.S. tracking additions: `http header checker`, `check http headers`, `http header checker tool`; project usage 102 / 300;
-- GitHub Build 952 and Browser 636 failed before repository execution with `runner_id: 0` and `steps: []`; this remains a final-batch/release CI infrastructure risk, not a Page 31 code failure.
+- exact staged `api/dns-propagation.php` PHP syntax: PASS;
+- DNS resolver runtime fixture: PASS — NOERROR/AD parsing, selected-type TTL extraction, CNAME-chain preservation, MX/CAA/TXT formatting, normalization and answer-agreement logic;
+- runtime fixture result: `status=NOERROR ad=true ttl=300 records=2 public_agree=true all_disagree=true`;
+- 256 KB DoH response cap, cURL write bound, explicit TLS peer/host verification and no redirect following: VERIFIED;
+- exact diagnostics JavaScript syntax: PASS;
+- exact committed browser-smoke JavaScript syntax: PASS;
+- targeted Chromium resolver regression: PASS with 11 assertions covering request parameters, resolver agreement/disagreement, DNS status, AD, latency, TTL, server output, record rows, findings and non-worldwide methodology;
+- Ubersuggest U.S. tracking additions: `dns resolver checker`, `google dns checker`, `cloudflare dns checker`; project usage 105 / 300;
+- GitHub Build 965 and Browser 649 failed before repository execution with `runner_id: 0` and `steps: []`; this remains a final-batch/release CI infrastructure risk, not a Page 32 code failure.
 
-Page 31 HTTP Header Checker is VERIFIED. Page 32 `/dns-propagation-checker/` may begin with research only.
+Page 32 DNS Resolver Checker is VERIFIED. Page 33 `/word-counter/` may begin with research only.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
@@ -694,6 +697,29 @@ Sitemap Checker isolated validation — 2026-10-07:
 - Page-specific gate: VERIFIED.
 - Production mutation: NONE.
 
+### Page 32 DNS Resolver Checker validation
+- Research / homepage propagation ownership / resolver intent / competitor gap / cannibalization: VERIFIED.
+- Implementation head: `5562e354edf9b7a91161c01300d5fedd77f1c8f2`.
+- Audit evidence commit: `5265226a80bfda3c9758d05544ef35e9c3d8fbf5`.
+- Exact implementation scope: six files / nine commits.
+- Exact endpoint blob `0c866a118fc2ba6ff72bf5d4c39ca855d8231bc9`: PHP syntax PASS.
+- DoH status / AD / TTL / full-record parsing: PASS.
+- Server MX / TXT / CAA formatting and answer normalization: PASS.
+- Runtime agreement fixture: PASS (`status=NOERROR ad=true ttl=300 records=2 public_agree=true all_disagree=true`).
+- DoH response safety: VERIFIED — 256 KB cap, bounded write, TLS verification, no redirect following.
+- HTML/search-metadata checks: PASS — one H1, one canonical, 50-character title, 138-character description.
+- Tool catalog: PASS — resolver aliases only; worldwide/propagation aliases excluded.
+- Sitemap: 89 / 89 unique and Page 32 `lastmod` 2026-10-09.
+- Diagnostics JavaScript syntax: PASS.
+- Browser-smoke JavaScript syntax: PASS.
+- Dedicated `dns-propagation-checker` browser regression committed.
+- Targeted Chromium resolver regression: PASS, 11 assertions.
+- GitHub Build 965 and Browser 649: no-runner infrastructure failures before steps (`runner_id: 0`, `steps: []`).
+- Ubersuggest U.S. rank tracking: `dns resolver checker`, `google dns checker`, `cloudflare dns checker`; usage 105 / 300.
+- Temporary fallback overlays/fixtures removed; isolated workspace clean.
+- Page-specific gate: VERIFIED.
+- Production mutation: NONE.
+
 ## CI infrastructure blocker
 
 BLOCKED:
@@ -742,20 +768,20 @@ XML Formatter & Validator isolated validation:
 
 ## Work in progress
 
-Page 31 HTTP Header Checker is VERIFIED on the working branch. Page 32 `/dns-propagation-checker/` is now the only active page. Its research gate is VERIFIED with a mandatory retarget: homepage `/` keeps worldwide/global DNS propagation intent, while this legacy URL will own named public-resolver comparison (Google, Cloudflare and server resolver). Implementation is authorized only within that distinct resolver-comparison scope. Production remains unchanged.
+Page 32 DNS Resolver Checker is VERIFIED on the working branch. Page 33 `/word-counter/` is now the only active page and is in RESEARCH ONLY state. No Page 33 implementation change is authorized until U.S. demand/intent, current SERP, competitor functionality/content, first-party search evidence, semantic ownership and cannibalization against adjacent text tools are verified. Production remains unchanged.
 
 ## Affected files — completed/current pages
 
-Completed Page 31 implementation/direct dependencies:
-- `http-header-checker/index.html`
-- `api/http-status.php`
+Completed Page 32 implementation/direct dependencies:
+- `dns-propagation-checker/index.html`
+- `api/dns-propagation.php`
 - `assets/diagnostics.js`
 - `assets/tool-catalog.json`
 - `tests/browser-smoke.cjs`
 - `sitemap.xml`
 
-Current active Page 32 research target:
-- `dns-propagation-checker/index.html` — read-only until the research/semantic brief is complete.
+Current active Page 33 research target:
+- `word-counter/index.html` — read-only until the research/semantic brief is complete.
 
 State/evidence:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
@@ -763,12 +789,12 @@ State/evidence:
 
 ## NEXT ACTION
 
-Implement and verify Page 32 `/dns-propagation-checker/` as the distinct DNS Resolver Checker:
-1. keep the URL/self-canonical but retarget title/H1/content/catalog away from generic worldwide propagation terms;
-2. preserve homepage ownership of `dns propagation checker/test/global DNS` and link worldwide propagation users to `/`;
-3. expand Google/Cloudflare/server resolver output with DNS status, TTL, DNSSEC AD where available, latency, correctly formatted local records and answer-agreement diagnostics;
-4. add page-specific backend/static/Chromium regressions and verify the exact current branch in the isolated non-production fallback when hosted runners are unavailable;
-5. add only selected resolver-comparison U.S. tracking terms after the page reaches VERIFIED.
+Research Page 33 `/word-counter/` only:
+1. inspect the current word-count implementation, content metrics, UX, internal links and browser tests;
+2. run Ubersuggest U.S. demand/intent research for word counter / word count / character-related semantic variants;
+3. inspect the current Google SERP, PAA/features and leading live competitors;
+4. check first-party GSC/page-keyword evidence and map ownership against `/character-counter/`, `/text-stats/` or any overlapping text utility;
+5. produce a semantic brief and concrete product/content gap before implementation.
 
 Do not deploy production.
 
@@ -776,9 +802,9 @@ Do not deploy production.
 
 Status: PARTIALLY VERIFIED at batch/release level.
 
-- GitHub-hosted Actions remain unreliable for this long-running branch; current Page 31 Build 952 and Browser 636 also failed before runner assignment with no repository-test steps.
-- The approved ZTHosting isolated developer fallback is operational on `vmi3588489` and passed Page 31 page-scoped PHP/runtime/security/static verification on exact staged audit files.
-- Targeted Chromium Page 31 regression passed using Python Playwright with the exact GitHub diagnostics blob.
+- GitHub-hosted Actions remain unreliable for this long-running branch; Page 32 Build 965 and Browser 649 also failed before runner assignment with no repository-test steps.
+- The approved ZTHosting isolated developer fallback is operational on `vmi3588489` and passed Page 32 page-scoped PHP/runtime/security/static verification on exact staged audit files.
+- Targeted Chromium Page 32 resolver regression passed with 11 assertions.
 - The fallback workspace is non-production and was restored clean after verification.
 - Production paths and running production containers are not used as CI workspaces.
 - The final accumulated branch still requires a full green release gate before merge/deployment.
