@@ -1331,6 +1331,7 @@ const cases = [
   }],
   ['http-header-checker', async p => {
     await p.route('**/api/http-status.php?mode=headers**', async route => {
+      assert.match(route.request().url(), /[?&]method=auto(?:&|$)/);
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
