@@ -6218,14 +6218,108 @@ Internal-link targets:
 - `/reverse-dns-checker/` for PTR/rDNS;
 - DNS troubleshooting guides.
 
-### Research status
+### Implementation
+
+Final implementation/test head before audit-state sync:
+- `5562e354edf9b7a91161c01300d5fedd77f1c8f2`.
+
+Implementation from the Page 32 authorization checkpoint is contained to six files:
+- `api/dns-propagation.php`;
+- `assets/diagnostics.js`;
+- `dns-propagation-checker/index.html`;
+- `assets/tool-catalog.json`;
+- `tests/browser-smoke.cjs`;
+- `sitemap.xml`.
+
+The endpoint now:
+- queries Google Public DNS and Cloudflare DNS-over-HTTPS JSON endpoints without following redirects;
+- uses explicit TLS peer/host verification, bounded connect/total timeouts and a 256 KB JSON response ceiling;
+- reports DNS response code/name independently from HTTP transport status;
+- reports the public resolver AD flag when exposed;
+- reports request latency, requested-type answers and TTL values;
+- preserves all returned answer records so CNAME/related records remain inspectable;
+- formats server-resolver MX priority, TXT chunks and CAA flags/tag/value instead of dropping those fields;
+- normalizes only for answer-set comparison while preserving display data;
+- reports Google-vs-Cloudflare agreement and all-successful-resolver answer-set agreement without inventing a global propagation score.
+
+The renderer now shows:
+- hostname and selected record type;
+- public-resolver agreement and all-resolver answer-set agreement;
+- DNS status, DNSSEC AD, latency, TTL and requested-type answers per resolver;
+- full returned record tables and concrete findings;
+- an explicit methodology note that this is not a worldwide propagation percentage.
+
+The public page is retargeted to `DNS Resolver Checker` while keeping the legacy URL/self-canonical. It links worldwide propagation intent back to the homepage and keeps DNS Checker, DNSSEC and reverse-DNS ownership separate. Tool-catalog aliases intentionally exclude propagation/global/map terms.
+
+The dedicated browser regression is committed and the sitemap `lastmod` is 2026-10-09.
+
+### Verification — 2026-10-09
+
+Exact implementation blobs at `5562e354edf9b7a91161c01300d5fedd77f1c8f2`:
+- `api/dns-propagation.php` — `0c866a118fc2ba6ff72bf5d4c39ca855d8231bc9`;
+- `assets/diagnostics.js` — `d282d0e919396ff00062ca43486001632a1417e7`;
+- `dns-propagation-checker/index.html` — `0bfbbc5e323a350afb8db3f1fcdae94c3d4d78e6`;
+- `assets/tool-catalog.json` — `d25325fda76d76b72c30ade7039617e72d2cef80`;
+- `tests/browser-smoke.cjs` — `58582f1174b99c78ec3b46452e531aa8893213d8`;
+- `sitemap.xml` — `846a390f31128c2d5a52a2d7e965d2ea7bb5ede4`.
+
+Page-scoped fallback evidence:
+- authorization checkpoint → implementation head: nine commits, six changed files only;
+- isolated ZTHosting `smartwebutility` workspace on `vmi3588489`: VERIFIED non-production and clean before staging;
+- exact implementation blobs staged with stale-write SHA protection;
+- endpoint PHP syntax: PASS;
+- deterministic DNS resolver runtime fixture: PASS;
+- fixture verified NOERROR/AD parsing, selected-type TTL extraction, CNAME-chain preservation, MX/CAA/TXT local formatting, TXT/MX normalization, public-resolver agreement and server disagreement;
+- fixture result: `status=NOERROR ad=true ttl=300 records=2 public_agree=true all_disagree=true`;
+- source checks verified the 256 KB DoH response cap, cURL write bound, explicit TLS verification and no redirect following;
+- HTML structural QA: one H1 and one self-canonical;
+- title length: 52 characters;
+- meta description length: 138 characters;
+- tool catalog JSON: PASS; resolver-only aliases are present and propagation/global aliases are intentionally absent;
+- sitemap: 89 URLs / 89 unique;
+- exact `assets/diagnostics.js` syntax: PASS;
+- exact `tests/browser-smoke.cjs` syntax: PASS;
+- targeted Chromium interaction/render regression: PASS using the staged DNS resolver endpoint/render/submit path and the committed mocked result shape;
+- Chromium assertions verified hostname/type query parameters, Google-vs-Cloudflare agreement, all-resolver disagreement, distinct answer count, DNS status, AD, latency, TTL, server-resolver output, returned-record sections, findings and the non-worldwide methodology statement;
+- Chromium assertion count: 11.
+
+GitHub-hosted CI remains a final-batch/release infrastructure issue:
+- Build run 965: FAILED before repository execution with `runner_id: 0` and `steps: []`;
+- Browser run 649: FAILED before repository execution with `runner_id: 0` and `steps: []`.
+
+These no-runner jobs do not invalidate the page-scoped fallback evidence.
+
+After verification, all staged Page 32 files were restored and both temporary resolver fixtures were deleted. The isolated workspace ended clean with no modified or untracked files. Production was not mutated.
+
+### Ubersuggest rank tracking
+
+After verification, the full existing SmartWebUtility keyword map was re-read and preserved. Added for U.S. English:
+- `dns resolver checker`;
+- `google dns checker`;
+- `cloudflare dns checker`.
+
+Tracked keyword-location usage moved from 102 / 300 to 105 / 300.
+
+No worldwide/propagation keyword was added to this dedicated resolver page's ownership.
+
+### Page 32 acceptance status
 
 - Homepage propagation ownership: VERIFIED by GSC + Ubersuggest + current SERP.
 - Resolver-comparison demand: VERIFIED.
 - Current competitor/functionality review: VERIFIED.
 - Google/Cloudflare DoH source documentation: VERIFIED.
-- Existing implementation: VERIFIED.
+- Existing implementation and distinct product gap: VERIFIED.
 - Cannibalization decision: VERIFIED.
-- Distinct product/content gap: VERIFIED.
-- Implementation: NOT STARTED at this checkpoint.
+- Six-file implementation scope: VERIFIED.
+- DoH response-size / TLS / redirect safety: VERIFIED.
+- DNS status / AD / TTL / latency / record parsing: VERIFIED.
+- Local MX / TXT / CAA formatting: VERIFIED.
+- Resolver agreement logic: VERIFIED.
+- Static SEO/content structure: VERIFIED.
+- JavaScript syntax: VERIFIED.
+- Targeted Chromium UI regression: VERIFIED.
+- Ubersuggest rank tracking: VERIFIED.
+- Full-batch GitHub-hosted release CI: BLOCKED by no-runner infrastructure and remains a release-level gate.
 - Production deployment: NOT STARTED.
+
+Page 32 is VERIFIED. Page 33 `/word-counter/` may begin with research only; do not deploy production.
