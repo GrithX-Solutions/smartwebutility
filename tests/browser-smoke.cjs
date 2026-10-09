@@ -1329,6 +1329,87 @@ const cases = [
     assert.match(await p.locator('#schemaError').innerText(), /fully qualified URL/i);
     assert.equal(await p.locator('#schemaOutput').inputValue(), '');
   }],
+  ['open-graph-checker', async p => {
+    await p.route('**/api/page-inspect.php?mode=og**', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          ok: true,
+          result: {
+            url: 'https://example.com/old',
+            final_url: 'https://www.example.com/article',
+            redirect_count: 1,
+            redirects: [{status:301,from:'https://example.com/old',to:'https://www.example.com/article'}],
+            status: 200,
+            content_type: 'text/html; charset=UTF-8',
+            bytes_checked: 4096,
+            truncated: false,
+            core_present: 4,
+            core_required: 4,
+            missing_required: [],
+            og_tag_count: 9,
+            og_property_count: 9,
+            outside_head_count: 0,
+            open_graph: {
+              'og:title': 'Example article',
+              'og:description': 'A useful social description.',
+              'og:url': 'https://www.example.com/article',
+              'og:image': 'https://cdn.example.com/social.jpg',
+              'og:type': 'article',
+              'og:site_name': 'Example Site',
+              'og:locale': 'en_US'
+            },
+            open_graph_all: {
+              'og:title': ['Example article'],
+              'og:type': ['article'],
+              'og:url': ['https://www.example.com/article'],
+              'og:image': ['https://cdn.example.com/social.jpg'],
+              'og:image:width': ['1200'],
+              'og:image:height': ['630'],
+              'og:image:alt': ['Example social image'],
+              'og:description': ['A useful social description.'],
+              'og:site_name': ['Example Site']
+            },
+            primary_image: {
+              url: 'https://cdn.example.com/social.jpg',
+              secure_url: null,
+              type: 'image/jpeg',
+              width: '1200',
+              height: '630',
+              alt: 'Example social image',
+              probe: {
+                ok: true,
+                status: 200,
+                content_type: 'image/jpeg',
+                final_url: 'https://img.example.com/social.jpg',
+                redirect_count: 1,
+                redirects: [{status:302,from:'https://cdn.example.com/social.jpg',to:'https://img.example.com/social.jpg'}],
+                bytes_checked: 65536,
+                truncated: false,
+                dimensions: {width:1200,height:630}
+              }
+            },
+            findings: ['The requested page redirected 1 time(s) before Open Graph tags were parsed.']
+          }
+        })
+      });
+    });
+    await p.locator('#target').fill('https://example.com/old');
+    await p.locator('#diagForm button[type="submit"]').click();
+    await p.locator('#result').waitFor({state:'visible'});
+    const resultText = await p.locator('#resultBody').innerText();
+    assert.match(resultText, /Final URL\s+https:\/\/www\.example\.com\/article/i);
+    assert.match(resultText, /Core properties\s+4 \/ 4/i);
+    assert.match(resultText, /OG tags found\s+9/i);
+    assert.match(resultText, /og:title\s+Example article/i);
+    assert.match(resultText, /Image check\s+Fetched/i);
+    assert.match(resultText, /Image HTTP status\s+200/i);
+    assert.match(resultText, /Detected dimensions\s+1200 × 630/i);
+    assert.match(resultText, /og:image:alt\s+Example social image/i);
+    assert.match(resultText, /301 https:\/\/example\.com\/old → https:\/\/www\.example\.com\/article/i);
+    assert.match(resultText, /302 https:\/\/cdn\.example\.com\/social\.jpg → https:\/\/img\.example\.com\/social\.jpg/i);
+  }],
   ['open-graph-preview', async p => {
     await p.locator('#ogTitle').fill('Example OG');
     await p.locator('#ogDescription').fill('Preview description');
