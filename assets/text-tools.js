@@ -7,19 +7,69 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 async function copyText(value,btn){if(!value)return;try{await navigator.clipboard.writeText(value);const o=btn.textContent;btn.textContent='Copied';setTimeout(()=>btn.textContent=o,1200)}catch{}}
 
 if(tool==='word-counter'||tool==='character-counter'){
- const input=$('textInput'), stats=$('textStats');
+ const input=$('textInput'), stats=$('textStats'), isWordCounter=tool==='word-counter';
+ const insights=isWordCounter?$('wordInsights'):null, target=isWordCounter?$('wordTarget'):null;
+ const targetStatus=isWordCounter?$('wordTargetStatus'):null, targetText=isWordCounter?$('wordTargetText'):null;
+ const targetProgress=isWordCounter?$('wordTargetProgress'):null, clearWordCounter=isWordCounter?$('clearWordCounter'):null;
+ const tokenList=text=>text.trim().match(/\S+/g)||[];
+ const normalizeToken=token=>token.toLocaleLowerCase().replace(/^[^a-z0-9\u00c0-\u024f]+|[^a-z0-9\u00c0-\u024f]+$/gi,'');
+ const duration=(words,wpm)=>{
+  if(!words)return '0 sec';
+  const seconds=Math.max(1,Math.ceil(words*60/wpm));
+  if(seconds<60)return seconds+' sec';
+  const minutes=Math.floor(seconds/60), rest=seconds%60;
+  return rest?minutes+'m '+rest+'s':minutes+'m';
+ };
+ function updateGoal(words){
+  if(!isWordCounter)return;
+  const goal=Math.floor(Number(target.value)||0);
+  if(goal<1){
+   targetStatus.hidden=true;
+   targetProgress.value=0;
+   targetProgress.max=1;
+   return;
+  }
+  targetStatus.hidden=false;
+  targetProgress.max=goal;
+  targetProgress.value=Math.min(words,goal);
+  if(words<goal)targetText.textContent=(goal-words)+' words remaining of '+goal;
+  else if(words===goal)targetText.textContent='Target reached: '+goal+' words';
+  else targetText.textContent=(words-goal)+' words over '+goal+'-word target';
+ }
  function count(){
   const text=input.value;
   const chars=text.length, charsNoSpace=text.replace(/\s/g,'').length;
-  const words=(text.trim().match(/\S+/g)||[]).length;
+  const tokens=tokenList(text), words=tokens.length;
   const sentences=(text.match(/[.!?]+(?=\s|$)/g)||[]).length;
   const paragraphs=text.trim()?text.trim().split(/\n\s*\n/).length:0;
   const lines=text?text.split(/\n/).length:0;
   stats.innerHTML=[
    ['Words',words],['Characters',chars],['Without spaces',charsNoSpace],['Sentences',sentences],['Paragraphs',paragraphs],['Lines',lines]
   ].map(([k,v])=>'<div><b>'+v+'</b><span>'+k+'</span></div>').join('');
+  if(isWordCounter){
+   const normalized=tokens.map(normalizeToken).filter(Boolean);
+   const unique=new Set(normalized).size;
+   const average=normalized.length
+    ? normalized.reduce((sum,word)=>sum+Array.from(word).length,0)/normalized.length
+    : 0;
+   insights.innerHTML=[
+    ['Reading time',duration(words,200)],
+    ['Speaking time',duration(words,130)],
+    ['Unique words',unique],
+    ['Avg word length',average.toFixed(1)]
+   ].map(([k,v])=>'<div><b>'+esc(v)+'</b><span>'+esc(k)+'</span></div>').join('');
+   updateGoal(words);
+  }
  }
- input.addEventListener('input',count); count();
+ input.addEventListener('input',count);
+ target?.addEventListener('input',count);
+ clearWordCounter?.addEventListener('click',()=>{
+  input.value='';
+  target.value='';
+  count();
+  input.focus();
+ });
+ count();
 }
 
 if(tool==='case-converter'){
