@@ -768,7 +768,7 @@ XML Formatter & Validator isolated validation:
 
 ## Work in progress
 
-Page 32 DNS Resolver Checker is VERIFIED on the working branch. Page 33 `/word-counter/` is now the only active page and is in RESEARCH ONLY state. No Page 33 implementation change is authorized until U.S. demand/intent, current SERP, competitor functionality/content, first-party search evidence, semantic ownership and cannibalization against adjacent text tools are verified. Production remains unchanged.
+Page 32 DNS Resolver Checker is VERIFIED on the working branch. Page 33 `/word-counter/` is now the only active page. Its demand/SERP/GSC/competitor/cannibalization research gate is VERIFIED and a lightweight browser-local product gap is confirmed. Implementation is authorized only within the word-focused workflow; Character Counter keeps character-limit/Unicode ownership, and file/OCR, office-app navigation, multilingual-specific and word-frequency primary intents remain out of scope. Production remains unchanged.
 
 ## Affected files — completed/current pages
 
@@ -789,12 +789,12 @@ State/evidence:
 
 ## NEXT ACTION
 
-Research Page 33 `/word-counter/` only:
-1. inspect the current word-count implementation, content metrics, UX, internal links and browser tests;
-2. run Ubersuggest U.S. demand/intent research for word counter / word count / character-related semantic variants;
-3. inspect the current Google SERP, PAA/features and leading live competitors;
-4. check first-party GSC/page-keyword evidence and map ownership against `/character-counter/`, `/text-stats/` or any overlapping text utility;
-5. produce a semantic brief and concrete product/content gap before implementation.
+Implement and verify Page 33 `/word-counter/` only:
+1. keep the existing six transparent counts and browser-local privacy model;
+2. add word-focused reading time, speaking time, unique-word count, average word length and optional target-word progress plus a Clear action;
+3. gate Word Counter-specific enhancements so `/character-counter/` behavior/documented counting semantics are not unintentionally changed;
+4. update page content/catalog/sitemap and strengthen the dedicated browser regression without claiming keyword-density, multilingual, file/OCR or office-app intents;
+5. run exact current-head static/JavaScript/Chromium checks, then add selected U.S. rank-tracking terms only after Page 33 reaches VERIFIED.
 
 Do not deploy production.
 
