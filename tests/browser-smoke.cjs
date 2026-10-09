@@ -1710,8 +1710,33 @@ const cases = [
     assert.ok((await p.locator('#bulkRedirectBody').innerText()).includes('example.com/a/final'));
   }],
   ['word-counter', async p => {
-    await p.locator('#textInput').fill('One two three.');
-    assert.ok((await p.locator('#textStats').innerText()).includes('3'));
+    await p.locator('#textInput').fill('One two two three.\n\nFour five!');
+    const baseStats=await p.locator('#textStats').innerText();
+    assert.match(baseStats,/6\s+Words/i);
+    assert.match(baseStats,/2\s+Sentences/i);
+    assert.match(baseStats,/2\s+Paragraphs/i);
+    assert.match(baseStats,/3\s+Lines/i);
+
+    const insights=await p.locator('#wordInsights').innerText();
+    assert.match(insights,/2 sec\s+Reading time/i);
+    assert.match(insights,/3 sec\s+Speaking time/i);
+    assert.match(insights,/5\s+Unique words/i);
+    assert.match(insights,/3\.7\s+Avg word length/i);
+
+    await p.locator('#wordTarget').fill('10');
+    assert.equal(await p.locator('#wordTargetStatus').isHidden(),false);
+    assert.match(await p.locator('#wordTargetText').innerText(),/4 words remaining of 10/i);
+    assert.equal(await p.locator('#wordTargetProgress').evaluate(el=>Number(el.value)),6);
+    assert.equal(await p.locator('#wordTargetProgress').evaluate(el=>Number(el.max)),10);
+
+    await p.locator('#wordTarget').fill('5');
+    assert.match(await p.locator('#wordTargetText').innerText(),/1 words over 5-word target/i);
+
+    await p.locator('#clearWordCounter').click();
+    assert.equal(await p.locator('#textInput').inputValue(),'');
+    assert.equal(await p.locator('#wordTarget').inputValue(),'');
+    assert.equal(await p.locator('#wordTargetStatus').isHidden(),true);
+    assert.match(await p.locator('#textStats').innerText(),/0\s+Words/i);
   }],
   ['character-counter', async p => {
     await p.locator('#textInput').fill('abc def');
