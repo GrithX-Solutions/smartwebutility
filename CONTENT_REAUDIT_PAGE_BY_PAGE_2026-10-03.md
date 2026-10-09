@@ -6052,3 +6052,180 @@ Tracked keyword-location usage moved from 99 / 300 to 102 / 300.
 - Production deployment: NOT STARTED.
 
 Page 31 is VERIFIED. Page 32 may begin with research only; do not deploy production.
+
+
+---
+
+## Page 32 — DNS Resolver Checker (legacy URL: DNS Propagation Checker) — 2026-10-09
+
+URL: `/dns-propagation-checker/`
+
+### Cannibalization decision first
+
+Do **not** let this URL own the generic/global DNS propagation intent.
+
+First-party Google Search Console already shows the homepage `/` receiving impressions for propagation-oriented queries including:
+- `dns propagation checker`;
+- `dns propagation test`;
+- `check dns propagation`;
+- `dns propagation map`;
+- `dns check global`;
+- `worldwide dns`;
+- related propagation variants.
+
+The dedicated `/dns-propagation-checker/` returned only one unrelated/noisy GSC query row in the same 90-day pull and Ubersuggest `page_keywords` returned no U.S. ranking-keyword data.
+
+The homepage is therefore the canonical owner of:
+- `dns propagation checker`;
+- `dns propagation test`;
+- `dns propagation`;
+- `global dns checker`;
+- `dns checker global`;
+- worldwide/country-level propagation intent.
+
+Keep the legacy URL in place to avoid an unnecessary URL migration, but retarget its title/H1/content/catalog semantics to a distinct resolver-comparison task. The page remains self-canonical.
+
+### Demand evidence for the homepage-owned propagation cluster
+
+Ubersuggest U.S. English:
+- `dns propagation test`: 5,400 monthly searches, CPC $14.09, SD 19;
+- `dns propagation`: 5,400, CPC $18.71, SD 48;
+- `dns propagation checker`: 4,400, CPC $24.35, SD 45;
+- `global dns checker`: 320, CPC $15.76, SD 57;
+- `dns checker global`: 320, CPC $10.13, SD 17.
+
+Fresh Ubersuggest U.S. SERP for `dns propagation test` was updated 2026-10-09. It is dominated by worldwide/global multi-location tools and includes low-authority domains such as ReviewMyDNS (DA 5), DNSWizz (DA 5), Domainyze (DA 11) and other global propagation tools. The `dns propagation checker` SERP likewise centers on WhatsMyDNS, DNSChecker, DNSMap, Site24x7 and other worldwide/global resolver-map experiences.
+
+This confirms the homepage's live 12-country probe product matches the high-volume propagation intent much better than the three-resolver page.
+
+### Demand evidence for the dedicated resolver-comparison cluster
+
+Ubersuggest U.S. English:
+- `google dns checker`: 880 monthly searches, CPC $14.39, SD 66;
+- `google dns lookup`: 720, CPC $10.72, SD 67;
+- `cloudflare dns checker`: 260, CPC $6.01, SD 47;
+- `cloudflare dns lookup`: 170, CPC $0, SD 50;
+- `dns resolver checker`: 170, CPC $7.41, SD 65;
+- `dns resolver check`: 170, CPC $7.41, SD 66;
+- `check dns resolver`: 170, CPC $7.41, SD 67;
+- `public dns checker`: 170, CPC $6.48, SD 64;
+- `dns resolver lookup`: 10, SD 18.
+
+Fresh Ubersuggest U.S. SERP for `google dns checker` was updated 2026-10-09. It includes Google's Dig tool, Google Public DNS documentation and generic DNS lookup/checker utilities. `cloudflare dns checker` has a more branded/connection-test-heavy SERP, so this page should not imply that it tests whether the visitor's own device is configured to use Cloudflare. It only queries Cloudflare's public DoH service for the entered hostname.
+
+### Current competitor / product review
+
+Current resolver-comparison tools show a useful gap beyond the current SmartWebUtility output:
+- FindUtils compares Google and Cloudflare side by side with TTLs and explicit normalization;
+- DevUtils explicitly separates resolver comparison from geographic propagation;
+- and.guide exposes response code, answer TTLs and DNSSEC status;
+- ShowIP exposes TTL, answer agreement, DNS response semantics and the authenticated-data flag;
+- Codynet compares multiple named public resolvers and highlights agreement/disagreement.
+
+The current SmartWebUtility endpoint currently discards most of the evidence available from Google/Cloudflare JSON DoH:
+- only answer strings are returned;
+- answer TTLs are dropped;
+- DNS response `Status` is not translated/explained;
+- `AD` / DNSSEC-authenticated-data is dropped;
+- latency is not reported;
+- agreement is not computed;
+- local MX priority is lost;
+- local CAA formatting is incomplete/empty because `dns_get_record` uses CAA-specific fields;
+- there is no dedicated functional browser regression.
+
+### Source-of-truth protocol evidence
+
+Google Public DNS JSON DoH documents `Status`, `AD`, and `Answer[].TTL/data`; an HTTP 200 can still contain a DNS-level failure such as SERVFAIL, so the DNS response code must be interpreted separately.
+
+Cloudflare's current JSON DoH documentation says its JSON schema follows Google's format and likewise exposes `Status`, `AD`, and answer TTL/data fields. Cloudflare also cautions that JSON DoH has no formal IETF JSON schema, so the page should treat provider JSON as provider-documented behavior rather than an Internet-standard JSON contract.
+
+### Canonical ownership
+
+- `/` — worldwide/global DNS propagation from live country-level probes.
+- `/dns-propagation-checker/` — named public resolver comparison: Google Public DNS, Cloudflare DNS and the server resolver.
+- `/dns-checker/` — focused single-resolver record lookup with TTL.
+- `/dnssec-checker/` — DNSSEC validation and DS/DNSKEY evidence.
+- `/reverse-dns-checker/` — PTR/rDNS/FCrDNS.
+
+Do not add `dns propagation checker`, `dns propagation test`, `global dns checker` or worldwide/map aliases to this dedicated page's catalog keywords.
+
+### Confirmed product/content gap
+
+Retarget and mature the existing page as a DNS Resolver Checker:
+- title/H1/catalog should say resolver comparison rather than claiming the generic global propagation intent;
+- query Google and Cloudflare DoH for the same hostname/type and keep the server resolver as a third path;
+- expose DNS response code/name, DNSSEC authenticated-data flag where provider APIs expose it, latency, requested-type answer values and TTLs;
+- preserve the full returned answer records so CNAME chains and related records are inspectable;
+- normalize only for agreement comparison while keeping raw/display values visible;
+- format server-resolver MX priority and CAA values correctly and preserve TTL;
+- report public-resolver agreement and all-resolver answer agreement without inventing a propagation percentage;
+- explicitly state that three resolver paths cannot establish worldwide convergence;
+- link the high-volume worldwide propagation intent back to the homepage;
+- cite Google Public DNS and Cloudflare DoH documentation in the explanatory content;
+- add a dedicated mocked Chromium regression.
+
+### Semantic brief
+
+Primary intent / keyword:
+- DNS resolver checker / public DNS resolver comparison.
+
+Secondary terms:
+- Google DNS checker;
+- Google DNS lookup;
+- Cloudflare DNS checker;
+- Cloudflare DNS lookup;
+- public DNS checker;
+- DNS resolver check;
+- check DNS resolver;
+- compare DNS resolvers.
+
+Entities / attributes:
+- Google Public DNS;
+- Cloudflare 1.1.1.1;
+- DNS-over-HTTPS;
+- resolver;
+- recursive resolver;
+- DNS response code / RCODE;
+- NOERROR;
+- NXDOMAIN;
+- SERVFAIL;
+- REFUSED;
+- TTL;
+- DNSSEC authenticated data / AD;
+- A;
+- AAAA;
+- CNAME;
+- MX;
+- TXT;
+- NS;
+- CAA;
+- cache;
+- answer agreement.
+
+Questions / sub-intents:
+- do Google and Cloudflare return the same answer;
+- what TTL does each resolver report;
+- what does NXDOMAIN or SERVFAIL mean;
+- whether the response is DNSSEC authenticated;
+- why two resolvers can disagree;
+- why resolver comparison is not the same as a worldwide propagation map;
+- when to use the single-resolver DNS Checker instead.
+
+Internal-link targets:
+- homepage `/` for worldwide propagation;
+- `/dns-checker/` for focused lookup;
+- `/dnssec-checker/` for deeper DNSSEC;
+- `/reverse-dns-checker/` for PTR/rDNS;
+- DNS troubleshooting guides.
+
+### Research status
+
+- Homepage propagation ownership: VERIFIED by GSC + Ubersuggest + current SERP.
+- Resolver-comparison demand: VERIFIED.
+- Current competitor/functionality review: VERIFIED.
+- Google/Cloudflare DoH source documentation: VERIFIED.
+- Existing implementation: VERIFIED.
+- Cannibalization decision: VERIFIED.
+- Distinct product/content gap: VERIFIED.
+- Implementation: NOT STARTED at this checkpoint.
+- Production deployment: NOT STARTED.
