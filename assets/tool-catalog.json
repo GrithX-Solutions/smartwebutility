@@ -714,8 +714,15 @@
     "category": "Website",
     "url": "/http-header-checker/",
     "title": "HTTP Header Checker",
-    "description": "Inspect HTTP response headers.",
-    "keywords": []
+    "description": "Inspect final HTTP response headers with method transparency, redirects and repeated values.",
+    "keywords": [
+      "http header checker",
+      "http headers checker",
+      "check http headers",
+      "website header checker",
+      "http header checker tool",
+      "http header checker online"
+    ]
   },
   {
     "category": "Website",
