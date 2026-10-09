@@ -633,8 +633,18 @@
     "category": "Text",
     "url": "/character-counter/",
     "title": "Character Counter",
-    "description": "Count characters with and without spaces.",
-    "keywords": []
+    "description": "Count visible graphemes, Unicode code points, UTF-16 units and UTF-8 bytes with an optional custom limit.",
+    "keywords": [
+      "character counter",
+      "character count",
+      "online character counter",
+      "character counter online",
+      "character count checker",
+      "character limit counter",
+      "character counter with spaces",
+      "character counter without spaces",
+      "unicode character counter"
+    ]
   },
   {
     "category": "Text",
