@@ -17,6 +17,8 @@ Run the remaining content/SEO re-audit page by page. Research, improve, test and
 - Meta Tag Checker audit evidence commit: `5565be6e26e9463986c3990242c54905701b49cf`.
 - Open Graph Checker implementation/test head before audit-state sync: `44de88a141c67c7c0a5c65d125a1c0f6ea5ba757`.
 - Open Graph Checker audit evidence commit: `cf9156eeba9159b94bb818f7cdefb2a4c884796e`.
+- HTTP Header Checker implementation/test head before audit-state sync: `2911f061b5895dfb57e3b2e487072083da0de21e`.
+- HTTP Header Checker audit evidence commit: `9bece05d547bb9c231c8085006a9b49106853564`.
 - Open Graph Preview final implementation/test head before audit-state sync: `0ac3dd07ca3a4ffe57cca9c34b697b40ce90bfa1`.
 - Open Graph Preview audit evidence commit: `47b22fe6c38ca603fcb03b11f8bb88e45d2ee1ec`.
 - Schema Markup Generator final implementation/test head before audit-state sync: `a0c41ceae9eda01d1a98b57bb40d29558f259325`.
@@ -124,20 +126,23 @@ Confirmed gap and implementation:
 Current exact implementation/test head:
 - `8dead313ae83277d68a3efd50d075f19989fd8a1`.
 
-Current verification for Page 30 Open Graph Checker:
-- research checkpoint to implementation head: exactly six scoped files / six commits: VERIFIED;
+Current verification for Page 31 HTTP Header Checker:
+- authorized Page 31 checkpoint to implementation head: exactly six scoped files / nine commits: VERIFIED;
 - exact Git blob identities recorded in the audit evidence: VERIFIED;
-- one H1 / one canonical, title 46 chars, description 152 chars: VERIFIED;
+- one H1 / one canonical, title 48 chars, description 140 chars, method selector present: VERIFIED;
 - tool catalog JSON: PASS;
-- sitemap: 89 URLs / 89 unique, Open Graph Checker `lastmod` 2026-10-09: PASS;
+- sitemap: 89 URLs / 89 unique, HTTP Header Checker `lastmod` 2026-10-09: PASS;
 - isolated ZTHosting `smartwebutility` workspace on `vmi3588489`: VERIFIED non-production and clean before/after staging;
-- PHP 8.2.34, DOMDocument and getimagesizefromstring runtime availability: VERIFIED;
-- exact staged OG parser/redirect/security fixture: PASS — 4/4 core properties, one page redirect, first-value precedence, body-level OG exclusion and private-image SSRF rejection;
-- targeted Chromium interaction/render fixture: PASS — final URL, 4/4 core readiness, primary image status, 1200 × 630 detected dimensions, image alt, page redirect and image redirect rendering;
-- Ubersuggest U.S. tracking additions: `open graph checker`, `og checker`, `open graph tester`; project usage 99 / 300;
-- GitHub Build 939 and Browser 623 failed before repository execution with `runner_id: 0` and `steps: []`; this remains a final-batch/release CI infrastructure risk, not a Page 30 code failure.
+- exact staged `api/http-status.php` PHP syntax: PASS;
+- backend orchestration fixture: PASS — HEAD 405 → GET fallback, GET 301 redirect, final HEAD 200, aggregate fallback state, total timing and duplicate Set-Cookie preservation;
+- default HTTP Status Checker contract guard: PASS; `curl_headers($url)` remains the non-`mode=headers` path;
+- redirect destination revalidation and GET-body discard: VERIFIED by current code path;
+- targeted Chromium interaction/render regression: PASS using Python Playwright + system Chromium and the exact GitHub diagnostics blob `8ec4c18956590e3816d08f0fe1e1b41a9e6d18a3`;
+- browser assertions verified `mode=headers&method=auto`, encoded target URL, final URL, redirects, method/fallback state, header counts, repeated values and redirect rendering;
+- Ubersuggest U.S. tracking additions: `http header checker`, `check http headers`, `http header checker tool`; project usage 102 / 300;
+- GitHub Build 952 and Browser 636 failed before repository execution with `runner_id: 0` and `steps: []`; this remains a final-batch/release CI infrastructure risk, not a Page 31 code failure.
 
-Page 30 Open Graph Checker is VERIFIED. Page 31 `/http-header-checker/` may begin with research only.
+Page 31 HTTP Header Checker is VERIFIED. Page 32 `/dns-propagation-checker/` may begin with research only.
 
 Research record:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
@@ -670,6 +675,25 @@ Sitemap Checker isolated validation — 2026-10-07:
 - Page-specific gate: VERIFIED.
 - Production mutation: NONE.
 
+### Page 31 HTTP Header Checker validation
+- Research / demand / intent / competitor gap / cannibalization: VERIFIED.
+- Implementation head: `2911f061b5895dfb57e3b2e487072083da0de21e`.
+- Audit evidence commit: `9bece05d547bb9c231c8085006a9b49106853564`.
+- Exact implementation scope: six files / nine commits.
+- Exact endpoint blob `e8e63f9bd9d3a0d5340e8e4bf2593bce8745770c`: PHP syntax PASS.
+- Backend orchestration fixture: PASS (`fallback=true redirect=1 total_ms=59 duplicate_set_cookie=2`).
+- Default HTTP Status Checker first-response path: VERIFIED preserved.
+- Redirect SSRF revalidation and GET-body discard: VERIFIED by current code path.
+- HTML/search-metadata checks: PASS — one H1, one canonical, method selector, title 48, description 140.
+- Tool catalog JSON and sitemap 89/89 uniqueness: PASS.
+- Dedicated `http-header-checker` browser regression committed and request method assertion present.
+- Targeted Chromium interaction/render fallback: PASS on exact GitHub diagnostics blob.
+- GitHub Build 952 and Browser 636: no-runner failures before steps (`runner_id: 0`, `steps: []`).
+- Ubersuggest U.S. rank tracking: `http header checker`, `check http headers`, `http header checker tool`; usage 102 / 300.
+- Temporary fallback overlays/fixture removed; isolated workspace clean.
+- Page-specific gate: VERIFIED.
+- Production mutation: NONE.
+
 ## CI infrastructure blocker
 
 BLOCKED:
@@ -718,20 +742,20 @@ XML Formatter & Validator isolated validation:
 
 ## Work in progress
 
-Page 30 Open Graph Checker is VERIFIED on the working branch. Page 31 `/http-header-checker/` is now the only active page. Its research/semantic/cannibalization gate is VERIFIED and a distinct raw-header product gap is confirmed; implementation is authorized only within the scoped Header Checker mode while preserving the default `/api/http-status.php` first-response contract used by `/http-status-checker/`. Production remains unchanged.
+Page 31 HTTP Header Checker is VERIFIED on the working branch. Page 32 `/dns-propagation-checker/` is now the only active page and is in RESEARCH ONLY state. No Page 32 implementation change is authorized until demand, SERP intent, competitor gap, resolver methodology and cannibalization against `/dns-checker/` are verified. Production remains unchanged.
 
 ## Affected files — completed/current pages
 
-Completed Page 30 implementation/direct dependencies:
-- `open-graph-checker/index.html`
-- `api/page-inspect.php`
+Completed Page 31 implementation/direct dependencies:
+- `http-header-checker/index.html`
+- `api/http-status.php`
 - `assets/diagnostics.js`
 - `assets/tool-catalog.json`
 - `tests/browser-smoke.cjs`
 - `sitemap.xml`
 
-Current active Page 31 research target:
-- `http-header-checker/index.html` — read-only until the research/semantic brief is complete.
+Current active Page 32 research target:
+- `dns-propagation-checker/index.html` — read-only until the research/semantic brief is complete.
 
 State/evidence:
 - `CONTENT_REAUDIT_PAGE_BY_PAGE_2026-10-03.md`
@@ -739,12 +763,12 @@ State/evidence:
 
 ## NEXT ACTION
 
-Implement and verify Page 31 `/http-header-checker/` only:
-1. keep the default `/api/http-status.php?url=...` behavior unchanged for HTTP Status Checker;
-2. add a scoped `mode=headers` path with Auto / HEAD / GET behavior, bounded redirect revalidation, repeated-header preservation and final-response context;
-3. update the Header Checker renderer/content/catalog aliases without absorbing status/security/cache/redirect specialist intents;
-4. add and run page-specific backend/static/Chromium regressions using the isolated non-production fallback when GitHub-hosted runners are unavailable;
-5. add selected U.S. rank-tracking terms only after the page reaches VERIFIED.
+Research Page 32 `/dns-propagation-checker/` only:
+1. inspect current resolver/API behavior, supported record types, UI, security/privacy, internal links and tests;
+2. run Ubersuggest U.S. demand/intent research for DNS propagation checker/test variants;
+3. inspect current Google SERP, PAA/features and leading live competitors such as multi-resolver DNS propagation tools;
+4. map ownership against `/dns-checker/`, reverse DNS and DNSSEC tools so one URL owns each intent;
+5. produce a semantic brief plus a concrete product/functionality gap before any implementation.
 
 Do not deploy production.
 
@@ -752,9 +776,9 @@ Do not deploy production.
 
 Status: PARTIALLY VERIFIED at batch/release level.
 
-- GitHub-hosted Actions remain unreliable for this long-running branch; current Page 30 Build 939 and Browser 623 also failed before runner assignment with no repository-test steps.
-- The approved ZTHosting isolated developer fallback is operational on `vmi3588489` and passed Page 30 page-scoped PHP/runtime/security/static verification on exact staged audit files.
-- Targeted Chromium page regression was completed in a separate isolated browser environment.
+- GitHub-hosted Actions remain unreliable for this long-running branch; current Page 31 Build 952 and Browser 636 also failed before runner assignment with no repository-test steps.
+- The approved ZTHosting isolated developer fallback is operational on `vmi3588489` and passed Page 31 page-scoped PHP/runtime/security/static verification on exact staged audit files.
+- Targeted Chromium Page 31 regression passed using Python Playwright with the exact GitHub diagnostics blob.
 - The fallback workspace is non-production and was restored clean after verification.
 - Production paths and running production containers are not used as CI workspaces.
 - The final accumulated branch still requires a full green release gate before merge/deployment.
